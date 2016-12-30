@@ -1,0 +1,4 @@
+node_modules
+*.sw[a-z]
+npm-debug.log
+.vscode

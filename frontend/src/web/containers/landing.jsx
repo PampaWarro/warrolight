@@ -59,7 +59,7 @@ export class Simulator extends React.Component {
     this.func = new (Programs[ev.key].func)()
     const self = this
     this.func.start({
-      frequencyInHertz: 60,
+      frequencyInHertz: 10,
       numberOfLeds: 150
     }, function(leds) {
       self.updateLeds(leds)
@@ -75,6 +75,7 @@ export class Simulator extends React.Component {
     }, () => ({}))
   }
   updateLeds(leds) {
+    this.props.send(leds)
     if (this.refs.simulator) {
       this.refs.simulator.setTiles(leds)
     }
@@ -112,8 +113,12 @@ export class Simulator extends React.Component {
 }
 
 export default connect(state => state.program || {}, {
-  setCurrentProgram: (dispatch) => (name) => ({
+  setCurrentProgram: (name) => (dispatch) => dispatch({
     type: 'set current program',
     name
+  }),
+  send: (leds) => (dispatch) => dispatch({
+    type: 'send',
+    payload: leds
   })
 })(Simulator)

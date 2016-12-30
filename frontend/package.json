@@ -81,6 +81,7 @@
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.4",
     "rxjs": "^5.0.0-rc.4",
+    "serialport": "^4.0.7",
     "socket.io-client": "^1.7.1",
     "style-loader": "^0.13.1",
     "styled-components": "^1.1.2",

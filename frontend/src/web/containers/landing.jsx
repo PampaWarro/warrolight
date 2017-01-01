@@ -30,7 +30,7 @@ const EnabledSimulatorLabel = styled.label`
 
 import { Func as blinkFunc, config as blinkConfig} from '../function/blink'
 import { Func as rainbowFunc, config as rainbowConfig} from '../function/rainbow'
-import { WSimulator } from './simulator'
+import { LedSimulator } from './simulator-canvas'
 
 const Programs = {
   'blink': {
@@ -59,7 +59,7 @@ export class Simulator extends React.Component {
     this.func = new (Programs[ev.key].func)()
     const self = this
     this.func.start({
-      frequencyInHertz: 10,
+      frequencyInHertz: 0.03,
       numberOfLeds: 150
     }, function(leds) {
       self.updateLeds(leds)
@@ -69,7 +69,7 @@ export class Simulator extends React.Component {
     const self = this
     this.func.start({
       numberOfLeds: 150,
-      frequencyInHertz: 10
+      frequencyInHertz: 0.03
     }, function(leds) {
       self.updateLeds(leds)
     }, () => ({}))
@@ -104,7 +104,7 @@ export class Simulator extends React.Component {
               <EnabledSimulatorLabel>Enabled</EnabledSimulatorLabel>
             </EnableSimulatorContainer>
             */ }
-            <WSimulator ref='simulator' />
+            <LedSimulator ref='simulator' />
           </SimulatorContainer>
         </Col>
       </Row>

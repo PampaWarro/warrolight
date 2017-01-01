@@ -3,27 +3,25 @@ export class Func {
         this.interval = 0
     }
     start(config, draw, done) {
-        let ind = -1
         let colors = new Array(config.numberOfLeds)
+        let sameColorLed = 13;
         const colorSet = [
-            '#00ff00', '#ff00ff', '#0000ff'
+            '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC'
         ]
         for (let i = 0; i < config.numberOfLeds; i++) {
             colors[i] = colorSet[2]
         }
-        let currentColor = 0
+        let time = 0
+
         this.interval = setInterval(() => {
-            ind++;
-            if (ind === config.numberOfLeds) {
-                ind = 0
-                currentColor = (currentColor + 1) % colorSet.length
-            }
-            const newColors = new Array(config.numberOfLeds)
-            for (let i = 0; i < config.numberOfLeds; i++) {
-                newColors[i] = i === ind ? colorSet[currentColor] : colors[i]
-            }
-            draw(newColors)
-            colors = newColors
+          time += 3;
+          const newColors = new Array(config.numberOfLeds)
+
+          for (let i = 0; i < config.numberOfLeds; i++) {
+            let colIndex = Math.floor(((time + i) / sameColorLed)) % colorSet.length;
+            newColors[i] = colorSet[colIndex];
+          }
+          draw(newColors)
         }, 1 / config.frequencyInHertz)
 
         done()

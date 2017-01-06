@@ -42,10 +42,7 @@ let state = _.range(0, 150);
 let prevState = state;
 
 io.on('connection', (socket) => {
-  console.log('client connect')
-
   socket.on('message', (data) => {
-    console.log('new state', data)
     if (data.action === 'data') {
       const newState = _.range(150)
       for (let i = 0; i < data.payload.length; i++) {

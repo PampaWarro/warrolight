@@ -20,9 +20,6 @@ import { configureStore } from './store'
 // Get routes
 import { routes } from './routes'
 
-// Style
-import 'antd/dist/antd.less'
-
 // Instantiation
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)

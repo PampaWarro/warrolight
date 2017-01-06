@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -10,7 +11,7 @@ module.exports = {
   entry: {
     'app': [
       'webpack-hot-middleware/client',
-      './src/index.tsx',
+      './src/main.jsx',
     ],
     'vendor': vendor
   },
@@ -24,17 +25,22 @@ module.exports = {
 
   resolve: {
       // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
+      extensions: ['', '.webpack.js', '.web.js', '.js', 'jsx']
   },
 
   module: {
     loaders: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-      { test: /\.jsx?$/, loaders: ['react-hot', 'babel'],
+      {
+        test: /.jsx?$/,
+        loaders: ['react-hot', 'babel-loader?presets[]=es2015&presets[]=react'],
+        exclude: /node_modules/
+      },
       { test: /\.scss$/, loader: production
         ? ExtractTextPlugin.extract('css!sass')
         : 'style!css?sourceMap!sass?sourceMap'
-      }
+      },
+      { test: /\.json$/, loader: 'json' }
     ],
 
     preLoaders: [
@@ -46,7 +52,7 @@ module.exports = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" }),
     new webpack.optimize.CommonsChunkPlugin({ name: 'meta', chunks: ['vendor'], filename: "meta.js" }),
-    new HtmlWebpackPlugin({ title: 'Poet App', template: 'src/index.html' }),
+    new HtmlWebpackPlugin({ title: 'Warrolight', template: 'src/index.html' }),
     new ExtractTextPlugin("styles.css"),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),

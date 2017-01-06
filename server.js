@@ -1,16 +1,30 @@
-import { default as Service } from './systems/service'
+const SerialPort = require('serialport');
+const _ = require('lodash');
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const path = require('path')
 
-import { default as Api } from './systems/api'
+const webpack = require('webpack')
+const config = require('./webpack.config');
 
-import { default as Db } from './systems/db'
+const compiler = webpack(config);
 
-var SerialPort = require('serialport')
+app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    progress: true,
+    quiet: true,
+    stats: {
+        colors: true
+    }
+}));
 
-const _ = require('lodash')
+app.use(require('webpack-hot-middleware')(compiler));
 
-const { io, socket, app } = Service
-
-const db = new Db()
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+})
 
 const arrayFromRGB = rgb => {
   const red = parseInt(rgb.substr(1, 2), 16)
@@ -32,10 +46,8 @@ io.on('message', (ctx, data) => {
   }
 })
 
-const api = new Api()
-api.setup(db, app)
+app.listen(3000)
 
-Service.app.listen(3000)
 
 const port = new SerialPort('COM3', {
   baudRate: 1152000,

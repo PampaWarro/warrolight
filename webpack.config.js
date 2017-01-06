@@ -11,7 +11,8 @@ module.exports = {
   entry: {
     'app': [
       'webpack-hot-middleware/client',
-      './src/main.jsx',
+      'babel-polyfill',
+      './src/main.js',
     ],
     'vendor': vendor
   },
@@ -33,7 +34,7 @@ module.exports = {
       // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
       {
         test: /.jsx?$/,
-        loaders: ['react-hot', 'babel-loader?presets[]=es2015&presets[]=react'],
+        loaders: ['react-hot', 'babel-loader?presets[]=es2015&presets[]=react&presets[]=stage-0'],
         exclude: /node_modules/
       },
       { test: /\.scss$/, loader: production

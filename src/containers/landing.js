@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
-import { Menu, Item, Row, Col } from 'antd'
 import { Link } from 'react-router'
 import { default as styled } from 'styled-components'
 
@@ -107,28 +106,11 @@ export class Simulator extends React.Component {
       menuItems.push( <Menu.Item key={key}>{Programs[key].name}</Menu.Item>)
     }
     return (<div>
-      <Row>
-        <Col span={4}>
-          <Menu onClick={this.handleClick.bind(this)} selectedKeys={this.state.selected}>
-            <MenuItemGroup title='Programs' style={{ 'marginTop': '20px' }}>
-                {menuItems}
-            </MenuItemGroup>
-          </Menu>
-        </Col>
-        <Col span={20}>
-          <SimulatorContainer>
-            <h2>Simulator</h2>
-            <h3>Current Program: { Programs[this.state.selected[0]].name } </h3>
-            { /*
-            <EnableSimulatorContainer>
-              <EnableSimulatorCheckbox type='checkbox' checked/>
-              <EnabledSimulatorLabel>Enabled</EnabledSimulatorLabel>
-            </EnableSimulatorContainer>
-            */ }
-            <LedSimulator ref='simulator' />
-          </SimulatorContainer>
-        </Col>
-      </Row>
+      <SimulatorContainer>
+        <h2>Simulator</h2>
+        <h3>Current Program: { Programs[this.state.selected[0]].name } </h3>
+        <LedSimulator ref='simulator' />
+      </SimulatorContainer>
     </div>)
   }
 }

@@ -4,9 +4,6 @@ import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import RedBox from 'redbox-react'
 
-// bitcore
-const bitcore = require('bitcore-lib')
-
 // Routing
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'

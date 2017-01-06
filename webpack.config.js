@@ -18,8 +18,13 @@ module.exports = {
   },
   output: {
       filename: '[name].[hash].js',
-      path: __dirname + '/dist'
+      path: path.join(__dirname, 'dist'),
+      publicPath: '/'
   },
+
+  watch: true,
+  colors: true,
+  progress: true,
 
   // Enable sourcemaps for debugging webpack's output.
   devtool: 'source-map',

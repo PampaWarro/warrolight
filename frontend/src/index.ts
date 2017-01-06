@@ -56,7 +56,7 @@ const ENCODING_POS_RGB = 1;
 const ENCODING_POS_VGA = 2;
 const ENCODING_VGA = 3;
 
-let encoding = ENCODING_VGA;
+let encoding = ENCODING_POS_RGB;
 
 function rgbToVga(r, g, b) { return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)}
 
@@ -97,12 +97,13 @@ function sendNextFrame() {
       totalLedsChanged++
     }
   }
-  initEncoding(totalLedsChanged);
-  let dim = 2
+  // initEncoding(totalLedsChanged);
+  initEncoding(150);
+  let dim = 1
   for (let i = 0; i < 150; i++) {
-    if (notEqual(state[i], prevState[i])) {
+    // if (notEqual(state[i], prevState[i])) {
       writePixel(i, state[i][0]/dim, state[i][1]/dim, state[i][2]/dim);
-    }
+    // }
   }
   prevState = state
   flush();

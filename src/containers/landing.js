@@ -74,9 +74,7 @@ export class Simulator extends React.Component {
     }, () => ({}))
   }
   updateLeds(leds) {
-    if (this.props.send) {
-      this.props.send(leds)
-    }
+    this.props.send(leds)
     if (this.refs.simulator) {
       this.refs.simulator.setTiles(leds)
     }

@@ -16,6 +16,7 @@ export function configureStore() {
       window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : (e) => e
     )
   )
+    console.log('state', store.getState())
 
   saga.run(mainSaga)
 

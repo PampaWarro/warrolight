@@ -1,12 +1,14 @@
 const SerialPort = require('serialport');
 const _ = require('lodash');
 const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-const path = require('path')
 
-const webpack = require('webpack')
+const http = require('http');
+const app = express();
+const server = http.createServer(app);
+const io = require('socket.io').listen(server);
+
+const path = require('path');
+const webpack = require('webpack');
 const config = require('./webpack.config');
 
 const compiler = webpack(config);
@@ -19,7 +21,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
         colors: true
     }
 }));
-
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function (req, res) {
@@ -46,7 +47,7 @@ io.on('message', (ctx, data) => {
   }
 })
 
-app.listen(3000)
+server.listen(3000)
 
 
 const port = new SerialPort('COM3', {

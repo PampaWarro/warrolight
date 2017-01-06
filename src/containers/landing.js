@@ -1,27 +1,6 @@
 import * as React from 'react'
-
 import { connect } from 'react-redux'
-import { default as styled } from 'styled-components'
-
 const randomcolor = require('randomcolor')
-
-const SimulatorContainer = styled.div`
-  padding: 20px;
-`
-
-const EnableSimulatorContainer = styled.div`
-  padding: 10px;
-`
-
-const EnableSimulatorCheckbox = styled.input`
-`
-
-const EnabledSimulatorLabel = styled.label`
-  position: relative;
-  top: -1px;
-  left: 4px;
-  font-size: 16px;
-`
 
 import { Func as blinkFunc, config as blinkConfig} from '../function/blink'
 import { Func as blinkFunc2, config as blinkConfig2} from '../function/blink2'
@@ -88,7 +67,9 @@ export class Simulator extends React.Component {
     }, () => ({}))
   }
   updateLeds(leds) {
-    this.props.send(leds)
+    if (this.props.send) {
+      this.props.send(leds)
+    }
     if (this.refs.simulator) {
       this.refs.simulator.setTiles(leds)
     }
@@ -102,21 +83,21 @@ export class Simulator extends React.Component {
       menuItems.push( <Menu.Item key={key}>{Programs[key].name}</Menu.Item>)
     }
     return (<div>
-      <SimulatorContainer>
+      <div>
         <h2>Simulator</h2>
         <h3>Current Program: { Programs[this.state.selected[0]].name } </h3>
         <LedSimulator ref='simulator' />
-      </SimulatorContainer>
+      </div>
     </div>)
   }
 }
 
 export default connect(state => state.program || {}, {
-  setCurrentProgram: (name) => (dispatch) => dispatch({
+  setCurrentProgram: (name) => ({
     type: 'set current program',
     name
   }),
-  send: (leds) => (dispatch) => dispatch({
+  send: (leds) => ({
     type: 'send',
     payload: leds
   })

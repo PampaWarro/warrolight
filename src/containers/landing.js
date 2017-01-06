@@ -37,18 +37,25 @@ const Programs = {
   }
 }
 
+class Item extends React.Component {
+  render() {
+    return <li><a href="#" onClick={this.props.onClick}>{this.props.children}</a></li>
+  }
+}
+
 export class Simulator extends React.Component {
   constructor() {
     super(...arguments)
     this.state = { selected: ['rainbow'] }
     this.func = new (Programs['rainbow'].func)()
   }
-  handleClick(ev) {
-    this.props.setCurrentProgram(ev.key)
-    this.setState({ selected: [ev.key] })
+  handleClick(key, ev) {
+    ev.preventDefault()
+    this.props.setCurrentProgram(key)
+    this.setState({ selected: [key] })
 
     this.func.stop()
-    this.func = new (Programs[ev.key].func)()
+    this.func = new (Programs[key].func)()
     const self = this
     this.func.start({
       frequencyInHertz: 0.02,
@@ -80,12 +87,13 @@ export class Simulator extends React.Component {
   render() {
     var menuItems = [];
     for (var key in Programs){
-      menuItems.push( <Menu.Item key={key}>{Programs[key].name}</Menu.Item>)
+      menuItems.push( <Item key={key} onClick={this.handleClick.bind(this, key)}>{Programs[key].name}</Item>)
     }
     return (<div>
       <div>
         <h2>Simulator</h2>
         <h3>Current Program: { Programs[this.state.selected[0]].name } </h3>
+        <ul>{ menuItems }</ul>
         <LedSimulator ref='simulator' />
       </div>
     </div>)

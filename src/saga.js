@@ -1,7 +1,6 @@
-import { fork, call, put, take } from 'redux-saga/effects'
-import { takeEvery } from 'redux-saga'
-
-import { io } from './events'
+import {call, put} from "redux-saga/effects";
+import {takeEvery} from "redux-saga";
+import {io} from "./events";
 
 function apiFetch(url) {
   return fetch('/api/' + url)

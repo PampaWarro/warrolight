@@ -18,8 +18,9 @@ export class Root extends React.Component {
   }
 
   render() {
-    return (<MainWrapper>
-      { this.props.children }
-    </MainWrapper>)
+    return <h1>Hasdas</h1>
+    // return (<MainWrapper>
+    //   { this.props.children }
+    // </MainWrapper>)
   }
 }

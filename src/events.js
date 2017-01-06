@@ -4,13 +4,6 @@ import { update } from './common'
 export const Connected = 'Socket connected'
 export const Disconnected = 'Socket disconnected'
 
-function insertToSet(set, element) {
-  if (set.indexOf(element) === -1) {
-    return Array.prototype.concat.call([], set, [element])
-  }
-  return set
-}
-
 export const io = SocketIO()
 
 export function connectionReducer(store, action) {

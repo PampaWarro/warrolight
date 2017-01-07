@@ -35,7 +35,7 @@ export class Simulator extends React.Component {
     this.func = new (this.state.Programs[key].func)()
     const self = this
     this.func.start({
-      frequencyInHertz: 0.04,
+      frequencyInHertz: 0.06,
       numberOfLeds: 150
     }, function(leds) {
       self.updateLeds(leds)
@@ -45,7 +45,7 @@ export class Simulator extends React.Component {
     const self = this
     this.func.start({
       numberOfLeds: 150,
-      frequencyInHertz: 0.04
+      frequencyInHertz: 0.06
     }, function(leds) {
       self.updateLeds(leds)
     }, () => ({}))

@@ -47,12 +47,31 @@ export class LedSimulator extends React.Component {
     const wh = 37;
     this.particles = [];
 
+    var scale = 8;
     for (let i = 0; i < particle_count; i++) {
       const p = new Led();
-      p.location = {
-        y: ((i % (wh * 2) >= wh ? wh * scaleY - i % wh * scaleY : i % wh * scaleY)) + 50,
-        x: 50+i*scaleX
-      };
+
+      if (i < 60) {
+        p.location = {
+          y: 60 * scale - i * scale + 100,
+          x: 30 * scale + 100
+        };
+      } else if (i < 90) {
+        p.location = {
+          y: 100,
+          x: 650 -  i * scale + 20 * scale
+        };
+      } else {
+        p.location = {
+          y: (i-30) * scale - 60 * scale + 100,
+          x: 100
+        };
+      }
+
+      // p.location = {
+      //     y: ((i % (wh * 2) >= wh ? wh * scaleY - i % wh * scaleY : i % wh * scaleY)) + 50,
+      //     x: 50+i*scaleX
+      // };
       this.particles.push(p);
     }
   }

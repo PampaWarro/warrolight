@@ -16,7 +16,7 @@ export class Func {
         let time = 0
 
         this.interval = setInterval(() => {
-            time += 1;
+            time += 5;
             const newColors = new Array(config.numberOfLeds)
 
             for (let i = 0; i < config.numberOfLeds; i++) {

@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
 server.listen(3000)
 
 
-const port = new SerialPort('COM3', {
+const port = new SerialPort('COM15', {
   baudRate: 1152000,
   parser: SerialPort.parsers.readline("\n")
 });

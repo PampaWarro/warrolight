@@ -11,7 +11,7 @@ export class Func {
             }
             on = !on
             draw(colors)
-        }, 200)
+        }, 1 / config.frequencyInHertz * 1000)
 
         done()
     }

@@ -19,7 +19,7 @@ const HALF_HEIGHT = 50
 const HALF_WIDTH = 72
 
 /**
- * Amount of leds on each
+ * Amount of leds on each part
  */
 const LEDS_LONG = 50
 const HALF_LEDS = 25

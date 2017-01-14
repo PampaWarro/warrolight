@@ -8,8 +8,9 @@ import { } from '../function/blink2'
 import { } from '../function/rainbow'
 import { } from '../function/turned-off'
 import { } from '../function/histogram'
+import { } from '../function/vertical'
 
-const ProgramNames = ['blink', 'blink2', 'rainbow', 'turned-off', 'histogram']
+const ProgramNames = ['blink', 'blink2', 'rainbow', 'turned-off', 'histogram', 'vertical']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -23,20 +24,36 @@ export class Simulator extends React.Component {
   constructor() {
     super(...arguments)
     const Programs = this.Programs = this.getPrograms();
-    const initial = 'histogram'
+    const initial = 'vertical'
     this.state = {
       selected: [initial],
+      overrideTriangle: true,
       Programs,
       func: new (Programs[initial].func)()
     }
 
     this.leds = []
+
+    const geometry = new Geometry(warroStripes)
     this.config = {
       frequencyInHertz: 60,
-      numberOfLeds: new Geometry(warroStripes, 0, 0, 0, 0).leds
+      numberOfLeds: geometry.leds
     }
 
-    this.getLeds = (index) => this.leds[index]
+    const compose = (index) => {
+      const x = geometry.x[index]
+      const y = geometry.y[index]
+      const triangle = y < geometry.height / 2
+        && x >= geometry.width / 3
+        && x <= geometry.width * 2 / 3
+      return triangle ? '#ff0000' : this.leds[index]
+    }
+
+    this.getLeds = (index) => {
+      return this.state.overrideTriangle
+        ? compose(index)
+        : this.leds[index]
+    }
   }
 
   startCurrent() {
@@ -77,10 +94,7 @@ export class Simulator extends React.Component {
   }
 
   getConfig() {
-    return {
-      frequencyInHertz: 0.06,
-      numberOfLeds: 451
-    }
+    return this.config
   }
 
   setCurrentProgram(name) {
@@ -108,7 +122,7 @@ export class Simulator extends React.Component {
   }
 
   updateLeds(leds) {
-    // this.props.send(leds)
+    this.props.send(leds)
     this.leds = leds
   }
 

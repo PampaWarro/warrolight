@@ -121,7 +121,7 @@ export class Func {
         this.lastVolume.push(newVal);
       }
       draw(this.lastVolume)
-    }, 5)
+    }, 1 / config.frequencyInHertz * 1000)
     done()
   }
 

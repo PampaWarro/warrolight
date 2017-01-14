@@ -30,7 +30,7 @@ export class Func {
 
             }
             draw(newColors)
-        }, 1 / config.frequencyInHertz)
+        }, 1 / config.frequencyInHertz * 1000)
 
         done()
     }

@@ -6,11 +6,12 @@ import { default as Geometry } from '../geometry/geometry'
 import { } from '../function/blink'
 import { } from '../function/blink2'
 import { } from '../function/rainbow'
+import { } from '../function/pw'
 import { } from '../function/turned-off'
 import { } from '../function/histogram'
 import { } from '../function/vertical'
 
-const ProgramNames = ['blink', 'blink2', 'rainbow', 'turned-off', 'histogram', 'vertical']
+const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'turned-off', 'histogram', 'vertical']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -24,10 +25,10 @@ export class Simulator extends React.Component {
   constructor() {
     super(...arguments)
     const Programs = this.Programs = this.getPrograms();
-    const initial = 'vertical'
+    const initial = 'pw'
     this.state = {
       selected: [initial],
-      overrideTriangle: true,
+      overrideTriangle: false,
       Programs,
       func: new (Programs[initial].func)()
     }

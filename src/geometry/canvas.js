@@ -50,7 +50,7 @@ export default class Canvas extends React.Component {
 
   getNextFrame() {
     const newCall = new Date().getTime()
-    console.log('FPS:', 1000/(newCall - this.lastCall))
+    // console.log('FPS:', 1000/(newCall - this.lastCall))
     const request = window.requestAnimationFrame(
       this.getNextFrame.bind(this), ReactDOM.findDOMNode(this.refs.canvas)
     )
@@ -72,6 +72,8 @@ export default class Canvas extends React.Component {
   }
 
   drawCanvas() {
+    const drawStartTime = performance.now();
+
     const leds = this.geometry.leds
     const ctx = this.refs.canvas.getContext('2d')
 
@@ -105,17 +107,25 @@ export default class Canvas extends React.Component {
 
       ctx.beginPath()
 
+      // ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+      lightRadius = lightRadius /6;
+
       let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
       gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
-      gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
-      gradient.addColorStop(0.125, `rgba(${r}, ${g}, ${b}, 0.5)`)
-      gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
-      gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
-      gradient.addColorStop(1,     `rgba(${r}, ${g}, ${b}, 0)`)
-
+      // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
+      gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
+      // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
+      // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
+      gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
       ctx.fillStyle = gradient
+
+
       ctx.arc(x, y, lightRadius, Math.PI * 2, false)
       ctx.fill()
     }
+    let drawMilliseconds = performance.now() - drawStartTime;
+    ctx.fillStyle = 'white'
+    ctx.font = "12px sans-serif";
+    ctx.fillText(`FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 20);
   }
 }

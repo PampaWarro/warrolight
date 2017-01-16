@@ -136,14 +136,26 @@ export class Simulator extends React.Component {
     for (let key in this.state.Programs){
       menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.Programs[key].name}</Item>)
     }
-    return (<div>
-      <div>
-        <h2>Pampa Warro</h2>
-        <h3>Current Program: { this.state.Programs[this.state.selected[0]].name } </h3>
-        <ul>{ menuItems }</ul>
-        <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
-      </div>
-    </div>)
+
+    let currentProgram = this.state.Programs[this.state.selected[0]];
+
+    let configOptions = [];
+    for (let paramName in currentProgram.config){
+      configOptions.push(<div key={paramName}>{paramName}: {this.config[paramName]}</div>);
+    }
+
+    {
+      return (<div>
+            <div>
+              <h2>Pampa Warro</h2>
+              <h3>Current Program: { currentProgram.name } </h3>
+              <ul>{ menuItems }</ul>
+              <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
+              <h3>Configuration</h3>
+              {configOptions}
+            </div>
+          </div>)
+    }
   }
 }
 

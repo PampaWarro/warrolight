@@ -1,4 +1,4 @@
-export class AbstractColorProgram {
+export class ColorUtils {
   static rgbToHex(r, g, b) {
     function componentToHex(c) {
       var hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
@@ -31,5 +31,26 @@ export class AbstractColorProgram {
       Math.round(g * 255),
       Math.round(b * 255)
     ];
+  }
+
+  static hexToRgb(hexColor) {
+    if (hexColor) {
+      // in three-character format, each value is multiplied by 0x11 to give an
+      // even scale from 0x00 to 0xff
+      let hex = hexColor.replace('#', '');
+      let r = parseInt(hex.substring(0, 2), 16);
+      let g = parseInt(hex.substring(2, 4), 16);
+      let b = parseInt(hex.substring(4, 6), 16);
+
+      return [r, g, b];
+    }
+  }
+
+  static dim(hexColor, number) {
+    var [r, g, b] = ColorUtils.hexToRgb(hexColor);
+    r = Math.floor(r * number);
+    g = Math.floor(g * number);
+    b = Math.floor(b * number);
+    return ColorUtils.rgbToHex(r, g, b);
   }
 }

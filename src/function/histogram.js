@@ -1,8 +1,7 @@
-import {AbstractColorProgram} from "./AbstractColorProgram";
+import {ColorUtils} from "../utils/ColorUtils";
 
-export class Func extends AbstractColorProgram {
+export class Func {
   constructor(config) {
-    super(config);
     this.ledCount = config.numberOfLeds;
     this.averageVolume = 0;
     this.lastVolume = new Array(this.ledCount+1).join('0').split('').map(() => "#000000");
@@ -78,7 +77,7 @@ export class Func extends AbstractColorProgram {
         vol = vol/3;
       }
       // console.log(vol);
-      let newVal = Func.rgbToHex(... Func.HSVtoRGB(vol*2+this.t/2000, 1, Math.pow(2, vol*50)/255));
+      let newVal = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB(vol*2+this.t/2000, 1, Math.pow(2, vol*50)/255));
 
       for(let i=0;i<speed;i++) {
         this.lastVolume.splice(Math.floor(this.ledCount/2-1), 2);

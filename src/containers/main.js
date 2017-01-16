@@ -9,9 +9,11 @@ import { } from '../function/rainbow'
 import { } from '../function/pw'
 import { } from '../function/turned-off'
 import { } from '../function/histogram'
+import { } from '../function/histogram2'
 import { } from '../function/vertical'
+import { } from '../function/all-white'
 
-const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'turned-off', 'histogram', 'vertical']
+const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'histogram', 'histogram2', 'vertical', 'all-white', 'turned-off']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -24,22 +26,24 @@ class Item extends React.Component {
 export class Simulator extends React.Component {
   constructor() {
     super(...arguments)
-    const Programs = this.Programs = this.getPrograms();
-    const initial = 'pw'
-    this.state = {
-      selected: [initial],
-      overrideTriangle: false,
-      Programs,
-      func: new (Programs[initial].func)()
-    }
-
-    this.leds = []
 
     const geometry = new Geometry(warroStripes)
     this.config = {
       frequencyInHertz: 60,
       numberOfLeds: geometry.leds
     }
+
+    const Programs = this.Programs = this.getPrograms();
+    const initial = 'pw'
+    this.state = {
+      selected: [initial],
+      overrideTriangle: false,
+      Programs,
+      func: new (Programs[initial].func)(this.config)
+    }
+
+    this.leds = []
+
 
     const compose = (index) => {
       const x = geometry.x[index]
@@ -89,7 +93,7 @@ export class Simulator extends React.Component {
     }
   }
 
-  handleClick(key, ev) {
+  handleProgramClick(key, ev) {
     ev.preventDefault()
     this.setCurrentProgram(key)
   }
@@ -101,7 +105,7 @@ export class Simulator extends React.Component {
   setCurrentProgram(name) {
     this.setState({
       selected: [name],
-      func: new (this.getProgram(name).func)()
+      func: new (this.getProgram(name).func)(this.config)
     })
   }
 
@@ -128,13 +132,13 @@ export class Simulator extends React.Component {
   }
 
   render() {
-    var menuItems = [];
-    for (var key in this.state.Programs){
-      menuItems.push( <Item key={key} onClick={this.handleClick.bind(this, key)}>{this.state.Programs[key].name}</Item>)
+    let menuItems = [];
+    for (let key in this.state.Programs){
+      menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.Programs[key].name}</Item>)
     }
     return (<div>
       <div>
-        <h2>Simulator</h2>
+        <h2>Pampa Warro</h2>
         <h3>Current Program: { this.state.Programs[this.state.selected[0]].name } </h3>
         <ul>{ menuItems }</ul>
         <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>

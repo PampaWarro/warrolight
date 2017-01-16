@@ -1,14 +1,15 @@
 import {AbstractColorProgram} from "./AbstractColorProgram";
 
 export class Func extends AbstractColorProgram {
-  constructor() {
-    super();
+  constructor(config) {
+    super(config);
     const self = this;
-    this.lastVolume = new Array(150+1).join('0').split('').map(() => "#000000");
-    this.lastVolumeAmp = new Array(150+1).join('0').split('').map(() => 0);
-    this.lastVolumeInc = new Array(150+1).join('0').split('').map(() => 0);
-    this.lastVolumeSum = new Array(150+1).join('0').split('').map(() => 0);
-    this.lastVolumeCount = new Array(150+1).join('0').split('').map(() => 0);
+    this.ledCount = config.numberOfLeds;
+    this.lastVolume = new Array(this.ledCount+1).join('0').split('').map(() => "#000000");
+    this.lastVolumeAmp = new Array(this.ledCount+1).join('0').split('').map(() => 0);
+    this.lastVolumeInc = new Array(this.ledCount+1).join('0').split('').map(() => 0);
+    this.lastVolumeSum = new Array(this.ledCount+1).join('0').split('').map(() => 0);
+    this.lastVolumeCount = new Array(this.ledCount+1).join('0').split('').map(() => 0);
 
     if (navigator.getUserMedia) {
       navigator.getUserMedia({video: false, audio: true}, onSuccess, onError);
@@ -18,10 +19,10 @@ export class Func extends AbstractColorProgram {
 
     function frequenciesToColors(array) {
       // get all the frequency amplitudes
-      for (let i = 0; i < 150; i++) {
+      for (let i = 0; i < self.ledCount; i++) {
         let pos = i;
 
-        let val = (array[i] / 256);
+        let val = (array[i%array.length] / 256);
 
         let lastVal = self.lastVolumeAmp[pos];
         self.lastVolumeAmp[pos] = val;
@@ -39,9 +40,9 @@ export class Func extends AbstractColorProgram {
 
       const analyser = context.createAnalyser();
       analyser.smoothingTimeConstant = 0.0;
-      analyser.fftSize = 512;
+      analyser.fftSize = 2048;
 
-      const javascriptNode = context.createScriptProcessor(256, 1, 1);
+      const javascriptNode = context.createScriptProcessor(analyser.fftSize/2, 1, 1);
 
       let lastAudioInfoTime = new Date();
       javascriptNode.onaudioprocess = function (e) {
@@ -69,14 +70,14 @@ export class Func extends AbstractColorProgram {
 
   start(config, draw, done) {
     this.interval = setInterval(() => {
-      for(let i=0;i<150;i++) {
+      for(let i=0;i<this.ledCount;i++) {
         let inc = this.lastVolumeInc[i];
         let amp = this.lastVolumeSum[i] / this.lastVolumeCount[i];
         if(inc < 0.3){
           inc = 0;
         }
 
-        this.lastVolume[i] = Func.rgbToHex(... Func.HSVtoRGB((Math.min(1, amp)+0.5)%1, 1, Math.min(1, Math.pow(amp/2+inc/2, 2))));
+        this.lastVolume[i] = Func.rgbToHex(... Func.HSVtoRGB((Math.min(1, amp)+0.5)%1, 1, Math.min(1, Math.pow(amp/2+inc/2, 1))));
         this.lastVolumeInc[i] = 0;
         this.lastVolumeCount[i] = 0;
         this.lastVolumeSum[i] = 0;

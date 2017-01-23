@@ -6,6 +6,7 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io').listen(server);
+const now = require('performance-now');
 
 const path = require('path');
 const webpack = require('webpack');
@@ -133,10 +134,10 @@ port.on('error', function(err) {
   console.log('Error: ', err.message);
 });
 
-let lastReceived = new Date().getTime();
+let lastReceived = now();
 port.on('data', function(data) {
-  console.log('Received. FPS: ' + Math.round((1000/(new Date().getTime() - lastReceived))));
-  lastReceived = new Date().getTime();
+  console.log('Received. FPS: ' + (1000/(now() - lastReceived)).toFixed(1));
+  lastReceived = now();
   sendNextFrame();
 });
 

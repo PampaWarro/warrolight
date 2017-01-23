@@ -1,14 +1,13 @@
 import {ColorUtils} from "../utils/ColorUtils";
 
 export class Func {
-    constructor() {
+    constructor(config) {
         this.interval = 0
         console.log("constructor rainbow");
     }
 
     start(config, draw, done) {
         let colors = new Array(config.numberOfLeds)
-        let sameColorLed = 13;
         const colorSet = [
             '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC', '#ffffff'
         ]
@@ -18,21 +17,21 @@ export class Func {
         let time = 0
 
         this.interval = setInterval(() => {
-            time += 1;
+            time += config.speed;
             const newColors = new Array(config.numberOfLeds)
 
             for (let i = 0; i < config.numberOfLeds; i++) {
-                let colIndex = Math.floor(((time + i) / sameColorLed)) % colorSet.length;
+                let colIndex = Math.floor(((time + i) / config.sameColorLeds)) % colorSet.length;
 
                 let col = colorSet[colIndex];
                 if (col == "#5500CC")
                     newColors[i] = col;
                 else
-                    newColors[i] = ColorUtils.dim(col, 0.3);
+                    newColors[i] = ColorUtils.dim(col, config.intensityDim);
 
             }
             draw(newColors)
-        }, 1 / config.frequencyInHertz * 1000)
+        }, 1000 / config.frequencyInHertz)
 
         done()
     }
@@ -43,6 +42,8 @@ export class Func {
 }
 
 export const config = {
-    frequencyInHertz: Number,
-    speed: Number
+    speed: {type: Number, min: 1, max: 20, default: 1},
+    sameColorLeds: {type: Number, min: 1, max: 500, default: 13},
+    intensityDim: {type: Number, min: 0, max: 1, step: 0.01, default: 0.3},
+    frequencyInHertz: {type: Number, min: 1, max: 200, default: 70}
 }

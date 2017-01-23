@@ -99,6 +99,15 @@ export class Simulator extends React.Component {
   }
 
   getConfig() {
+    let currentProgram = this.state.Programs[this.state.selected[0]];
+    if(currentProgram) {
+      let configDef = currentProgram.config;
+      for (let paramName in configDef) {
+        if (this.config[paramName] === undefined && configDef[paramName].default) {
+          this.config[paramName] = configDef[paramName].default;
+        }
+      }
+    }
     return this.config
   }
 
@@ -141,7 +150,7 @@ export class Simulator extends React.Component {
 
     let configOptions = [];
     for (let paramName in currentProgram.config){
-      configOptions.push(<div key={paramName}>{paramName}: {this.config[paramName]}</div>);
+      configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
     }
 
     {
@@ -156,6 +165,43 @@ export class Simulator extends React.Component {
             </div>
           </div>)
     }
+  }
+}
+
+class NumberParam extends React.Component {
+  constructor(props){
+    super(props);
+    this.configRef = props.configRef;
+    this.field = props.field;
+    this.min = (props.configDefinition || {}).min || 0;
+    this.max = (props.configDefinition || {}).max || 500;
+    this.step = (props.configDefinition || {}).step || 1;
+    this.state = {value: this.getVal()}
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setVal(event.target.value);
+  }
+
+  getVal(){
+    return  this.configRef[this.field];
+  }
+
+  setVal(val){
+    let value = parseFloat(val);
+    this.setState({value: value});
+    this.configRef[this.field] = value;
+  }
+
+  render() {
+    return (
+    <div>
+      <input type="range" min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+      <span>{this.field}:&nbsp;</span>
+      <strong>{this.state.value}&nbsp;</strong>
+    </div>
+    );
   }
 }
 

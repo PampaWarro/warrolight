@@ -16,22 +16,26 @@ export class Func {
         }
         let time = 0
 
-        this.interval = setInterval(() => {
-            time += config.speed;
-            const newColors = new Array(config.numberOfLeds)
+        let compute = () => {
+          this.interval = setTimeout(compute, 1000 / config.frequencyInHertz)
 
-            for (let i = 0; i < config.numberOfLeds; i++) {
-                let colIndex = Math.floor(((time + i) / config.sameColorLeds)) % colorSet.length;
+          time += config.speed;
+          const newColors = new Array(config.numberOfLeds)
 
-                let col = colorSet[colIndex];
-                if (col == "#5500CC")
-                    newColors[i] = col;
-                else
-                    newColors[i] = ColorUtils.dim(col, config.intensityDim);
+          for (let i = 0; i < config.numberOfLeds; i++) {
+            let colIndex = Math.floor(((time + i) / config.sameColorLeds)) % colorSet.length;
 
-            }
-            draw(newColors)
-        }, 1000 / config.frequencyInHertz)
+            let col = colorSet[colIndex];
+            if (col == "#5500CC")
+              newColors[i] = col;
+            else
+              newColors[i] = ColorUtils.dim(col, config.intensityDim);
+
+          }
+          draw(newColors)
+        };
+
+        this.interval = setTimeout(compute, 1000 / config.frequencyInHertz)
 
         done()
     }
@@ -43,7 +47,7 @@ export class Func {
 
 export const config = {
     speed: {type: Number, min: 1, max: 20, default: 1},
-    sameColorLeds: {type: Number, min: 1, max: 500, default: 13},
+    sameColorLeds: {type: Number, min: 1, max: 100, default: 13},
     intensityDim: {type: Number, min: 0, max: 1, step: 0.01, default: 0.3},
-    frequencyInHertz: {type: Number, min: 1, max: 200, default: 70}
+    frequencyInHertz: {type: Number, min: 1, max: 300, default: 70}
 }

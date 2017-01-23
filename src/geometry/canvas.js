@@ -30,6 +30,7 @@ export default class Canvas extends React.Component {
     )
     this.state = {}
 
+    this.lastFrameTime = performance.now();
     this.lastCall = new Date().getTime()
   }
 
@@ -124,8 +125,13 @@ export default class Canvas extends React.Component {
       ctx.fill()
     }
     let drawMilliseconds = performance.now() - drawStartTime;
+    let lastFrameMilliseconds = performance.now() - this.lastFrameTime;
+    this.lastFrameTime = performance.now();
+
     ctx.fillStyle = 'white'
     ctx.font = "12px sans-serif";
-    ctx.fillText(`FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 20);
+    ctx.fillText(`Max FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 20);
+    ctx.fillText(`Real FPS: ${Math.floor(1000/lastFrameMilliseconds)}`, 10, 40);
+
   }
 }

@@ -13,7 +13,7 @@ import { } from '../function/histogram2'
 import { } from '../function/vertical'
 import { } from '../function/all-white'
 
-const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'histogram', 'histogram2', 'vertical', 'all-white', 'turned-off']
+const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'histogram', 'histogram2', 'stars', 'vertical', 'all-white', 'turned-off']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -155,15 +155,19 @@ export class Simulator extends React.Component {
 
     {
       return (<div>
-            <div>
-              <h2>Pampa Warro</h2>
-              <h3>Current Program: { currentProgram.name } </h3>
-              <ul>{ menuItems }</ul>
-              <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
-              <h3>Configuration</h3>
-              {configOptions}
-            </div>
-          </div>)
+        <div>
+          <div className="controls">
+            <h2>Pampa Warro</h2>
+            <ul>{ menuItems }</ul>
+            <h3>Configuration</h3>
+            {configOptions}
+          </div>
+          <div className="simulator">
+            <h3>Current Program: { currentProgram.name } </h3>
+            <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
+          </div>
+        </div>
+      </div>)
     }
   }
 }
@@ -174,7 +178,7 @@ class NumberParam extends React.Component {
     this.configRef = props.configRef;
     this.field = props.field;
     this.min = (props.configDefinition || {}).min || 0;
-    this.max = (props.configDefinition || {}).max || 500;
+    this.max = (props.configDefinition || {}).max || 100;
     this.step = (props.configDefinition || {}).step || 1;
     this.state = {value: this.getVal()}
     this.handleChange = this.handleChange.bind(this);
@@ -196,10 +200,12 @@ class NumberParam extends React.Component {
 
   render() {
     return (
-    <div>
-      <input type="range" min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+    <div className="config-item">
       <span>{this.field}:&nbsp;</span>
-      <strong>{this.state.value}&nbsp;</strong>
+      <div>
+        <strong>{this.state.value}&nbsp;</strong>
+        <input type="range" min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+      </div>
     </div>
     );
   }

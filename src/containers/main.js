@@ -33,13 +33,13 @@ export class Simulator extends React.Component {
       numberOfLeds: geometry.leds
     }
 
-    const Programs = this.Programs = this.getPrograms();
-    const initial = 'pw'
+    const programs = this.programs = this.getPrograms();
+    const initial = 'rainbow';
     this.state = {
-      selected: [initial],
+      selected: initial,
       overrideTriangle: false,
-      Programs,
-      func: new (Programs[initial].func)(this.config)
+      programs,
+      func: new (programs[initial].func)(this.getConfig(programs[initial].config))
     }
 
     this.leds = []
@@ -63,7 +63,7 @@ export class Simulator extends React.Component {
 
   startCurrent() {
     this.state.func.start(
-      this.getConfig(),
+      this.getConfig(this.programs[this.state.selected].config),
       (leds) => this.updateLeds(leds),
       () => ({})
     )
@@ -98,23 +98,20 @@ export class Simulator extends React.Component {
     this.setCurrentProgram(key)
   }
 
-  getConfig() {
-    let currentProgram = this.state.Programs[this.state.selected[0]];
-    if(currentProgram) {
-      let configDef = currentProgram.config;
-      for (let paramName in configDef) {
-        if (this.config[paramName] === undefined && configDef[paramName].default) {
-          this.config[paramName] = configDef[paramName].default;
-        }
+  getConfig(configDef = {}) {
+    for (let paramName in configDef) {
+      if (this.config[paramName] === undefined && configDef[paramName].default) {
+        this.config[paramName] = configDef[paramName].default;
       }
     }
     return this.config
   }
 
   setCurrentProgram(name) {
+    let selectedProgram = this.programs[name];
     this.setState({
-      selected: [name],
-      func: new (this.getProgram(name).func)(this.config)
+      selected: name,
+      func: new (selectedProgram.func)(this.getConfig(selectedProgram.config))
     })
   }
 
@@ -137,16 +134,17 @@ export class Simulator extends React.Component {
 
   updateLeds(leds) {
     this.props.send(leds)
-    this.leds = leds
+    this.leds = leds;
+    this.refs.simulator.getNextFrame();
   }
 
   render() {
     let menuItems = [];
-    for (let key in this.state.Programs){
-      menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.Programs[key].name}</Item>)
+    for (let key in this.state.programs){
+      menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
     }
 
-    let currentProgram = this.state.Programs[this.state.selected[0]];
+    let currentProgram = this.state.programs[this.state.selected];
 
     let configOptions = [];
     for (let paramName in currentProgram.config){
@@ -164,7 +162,7 @@ export class Simulator extends React.Component {
           </div>
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
-            <Lights width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
+            <Lights ref="simulator" width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
           </div>
         </div>
       </div>)
@@ -182,6 +180,7 @@ class NumberParam extends React.Component {
     this.step = (props.configDefinition || {}).step || 1;
     this.state = {value: this.getVal()}
     this.handleChange = this.handleChange.bind(this);
+    this.name = ""+Math.random();
   }
 
   handleChange(event) {
@@ -204,7 +203,7 @@ class NumberParam extends React.Component {
       <span>{this.field}:&nbsp;</span>
       <div>
         <strong>{this.state.value}&nbsp;</strong>
-        <input type="range" min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+        <input type="range" name={this.name} min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
       </div>
     </div>
     );

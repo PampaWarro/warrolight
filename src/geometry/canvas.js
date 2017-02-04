@@ -31,6 +31,7 @@ export default class Canvas extends React.Component {
     this.state = {}
 
     this.lastFrameTime = performance.now();
+
     this.lastCall = new Date().getTime()
   }
 
@@ -49,19 +50,24 @@ export default class Canvas extends React.Component {
     this.getNextFrame()
   }
 
+  componentWillUpdate(){
+    console.log("Will update viejo"+new Date());
+    // this.getNextFrame();
+  }
+
   getNextFrame() {
     const newCall = new Date().getTime()
     // console.log('FPS:', 1000/(newCall - this.lastCall))
-    const request = window.requestAnimationFrame(
-      this.getNextFrame.bind(this), ReactDOM.findDOMNode(this.refs.canvas)
-    )
+    // const request = window.requestAnimationFrame(
+    //   this.getNextFrame.bind(this), ReactDOM.findDOMNode(this.refs.canvas)
+    // )
     this.drawCanvas()
-    this.setState({ request })
+    // this.setState({ request })
     this.lastCall = newCall
   }
 
   componentWillUnmount() {
-    window.cancelAnimationFrame(this.state.request)
+    // window.cancelAnimationFrame(this.state.request)
   }
 
   getColor(index) {
@@ -108,9 +114,9 @@ export default class Canvas extends React.Component {
 
       ctx.beginPath()
 
-      // ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
       lightRadius = lightRadius /6;
-
+      /*
       let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
       gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
       // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
@@ -118,7 +124,8 @@ export default class Canvas extends React.Component {
       // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
       // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
       gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
-      ctx.fillStyle = gradient
+      */
+      // ctx.fillStyle = gradient
 
 
       ctx.arc(x, y, lightRadius, Math.PI * 2, false)

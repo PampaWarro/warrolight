@@ -71,12 +71,12 @@ export class Func {
     this.interval = setInterval(() => {
       for(let i=0;i<this.ledCount;i++) {
         let inc = this.lastVolumeInc[i];
-        let amp = this.lastVolumeSum[i] / this.lastVolumeCount[i];
+        let amp = this.lastVolumeSum[i] / this.lastVolumeCount[i]*config.intensityDim;
         if(inc < 0.3){
           inc = 0;
         }
 
-        this.lastVolume[i] = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB((Math.min(1, amp)+0.5)%1, 1, Math.min(1, Math.pow(amp/2+inc/2, 1))));
+        this.lastVolume[i] = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB((Math.min(1, amp)+config.colorOffset)%1, 1, Math.min(1, Math.pow(amp/2+inc/2, 1))));
         this.lastVolumeInc[i] = 0;
         this.lastVolumeCount[i] = 0;
         this.lastVolumeSum[i] = 0;
@@ -93,5 +93,7 @@ export class Func {
 }
 
 export const config = {
-  frequencyInHertz: Number
+  frequencyInHertz: {type: Number, min: 1, max: 300, default: 70},
+  colorOffset: {type: Number, min: 0, max: 1, step: 0.01, default: 0.3},
+  intensityDim: {type: Number, min: 0, max: 3, step: 0.01, default: 1}
 }

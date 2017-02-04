@@ -1,47 +1,33 @@
 import {ColorUtils} from "../utils/ColorUtils";
+import {TimeTickedFunction} from "./TimeTickedFunction";
 
-export class Func {
+export class Func extends TimeTickedFunction {
     constructor(config) {
-        this.interval = 0
-        console.log("constructor rainbow");
+      super(config);
+
+      this.colorSet = [
+        '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC', '#ffffff'
+      ];
+
+      this.time = 0;
     }
 
-    start(config, draw, done) {
-        let colors = new Array(config.numberOfLeds)
-        const colorSet = [
-            '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC', '#ffffff'
-        ]
-        for (let i = 0; i < config.numberOfLeds; i++) {
-            colors[i] = colorSet[2]
-        }
-        let time = 0
+    drawFrame(config, draw, done){
+      this.time += config.speed;
+      const newColors = new Array(config.numberOfLeds)
 
-        let compute = () => {
-          this.interval = setTimeout(compute, 1000 / config.frequencyInHertz)
+      for (let i = 0; i < config.numberOfLeds; i++) {
+        let colIndex = Math.floor(((this.time + i) / config.sameColorLeds)) % this.colorSet.length;
 
-          time += config.speed;
-          const newColors = new Array(config.numberOfLeds)
+        let col = this.colorSet[colIndex];
+        if (col == "#5500CC")
+          newColors[i] = col;
+        else
+          newColors[i] = ColorUtils.dim(col, config.intensityDim);
 
-          for (let i = 0; i < config.numberOfLeds; i++) {
-            let colIndex = Math.floor(((time + i) / config.sameColorLeds)) % colorSet.length;
-
-            let col = colorSet[colIndex];
-            if (col == "#5500CC")
-              newColors[i] = col;
-            else
-              newColors[i] = ColorUtils.dim(col, config.intensityDim);
-
-          }
-          draw(newColors)
-        };
-
-        this.interval = setTimeout(compute, 1000 / config.frequencyInHertz)
-
-        done()
-    }
-
-    stop() {
-        clearInterval(this.interval)
+      }
+      draw(newColors);
+      done()
     }
 }
 

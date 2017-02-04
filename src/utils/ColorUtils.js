@@ -27,9 +27,9 @@ export class ColorUtils {
       case 5: r = v, g = p, b = q; break;
     }
     return [
-      Math.round(r * 255),
-      Math.round(g * 255),
-      Math.round(b * 255)
+      Math.round(Math.min(255, r * 255)),
+      Math.round(Math.min(255, g * 255)),
+      Math.round(Math.min(255, b * 255))
     ];
   }
 

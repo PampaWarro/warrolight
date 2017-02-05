@@ -119,7 +119,7 @@ export class Simulator extends React.Component {
     const mod = require('../function/' + name);
     return {
       name: name,
-      config: mod.config,
+      config: mod.Func.configSchema ? mod.Func.configSchema() : mod.config,
       func: mod.Func
     }
   }

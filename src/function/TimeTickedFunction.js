@@ -6,7 +6,7 @@ export class TimeTickedFunction {
   }
 
   // Override in subclasses
-  drawFrame(config, draw, done){
+  drawFrame(draw, done){
     throw new Error("Child classes should override drawFrame");
   }
 
@@ -14,7 +14,7 @@ export class TimeTickedFunction {
     this.config = config;
     const frame =() => {
       this.interval = setTimeout(frame, (1000 / config.frequencyInHertz));
-      this.drawFrame(config, draw, done);
+      this.drawFrame(draw, done);
     }
 
     this.interval = setTimeout(frame, (1000 / config.frequencyInHertz));
@@ -25,8 +25,11 @@ export class TimeTickedFunction {
   stop() {
     clearInterval(this.interval)
   }
-}
 
-export const config = {
-  frequencyInHertz: Number
+  static configSchema(){
+    // Child classes should call super.configSchema and extend this object
+    return {
+      frequencyInHertz: {type: Number, min: 1, max: 300, default: 70}
+    }
+  }
 }

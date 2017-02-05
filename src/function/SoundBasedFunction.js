@@ -1,0 +1,96 @@
+import {ColorUtils} from "../utils/ColorUtils";
+import {TimeTickedFunction} from "./TimeTickedFunction";
+
+export class SoundBasedFunction extends TimeTickedFunction{
+  constructor(config) {
+    super(config);
+
+    this.averageVolume = 0;
+    let self = this;
+
+    if(window.singletonAudioStream){
+      createAnalyzer(window.singletonAudioStream)
+    } else {
+      function onSuccess(stream) {
+        window.singletonAudioStream = stream;
+        createAnalyzer(window.singletonAudioStream);
+      }
+
+      function onError(err) {
+        alert('Error'+err.toString());
+      }
+
+      if (navigator.getUserMedia) {
+        navigator.getUserMedia({video: false, audio: true}, onSuccess, onError);
+      } else if (navigator.webkitGetUserMedia) {
+        navigator.webkitGetUserMedia({video: false, audio: true}, onSuccess, onError);
+      }
+    }
+
+    this.maxVolume = 0;
+
+    function getAverageVolume(array, from=0, to=null) {
+      let values = 0;
+      to = to || array.length;
+      // get all the frequency amplitudes
+      for (var i = from; i < to; i++) {
+        values += array[i];
+      }
+      return values / (array.length * (to - from));
+    }
+
+    function createAnalyzer(stream) {
+      self.stream = stream;
+
+      if(!window.singletonAudioContext){
+        console.log("Creating singleton audio context");
+        window.singletonAudioContext = window.webkitAudioContext ? new webkitAudioContext() : new AudioContext();
+      }
+      self.audioContext = window.singletonAudioContext;
+      self.mediaStreamSource = self.audioContext.createMediaStreamSource(stream);
+
+      self.analyser = self.audioContext.createAnalyser();
+      self.analyser.smoothingTimeConstant = 0.0;
+      self.analyser.fftSize = 512;
+
+      self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
+
+      let lastTime = new Date();
+      //self.audioProcessorNode.onaudioprocess = function(e) {
+      self.processInterval = setTimeout(function computeSoundStats(){
+        //var sample = e.inputBuffer.getChannelData(0);
+
+        // get the average, bincount is fftsize / 2
+        var array =  new Uint8Array(self.analyser.frequencyBinCount);
+        self.analyser.getByteFrequencyData(array);
+
+        // calculate average
+        self.averageVolume = getAverageVolume(array);
+        self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
+
+        console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
+        self.processInterval = setTimeout(computeSoundStats, config.soundSamplingFreq);
+        lastTime = new Date();
+      }, config.soundSamplingFreq);
+
+        // stream -> mediaSource -> analyser -> javascriptNode -> destination
+        self.mediaStreamSource.connect(self.analyser);
+        self.analyser.connect(self.audioProcessorNode);
+        self.audioProcessorNode.connect(self.audioContext.destination);
+    }
+  }
+
+  stop() {
+    super.stop();
+    this.mediaStreamSource.disconnect(self.audioProcessorNode);
+    this.audioProcessorNode.disconnect(this.audioContext);
+    clearInterval(this.processInterval)
+  }
+
+  // Override and extend config Schema
+  static configSchema(){
+    let config = super.configSchema();
+    config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 20};
+    return config;
+  }
+}

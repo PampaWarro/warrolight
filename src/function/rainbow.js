@@ -12,28 +12,29 @@ export class Func extends TimeTickedFunction {
       this.time = 0;
     }
 
-    drawFrame(config, draw, done){
-      this.time += config.speed;
-      const newColors = new Array(config.numberOfLeds)
+    drawFrame(draw, done){
+      this.time += this.config.speed;
+      const newColors = new Array(this.config.numberOfLeds)
 
-      for (let i = 0; i < config.numberOfLeds; i++) {
-        let colIndex = Math.floor(((this.time + i) / config.sameColorLeds)) % this.colorSet.length;
+      for (let i = 0; i < this.config.numberOfLeds; i++) {
+        let colIndex = Math.floor(((this.time + i) / this.config.sameColorLeds)) % this.colorSet.length;
 
         let col = this.colorSet[colIndex];
         if (col == "#5500CC")
           newColors[i] = col;
         else
-          newColors[i] = ColorUtils.dim(col, config.intensityDim);
-
+          newColors[i] = ColorUtils.dim(col, this.config.intensityDim);
       }
       draw(newColors);
       done()
     }
-}
 
-export const config = {
-    speed: {type: Number, min: 1, max: 20, default: 1},
-    sameColorLeds: {type: Number, min: 1, max: 100, default: 13},
-    intensityDim: {type: Number, min: 0, max: 1, step: 0.01, default: 0.3},
-    frequencyInHertz: {type: Number, min: 1, max: 300, default: 70}
+  // Override and extend config Schema
+  static configSchema(){
+    let config = super.configSchema();
+    config.speed = {type: Number, min: 1, max: 20, default: 1};
+    config.sameColorLeds = {type: Number, min: 1, max: 100, default: 13};
+    config.intensityDim = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
+    return config;
+  }
 }

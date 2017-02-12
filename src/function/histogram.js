@@ -13,12 +13,6 @@ export class Func extends SoundBasedFunction{
 
   // Override parent method
   drawFrame(draw, done){
-    this.pushLastVolume();
-    draw(this.lastVolume);
-    done();
-  }
-
-  pushLastVolume(){
     this.time += this.config.speed;
 
     let vol = this.averageVolume*this.config.intensityDim;
@@ -34,6 +28,9 @@ export class Func extends SoundBasedFunction{
       this.lastVolume.unshift(newVal);
       this.lastVolume.push(newVal);
     }
+
+    draw(this.lastVolume);
+    done();
   }
 
   // Override and extend config Schema

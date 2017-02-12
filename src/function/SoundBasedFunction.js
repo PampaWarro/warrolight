@@ -50,8 +50,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
       self.mediaStreamSource = self.audioContext.createMediaStreamSource(stream);
 
       self.analyser = self.audioContext.createAnalyser();
-      self.analyser.smoothingTimeConstant = 0.0;
-      self.analyser.fftSize = 512;
+      self.analyser.smoothingTimeConstant = 0.5;
+      self.analyser.fftSize = 1024;
 
       self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
 
@@ -65,7 +65,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
         self.analyser.getByteFrequencyData(array);
 
         // calculate average
-        self.averageVolume = getAverageVolume(array);
+        self.averageVolume = getAverageVolume(array, config.minFreq, config.maxFreq);
+        // self.bassesAverageVolume = getAverageVolume(array, 32);
         self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
 
         console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
@@ -91,6 +92,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
   static configSchema(){
     let config = super.configSchema();
     config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 20};
+    config.maxFreq = {type: Number, min: 1, max: 512, step: 1, default: 512};
+    config.minFreq = {type: Number, min: 0, max: 512, step: 1, default: 0};
     return config;
   }
 }

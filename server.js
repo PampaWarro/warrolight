@@ -75,8 +75,9 @@ port.on('open', function() {
 const ENCODING_POS_RGB = 1;
 const ENCODING_POS_VGA = 2;
 const ENCODING_VGA = 3;
+const ENCODING_RGB = 4;
 
-let encoding = ENCODING_POS_RGB;
+let encoding = ENCODING_RGB;
 
 function rgbToVga(r, g, b) { return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)}
 
@@ -96,6 +97,8 @@ function writePixel(pos, r, g, b) {
     write([pos, rgbToVga(r, g, b)])
   } else if (encoding == ENCODING_VGA) {
     write([rgbToVga(r, g, b)])
+  } else if (encoding == ENCODING_RGB) {
+    write([r, g, b])
   }
 }
 

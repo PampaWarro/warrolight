@@ -114,17 +114,16 @@ export default class Canvas extends React.Component {
 
       ctx.beginPath()
 
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
       lightRadius = lightRadius /6;
-      /*
-      let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
-      gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
-      // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
-      gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
-      // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
-      // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
-      gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
-      */
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+
+      // let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
+      // gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
+      // // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
+      // gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
+      // // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
+      // // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
+      // gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
       // ctx.fillStyle = gradient
 
 

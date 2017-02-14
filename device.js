@@ -14,14 +14,13 @@ const {
   ENCODING_POS_VGA,
   arrayFromRGB,
   rgbToVga
-} = require('./colorDef')
+} = require('./colorEncoding')
 
 module.exports = class Device {
 
   constructor(numberOfLights, devicePort, verbosity) {
-    this.state          = _.range(0, numberOfLights)
-    this.prevState      = _.range(0, numberOfLights)
-
+    this.state = _.range(0, numberOfLights)
+    this.numberOfLights = numberOfLights
     this.verbosity = verbosity || DEBUG
     this.devicePort = devicePort
     this.encoding = ENCODING_RGB
@@ -42,32 +41,24 @@ module.exports = class Device {
   }
 
   setState(rgbArray) {
-    const newState = _.range(numberOfLights)
-    for (let i = 0; i < numberOfLights; i++) {
+    const newState = _.range(this.numberOfLights)
+    for (let i = 0; i < this.numberOfLights; i++) {
       newState[i] = arrayFromRGB(rgbArray[i])
     }
     this.state = newState
   }
 
   sendNextFrame() {
-    let totalLedsChanged = 0;
-    for (let i = 0; i < this.numberOfLights; i++) {
-      if (notEqual(this.state[i], this.prevState[i])) {
-        totalLedsChanged++
-      }
-    }
-    // initEncoding(totalLedsChanged);
     this.initEncoding()
 
     let dim = 1
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < this.numberOfLights; i++) {
       this.writePixel(i,
         this.state[i][0]/dim,
         this.state[i][1]/dim,
         this.state[i][2]/dim
       )
     }
-    this.prevState = this.state
     this.flush()
   }
 
@@ -120,13 +111,12 @@ module.exports = class Device {
 
     this.lastReceived = now();
 
-    this.port.on('open', function() {
+    this.port.on('open', () => {
       this.logInfo('Port open. Data rate: ' + this.port.options.baudRate);
       setTimeout(this.sendInitialKick.bind(this), 2000)
     })
 
     this.port.on('error', this.handleError.bind(this))
-    this.port.on('data', this.handleData.bind(this))
     this.port.on('data', this.handleData.bind(this))
     this.port.on('drain', this.handleData.bind(this))
     this.port.on('close', this.handleClose.bind(this))

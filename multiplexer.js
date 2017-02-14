@@ -4,7 +4,7 @@ module.exports = class Multiplexer {
 
   constructor(numberOfLights, devices, mapping) {
     this.numberOfLights = numberOfLights
-    this.devices = []
+    this.devices = devices
     this.targetDevice = []
     this.targetPosition = []
     for (let i = 0; i < numberOfLights; i++) {

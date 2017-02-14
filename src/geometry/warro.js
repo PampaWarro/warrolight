@@ -21,8 +21,8 @@ const HALF_WIDTH = 72
 /**
  * Amount of leds on each part
  */
-const LEDS_LONG = 50
-const HALF_LEDS = 25
+const LEDS_LONG = 120
+const HALF_LEDS = LEDS_LONG/2;
 const LAST_LED = 1
 
 export default [
@@ -32,6 +32,7 @@ export default [
   new Stripe(PORTION   , HEIGHT - HEIGHT     , 2*PORTION , HEIGHT - HEIGHT     , HALF_LEDS),
   new Stripe(2*PORTION , HEIGHT - HEIGHT     , HALF_WIDTH, HEIGHT - HALF_HEIGHT, HALF_LEDS),
   new Stripe(HALF_WIDTH, HEIGHT - HALF_HEIGHT, 2*PORTION , HEIGHT - 0          , HALF_LEDS),
+  new Stripe(PORTION, HEIGHT, 2*PORTION , HEIGHT, HALF_LEDS),
   new Stripe(2*PORTION , HEIGHT - 0          , WIDTH     , HEIGHT - HEIGHT     , LEDS_LONG),
-  new Stripe(WIDTH     , HEIGHT - HEIGHT     , WIDTH     , HEIGHT - HEIGHT     , LAST_LED),
+  // new Stripe(WIDTH     , HEIGHT - HEIGHT     , WIDTH     , HEIGHT - HEIGHT     , LAST_LED),
 ]

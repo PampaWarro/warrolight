@@ -1,4 +1,3 @@
-const SerialPort = require('serialport');
 const _ = require('lodash');
 const express = require('express');
 
@@ -32,122 +31,19 @@ app.get('*', function (req, res) {
   });
 })
 
-const arrayFromRGB = rgb => {
-  const red = parseInt(rgb.substr(1, 2), 16)
-  const blue = parseInt(rgb.substr(3, 2), 16)
-  const green = parseInt(rgb.substr(5, 2), 16)
-  return [red, blue, green]
-}
+const device1 = new Device(150, 'COM15')
+const device2 = new Device(150, 'COM15')
 
-let state = _.range(0, 150);
-let prevState = state;
+const multiplexer = new Multiplexer(300, [device1, device2], (index) => {
+  return [ index < 150 ? 0 : 1, index < 150 ? index : index - 15 ]
+})
 
 io.on('connection', (socket) => {
   socket.on('message', (data) => {
     if (data.action === 'data') {
-      const newState = _.range(150)
-      for (let i = 0; i < data.payload.length; i++) {
-        newState[i] = arrayFromRGB(data.payload[i])
-      }
-      state = newState
+      multiplexer.setState(data.payload)
     }
   })
 });
 
 server.listen(3000)
-
-
-const port = new SerialPort('COM15', {
-  baudRate: 1152000,
-  parser: SerialPort.parsers.readline("\n")
-});
-
-port.on('open', function() {
-  console.log('port open. Data rate: ' + port.options.baudRate);
-
-  setTimeout(function(){
-    //port.write(Buffer.from([1,5,255,10,10]), ()=>console.log("write"));
-    port.write(Buffer.from([1,2,255,0,255]), ()=>console.log("Kick of data"));
-  }, 2000);
-});
-
-
-const ENCODING_POS_RGB = 1;
-const ENCODING_POS_VGA = 2;
-const ENCODING_VGA = 3;
-const ENCODING_RGB = 4;
-
-let encoding = ENCODING_RGB;
-
-function rgbToVga(r, g, b) { return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)}
-
-let dataBuffer = [];
-function write(data){
-  dataBuffer = dataBuffer.concat(data);
-}
-function flush(){
-  port.write(Buffer.from(dataBuffer));
-  dataBuffer = [];
-}
-
-function writePixel(pos, r, g, b) {
-  if (encoding === ENCODING_POS_RGB) {
-    write([pos, r, g, b])
-  } else if (encoding === ENCODING_POS_VGA) {
-    write([pos, rgbToVga(r, g, b)])
-  } else if (encoding == ENCODING_VGA) {
-    write([rgbToVga(r, g, b)])
-  } else if (encoding == ENCODING_RGB) {
-    write([r, g, b])
-  }
-}
-
-function initEncoding(total) {
-  write([encoding]);
-  if (encoding == ENCODING_POS_RGB || encoding == ENCODING_POS_VGA) {
-    write([total]);
-  }
-}
-
-const notEqual = (a, b) => {
-  return a[0] !== b[0] || a[1] !== b[1] || a[2] !== b[2]
-}
-
-function sendNextFrame() {
-  let totalLedsChanged = 0;
-  for (let i = 0; i < 150; i++) {
-    if (notEqual(state[i], prevState[i])) {
-      totalLedsChanged++
-    }
-  }
-  // initEncoding(totalLedsChanged);
-  initEncoding(150);
-  let dim = 1
-  for (let i = 0; i < 150; i++) {
-    // if (notEqual(state[i], prevState[i])) {
-      writePixel(i, state[i][0]/dim, state[i][1]/dim, state[i][2]/dim);
-    // }
-  }
-  prevState = state
-  flush();
-}
-
-// open errors will be emitted as an error event
-port.on('error', function(err) {
-  console.log('Error: ', err.message);
-});
-
-let lastReceived = now();
-port.on('data', function(data) {
-  console.log('Received. FPS: ' + (1000/(now() - lastReceived)).toFixed(1));
-  lastReceived = now();
-  sendNextFrame();
-});
-
-port.on('drain', function(data) {
-  console.log('Drain called');
-});
-
-port.on('close', function(data) {
-  console.log('port closed.');
-});

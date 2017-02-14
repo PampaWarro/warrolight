@@ -154,15 +154,21 @@ export class Simulator extends React.Component {
     {
       return (<div>
         <div>
-          <div className="controls">
-            <h2>Pampa Warro</h2>
-            <ul>{ menuItems }</ul>
-            <h3>Configuration</h3>
-            {configOptions}
-          </div>
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
             <Lights ref="simulator" width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
+          </div>
+          <div className="controls">
+            <div>
+              <h2>Pampa Warro</h2>
+            </div>
+            <div>
+              <ul className="menuItems">{ menuItems }</ul>
+            </div>
+            <div className="configuration">
+              <h3>Configuration</h3>
+              {configOptions}
+            </div>
           </div>
         </div>
       </div>)

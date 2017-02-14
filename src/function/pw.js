@@ -8,7 +8,7 @@ export class Func {
     }
     start(config, draw, done) {
         let Pon = true
-        this.interval = setInterval(() => {
+        this.fn = () => {
             const colors = new Array(config.numberOfLeds)
             for (let i = 0; i < config.numberOfLeds; i++) {
                 const x = this.geometry.x[i]
@@ -32,7 +32,9 @@ export class Func {
             }
             Pon = !Pon
             draw(colors)
-        }, 1000)
+        }
+        this.interval = setInterval(this.fn, 1000 / config.frequencyInHertz)
+        fn()
 
         done()
     }

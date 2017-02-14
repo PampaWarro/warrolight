@@ -153,7 +153,7 @@ export class Simulator extends React.Component {
 
     {
       return (<div>
-        <div>
+        <div className="contain">
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
             <Lights ref="simulator" width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>

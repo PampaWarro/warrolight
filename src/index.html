@@ -13,28 +13,53 @@
     a{
 
     }
-    .simulator{
-        display: inline-block;
-        padding: 5px;
-    }
-    .controls{
-        background-color: #333;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    .controls > div
-    {
-        flex: 1 0 47%;
-        text-align: center;
-        padding: 10px;
+
+    @media (min-width: 768px) {
+      .contain {
+          display: flex;
+      }
+      .simulator{
+          order: 3;
+      }
+      .controls{
+          order: 2;
+          background-color: #333;
+          width: 300px;
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+      }
+      .controls > div
+      {
+          text-align: center;
+          padding: 10px;
+      }
     }
 
-    .controls > div:first-child
-    {
-        flex: 0 1 100%;
+    @media (max-width: 768px) {
+      .simulator{
+          display: inline-block;
+          padding: 5px;
+      }
+      .controls{
+          background-color: #333;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+      }
+      .controls > div
+      {
+          flex: 1 0 47%;
+          text-align: center;
+          padding: 10px;
+      }
+      .controls > div:first-child
+      {
+          flex: 0 1 100%;
+      }
     }
+
     .menuItems {
         list-style: none;
         margin: 0;

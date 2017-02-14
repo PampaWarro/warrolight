@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const SerialPort = require('serialport')
 const now = require('performance-now')
 const { DEBUG, INFO, WARNING, ERROR } = require('./log')
@@ -15,7 +16,7 @@ const {
   rgbToVga
 } = require('./colorDef')
 
-export default class Device {
+module.exports = class Device {
 
   constructor(numberOfLights, devicePort, verbosity) {
     this.state          = _.range(0, numberOfLights)
@@ -33,6 +34,11 @@ export default class Device {
     this.setupCommunication()
 
     this.dataBuffer = []
+
+    this.getFPS = () => {
+      const FPS = (1000/(now() - this.lastReceived)).toFixed(1)
+      return this.devicePort + ' - received pingback. FPS: ' + FPS
+    }
   }
 
   setState(rgbArray) {
@@ -138,10 +144,6 @@ export default class Device {
     this.logInfo('Port drained.')
   }
 
-  getFPS = () => {
-    const FPS = (1000/(now() - this.lastReceived)).toFixed(1)
-    return this.devicePort + ' - received pingback. FPS: ' + FPS
-  }
 
   handleData(data) {
     this.logDebug(this.getFPS)
@@ -151,7 +153,7 @@ export default class Device {
 
   logDebug(message) {
     if (this.verbosity <= DEBUG) {
-      message = typeof message === function ? message() : message
+      message = (typeof message === 'function') ? message() : message
       console.log(this.devicePort, message)
     }
   }

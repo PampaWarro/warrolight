@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-export default class Multiplexer {
+module.exports = class Multiplexer {
 
   constructor(numberOfLights, devices, mapping) {
     this.numberOfLights = numberOfLights

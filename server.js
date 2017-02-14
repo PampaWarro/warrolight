@@ -13,6 +13,9 @@ const config = require('./webpack.config');
 
 const compiler = webpack(config);
 
+const Device = require('./device')
+const Multiplexer = require('./multiplexer')
+
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
   publicPath: "/"

@@ -36,9 +36,16 @@ app.get('*', function (req, res) {
 
 const device1 = new Device(150, 'COM3')
 const device2 = new Device(150, 'COM4')
+const device3 = new Device(150, 'COM5')
 
-const multiplexer = new Multiplexer(300, [device1, device2], (index) => {
-  return [ index < 150 ? 0 : 1, index < 150 ? index : index - 150 ]
+const multiplexer = new Multiplexer(450, [device1, device2, device3], (index) => {
+  if(index < 150) {
+    return [0, index]
+  } else if(index < 300){
+    return [1, index - 150]
+  } else {
+    return [2, index - 300]
+  }
 })
 
 io.on('connection', (socket) => {

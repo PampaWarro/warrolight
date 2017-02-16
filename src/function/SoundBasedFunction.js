@@ -2,8 +2,8 @@ import {ColorUtils} from "../utils/ColorUtils";
 import {TimeTickedFunction} from "./TimeTickedFunction";
 
 export class SoundBasedFunction extends TimeTickedFunction{
-  constructor(config) {
-    super(config);
+  constructor(config, leds) {
+    super(config, leds);
 
     this.averageVolume = 0;
     let self = this;

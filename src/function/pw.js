@@ -1,17 +1,16 @@
 import {TimeTickedFunction} from "./TimeTickedFunction";
 
 export class Func extends TimeTickedFunction{
-  constructor(config) {
-    super(config);
-    this.geometry = this.config.geometry;
+  constructor(config, leds) {
+    super(config, leds);
     this.drawingP = true;
   }
 
   // Override base class
   drawFrame(draw, done) {
-    const colors = [... Array(this.config.numberOfLeds)]; // Array del tamaño de las luces
+    const colors = [... Array(this.numberOfLeds)]; // Array del tamaño de las luces
 
-    for (let i = 0; i < this.config.numberOfLeds; i++) {
+    for (let i = 0; i < this.numberOfLeds; i++) {
       const x = this.geometry.x[i]
       const y = this.geometry.y[i]
 

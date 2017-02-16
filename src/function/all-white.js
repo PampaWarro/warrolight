@@ -7,7 +7,7 @@ export class Func extends TimeTickedFunction{
     // En HSV blanco es (0,0,1)
     var tonoDeBlanco = ColorUtils.HSVtoHex(0, 0, this.config.brillo);
 
-    let colors = [... Array(this.config.numberOfLeds)]; // Array del tamaño de las luces
+    let colors = [... Array(this.numberOfLeds)]; // Array del tamaño de las luces
     draw(colors.map(() => tonoDeBlanco));
   }
 

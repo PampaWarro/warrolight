@@ -2,8 +2,8 @@ import {ColorUtils} from "../utils/ColorUtils";
 import {TimeTickedFunction} from "./TimeTickedFunction";
 
 export class Func extends TimeTickedFunction {
-    constructor(config) {
-      super(config);
+    constructor(config, leds) {
+      super(config, leds);
 
       this.colorSet = [
         '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC', '#ffffff'
@@ -14,9 +14,9 @@ export class Func extends TimeTickedFunction {
 
     drawFrame(draw, done){
       this.time += this.config.speed;
-      const newColors = new Array(this.config.numberOfLeds)
+      const newColors = new Array(this.numberOfLeds)
 
-      for (let i = 0; i < this.config.numberOfLeds; i++) {
+      for (let i = 0; i < this.numberOfLeds; i++) {
         let colIndex = Math.floor(((this.time + i) / this.config.sameColorLeds)) % this.colorSet.length;
 
         let col = this.colorSet[colIndex];

@@ -3,17 +3,7 @@ import { connect } from 'react-redux'
 import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
-import { } from '../function/blink'
-import { } from '../function/blink'
-import { } from '../function/rainbow'
-import { } from '../function/pw'
-import { } from '../function/all-off'
-import { } from '../function/musicFlow'
-import { } from '../function/musicFreqs'
-import { } from '../function/vertical'
-import { } from '../function/all-white'
-
-const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial']
+const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -30,7 +20,10 @@ export class Simulator extends React.Component {
     const geometry = new Geometry(warroStripes)
 
     this.config = {
-      frequencyInHertz: 60,
+      frequencyInHertz: 60
+    }
+
+    this.layout = {
       numberOfLeds: geometry.leds,
       geometry: geometry
     }
@@ -41,7 +34,7 @@ export class Simulator extends React.Component {
       selected: initial,
       overrideTriangle: false,
       programs,
-      func: new (programs[initial].func)(this.getConfig(programs[initial].config))
+      func: new (programs[initial].func)(this.getConfig(programs[initial].config), this.layout)
     }
 
     this.leds = []
@@ -113,7 +106,7 @@ export class Simulator extends React.Component {
     let selectedProgram = this.programs[name];
     this.setState({
       selected: name,
-      func: new (selectedProgram.func)(this.getConfig(selectedProgram.config))
+      func: new (selectedProgram.func)(this.getConfig(selectedProgram.config), this.layout)
     })
   }
 
@@ -154,7 +147,12 @@ export class Simulator extends React.Component {
 
     let configOptions = [];
     for (let paramName in currentProgram.config){
-      configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+      console.log("Param: "+currentProgram.config[paramName].type)
+      if(currentProgram.config[paramName].type === Boolean){
+        configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+      } else {
+        configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+      }
     }
 
     {
@@ -219,6 +217,45 @@ class NumberParam extends React.Component {
     );
   }
 }
+
+
+class BooleanParam extends React.Component {
+  constructor(props){
+    super(props);
+    this.configRef = props.configRef;
+    this.field = props.field;
+    this.state = {value: this.getVal()}
+    this.handleChange = this.handleChange.bind(this);
+    this.name = ""+Math.random();
+  }
+
+  handleChange(event) {
+    this.setVal(event.target.checked);
+  }
+
+  getVal(){
+    return  this.configRef[this.field];
+  }
+
+  setVal(val){
+    let value = val;
+    this.setState({value: value});
+    this.configRef[this.field] = value;
+  }
+
+  render() {
+    return (
+      <div className="config-item">
+        <span>{this.field}:&nbsp;</span>
+        <div>
+          <strong>{this.state.value}&nbsp;</strong>
+          <input type="checkbox" name={this.name} checked={this.state.value} onChange={this.handleChange}/>
+        </div>
+      </div>
+    );
+  }
+}
+
 
 export default connect(state => state.program || {}, {
   setCurrentProgram: (name) => ({

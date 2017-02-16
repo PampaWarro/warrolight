@@ -3,14 +3,14 @@ import {ColorUtils} from "../utils/ColorUtils";
 
 export class Func extends TimeTickedFunction{
   drawFrame(draw, done) {
-    const colors = new Array(this.config.numberOfLeds)
+    const colors = new Array(this.numberOfLeds)
     const elapsed = (this.timeInMs) / 1000;
 
     this.extraTime = (this.extraTime || 0) + Math.random()*10;
 
-    for (let i = 0; i < this.config.numberOfLeds; i++) {
-      const dx = this.config.geometry.x[i] - 30 - this.config.centerX;
-      const dy = this.config.geometry.y[i] - 34.6  + this.config.centerY;
+    for (let i = 0; i < this.numberOfLeds; i++) {
+      const dx = this.geometry.x[i] - 30 - this.config.centerX;
+      const dy = this.geometry.y[i] - 34.6  + this.config.centerY;
 
       const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
 

@@ -1,9 +1,10 @@
 import {ColorUtils} from "../utils/ColorUtils";
 
 export class Func {
-  constructor(config) {
+  constructor(config, leds) {
     const self = this;
-    this.ledCount = config.numberOfLeds;
+    this.ledCount = leds.numberOfLeds;
+
     this.lastVolume = new Array(this.ledCount+1).join('0').split('').map(() => "#000000");
     this.lastVolumeAmp = new Array(this.ledCount+1).join('0').split('').map(() => 0);
     this.lastVolumeInc = new Array(this.ledCount+1).join('0').split('').map(() => 0);

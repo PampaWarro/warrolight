@@ -3,6 +3,8 @@ import {ColorUtils} from "../utils/ColorUtils";
 export class TimeTickedFunction {
   constructor(config) {
     this.config = config;
+    this.timeInMs = 0;
+    this.startTime = 0;
   }
 
   // Override in subclasses
@@ -12,8 +14,11 @@ export class TimeTickedFunction {
 
   start(config, draw, done) {
     this.config = config;
+    this.startTime = new Date();
+
     const frame =() => {
       this.interval = setTimeout(frame, (1000 / config.frequencyInHertz));
+      this.timeInMs = new Date() - this.startTime;
       this.drawFrame(draw, done);
     }
 

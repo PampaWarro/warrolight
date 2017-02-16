@@ -2,10 +2,6 @@ import {TimeTickedFunction} from "./TimeTickedFunction";
 import {ColorUtils} from "../utils/ColorUtils";
 
 export class Func extends TimeTickedFunction{
-    constructor(config) {
-      super(config);
-    }
-
   // Override base class
   drawFrame(draw, done){
     // En HSV blanco es (0,0,1)

@@ -13,7 +13,7 @@ import { } from '../function/musicFreqs'
 import { } from '../function/vertical'
 import { } from '../function/all-white'
 
-const ProgramNames = ['all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical']
+const ProgramNames = ['all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -102,7 +102,7 @@ export class Simulator extends React.Component {
 
   getConfig(configDef = {}) {
     for (let paramName in configDef) {
-      if (this.config[paramName] === undefined && configDef[paramName].default) {
+      if (this.config[paramName] === undefined && configDef[paramName].default !== undefined) {
         this.config[paramName] = configDef[paramName].default;
       }
     }
@@ -162,7 +162,7 @@ export class Simulator extends React.Component {
         <div className="contain">
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
-            <Lights ref="simulator" width="720" height="500" stripes={warroStripes} getColor={this.getLeds}/>
+            <Lights ref="simulator" width="600" height="346" stripes={warroStripes} getColor={this.getLeds}/>
           </div>
           <div className="controls">
             <div>

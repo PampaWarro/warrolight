@@ -8,6 +8,10 @@ export class ColorUtils {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
   }
 
+  static HSVtoHex(h, s, v){
+    return ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB(h, s, v));
+  }
+
   static HSVtoRGB(h, s, v) {
     var r, g, b, i, f, p, q, t;
     if (arguments.length === 1) {

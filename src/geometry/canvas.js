@@ -79,7 +79,9 @@ export default class Canvas extends React.Component {
 
   render() {
     return <div>
+      <div>
         <input type="checkbox" data-id={'renderToggle'} checked={this.state.renderingEnabled} onChange={this.__changeSelection.bind(this)} /><label>Simular</label>
+      </div>
         <canvas ref="canvas" width={this.props.width} height={this.props.height} />
     </div>
   }
@@ -155,7 +157,7 @@ export default class Canvas extends React.Component {
 
 
     // ctx.fillText(`Sim overhead FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 40);
-    ctx.fillText(`Program FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
+    ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
 
   }
 }

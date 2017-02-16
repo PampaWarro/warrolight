@@ -12,11 +12,13 @@ import { default as Stripe } from './stripe'
  *                   *     *
  *        (PORTION, 0)    (2*PORTION, 0)
  */
-const PORTION = 48
-const WIDTH = 144
-const HEIGHT = 100
-const HALF_HEIGHT = 50
-const HALF_WIDTH = 72
+const scale = 0.1;
+
+const PORTION = 200*scale
+const WIDTH = 3*PORTION
+const HEIGHT = Math.sqrt(4*PORTION*PORTION - PORTION*PORTION)
+const HALF_HEIGHT = HEIGHT/2
+const HALF_WIDTH = WIDTH/2
 
 /**
  * Amount of leds on each part

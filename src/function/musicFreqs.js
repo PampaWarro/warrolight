@@ -71,7 +71,7 @@ export class Func {
     this.interval = setInterval(() => {
       for(let i=0;i<this.ledCount;i++) {
         let inc = this.lastVolumeInc[i];
-        let amp = this.lastVolumeSum[i] / this.lastVolumeCount[i]*config.intensityDim;
+        let amp = this.lastVolumeSum[i] / this.lastVolumeCount[i]*config.brillo;
         if(inc < 0.3){
           inc = 0;
         }
@@ -95,5 +95,5 @@ export class Func {
 export const config = {
   frequencyInHertz: {type: Number, min: 1, max: 300, default: 70},
   colorOffset: {type: Number, min: 0, max: 1, step: 0.01, default: 0.3},
-  intensityDim: {type: Number, min: 0, max: 3, step: 0.01, default: 1}
+  brillo: {type: Number, min: 0, max: 3, step: 0.01, default: 1}
 }

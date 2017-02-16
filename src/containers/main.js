@@ -4,22 +4,22 @@ import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
 import { } from '../function/blink'
-import { } from '../function/blink2'
+import { } from '../function/blink'
 import { } from '../function/rainbow'
 import { } from '../function/pw'
-import { } from '../function/turned-off'
-import { } from '../function/histogram'
-import { } from '../function/histogram2'
+import { } from '../function/all-off'
+import { } from '../function/musicFlow'
+import { } from '../function/musicFreqs'
 import { } from '../function/vertical'
 import { } from '../function/all-white'
 
-const ProgramNames = ['blink', 'blink2', 'pw', 'rainbow', 'histogram', 'histogram2', 'stars', 'vertical', 'all-white', 'turned-off']
+const ProgramNames = ['all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical']
 
 import { default as Lights } from '../geometry/canvas'
 
 class Item extends React.Component {
   render() {
-    return <li><a href="#" onClick={this.props.onClick}>{this.props.children}</a></li>
+    return <a href="#" onClick={this.props.onClick}>{this.props.children}</a>
   }
 }
 
@@ -28,9 +28,11 @@ export class Simulator extends React.Component {
     super(...arguments)
 
     const geometry = new Geometry(warroStripes)
+
     this.config = {
       frequencyInHertz: 60,
-      numberOfLeds: geometry.leds
+      numberOfLeds: geometry.leds,
+      geometry: geometry
     }
 
     const programs = this.programs = this.getPrograms();
@@ -141,7 +143,11 @@ export class Simulator extends React.Component {
   render() {
     let menuItems = [];
     for (let key in this.state.programs){
-      menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
+      if(key === this.state.selected){
+        menuItems.push( <Item key={key} className="selected" onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
+      } else {
+        menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
+      }
     }
 
     let currentProgram = this.state.programs[this.state.selected];
@@ -162,9 +168,7 @@ export class Simulator extends React.Component {
             <div>
               <h2>Pampa Warro</h2>
             </div>
-            <div>
-              <ul className="menuItems">{ menuItems }</ul>
-            </div>
+            <div className="menuItems">{ menuItems }</div>
             <div className="configuration">
               <h3>Configuration</h3>
               {configOptions}

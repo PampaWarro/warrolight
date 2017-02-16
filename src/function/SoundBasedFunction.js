@@ -69,7 +69,7 @@ export class SoundBasedFunction extends TimeTickedFunction{
         // self.bassesAverageVolume = getAverageVolume(array, 32);
         self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
 
-        console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
+        // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
         self.processInterval = setTimeout(computeSoundStats, config.soundSamplingFreq);
         lastTime = new Date();
       }, config.soundSamplingFreq);
@@ -91,7 +91,7 @@ export class SoundBasedFunction extends TimeTickedFunction{
   // Override and extend config Schema
   static configSchema(){
     let config = super.configSchema();
-    config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 20};
+    config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 16};
     config.maxFreq = {type: Number, min: 1, max: 512, step: 1, default: 512};
     config.minFreq = {type: Number, min: 0, max: 512, step: 1, default: 0};
     return config;

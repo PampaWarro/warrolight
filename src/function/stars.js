@@ -34,7 +34,7 @@ export class Func {
 
             this.stars[i] = [r,g,b];
           }
-          draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), config.intensityDim)));
+          draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), config.brillo)));
         };
 
         this.interval = setTimeout(compute, 1000 / config.frequencyInHertz)
@@ -48,7 +48,7 @@ export class Func {
 
 export const config = {
     decay: {type: Number, min: 0, max: 1, step: 0.005, default: 0.90},
-    intensityDim: {type: Number, min: 0, max: 1, step: 0.01, default: 1},
+    brillo: {type: Number, min: 0, max: 1, step: 0.01, default: 1},
     probability: {type: Number, min: 0, max: 1, step: 0.001, default: 0.060},
     frequencyInHertz: {type: Number, min: 1, max: 300, default: 70}
 }

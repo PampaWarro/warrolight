@@ -15,7 +15,7 @@ export class Func extends SoundBasedFunction{
   drawFrame(draw, done){
     this.time += this.config.speed;
 
-    let vol = this.averageVolume*this.config.intensityDim;
+    let vol = this.averageVolume*this.config.brillo;
 
     if(vol < this.config.cutThreshold){
       vol = vol/3*0;
@@ -36,7 +36,7 @@ export class Func extends SoundBasedFunction{
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();
-    res.intensityDim = {type: Number, min: 0, max: 3, step: 0.01, default: 1};
+    res.brillo = {type: Number, min: 0, max: 3, step: 0.01, default: 1};
     res.speed = {type: Number, min: 1, max: 10, step: 1, default: 1};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
     return res;

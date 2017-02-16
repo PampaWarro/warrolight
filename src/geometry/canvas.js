@@ -28,9 +28,13 @@ export default class Canvas extends React.Component {
       this.props.xMargin || 10,
       this.props.yMargin || 10
     )
-    this.state = {}
+    this.state = {
+      renderingEnabled: true
+    }
 
     this.lastFrameTime = performance.now();
+    this.lastFPS = 0;
+    this.frameCount = 0;
 
     this.lastCall = new Date().getTime()
   }
@@ -48,11 +52,6 @@ export default class Canvas extends React.Component {
 
   componentDidMount() {
     this.getNextFrame()
-  }
-
-  componentWillUpdate(){
-    console.log("Will update viejo"+new Date());
-    // this.getNextFrame();
   }
 
   getNextFrame() {
@@ -74,8 +73,15 @@ export default class Canvas extends React.Component {
     return this.getColor(index)
   }
 
+  __changeSelection(){
+    this.setState({renderingEnabled: !this.state.renderingEnabled});
+  }
+
   render() {
-    return <canvas ref="canvas" width={this.props.width} height={this.props.height} />
+    return <div>
+        <input type="checkbox" data-id={'renderToggle'} checked={this.state.renderingEnabled} onChange={this.__changeSelection.bind(this)} /><label>Simular</label>
+        <canvas ref="canvas" width={this.props.width} height={this.props.height} />
+    </div>
   }
 
   drawCanvas() {
@@ -90,54 +96,66 @@ export default class Canvas extends React.Component {
 
     ctx.globalCompositeOperation = 'lighter'
 
-    const X = this.geometry.x
-    const Y = this.geometry.y
+    if(this.state.renderingEnabled) {
+      const X = this.geometry.x
+      const Y = this.geometry.y
 
-    for (let i = 0; i < leds; i++) {
-      const color = this.getColor(i)
-      if (color === undefined) {
-        return
-      }
-      const [r, g, b] = hexToRgb(color)
-      const x = X[i]
-      const y = Y[i]
+      for (let i = 0; i < leds; i++) {
+        const color = this.getColor(i)
+        if (color === undefined) {
+          return
+        }
+        const [r, g, b] = hexToRgb(color)
+        const x = X[i]
+        const y = Y[i]
 
-      let power = (r + g + b - 150) * 2
-      if (power < 0) power = 0
+        let power = (r + g + b - 150) * 2
+        if (power < 0) power = 0
 
-      let lightRadius = (20 + (r + g + b) / (255 * 3) * 80) * 0.7
+        let lightRadius = (20 + (r + g + b) / (255 * 3) * 80) * 0.7
 
-      let [or, og, ob] = [r + power, g + power, b + power]
-      if (or > 255) or = 255
-      if (og > 255) og = 255
-      if (ob > 255) ob = 255
+        let [or, og, ob] = [r + power, g + power, b + power]
+        if (or > 255) or = 255
+        if (og > 255) og = 255
+        if (ob > 255) ob = 255
 
-      ctx.beginPath()
+        ctx.beginPath()
 
       lightRadius = lightRadius /6;
       ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
 
-      // let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
-      // gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
-      // // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
-      // gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
-      // // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
-      // // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
-      // gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
-      // ctx.fillStyle = gradient
+        // let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
+        // gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
+        // // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
+        // gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
+        // // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.25)`)
+        // // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.12)`)
+        // gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
+        // ctx.fillStyle = gradient
 
 
-      ctx.arc(x, y, lightRadius, Math.PI * 2, false)
-      ctx.fill()
+        ctx.arc(x, y, lightRadius, Math.PI * 2, false)
+        ctx.fill()
+      }
     }
+
+    this.frameCount++;
+
     let drawMilliseconds = performance.now() - drawStartTime;
-    let lastFrameMilliseconds = performance.now() - this.lastFrameTime;
-    this.lastFrameTime = performance.now();
+    let timeSinceLastFPS = performance.now() - this.lastFrameTime;
+    if(timeSinceLastFPS > 100){
+      this.lastFPS = 1000*this.frameCount/timeSinceLastFPS;
+      this.frameCount = 0;
+      this.lastFrameTime = performance.now();
+    }
 
     ctx.fillStyle = 'white'
     ctx.font = "12px sans-serif";
-    ctx.fillText(`Max FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 20);
-    ctx.fillText(`Real FPS: ${Math.floor(1000/lastFrameMilliseconds)}`, 10, 40);
+
+
+
+    // ctx.fillText(`Sim overhead FPS: ${Math.floor(1000/drawMilliseconds)}`, 10, 40);
+    ctx.fillText(`Program FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
 
   }
 }

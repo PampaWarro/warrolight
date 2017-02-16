@@ -24,7 +24,7 @@
       .controls{
           order: 2;
           background-color: #333;
-          width: 300px;
+          width: 350px;
           display: flex;
           flex-direction: column;
           flex-wrap: wrap;
@@ -61,27 +61,24 @@
     }
 
     .menuItems {
-        list-style: none;
         margin: 0;
         padding: 0;
-    }
-    .menuItems li {
-        text-align: center;
-        list-style: none;
-        padding: 0;
-        display: inline-block;
-        width: 25%;
-        min-height: 70px;
+        columns: 2;
     }
     .menuItems a {
-        width: 100%;
-        padding-top: 25px;
-        padding-bottom: 25px;
-        border: solid 2px black;
+        text-align: center;
         text-decoration: none;
-        vertical-align: center;
-        display: inline-block;
-
+        margin: 1px;
+        padding: 2px;
+        display: block;
+        background-color: #222;
+        word-break: break-all;
+    }
+    .menuItems a:hover {
+      background-color: black;
+    }
+    .menuItems a:selected {
+      background-color: #444;
     }
     .config-item {
         display: flex;

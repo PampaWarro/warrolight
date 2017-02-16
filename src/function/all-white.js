@@ -1,25 +1,24 @@
+import {TimeTickedFunction} from "./TimeTickedFunction";
 import {ColorUtils} from "../utils/ColorUtils";
 
-export class Func {
-    constructor() {
-        this.interval = 0
+export class Func extends TimeTickedFunction{
+    constructor(config) {
+      super(config);
     }
-    start(config, draw, done) {
-        this.interval = setInterval(() => {
-            const colors = new Array(config.numberOfLeds)
-            for (let i = 0; i < config.numberOfLeds; i++) {
-                colors[i] = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB(0, 0, config.intensityDim));
-            }
-            draw(colors)
-        }, 1 / config.frequencyInHertz)
-        done()
-    }
-    stop() {
-        clearInterval(this.interval)
-    }
-}
 
-export const config = {
-    frequencyInHertz: Number,
-    intensityDim: {type: Number, min: 0, max: 1, step: 0.01, default: 0.5},
+  // Override base class
+  drawFrame(draw, done){
+    // En HSV blanco es (0,0,1)
+    var tonoDeBlanco = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB(0, 0, this.config.brillo));
+
+    let colors = [... Array(this.config.numberOfLeds)]; // Array del tamaño de las luces
+    draw(colors.map(() => tonoDeBlanco));
+  }
+
+  // Override and extend config Schema
+  static configSchema(){
+    let res = super.configSchema();
+    res.brillo =  {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
+    return res;
+  }
 }

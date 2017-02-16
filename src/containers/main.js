@@ -13,7 +13,7 @@ import { } from '../function/musicFreqs'
 import { } from '../function/vertical'
 import { } from '../function/all-white'
 
-const ProgramNames = ['all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial']
+const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial']
 
 import { default as Lights } from '../geometry/canvas'
 

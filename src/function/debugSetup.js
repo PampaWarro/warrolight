@@ -4,11 +4,11 @@ import {ColorUtils} from "../utils/ColorUtils";
 export class Func extends TimeTickedFunction{
   // Override base class
   drawFrame(draw, done){
-    // En HSV blanco es (0,0,1)
-    var tonoDeBlanco = ColorUtils.HSVtoHex(0, 0, this.config.brillo);
-
     let colors = [... Array(this.config.numberOfLeds)]; // Array del tamaño de las luces
-    draw(colors.map(() => tonoDeBlanco));
+
+    draw(colors.map((v,i) => {
+      return ColorUtils.HSVtoHex(Math.floor(i/50)/12, 1-(i%50)/50, this.config.brillo);
+    }));
   }
 
   // Override and extend config Schema

@@ -24,6 +24,10 @@ export class Func extends TimeTickedFunction {
 
       this.stars[i] = [r, g, b];
     }
+    if(this.config.move) {
+      let first = this.stars.shift();
+      this.stars.push(first);
+    }
     draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), this.config.brillo)));
   }
 
@@ -32,6 +36,7 @@ export class Func extends TimeTickedFunction {
     config.decay = {type: Number, min: 0, max: 1, step: 0.005, default: 0.90}
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     config.probability = {type: Number, min: 0, max: 1, step: 0.001, default: 0.060}
+    config.move = {type: Boolean, default: false}
     return config;
   }
 }

@@ -17,11 +17,12 @@ export class Func extends SoundBasedFunction{
 
     let vol = this.averageVolume*this.config.multiplier;
 
+    // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){
       vol = vol/3*0;
     }
 
-    let newVal = ColorUtils.rgbToHex(... ColorUtils.HSVtoRGB(vol*4+this.time/2000, 1, Math.pow(2, vol*50)/255-1/255));
+    let newVal = ColorUtils.HSVtoHex((vol*4+this.time/2000)%1, 1, Math.min(vol*vol*10, 1));
 
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.haciaElCentro){

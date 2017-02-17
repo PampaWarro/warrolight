@@ -20,12 +20,19 @@ export function programsByShape(mapping) {
   const trianguloTopTop = _.range(270, 300).concat(inv(_.range(420, 450)));
   const trianguloTop = trianguloTopLeft.concat(inv(trianguloTopTop)).concat(inv(trianguloTopRight));
 
+  // Una permutación random de todas las luces. PSYCHO MIND FUCK
+  const shuffle = _.shuffle(_.range(0,600))
 
-  const w = [].concat(pataLeft).reverse().concat(trianguloBottomLeft).concat(trianguloTopRight)
+  // Una permutación random de pedazos de a 20 luces
+  const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
+  const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
+
+  // La W warra
+  const Warro = _.flatten([inv(pataLeft), _.range(150,300), inv(_.range(300, 450)), pataRight])
 
   const reloj = basePataLeft.concat(_.range(150, 300)).concat(inv(_.range(300, 450))).concat(inv(basePataRight))
 
-  const knownMappings = {pataLeft, pataRight, reloj, trianguloBottom, trianguloTop};
+  const knownMappings = {pataLeft, pataRight, reloj, trianguloBottom, trianguloTop, trianguloBottomBottom, Warro, shuffle, shuffleSegments10, shuffleSegments20};
 
   return class {
     constructor(config, leds) {

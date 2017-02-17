@@ -50,8 +50,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
       self.mediaStreamSource = self.audioContext.createMediaStreamSource(stream);
 
       self.analyser = self.audioContext.createAnalyser();
-      self.analyser.smoothingTimeConstant = 0.5;
-      self.analyser.fftSize = 1024;
+      self.analyser.smoothingTimeConstant = 0.1;
+      self.analyser.fftSize = 2048;
 
       self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
 
@@ -61,11 +61,13 @@ export class SoundBasedFunction extends TimeTickedFunction{
         //var sample = e.inputBuffer.getChannelData(0);
 
         // get the average, bincount is fftsize / 2
-        var array =  new Uint8Array(self.analyser.frequencyBinCount);
-        self.analyser.getByteFrequencyData(array);
+        var byteFrequencyData =  new Uint8Array(self.analyser.frequencyBinCount);
+        self.analyser.getByteFrequencyData(byteFrequencyData);
 
         // calculate average
-        self.averageVolume = getAverageVolume(array, config.minFreq, config.maxFreq);
+        self.averageVolume = getAverageVolume(byteFrequencyData, config.minFreq, config.maxFreq);
+        self.analyzeRawAudioData(byteFrequencyData)
+
         // self.bassesAverageVolume = getAverageVolume(array, 32);
         self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
 
@@ -79,6 +81,11 @@ export class SoundBasedFunction extends TimeTickedFunction{
         self.analyser.connect(self.audioProcessorNode);
         self.audioProcessorNode.connect(self.audioContext.destination);
     }
+  }
+
+  // To be overriden by subclasses that need this
+  analyzeRawAudioData(data){
+
   }
 
   stop() {

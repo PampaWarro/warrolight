@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
-const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos']
+const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -147,7 +147,6 @@ export class Simulator extends React.Component {
 
     let configOptions = [];
     for (let paramName in currentProgram.config){
-      console.log("Param: "+currentProgram.config[paramName].type)
       if(currentProgram.config[paramName].type === Boolean){
         configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
       } else {

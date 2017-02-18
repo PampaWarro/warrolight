@@ -43,10 +43,10 @@ export class DjDashboard extends React.Component {
         <div>
         <div className="contain">
           <div className="dj-dash controls">
+            <div className={"state "+stateClass}>{ state }</div>
             <div>
               <h2>Pampa Warro DJ</h2>
             </div>
-            <div className={"state "+stateClass}>{ state }</div>
             <div className="menuItems">{ menuItems }</div>
           </div>
         </div>

@@ -97,7 +97,11 @@ io.on('connection', (socket) => {
     },
     "warro": {
       description: "Logo Pampa Warro +2s",
-      run: temporalEffectAction(t => _.range(0,600).map(i => '#990066'), 2000)
+      run: temporalEffectAction(t => {
+        let todoNaranja = _.range(0,600).map(i => '#FF9933')
+        _.each(_.range(0,30).concat(_.range(450,480)), i => todoNaranja[i] = "#000000")
+        return todoNaranja
+      }, 2000)
     },
     "resume": {
       description: "Retomar programa",

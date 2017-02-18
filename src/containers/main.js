@@ -263,6 +263,7 @@ export default connect(state => state.program || {}, {
   }),
   send: (leds) => ({
     type: 'send',
+    msgType: 'leds',
     payload: leds
   })
 })(Simulator)

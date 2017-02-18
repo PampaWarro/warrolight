@@ -22,7 +22,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.get('*', function (req, res) {
+app.get('*', function (req, res, next) {
   var filename = path.join(compiler.outputPath,'index.html');
   compiler.outputFileSystem.readFile(filename, function(err, result){
     if (err) {
@@ -65,11 +65,19 @@ setTimeout(() => {
 }, 5000)
 
 
+let djActionRunning = false;
 io.on('connection', (socket) => {
   socket.on('message', (data) => {
-    if (data.action === 'data') {
-      if (multiplexer) {
+    if (data.action === 'leds') {
+      if (multiplexer && !djActionRunning) {
         multiplexer.setState(data.payload)
+      }
+    } else if (data.action === "dj-action"){
+      console.log(`DJ ACTION ${data.payload}`)
+      djActionRunning = true;
+      setTimeout(() => djActionRunning = false, 1000);
+      if (multiplexer) {
+        multiplexer.setState(_.range(0,600).map(i => '#990066'))
       }
     }
   })

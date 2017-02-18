@@ -21,7 +21,7 @@ function* fetchData(action) {
 
 function* socketSend(action) {
   io.send({
-    action: 'data',
+    action: action.msgType,
     payload: action.payload
   })
 }

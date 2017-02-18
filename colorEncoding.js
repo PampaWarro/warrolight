@@ -6,7 +6,7 @@ module.exports = {
 
   arrayFromRGB: rgb => {
     if(!rgb){
-      return console.warn("Valor de RGB nulo: ", rgb);
+      return //console.warn("Valor de RGB nulo: ", rgb);
     }
     const red = parseInt(rgb.substr(1, 2), 16)
     const blue = parseInt(rgb.substr(3, 2), 16)

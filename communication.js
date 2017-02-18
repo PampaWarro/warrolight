@@ -8,10 +8,6 @@ const io = require('socket.io').listen(server);
 const now = require('performance-now');
 
 const path = require('path');
-const webpack = require('webpack');
-const config = require('./webpack.config');
-
-const compiler = webpack(config);
 
 const Device = require('./device')
 const Multiplexer = require('./multiplexer')
@@ -19,33 +15,22 @@ const Multiplexer = require('./multiplexer')
 var device1, device2, device3, device4
 var multiplexer
 
-setTimeout(() => {
-  device1 = new Device(150, '/dev/ttyACM0')
-}, 1000)
-setTimeout(() => {
-  device2 = new Device(150, '/dev/ttyACM1')
-}, 2000)
-setTimeout(() => {
-  device3 = new Device(150, '/dev/ttyACM2')
-}, 3000)
-setTimeout(() => {
-  device4 = new Device(150, '/dev/ttyACM3')
-}, 4000)
+device1 = new Device(300, 'COM4')
+device2 = new Device(300, 'COM5')
+
 
 setTimeout(() => {
-  multiplexer = new Multiplexer(600, [device3, device1, device2, device4], (index) => {
-    if(index < 150) {
+  multiplexer = new Multiplexer(600, [device1, device2], (index) => {
+    if(index < 300) {
       return [0, index]
-    } else if(index < 300){
-      return [1, index - 150]
-    } else if (index < 450) {
-      return [2, index - 300]
     } else {
-      return [3, index - 450]
+      if(index < 450)
+        return [1, index - 300 + 150]
+      else
+        return [1, index - 300 - 150]
     }
   })
-}, 5000)
-
+}, 2000)
 
 let djActionRunning = false;
 io.on('connection', (socket) => {

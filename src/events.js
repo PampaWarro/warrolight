@@ -4,7 +4,7 @@ import { update } from './common'
 export const Connected = 'Socket connected'
 export const Disconnected = 'Socket disconnected'
 
-export const io = SocketIO()
+export const io = SocketIO('localhost:3000')
 
 export function connectionReducer(store, action) {
   switch (action.type) {

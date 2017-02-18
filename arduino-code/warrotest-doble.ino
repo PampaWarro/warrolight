@@ -47,7 +47,7 @@ void setup() {
       FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
       FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, NUM_LEDS);
       
-      Serial.begin(576000*2);           // set up Serial library at 1152000 bps, the same than in Node.js
+      Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
       //Serial.println("Hello world!");  // prints hello with ending line break 
 
       for(int i = 0; i<NUM_LEDS; i++){
@@ -88,9 +88,9 @@ void writeLeds(int pos, byte r, byte g, byte  b){
     leds[pos].green = g;
     leds[pos].blue = b;
   } else {
-    leds2[pos].red = r;
-    leds2[pos].green = g;
-    leds2[pos].blue = b;    
+    leds2[pos-150].red = r;
+    leds2[pos-150].green = g;
+    leds2[pos-150].blue = b;    
   }
 }
 
@@ -146,11 +146,11 @@ void loop() {
           }
         }
     }
+    
     FastLED.show();
     
     // Protocolo que entiende node.js
     Serial.println("OK"); // ASCII printable characters    
   }
 }
-
 

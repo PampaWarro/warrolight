@@ -23,7 +23,7 @@ module.exports = class Device {
     this.numberOfLights = numberOfLights
     this.verbosity = verbosity || DEBUG
     this.devicePort = devicePort
-    this.encoding = ENCODING_POS_RGB
+    this.encoding = ENCODING_RGB
 
     this.port = new SerialPort(devicePort, {
       baudRate: 1152000 / 2,
@@ -42,22 +42,10 @@ module.exports = class Device {
 
   setState(rgbArray) {
     const newState = _.range(this.numberOfLights)
-    let changed = 0
     for (let i = 0; i < this.numberOfLights; i++) {
-      const newRGB = arrayFromRGB(rgbArray[i])
-      if (notEqual(this.state[i], newRGB)) {
-        newState[i] = newRGB
-        changed++
-      }
+      newState[i] = arrayFromRGB(rgbArray[i])
     }
-    // this.logDebug(() => `Proportion: ${changed / this.numberOfLights * 100}`)
-    this.oldState = this.state
-    this.changed = changed
     this.state = newState
-  }
-
-  getNumberOfLightsToUpdate() {
-    this.changed ? this.changed : this.numberOfLights
   }
 
   sendNextFrame() {
@@ -65,32 +53,19 @@ module.exports = class Device {
 
     let dim = 1
     for (let i = 0; i < this.numberOfLights; i++) {
-      this.sendLight(i)
-    }
-    this.flush()
-  }
-
-  hasChanged(index) {
-    if (!this.oldState) {
-      return true
-    }
-    return notEqual(this.state[index], this.oldState[index])
-  }
-
-  sendLight(index) {
-    if (!this.needsHeaderWithNumberOfLights() || this.hasChanged(index)) {
-      this.writePixel(index,
-        this.state[index][0],
-        this.state[index][1],
-        this.state[index][2]
+      this.writePixel(i,
+        this.state[i][0]/dim,
+        this.state[i][1]/dim,
+        this.state[i][2]/dim
       )
     }
+    this.flush()
   }
 
   initEncoding() {
     this.write([this.encoding]);
     if (this.needsHeaderWithNumberOfLights()) {
-      this.write([this.getNumberOfLightsToUpdate()]);
+      this.write([this.numberOfLights]);
     }
   }
 

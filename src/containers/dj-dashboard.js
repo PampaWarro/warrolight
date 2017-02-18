@@ -11,11 +11,8 @@ export class DjDashboard extends React.Component {
   constructor() {
     super(...arguments)
 
-    this.state = {
-      actions: {"off": "APAGAR LUCES", "warro": "Logo Pampa Warro"}
-    }
-
-    this.leds = []
+    this.state = {}
+    // this.props = { actions: {}}
   }
 
   handleProgramClick(djAction, ev) {
@@ -25,18 +22,31 @@ export class DjDashboard extends React.Component {
 
   render() {
     let menuItems = [];
-    for (let actionKey in this.state.actions){
-      menuItems.push( <Item key={actionKey} className="selected" onClick={e => this.handleProgramClick(actionKey, e)}>{this.state.actions[actionKey]}</Item>)
+    for (let actionKey in this.props.actions){
+      if(actionKey !== "resume" || this.props.serverState == "dj-action")
+        menuItems.push( <Item key={actionKey} className="selected" onClick={e => this.handleProgramClick(actionKey, e)}>{this.props.actions[actionKey]}</Item>)
+    }
+
+    let state = "Desconectado del server";
+    let stateClass = "state-danger"
+    if(this.props.connected){
+      state = this.props.serverState || "Connected";
+      stateClass = "state-ok"
+
+      if(state == "dj-action" && this.props.stateTimeRemaining){
+        state += ` (quedan ${(this.props.stateTimeRemaining/1000).toFixed(1)}s)`
+      }
     }
 
     {
       return (
         <div>
         <div className="contain">
-          <div className="controls">
+          <div className="dj-dash controls">
             <div>
-              <h2>Pampa Warro</h2>
+              <h2>Pampa Warro DJ</h2>
             </div>
+            <div className={"state "+stateClass}>{ state }</div>
             <div className="menuItems">{ menuItems }</div>
           </div>
         </div>
@@ -45,7 +55,18 @@ export class DjDashboard extends React.Component {
   }
 }
 
-export default connect(state => state.program || {}, {
+let mapStateToProps = state => {
+  console.log("STATE CHANGE", state)
+
+  return {
+    connected: state.connection.connected,
+    serverState: state.connection.state,
+    actions: state.connection.actions || {},
+    stateTimeRemaining: state.connection.stateTimeRemaining || null
+  }
+}
+
+export default connect(mapStateToProps, {
   send: (action) => ({
     type: "send",
     msgType: "dj-action",

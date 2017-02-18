@@ -3,6 +3,7 @@ import { update } from './common'
 
 export const Connected = 'Socket connected'
 export const Disconnected = 'Socket disconnected'
+export const ServerData = 'Server data'
 
 export const io = SocketIO('localhost:3000')
 
@@ -12,6 +13,10 @@ export function connectionReducer(store, action) {
       return update(store, { connected: true })
     case Disconnected:
       return update(store, { connected: false })
+    case ServerData:
+      if(action.payload) {
+        return update(store, action.payload)
+      }
     default:
       break
   }
@@ -24,6 +29,9 @@ export function connectStoreToEvents(store) {
   })
   io.on('disconnect', () => {
     store.dispatch({ type: Disconnected })
+  })
+  io.on('data', (data) => {
+    store.dispatch({ type: ServerData, payload: data })
   })
   return store
 }

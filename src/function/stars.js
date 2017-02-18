@@ -35,7 +35,7 @@ export class Func extends TimeTickedFunction {
     let config = super.configSchema();
     config.decay = {type: Number, min: 0, max: 1, step: 0.005, default: 0.90}
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
-    config.probability = {type: Number, min: 0, max: 1, step: 0.001, default: 0.060}
+    config.probability = {type: Number, min: 0, max: 1, step: 0.0001, default: 0.0001}
     config.move = {type: Boolean, default: false}
     return config;
   }

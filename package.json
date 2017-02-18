@@ -5,7 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha test",
-    "start": "node server.js"
+    "start": "node communication.js",
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",

@@ -1,25 +1,19 @@
-import {TimeTickedFunction} from "./TimeTickedFunction";
-import {ColorUtils} from "../utils/ColorUtils";
+// import {Func} from "./rainbow";
+const _ = require('lodash')
+import {createMultiProgram} from "./MultiPrograms";
+import {programsByShape} from "./Transformations";
 
-export class Func extends TimeTickedFunction{
-  // Override base class
-  drawFrame(draw, done){
-    let colors = [... Array(this.numberOfLeds)]; // Array del tamaño de las luces
+const Rainbow = require("./rainbow").Func;
+const MusicFlow = require("./musicFlow").Func;
+const Stars = require("./stars").Func;
 
-    draw(colors.map((v, i) => {
-      jj
-      return ColorUtils.HSVtoHex(
-        0.33,
-        i / 120,
-        this.config.brillo
-      );
-    }));
-  }
+// las formas que se pueden usar están definidas en Transformation
+const schedule = [
+  {duration: 3000, program: programsByShape({mini_w: Rainbow})},
+  // {duration: 3000, program: programsByShape({char_a: [Stars, Stars.presets().muchasFast]})},
+  // {duration: 3000, program: programsByShape({char_r: Rainbow})},
+  // {duration: 3000, program: programsByShape({char_r: [Stars, Stars.presets().muchasFast]})},
+  // {duration: 3000, program: programsByShape({char_o: Rainbow})},
+]
 
-  // Override and extend config Schema
-  static configSchema(){
-    let res = super.configSchema();
-    res.brillo =  {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
-    return res;
-  }
-}
+export const Func = createMultiProgram(schedule)

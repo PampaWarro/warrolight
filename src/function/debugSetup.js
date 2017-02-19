@@ -7,8 +7,8 @@ export class Func extends TimeTickedFunction{
     let colors = [... Array(this.numberOfLeds)]; // Array del tamaño de las luces
 
     draw(colors.map((v,i) => {
-      return ColorUtils.HSVtoHex(Math.floor(i/50)/12, 1-(i%50)/50, this.config.brillo);
-    }));
+      return ColorUtils.HSVtoHex(Math.floor(i/50)/12, 0.8, this.config.brillo);
+    }));ltu
   }
 
   // Override and extend config Schema

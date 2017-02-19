@@ -4,7 +4,7 @@ import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup',
+  'debugSetup', 'test1',
   'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
   'multiIntro', 'multiWarroLetras'
@@ -34,7 +34,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'rainbow';
+    const initial = 'test1';
     this.state = {
       selected: initial,
       overrideTriangle: false,

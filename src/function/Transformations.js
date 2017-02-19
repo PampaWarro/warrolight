@@ -26,6 +26,13 @@ export function programsByShape(mapping) {
   // Una permutación random de todas las luces. PSYCHO MIND FUCK
   const shuffle = _.shuffle(_.range(0,600))
 
+  const mini_w = _.flatten([
+    _.range(quiebre_abajo, 150),
+    inv(_.range(450+quiebre_abajo, 600)),
+    _.range(300, 360),
+    inv(_.range(150, 210)),
+  ])
+
   // Una permutación random de pedazos de a 20 luces
   const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
   const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
@@ -57,7 +64,8 @@ export function programsByShape(mapping) {
     trianguloBottomBottom, trianguloTopTop,
     Warro, reloj, V1, V2,
     shuffle, shuffleSegments10, shuffleSegments20,
-    char_1, char_2, char_3, char_a, char_o, char_r, char_w
+    char_1, char_2, char_3, char_a, char_o, char_r, char_w,
+    mini_w,
   };
 
   return class {

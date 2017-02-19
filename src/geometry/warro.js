@@ -32,7 +32,7 @@ const LAST_LED = 1
 
 export default [
   // Led 1
-  new Stripe(HALF_WIDTH , HEIGHT, PORTION, HEIGHT, HALF_LEDS/2),
+  new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT, HALF_LEDS/2),
   new Stripe(PORTION   , HEIGHT - 0, 0, HEIGHT - HEIGHT,  LEDS_LONG),
 
   // Led 2

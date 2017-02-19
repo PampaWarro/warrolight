@@ -5,10 +5,21 @@ export class Func extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
 
-    this.colorSet = [
-      '#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0099ff', '#0000ff', '#5500CC', '#ffffff'
-    ];
+    this.colors = new Array(this.numberOfLeds)
+    this.bright = new Array(this.numberOfLeds)
+    this.currentBright = new Array(this.numberOfLeds)
 
+    for (let i = 0; i < this.numberOfLeds; i++) {
+      const index = this.mappingOrder(i)
+      if (index > 540) {
+        this.bright[i] = 0
+        this.colors[i] = 0
+      } else {
+        this.colors[i] = 0;
+        this.bright[i] = 1;
+      }
+      this.currentBright[i] = this.bright[i]
+    }
     this.time = 0;
   }
 
@@ -33,23 +44,26 @@ export class Func extends TimeTickedFunction {
 
   drawFrame(draw, done) {
     this.time += this.config.speed;
-    const elapsed = this.time % (540 * 2);
-    const elapsedCycle = this.time % (540);
+    const decay = this.config.decay
+    const chance = this.config.chance
     const newColors = new Array(this.numberOfLeds)
+    let bright = this.currentBright[0] * decay
+    if (this.time % 300 === 0) {
+      bright = 1
+    }
+    if (this.time % 300 === 60) {
+      bright = 1
+    }
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const index = i // this.mappingOrder(i)
-      if (index > 540) {
-        newColors[i] = ColorUtils.HSVtoHex(0, 0, 0)
-      } else {
-        const brillo = index < elapsedCycle ? 1 : 0
-        const spear = index > elapsedCycle - this.config.spearLength ? 1 : 0
-        newColors[i] = ColorUtils.HSVtoHex(
-          0,
-          0,
-          brillo * spear * this.config.brillo,
-        )
-      }
+      const index = this.mappingOrder(i)
+      const color = this.colors[i]
+      this.currentBright[i] = bright
+      newColors[i] = ColorUtils.HSVtoHex(
+        color,
+        1,
+        this.config.brillo * this.bright[i] * bright,
+      )
     }
     draw(newColors);
     done()
@@ -65,8 +79,9 @@ export class Func extends TimeTickedFunction {
   static configSchema() {
     let config = super.configSchema();
     config.speed = {type: Number, min: 5, max: 20, default: 4};
+    config.decay = {type: Number, min: 0.8, max: 0.99999, step: 0.001, default: 0.95};
+    config.chance = {type: Number, min: 0.90, max: 0.99, step: 0.001, default: 0.95};
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
-    config.spearLength = {type: Number, min: 30, max: 540, step: 1, default: 180};
     return config;
   }
 }

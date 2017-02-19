@@ -47,6 +47,7 @@ export function programsByShape(mapping) {
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(150, 300), inv(_.range(300, 450)), inv(basePataRight)])
 
+  const allOfIt = _.range(0, 600)
   // Numeros y letras
   const char_1 = _.range(150, 300)
   const char_2 = _.flatten([inv(trianguloBottomBottom), trianguloBottomLeft, trianguloTopRight, trianguloTopTop])
@@ -65,7 +66,7 @@ export function programsByShape(mapping) {
     Warro, reloj, V1, V2,
     shuffle, shuffleSegments10, shuffleSegments20,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
-    mini_w,
+    mini_w, allOfIt
   };
 
   return class {

@@ -16,7 +16,8 @@ export class Func extends TimeTickedFunction {
         this.colors[i] = 0
       } else {
         this.colors[i] = 0.18 - (this.geometry.y[i] / 200)
-        this.bright[i] = this.geometry.y[i] / 20 + 0.3
+        const height = this.geometry.y[i] / 20
+        this.bright[i] = height * height + 0.1
       }
       this.currentBright[i] = this.bright[i]
     }
@@ -58,7 +59,7 @@ export class Func extends TimeTickedFunction {
       this.currentBright[i] = bright
       newColors[i] = ColorUtils.HSVtoHex(
         color,
-        1,
+        color > 0.13 ? 1 - color * 2 : 1,
         this.config.brillo * this.bright[i] * bright,
       )
     }

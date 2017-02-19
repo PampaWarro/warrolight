@@ -4,9 +4,9 @@ import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup', 'test1',
+  'debugSetup', 'test1', 'heart', 'spear-blink',
   'rainbow2', 'white-spear',
-  'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
+  'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
   'multiIntro', 'multiWarroLetras', 'fire'
 ]

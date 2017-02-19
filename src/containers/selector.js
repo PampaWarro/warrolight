@@ -3,12 +3,10 @@ import { connect } from 'react-redux'
 import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
-const ProgramNames = [
-  'debugSetup',
-  'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
-  'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'multiIntro', 'multiWarroLetras'
-]
+const ProgramNames = ['debugSetup',
+'all-white', 'all-off', 'blink', 'pw',
+'rainbow', 'stars', 'musicFlow', 'musicFreqs',
+'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
 
 import { default as Lights } from '../geometry/canvas'
 
@@ -34,7 +32,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'rainbow';
+    const initial = 'control';
     this.state = {
       selected: initial,
       overrideTriangle: false,
@@ -215,8 +213,7 @@ class NumberParam extends React.Component {
       <span>{this.field}:&nbsp;</span>
       <div>
         <strong>{this.state.value}&nbsp;</strong>
-        <input type="range" name={this.name}
-        min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+        <input type="range" name={this.name} min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
       </div>
     </div>
     );

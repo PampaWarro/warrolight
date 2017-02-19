@@ -13,6 +13,9 @@ const config = require('./webpack.config');
 
 const compiler = webpack(config);
 
+const Device = require('./device')
+const Multiplexer = require('./multiplexer')
+
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
   publicPath: "/"
@@ -30,5 +33,25 @@ app.get('*', function (req, res, next) {
     res.end();
   });
 })
+
+
+
+let djActionRunning = false;
+io.on('connection', (socket) => {
+  socket.on('message', (data) => {
+    if (data.action === 'leds') {
+      if (multiplexer && !djActionRunning) {
+        multiplexer.setState(data.payload)
+      }
+    } else if (data.action === "dj-action"){
+      console.log(`DJ ACTION ${data.payload}`)
+      djActionRunning = true;
+      setTimeout(() => djActionRunning = false, 1000);
+      if (multiplexer) {
+        multiplexer.setState(_.range(0,600).map(i => '#990066'))
+      }
+    }
+  })
+});
 
 server.listen(3001, '0.0.0.0')

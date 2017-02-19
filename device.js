@@ -128,6 +128,22 @@ module.exports = class Device {
 
   handleClose(err) {
     this.logInfo('Port closed.')
+
+    const setRetry = function() { setTimeout(retry, 2000) }
+    var retry = () => {
+      console.log('retrying...', this.devicePort)
+      try {
+      this.port = new SerialPort(this.devicePort, {
+        baudRate: 1152000 / 2,
+        parser: SerialPort.parsers.readline("\n")
+      })
+      } catch (e) {
+        setRetry()
+      }
+
+      this.setupCommunication()
+    }
+    setRetry()
   }
 
   handleDrain(err) {

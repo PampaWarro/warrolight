@@ -1,4 +1,6 @@
 export class ColorUtils {
+  static red: '#ff0000'
+
   static rgbToHex(r, g, b) {
     function componentToHex(c) {
       var hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);

@@ -5,7 +5,7 @@ import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
   'debugSetup', 'test1',
-  'rainbow2',
+  'rainbow2', 'white-spear',
   'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
   'multiIntro', 'multiWarroLetras'
@@ -35,7 +35,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'rainbow2';
+    const initial = 'white-spear';
     this.state = {
       selected: initial,
       overrideTriangle: false,

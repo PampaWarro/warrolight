@@ -30,19 +30,26 @@ export function programsByShape(mapping) {
   const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
   const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
 
-  // Numeros
-  const char_1 = _.range(150, 300)
-  const char_2 = _.flatten([inv(trianguloBottomBottom), trianguloBottomLeft, trianguloTopRight, trianguloTopTop])
-  const char_3 = _.flatten([trianguloBottomBottom, trianguloBottomRight, trianguloTopRight, trianguloTopTop])
-
   // La W warra
   const Warro = _.flatten([inv(pataLeft), _.range(150,300), inv(_.range(300, 450)), pataRight])
 
   // Las V V
   const V1 = inv(pataLeft).concat(_.range(150,300-quiebre_arriba))
   const V2 = inv(_.range(300,450-quiebre_arriba)).concat(pataRight)
+
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(150, 300), inv(_.range(300, 450)), inv(basePataRight)])
+
+  // Numeros y letras
+  const char_1 = _.range(150, 300)
+  const char_2 = _.flatten([inv(trianguloBottomBottom), trianguloBottomLeft, trianguloTopRight, trianguloTopTop])
+  const char_3 = _.flatten([trianguloBottomBottom, trianguloBottomRight, trianguloTopRight, trianguloTopTop])
+
+  const char_a = _.flatten([trianguloBottom, trianguloTopRight, trianguloTopTop, inv(_.range(450-quiebre_arriba-10,450-quiebre_arriba))])
+  const char_o = _.flatten([reloj.slice(0,90-20), reloj.slice(90+20,270-20), reloj.slice(270+20,360)]) // El reloj sin el centro
+  const char_r = _.flatten([trianguloBottomLeft, trianguloTop, inv(trianguloBottomRight)])
+  const char_w = Warro
+
 
   const knownMappings = {
     pataLeft, pataRight,
@@ -50,7 +57,7 @@ export function programsByShape(mapping) {
     trianguloBottomBottom, trianguloTopTop,
     Warro, reloj, V1, V2,
     shuffle, shuffleSegments10, shuffleSegments20,
-    char_1, char_2, char_3
+    char_1, char_2, char_3, char_a, char_o, char_r, char_w
   };
 
   return class {

@@ -4,11 +4,14 @@ import {SoundBasedFunction} from "./SoundBasedFunction";
 export class Func extends SoundBasedFunction{
   constructor(config, leds) {
     super(config, leds);
+  }
 
+  start(config, draw, done){
     this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => "#000000");
     this.time = 0;
-
     this.maxVolume = 0;
+
+    super.start(config, draw, done)
   }
 
   // Override parent method
@@ -27,15 +30,14 @@ export class Func extends SoundBasedFunction{
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.doble){
         if(this.config.haciaAfuera) {
+          this.lastVolume.splice(this.numberOfLeds-1, 1);
+          this.lastVolume.splice(0, 1);
+          this.lastVolume.splice(this.lastVolume.length/2, 0, newVal);
+          this.lastVolume.splice(this.lastVolume.length/2, 0, newVal);
+        } else {
           this.lastVolume.splice(Math.floor(this.numberOfLeds / 2 - 1), 2);
           this.lastVolume.unshift(newVal);
           this.lastVolume.push(newVal);
-        } else {
-          this.lastVolume.splice(this.numberOfLeds-1, 1);
-          this.lastVolume.splice(0, 1);
-
-          this.lastVolume.splice(this.lastVolume.length/2, 0, newVal);
-          this.lastVolume.splice(this.lastVolume.length/2, 0, newVal);
         }
       } else {
         this.lastVolume.splice(this.numberOfLeds-1, 1);
@@ -51,8 +53,8 @@ export class Func extends SoundBasedFunction{
     return {
       slowDoble: {speed: 1, doble: true},
       fastSimple: {speed: 5, doble: false},
-      fastDobleDesdePuntas: {speed: 5, doble: true, haciaAfuera: true},
-      fastDobleDesdeCentro: {speed: 5, doble: true, haciaAfuera: false},
+      fastDobleDesdePuntas: {speed: 5, doble: true, haciaAfuera: false},
+      fastDobleDesdeCentro: {speed: 5, doble: true, haciaAfuera: true},
     }
   }
 

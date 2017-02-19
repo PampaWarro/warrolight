@@ -7,7 +7,7 @@ const ProgramNames = [
   'debugSetup',
   'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'multiIntro'
+  'multiIntro', 'multiWarroLetras'
 ]
 
 import { default as Lights } from '../geometry/canvas'

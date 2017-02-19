@@ -4,7 +4,9 @@ import {TimeTickedFunction} from "./TimeTickedFunction";
 export class SoundBasedFunction extends TimeTickedFunction{
   constructor(config, leds) {
     super(config, leds);
+  }
 
+  start(config, draw, done){
     this.averageVolume = 0;
     let self = this;
 
@@ -50,7 +52,7 @@ export class SoundBasedFunction extends TimeTickedFunction{
       self.mediaStreamSource = self.audioContext.createMediaStreamSource(stream);
 
       self.analyser = self.audioContext.createAnalyser();
-      self.analyser.smoothingTimeConstant = 0.1;
+      self.analyser.smoothingTimeConstant = 0.2;
       self.analyser.fftSize = 2048;
 
       self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
@@ -76,11 +78,13 @@ export class SoundBasedFunction extends TimeTickedFunction{
         lastTime = new Date();
       }, config.soundSamplingFreq);
 
-        // stream -> mediaSource -> analyser -> javascriptNode -> destination
-        self.mediaStreamSource.connect(self.analyser);
-        self.analyser.connect(self.audioProcessorNode);
-        self.audioProcessorNode.connect(self.audioContext.destination);
+      // stream -> mediaSource -> analyser -> javascriptNode -> destination
+      self.mediaStreamSource.connect(self.analyser);
+      self.analyser.connect(self.audioProcessorNode);
+      self.audioProcessorNode.connect(self.audioContext.destination);
     }
+
+    super.start(config, draw, done)
   }
 
   // To be overriden by subclasses that need this

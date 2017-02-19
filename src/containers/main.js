@@ -3,7 +3,12 @@ import { connect } from 'react-redux'
 import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
-const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
+const ProgramNames = [
+  'debugSetup',
+  'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
+  'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
+  'multiIntro'
+]
 
 import { default as Lights } from '../geometry/canvas'
 

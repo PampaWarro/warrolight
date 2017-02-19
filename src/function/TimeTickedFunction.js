@@ -3,8 +3,6 @@ import {ColorUtils} from "../utils/ColorUtils";
 export class TimeTickedFunction {
   constructor(config, leds) {
     this.config = config;
-    this.timeInMs = 0;
-    this.startTime = 0;
     this.leds = leds;
     this.numberOfLeds = leds.numberOfLeds;
     this.geometry = leds.geometry;
@@ -17,6 +15,7 @@ export class TimeTickedFunction {
 
   start(config, draw, done) {
     this.config = config;
+    this.timeInMs = 0;
     this.startTime = new Date();
 
     const frame =() => {

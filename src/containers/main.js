@@ -8,7 +8,7 @@ const ProgramNames = [
   'rainbow2', 'white-spear',
   'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'multiIntro', 'multiWarroLetras'
+  'multiIntro', 'multiWarroLetras', 'fire'
 ]
 
 import { default as Lights } from '../geometry/canvas'
@@ -35,7 +35,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'white-spear';
+    const initial = 'fire';
     this.state = {
       selected: initial,
       overrideTriangle: false,

@@ -38,7 +38,7 @@ export class Func extends TimeTickedFunction {
     const newColors = new Array(this.numberOfLeds)
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const index = i // this.mappingOrder(i)
+      const index = this.mappingOrder(i)
       if (index > 540) {
         newColors[i] = ColorUtils.HSVtoHex(0, 0, 0)
       } else {

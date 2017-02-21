@@ -6,14 +6,11 @@ import {programsByShape} from "./Transformations";
 const Rainbow = require("./rainbow").Func;
 const MusicFlow = require("./musicFlow").Func;
 const Stars = require("./stars").Func;
-const Spear = require("./white-spear").Func;
-const AllWhite = require("./all-white").Func;
-const Blink = require("./blink").Func;
 
 // las formas que se pueden usar están definidas en Transformation
 const schedule = [
-  {duration: 5000, program: programsByShape({allOfIt: Spear }) },
-  {duration: 2000, program: programsByShape({mini_w: [Blink, Blink.presets.twicePerSecond] }) }
+  // {duration: 3000, program: programsByShape({char_w: Rainbow})},
+  {duration: 3000, program: programsByShape({reloj: [Rainbow, Rainbow.presets().fastMarks]})},
 ]
 
 export const Func = createMultiProgram(schedule)

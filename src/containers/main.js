@@ -39,11 +39,13 @@ export class Simulator extends React.Component {
 
     const programs = this.programs = this.getPrograms();
     const initial = 'fire';
+    let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,
       overrideTriangle: false,
       programs,
-      func: new (programs[initial].func)(this.getConfig(programs[initial].config), this.layout)
+      func: new (programs[initial].func)(initialConfig, this.layout),
+      config: initialConfig
     }
 
     this.leds = []
@@ -96,6 +98,14 @@ export class Simulator extends React.Component {
     if(newProps.program && newProps.program !== this.state.selected){
       this.setCurrentProgram(newProps.program)
     }
+
+    if(newProps.updatedField){
+      let field = newProps.updatedField.field;
+      let val = newProps.updatedField.value;
+      if(this.config[field] !== val){
+        this.updateConfigField(field, val)
+      }
+    }
   }
 
   componentDidUpdate(oldProps, oldState) {
@@ -121,9 +131,11 @@ export class Simulator extends React.Component {
 
   setCurrentProgram(name) {
     let selectedProgram = this.programs[name];
+    let updatedConfig = this.getConfig(selectedProgram.config);
     this.setState({
       selected: name,
-      func: new (selectedProgram.func)(this.getConfig(selectedProgram.config), this.layout)
+      func: new (selectedProgram.func)(updatedConfig, this.layout),
+      config: updatedConfig
     })
   }
 
@@ -154,6 +166,20 @@ export class Simulator extends React.Component {
     this.refs.simulator.getNextFrame();
   }
 
+  updateConfigField(field, value){
+    this.config[field] = value;
+    this.setState({
+      selected: this.state.selected,
+      func: this.state.func,
+      config: this.config
+    })
+  }
+
+  userUpdateConfigField(field, value){
+    this.updateConfigField(field, value)
+    this.sendSlaveCommand("updateConfigField", {field: field, value: value})
+  }
+
   render() {
     let menuItems = [];
     for (let key in this.state.programs){
@@ -169,9 +195,9 @@ export class Simulator extends React.Component {
     let configOptions = [];
     for (let paramName in currentProgram.config){
       if(currentProgram.config[paramName].type === Boolean){
-        configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+        configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]} value={this.state.config[paramName]} updateConfig={ v => this.userUpdateConfigField(paramName, v) } field={paramName}/>);
       } else {
-        configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+        configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} value={this.state.config[paramName]} updateConfig={ v => this.userUpdateConfigField(paramName, v) } field={paramName}/>);
       }
     }
 
@@ -222,7 +248,6 @@ export class Simulator extends React.Component {
 class NumberParam extends React.Component {
   constructor(props){
     super(props);
-    this.configRef = props.configRef;
     this.field = props.field;
     this.min = (props.configDefinition || {}).min || 0;
     this.max = (props.configDefinition || {}).max || 100;
@@ -237,13 +262,13 @@ class NumberParam extends React.Component {
   }
 
   getVal(){
-    return  this.configRef[this.field];
+    return  this.props.value;
   }
 
   setVal(val){
     let value = parseFloat(val);
     this.setState({value: value});
-    this.configRef[this.field] = value;
+    this.props.updateConfig(value);
   }
 
   render() {
@@ -264,7 +289,6 @@ class NumberParam extends React.Component {
 class BooleanParam extends React.Component {
   constructor(props){
     super(props);
-    this.configRef = props.configRef;
     this.field = props.field;
     this.state = {value: this.getVal()}
     this.handleChange = this.handleChange.bind(this);
@@ -276,13 +300,13 @@ class BooleanParam extends React.Component {
   }
 
   getVal(){
-    return  this.configRef[this.field];
+    return  this.props.value;
   }
 
   setVal(val){
     let value = val;
     this.setState({value: value});
-    this.configRef[this.field] = value;
+    this.props.updateConfig(value);
   }
 
   render() {
@@ -310,6 +334,8 @@ let mapStateToProps = state => {
   if(remoteCmd){
     if(remoteCmd.command == "setCurrentProgram"){
       newState.program = remoteCmd.payload;
+    } else if(remoteCmd.command == "updateConfigField"){
+      newState.updatedField = remoteCmd.payload;
     }
   }
   return newState

@@ -123,6 +123,9 @@ io.on('connection', (socket) => {
         console.log(`DJ ACTION ${action.description}`)
         action.run()
       }
+    } else if (data.action === "remoteCmd"){
+      console.log("Remote command:", data.payload)
+      socket.broadcast.emit('cmd', data.payload)
     }
   })
 });

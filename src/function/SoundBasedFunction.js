@@ -94,8 +94,10 @@ export class SoundBasedFunction extends TimeTickedFunction{
 
   stop() {
     super.stop();
-    this.mediaStreamSource.disconnect(self.audioProcessorNode);
-    this.audioProcessorNode.disconnect(this.audioContext);
+    if(this.mediaStreamSource) {
+      this.mediaStreamSource.disconnect(self.audioProcessorNode);
+      this.audioProcessorNode.disconnect(this.audioContext);
+    }
     clearInterval(this.processInterval)
   }
 

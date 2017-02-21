@@ -23,11 +23,14 @@ export class Simulator extends React.Component {
   constructor() {
     super(...arguments)
 
+    this.master = this.props.route.master
+
     const geometry = new Geometry(warroStripes)
 
     this.config = {
       frequencyInHertz: 60
     }
+
 
     this.layout = {
       numberOfLeds: geometry.leds,
@@ -63,15 +66,18 @@ export class Simulator extends React.Component {
   }
 
   startCurrent() {
-    this.state.func.start(
-      this.getConfig(this.programs[this.state.selected].config),
-      (leds) => this.updateLeds(leds),
-      () => ({})
-    )
+    if(this.master) {
+      this.state.func.start(
+        this.getConfig(this.programs[this.state.selected].config),
+        (leds) => this.updateLeds(leds),
+        () => ({})
+      )
+    }
   }
 
   stopCurrent() {
-    this.state.func.stop()
+    if(this.master)
+      this.state.func.stop()
   }
 
   componentDidMount() {
@@ -83,13 +89,17 @@ export class Simulator extends React.Component {
   }
 
   componentWillUpdate(newProps, newState) {
-    if (this.state.func !== newState.func) {
+    if (this.master && this.state.func !== newState.func) {
       this.stopCurrent()
+    }
+    // Run remoteCmd
+    if(newProps.program && newProps.program !== this.state.selected){
+      this.setCurrentProgram(newProps.program)
     }
   }
 
   componentDidUpdate(oldProps, oldState) {
-    if (oldState.func !== this.state.func) {
+    if (this.master && oldState.func !== this.state.func) {
       this.startCurrent()
     }
   }
@@ -97,6 +107,7 @@ export class Simulator extends React.Component {
   handleProgramClick(key, ev) {
     ev.preventDefault()
     this.setCurrentProgram(key)
+    this.sendSlaveCommand('setCurrentProgram', key)
   }
 
   getConfig(configDef = {}) {
@@ -114,6 +125,10 @@ export class Simulator extends React.Component {
       selected: name,
       func: new (selectedProgram.func)(this.getConfig(selectedProgram.config), this.layout)
     })
+  }
+
+  sendSlaveCommand(command, payload){
+    this.props.sendRemoteCmd({command, payload})
   }
 
   getProgram(name) {
@@ -160,16 +175,37 @@ export class Simulator extends React.Component {
       }
     }
 
+    let state = "Desconectado del server";
+    let stateClass = "state-danger"
+    if(this.props.connected){
+      state = this.props.serverState || "Connected";
+      stateClass = this.props.serverState == "dj-action" ? "state-warning" : "state-ok"
+
+      if(state == "dj-action" && this.props.stateTimeRemaining){
+        state += ` (quedan ${(this.props.stateTimeRemaining/1000).toFixed(1)}s)`
+      }
+    }
+
+    let simulatorPart = null;
+    if(this.master){
+      simulatorPart = <div className="simulator">
+        <h3>Current Program: { currentProgram.name } </h3>
+        <Lights ref="simulator" width="600" height="346" stripes={warroStripes} getColor={this.getLeds}/>
+      </div>
+    } else {
+      simulatorPart = <div className="simulator">
+        <h3>Current Program: { currentProgram.name } </h3>
+      </div>
+    }
+
     {
       return (<div>
+        <div className={"state "+stateClass}>{ state }</div>
         <div className="contain">
-          <div className="simulator">
-            <h3>Current Program: { currentProgram.name } </h3>
-            <Lights ref="simulator" width="600" height="346" stripes={warroStripes} getColor={this.getLeds}/>
-          </div>
+          {simulatorPart}
           <div className="controls">
             <div>
-              <h2>Pampa Warro</h2>
+              <h2>Pampa Warro { this.master ? 'Master' : 'Slave' }</h2>
             </div>
             <div className="menuItems">{ menuItems }</div>
             <div className="configuration">
@@ -263,7 +299,23 @@ class BooleanParam extends React.Component {
 }
 
 
-export default connect(state => state.program || {}, {
+let mapStateToProps = state => {
+  let newState = {
+    connected: state.connection.connected,
+    serverState: state.connection.state,
+    stateTimeRemaining: state.connection.stateTimeRemaining || null,
+  }
+
+  let remoteCmd = state.connection.remoteCmd;
+  if(remoteCmd){
+    if(remoteCmd.command == "setCurrentProgram"){
+      newState.program = remoteCmd.payload;
+    }
+  }
+  return newState
+}
+
+export default connect(mapStateToProps, {
   setCurrentProgram: (name) => ({
     type: 'set current program',
     name
@@ -272,5 +324,10 @@ export default connect(state => state.program || {}, {
     type: 'send',
     msgType: 'leds',
     payload: leds
-  })
+  }),
+  sendRemoteCmd: (cmd) => ({
+    type: 'send',
+    msgType: 'remoteCmd',
+    payload: cmd
+  }),
 })(Simulator)

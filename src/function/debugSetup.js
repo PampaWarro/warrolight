@@ -8,7 +8,7 @@ export class Func extends TimeTickedFunction{
 
     draw(colors.map((v,i) => {
       return ColorUtils.HSVtoHex(Math.floor(i/50)/12, 0.8, this.config.brillo);
-    }));ltu
+    }));
   }
 
   // Override and extend config Schema

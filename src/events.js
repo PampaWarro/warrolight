@@ -4,8 +4,10 @@ import { update } from './common'
 export const Connected = 'Socket connected'
 export const Disconnected = 'Socket disconnected'
 export const ServerData = 'Server data'
+export const RemoteCmd = 'Remote cmd'
 
-export const io = SocketIO('localhost:3000')
+// Negrada para no fijat el host y cambiar el puerto
+export const io = SocketIO(window.location.host.replace("3001", "3000"))
 
 export function connectionReducer(store, action) {
   switch (action.type) {
@@ -17,6 +19,12 @@ export function connectionReducer(store, action) {
       if(action.payload) {
         return update(store, action.payload)
       }
+      break
+    case RemoteCmd:
+      if(action.payload) {
+        return update(store, {remoteCmd: action.payload})
+      }
+      break
     default:
       break
   }
@@ -32,6 +40,9 @@ export function connectStoreToEvents(store) {
   })
   io.on('data', (data) => {
     store.dispatch({ type: ServerData, payload: data })
+  })
+  io.on('cmd', (data) => {
+    store.dispatch({ type: RemoteCmd, payload: data })
   })
   return store
 }

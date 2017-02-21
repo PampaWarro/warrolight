@@ -31,7 +31,7 @@ export class DjDashboard extends React.Component {
     let stateClass = "state-danger"
     if(this.props.connected){
       state = this.props.serverState || "Connected";
-      stateClass = "state-ok"
+      stateClass = this.props.serverState == "off" ? "state-warning" : "state-ok"
 
       if(state == "dj-action" && this.props.stateTimeRemaining){
         state += ` (quedan ${(this.props.stateTimeRemaining/1000).toFixed(1)}s)`
@@ -41,9 +41,9 @@ export class DjDashboard extends React.Component {
     {
       return (
         <div>
+        <div className={"state "+stateClass}>{ state }</div>
         <div className="contain">
           <div className="dj-dash controls">
-            <div className={"state "+stateClass}>{ state }</div>
             <div>
               <h2>Pampa Warro DJ</h2>
             </div>

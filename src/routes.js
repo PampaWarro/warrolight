@@ -8,7 +8,9 @@ import { default as DjDashboard} from "./containers/dj-dashboard";
 
 export function routes() {
   return <Route path='/' component={Root}>
-    <IndexRoute component={Simulator} />
+    <IndexRoute component={DjDashboard} />
+    <Route path='master' master='true' component={Simulator} />
+    <Route path='slave' component={Simulator} />
     <Route path='dj' component={DjDashboard} />
   </Route>
 }

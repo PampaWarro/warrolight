@@ -25,8 +25,12 @@ function* socketSend(action) {
     payload: action.payload
   })
 }
+function* clearRemote(action) {
+  yield put({ type: 'Clear remote' })
+}
 
 export default function* watchForGenericCalls() {
   yield takeEvery('API_FETCH_REQUEST', fetchData)
+  yield takeEvery('Remote cmd', clearRemote)
   yield takeEvery('send', socketSend)
 }

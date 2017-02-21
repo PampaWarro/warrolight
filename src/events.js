@@ -5,6 +5,7 @@ export const Connected = 'Socket connected'
 export const Disconnected = 'Socket disconnected'
 export const ServerData = 'Server data'
 export const RemoteCmd = 'Remote cmd'
+export const ClearRemote = 'Clear remote'
 
 // Negrada para no fijat el host y cambiar el puerto
 export const io = SocketIO(window.location.host.replace("3001", "3000"))
@@ -25,6 +26,8 @@ export function connectionReducer(store, action) {
         return update(store, {remoteCmd: action.payload})
       }
       break
+    case ClearRemote:
+      return update(store, { remoteCmd: '' })
     default:
       break
   }

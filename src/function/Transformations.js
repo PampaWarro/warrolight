@@ -75,6 +75,12 @@ export function programsByShape(mapping) {
       _.each(mapping, (Program, shapeName) => {
         const map = knownMappings[shapeName]
         let localLeds = _.extend({}, leds, {numberOfLeds: map.length})
+        // Map new geometry
+        localLeds.position = { x: [... Array(map.length)], y: [... Array(map.length)] }
+        for (let i =  0; i < map.length; i++) {
+          localLeds.position.x[i] = leds.geometry.x[map[i]]
+          localLeds.position.y[i] = leds.geometry.y[map[i]]
+        }
         // Support specific configs
         let specificConfig = config;
         if(_.isArray(Program)){

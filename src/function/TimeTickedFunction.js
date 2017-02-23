@@ -6,6 +6,7 @@ export class TimeTickedFunction {
     this.leds = leds;
     this.numberOfLeds = leds.numberOfLeds;
     this.geometry = leds.geometry;
+    this.position = leds.position;
   }
 
   // Override in subclasses

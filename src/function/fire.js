@@ -10,37 +10,12 @@ export class Func extends TimeTickedFunction {
     this.currentBright = new Array(this.numberOfLeds)
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const index = this.mappingOrder(i)
-      if (index > 540) {
-        this.bright[i] = 0
-        this.colors[i] = 0
-      } else {
-        this.colors[i] = 0.18 - (this.geometry.y[i] / 200)
-        const height = this.geometry.y[i] / 20
-        this.bright[i] = height * height + 0.1
-      }
+      this.colors[i] = 0.18 - (this.position.y[i] / 200)
+      const height = this.position.y[i] / 20
+      this.bright[i] = height * height + 0.1
       this.currentBright[i] = this.bright[i]
     }
     this.time = 0;
-  }
-
-  mappingOrder(index) {
-    if (index < 30) {
-      return index + 570
-    }
-    if (index <= 150 && index >= 30) {
-      return 150 - index
-    }
-    if (index >= 300 && index < 450) {
-      return 450 - index + 300 - 30
-    }
-    if (index >= 450 && index < 480) {
-      return 570
-    }
-    if (index >= 450) {
-      return index - 60
-    }
-    return index - 30
   }
 
   drawFrame(draw, done) {
@@ -50,7 +25,6 @@ export class Func extends TimeTickedFunction {
     const newColors = new Array(this.numberOfLeds)
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const index = this.mappingOrder(i)
       const color = this.colors[i]
       let bright = this.currentBright[i] * decay
       if (Math.random() > chance) {

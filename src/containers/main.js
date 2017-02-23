@@ -5,7 +5,7 @@ import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
   'debugSetup', 'test1', 'heart', 'spear-blink',
-  'rainbow2', 'white-spear',
+  'rainbow2', 'white-spear', 'fire-explosion',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
   'multiIntro', 'multiFlor', 'multiWarroLetras', 'fire'
@@ -38,7 +38,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'fire';
+    const initial = 'fire-explosion';
     let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,

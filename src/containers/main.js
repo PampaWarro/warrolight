@@ -86,6 +86,12 @@ export class Simulator extends React.Component {
     this.startCurrent()
   }
 
+  componentWillMount() {
+    if (!this.master) {
+      this.sendSlaveCommand('requestCurrentProgram', '')
+    }
+  }
+
   componentWillUnmount() {
     this.stopCurrent()
   }
@@ -97,6 +103,13 @@ export class Simulator extends React.Component {
     // Run remoteCmd
     if(newProps.program && newProps.program !== this.state.selected){
       this.setCurrentProgram(newProps.program)
+    }
+
+    if (newProps.requestedProgram) {
+      this.sendSlaveCommand('setCurrentProgram', this.state.selected)
+      for (let key in this.config) {
+        this.sendSlaveCommand("updateConfigField", {field: key, value: this.config[key]})
+      }
     }
 
     if(newProps.updatedField){
@@ -335,6 +348,8 @@ let mapStateToProps = state => {
       newState.program = remoteCmd.payload;
     } else if(remoteCmd.command == "updateConfigField"){
       newState.updatedField = remoteCmd.payload;
+    } else if (remoteCmd.command == 'requestCurrentProgram') {
+      newState.requestedProgram = true
     }
   }
   return newState

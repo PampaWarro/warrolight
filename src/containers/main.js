@@ -276,9 +276,9 @@ class NumberParam extends React.Component {
     <div className="config-item">
       <span>{this.field}:&nbsp;</span>
       <div>
-        <strong>{this.state.value}&nbsp;</strong>
+        <strong>{this.props.value}&nbsp;</strong>
         <input type="range" name={this.name}
-        min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+        min={this.min} step={this.step} max={this.max} value={this.props.value} onChange={this.handleChange}/>
       </div>
     </div>
     );
@@ -305,7 +305,6 @@ class BooleanParam extends React.Component {
 
   setVal(val){
     let value = val;
-    this.setState({value: value});
     this.props.updateConfig(value);
   }
 
@@ -314,8 +313,8 @@ class BooleanParam extends React.Component {
       <div className="config-item">
         <span>{this.field}:&nbsp;</span>
         <div>
-          <strong>{this.state.value}&nbsp;</strong>
-          <input type="checkbox" name={this.name} checked={this.state.value} onChange={this.handleChange}/>
+          <strong>{this.props.value}&nbsp;</strong>
+          <input type="checkbox" name={this.name} checked={this.props.value} onChange={this.handleChange}/>
         </div>
       </div>
     );

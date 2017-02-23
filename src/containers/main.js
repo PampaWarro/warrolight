@@ -5,7 +5,7 @@ import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
   'debugSetup', 'test1', 'heart', 'spear-blink',
-  'rainbow2', 'white-spear',
+  'rainbow2', 'white-spear', 'radial2',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
   'multiIntro', 'multiFlor', 'multiWarroLetras', 'fire'

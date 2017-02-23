@@ -28,14 +28,14 @@ export class Func extends SoundBasedFunction {
     const newColors = new Array(this.numberOfLeds)
 
     for(let i = 0; i < this.numberOfLeds; i++) {
-      newColors[i] = (40 - this.position.y[i]) > this.volumeSum
+      newColors[i] = (20 - this.position.y[i]) > this.volumeSum
         ? ColorUtils.HSVtoHex(
           0,
           0,
           0
         )
         : ColorUtils.HSVtoHex(
-          this.position.y[i] / 100 + 0.2,
+          this.position.y[i] / 50,
           1,
           this.config.brillo
         )

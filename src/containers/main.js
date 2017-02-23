@@ -186,6 +186,9 @@ export class Simulator extends React.Component {
       func: this.state.func,
       config: this.config
     })
+    if (this.state.func && this.state.func.updateConfig) {
+      this.state.func.updateConfig(field, value)
+    }
   }
 
   userUpdateConfigField(field, value){

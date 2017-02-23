@@ -2,7 +2,7 @@ const _ = require('lodash')
 
 import {programsByShape} from "./Transformations";
 
-const Spear = require("./components/color-spear").Func;
+const Spear = require("./color-spear").Func;
 
 // las formas que se pueden usar están definidas en Transformation
 const mapping = {

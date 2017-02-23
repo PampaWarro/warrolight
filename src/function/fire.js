@@ -3,7 +3,7 @@ const _ = require('lodash')
 
 import {programsByShape} from "./Transformations";
 
-const Fire = require("./components/fire").Func;
+const Fire = require("./fireFn").Func;
 
 // las formas que se pueden usar están definidas en Transformation
 const mapping = {

@@ -110,6 +110,15 @@ export function programsByShape(mapping) {
       done()
     }
 
+    updateConfig(key, value) {
+      _.each(this.instances, (program, mapName) => {
+        if (program.specificConfig[key] && program.specificConfig[key] !== value) {
+          program.specificConfig[key] = value
+          program.config[key] = value
+        }
+      })
+    }
+
     stop() {
       _.each(this.instances, (program, mapName) => program.stop())
     }

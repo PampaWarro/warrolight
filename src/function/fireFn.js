@@ -1,5 +1,5 @@
-import {ColorUtils} from "../../utils/ColorUtils";
-import {TimeTickedFunction} from "../TimeTickedFunction";
+import {ColorUtils} from "../utils/ColorUtils";
+import {TimeTickedFunction} from "./TimeTickedFunction";
 
 export class Func extends TimeTickedFunction {
   constructor(config, leds) {

@@ -1,5 +1,5 @@
-import {TimeTickedFunction} from "../TimeTickedFunction";
-import {ColorUtils} from "../../utils/ColorUtils";
+import {TimeTickedFunction} from "./TimeTickedFunction";
+import {ColorUtils} from "../utils/ColorUtils";
 
 export class Func extends TimeTickedFunction{
   drawFrame(draw, done) {

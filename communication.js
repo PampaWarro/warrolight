@@ -15,22 +15,25 @@ const Multiplexer = require('./multiplexer')
 var device1, device2, device3, device4
 var multiplexer
 
-device1 = new Device(300, 'COM4')
-device2 = new Device(300, 'COM5')
+device1 = new Device(150, 'COM3')
+device2 = new Device(150, 'COM4')
+setTimeout(() => device3 = new Device(150, 'COM5'), 2000)
+setTimeout(() => device4 = new Device(150, 'COM6'), 4000)
 
 
 setTimeout(() => {
-  multiplexer = new Multiplexer(600, [device1, device2], (index) => {
-    if(index < 300) {
+  multiplexer = new Multiplexer(600, [device1, device2, device3, device4], (index) => {
+    if(index < 150) {
       return [0, index]
+    } else if(index < 300) {
+        return [1, index - 150]
+    } else if(index < 300) {
+        return [2, index - 300]
     } else {
-      if(index < 450)
-        return [1, index - 300 + 150]
-      else
-        return [1, index - 300 - 150]
+        return [3, index - 450]
     }
   })
-}, 2000)
+}, 6000)
 
 let state = "off"
 io.on('connection', (socket) => {

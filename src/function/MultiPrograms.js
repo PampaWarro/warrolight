@@ -1,7 +1,7 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
 
-export function createMultiProgram(programSchedule) {
+export function createMultiProgram(programSchedule, random = false) {
   return class {
     constructor(config, leds) {
       // Shallow copy of schedule
@@ -19,8 +19,23 @@ export function createMultiProgram(programSchedule) {
 
       this.nextTimeout = setTimeout(() => this.playNextProgram(config, draw, done), this.current.duration);
 
-      this.nextPosition = (this.nextPosition + 1) % this.programSchedule.length;
+      if(random){
+        this.nextPosition = Math.floor(Math.random()*this.programSchedule.length) % this.programSchedule.length;
+      } else {
+        this.nextPosition = (this.nextPosition + 1) % this.programSchedule.length;
+      }
     }
+
+    updateConfig(key, value) {
+      var program = this.current.programInstance;
+      if (program.config && program.config[key] && program.config[key] !== value) {
+        program.config[key] = value
+        if(program.updateConfig){
+          program.updateConfig(key, value)
+        }
+      }
+    }
+
 
     start(config, draw, done) {
       this.playNextProgram(config, draw, done);

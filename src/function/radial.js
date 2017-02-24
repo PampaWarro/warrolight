@@ -9,8 +9,10 @@ export class Func extends TimeTickedFunction{
     this.extraTime = (this.extraTime || 0) + Math.random()*10;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const dx = this.geometry.x[i] - 30 - this.config.centerX;
-      const dy = this.geometry.y[i] - 34.6  + this.config.centerY;
+      let geometry = this.position || this.geometry;
+
+      const dx = geometry.x[i] - 30 - this.config.centerX;
+      const dy = geometry.y[i] - 34.6  + this.config.centerY;
 
       const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
 

@@ -36,6 +36,7 @@ export function programsByShape(mapping) {
   // Una permutación random de pedazos de a 20 luces
   const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
   const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
+  const trianguloBottomShuffle = _.shuffle(trianguloBottom)
 
   // La W warra
   const Warro = _.flatten([inv(pataLeft), _.range(150,300), inv(_.range(300, 450)), pataRight])
@@ -64,7 +65,7 @@ export function programsByShape(mapping) {
     trianguloBottom, trianguloTop,
     trianguloBottomBottom, trianguloTopTop,
     Warro, reloj, V1, V2,
-    shuffle, shuffleSegments10, shuffleSegments20,
+    shuffle, shuffleSegments10, shuffleSegments20, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
     mini_w, allOfIt
   };

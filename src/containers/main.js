@@ -4,11 +4,11 @@ import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup', 'test1', 'heart', 'volume-height',
+  'debugSetup', 'heart', 'volume-height',
   'rainbow2', 'white-spear', 'radial2', 'rainbow-horizontal', 'rainbow-hourglass',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'multiIntro', 'multiFlor', 'multiWarroLetras', 'fire'
+  'dia1Intro', 'dia1main', 'multiWarroLetras', 'fire', 'musicVolumeDot', 'speeding-spear'
 ]
 
 import { default as Lights } from '../geometry/canvas'
@@ -38,7 +38,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'fire';
+    const initial = 'dia1Intro';
     let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,

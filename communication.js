@@ -22,12 +22,12 @@ setTimeout(() => device4 = new Device(150, 'COM6'), 4000)
 
 
 setTimeout(() => {
-  multiplexer = new Multiplexer(600, [device1, device2, device3, device4], (index) => {
+  multiplexer = new Multiplexer(600, [device2, device4, device3, device1], (index) => {
     if(index < 150) {
       return [0, index]
     } else if(index < 300) {
         return [1, index - 150]
-    } else if(index < 300) {
+    } else if(index < 450) {
         return [2, index - 300]
     } else {
         return [3, index - 450]

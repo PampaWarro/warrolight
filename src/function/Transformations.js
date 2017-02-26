@@ -5,21 +5,27 @@ export function programsByShape(mapping) {
   var inv = arr => [].concat(arr).reverse()
 
   const quiebre_abajo = 30;
+  const quiebre_abajo_left = quiebre_abajo - 2;
+  const quiebre_abajo_right = quiebre_abajo;
+
+  const centroOffsetLeft = -1;
+  const centroOffsetRight = -1;
+
   const quiebre_arriba = 30;
 
-  const pataLeft = _.range(quiebre_abajo, 150)
-  const pataRight = _.range(450+quiebre_abajo, 600)
+  const pataLeft = _.range(quiebre_abajo_left, 150)
+  const pataRight = _.range(450+quiebre_abajo_right, 600)
 
-  const basePataLeft =  _.range(0, quiebre_abajo);
-  const basePataRight =  _.range(450, 450+quiebre_abajo);
+  const basePataLeft =  _.range(0, quiebre_abajo_left);
+  const basePataRight =  _.range(450, 450+quiebre_abajo_right);
 
-  const trianguloBottomLeft = _.range(150, 210);
-  const trianguloBottomRight = _.range(300, 360);
+  const trianguloBottomLeft = _.range(150, 210 + centroOffsetLeft);
+  const trianguloBottomRight = _.range(300, 360 + centroOffsetRight);
   const trianguloBottomBottom = inv(basePataLeft).concat(basePataRight);
   const trianguloBottom = _.flatten([trianguloBottomBottom, trianguloBottomRight, inv(trianguloBottomLeft)])
 
-  const trianguloTopLeft = _.range(360, 450-quiebre_arriba);
-  const trianguloTopRight = _.range(210, 300-quiebre_arriba);
+  const trianguloTopLeft = _.range(360 + centroOffsetRight, 450-quiebre_arriba);
+  const trianguloTopRight = _.range(210 + centroOffsetLeft, 300-quiebre_arriba);
   const trianguloTopTop = _.range(300-quiebre_arriba, 300).concat(inv(_.range(450-quiebre_arriba, 450)));
   const trianguloTop = _.flatten([trianguloTopLeft, inv(trianguloTopTop), inv(trianguloTopRight)])
 

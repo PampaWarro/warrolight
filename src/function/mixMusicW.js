@@ -12,7 +12,7 @@ const mapping = {
   // "Warro": MusicFreq,
   // "shuffleSegments20": MusicFlow,
   // "shuffle": MusicFlow,
-  "reloj": MusicFlow,
+  "reloj": [MusicFlow, {multiplier: 1.3, haciaAfuera: false, speed: 8}],
   "pataRight": MusicFreq,
   "pataLeft": MusicFreq
 }

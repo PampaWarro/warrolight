@@ -5,13 +5,13 @@ export function programsByShape(mapping) {
   var inv = arr => [].concat(arr).reverse()
 
   const quiebre_abajo = 30;
-  const quiebre_abajo_left = quiebre_abajo - 2;
-  const quiebre_abajo_right = quiebre_abajo;
+  const quiebre_abajo_left = quiebre_abajo - 3;
+  const quiebre_abajo_right = quiebre_abajo + 1;
 
-  const centroOffsetLeft = -1;
+  const centroOffsetLeft = -2;
   const centroOffsetRight = -1;
 
-  const quiebre_arriba = 30;
+  const quiebre_arriba = 33;
 
   const pataLeft = _.range(quiebre_abajo_left, 150)
   const pataRight = _.range(450+quiebre_abajo_right, 600)
@@ -48,8 +48,13 @@ export function programsByShape(mapping) {
   const Warro = _.flatten([inv(pataLeft), _.range(150,300), inv(_.range(300, 450)), pataRight])
 
   // Las V V
-  const V1 = inv(pataLeft).concat(_.range(150,300-quiebre_arriba))
-  const V2 = inv(_.range(300,450-quiebre_arriba)).concat(pataRight)
+  const V1L = pataLeft;
+  let V1R = _.range(150,300-quiebre_arriba);
+  const V2R = pataRight;
+  let V2L = _.range(300,450-quiebre_arriba);
+
+  const V1 = inv(V1L).concat(V1R)
+  const V2 = inv(V2L).concat(V2R)
 
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(150, 300), inv(_.range(300, 450)), inv(basePataRight)])
@@ -70,7 +75,7 @@ export function programsByShape(mapping) {
     pataLeft, pataRight,
     trianguloBottom, trianguloTop,
     trianguloBottomBottom, trianguloTopTop,
-    Warro, reloj, V1, V2,
+    Warro, reloj, V1, V2, V1L, V1R, V2L, V2R,
     shuffle, shuffleSegments10, shuffleSegments20, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
     mini_w, allOfIt

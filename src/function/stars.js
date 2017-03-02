@@ -37,6 +37,7 @@ export class Func extends TimeTickedFunction {
       pocasFast: {decay: 0.88, probability: 0.02},
       muchasFast: {decay: 0.88, probability: 0.1},
       muchasSlow: {decay: 0.95, probability: 0.06},
+      pocasMoving: {decay: 0.97, probability: 0.002, move: true, brillo: 1}
     }
   }
 

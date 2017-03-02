@@ -4,6 +4,7 @@ import {SoundBasedFunction} from "./SoundBasedFunction";
 export class Func extends SoundBasedFunction{
   constructor(config, leds) {
     super(config, leds);
+    this.averageVol = 0;
   }
 
   start(config, draw, done){
@@ -18,21 +19,23 @@ export class Func extends SoundBasedFunction{
   drawFrame(draw, done){
     this.time += this.config.speed;
 
-    let vol = this.averageVolume*this.config.multiplier;
+    let vol = this.averageVolume*this.config.multiplier*3+0.2;
+    this.averageVol = (vol+2*this.averageVol)/3
 
-    // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
-    if(vol < this.config.cutThreshold){
-      vol = 0;
-    }
-
-    let newVal = ColorUtils.HSVtoHex(0, 0, Math.min(vol*vol*5, 1));
 
     for(let i=0;i<this.numberOfLeds;i++) {
-      if(i % Math.round((this.numberOfLeds / this.config.numberOfOnLeds)) === 0){
-        this.lastVolume[i] = newVal;
-      } else {
-        this.lastVolume[i] = ColorUtils.rgbToHex(0,0,0);
+      let newColor = "#000000";
+      if(i < (this.numberOfLeds)*this.averageVol && (Math.ceil(i/3)*3)%(Math.round(this.numberOfLeds/10))){
+        let tone = 0.35;
+        if((i/this.numberOfLeds) > 0.5){
+          tone = 0.25;
+        }
+        if((i/this.numberOfLeds) > 0.7){
+          tone = 0;
+        }
+        newColor = ColorUtils.HSVtoHex(tone, 1, Math.min(1, vol));
       }
+      this.lastVolume[i] = newColor;
     }
 
     draw(this.lastVolume);
@@ -50,7 +53,6 @@ export class Func extends SoundBasedFunction{
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 3};
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
-    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.1};
     return res;
   }
 }

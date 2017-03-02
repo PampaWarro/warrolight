@@ -32,7 +32,7 @@ export class Func extends TimeTickedFunction {
   static presets() {
     return {
       slowMarks: {speed: 3, sameColorLeds: 5, brillo: 0},
-      fastMarks: {speed: 3, sameColorLeds: 5, brillo: 0},
+      fastMarks: {speed: 4, sameColorLeds: 20, brillo: 0.3},
     }
   }
 

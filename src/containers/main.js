@@ -8,7 +8,7 @@ const ProgramNames = [
   'rainbow2', 'white-spear', 'radial2', 'rainbow-horizontal', 'rainbow-hourglass',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'dia1Intro', 'dia1main', 'multiWarroLetras', 'fire', 'musicVolumeDot', 'speeding-spear'
+  'dia2Intro', 'dia1main', 'multiWarroLetras', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear'
 ]
 
 import { default as Lights } from '../geometry/canvas'

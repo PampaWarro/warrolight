@@ -38,7 +38,7 @@ export class Func extends TimeTickedFunction {
   // Override and extend config Schema
   static configSchema() {
     let config = super.configSchema();
-    config.speed = {type: Number, min: 5, max: 20, default: 4};
+    config.speed = {type: Number, min: 1, max: 20, default: 4};
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
     config.spearLength = {type: Number, min: 30, max: 540, step: 1, default: 180};
     return config;

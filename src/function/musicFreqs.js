@@ -37,7 +37,7 @@ export class Func extends SoundBasedFunction {
         inc = 0;
       }
 
-      this.lastVolume[i] = ColorUtils.HSVtoHex((Math.min(1, amp)+this.config.colorOffset)%1, 1, Math.min(1, Math.pow(amp/2+inc/2, 1)));
+      this.lastVolume[i] = ColorUtils.HSVtoHex((Math.min(1, amp)+this.config.colorOffset)%1, 1, Math.min(1, Math.pow(amp+0*inc, 2)));
       this.lastVolumeInc[i] = 0;
       this.lastVolumeCount[i] = 1;
       this.lastVolumeSum[i] = 0;

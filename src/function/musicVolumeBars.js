@@ -33,7 +33,7 @@ export class Func extends SoundBasedFunction{
         if((i/this.numberOfLeds) > 0.7){
           tone = 0;
         }
-        newColor = ColorUtils.HSVtoHex(tone, 1, Math.min(1, vol));
+        newColor = ColorUtils.HSVtoHex(tone, 1, Math.min(1, vol*vol));
       }
       this.lastVolume[i] = newColor;
     }

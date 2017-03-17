@@ -9,6 +9,7 @@ export class Func extends SoundBasedFunction{
   start(config, draw, done){
     this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => "#000000");
     this.time = 0;
+    this.realTime = 0;
     this.maxVolume = 0;
 
     super.start(config, draw, done)
@@ -17,6 +18,7 @@ export class Func extends SoundBasedFunction{
   // Override parent method
   drawFrame(draw, done){
     this.time += this.config.speed;
+    this.realTime += 1;
 
     let vol = this.averageVolume*this.config.multiplier;
 
@@ -25,7 +27,7 @@ export class Func extends SoundBasedFunction{
       vol = vol/3*0;
     }
 
-    let newVal = ColorUtils.HSVtoHex((vol*4+this.time/2000)%1, 1, Math.min(vol*vol*10, 1));
+    let newVal = ColorUtils.HSVtoHex((vol*4+this.realTime/2000)%1, 1, Math.min(vol*vol*10, 1));
 
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.doble){
@@ -52,6 +54,7 @@ export class Func extends SoundBasedFunction{
   static presets(){
     return {
       slowDoble: {multiplier: 1, speed: 1, doble: true},
+      mediumDoble: {multiplier: 1.3, speed: 3, doble: true},
       fastSimple: {speed: 5, doble: false},
       fastDobleDesdePuntas: {speed: 5, doble: true, haciaAfuera: false},
       fastDobleDesdeCentro: {speed: 5, doble: true, haciaAfuera: true},

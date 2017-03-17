@@ -12,7 +12,7 @@ const mapping = {
   // "Warro": MusicFreq,
   // "trianguloBottomBottom": MusicFlow,
 
-  "shuffleSegments20": MusicFlow
+  "shuffleSegments10": MusicFlow
   // "shuffle": MusicFlow,
 }
 

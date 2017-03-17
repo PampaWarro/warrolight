@@ -4,11 +4,11 @@ import { default as warroStripes } from '../geometry/warro'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup', 'debugShapes', 'heart', 'volume-height',
-  'rainbow2', 'white-spear', 'radial2', 'rainbow-horizontal', 'rainbow-hourglass',
+  'debugSetup', 'debugShapes', 'aliveDots', 'heart',
+  'rainbow2', 'white-spear', 'rainbow-horizontal', 'rainbow-hourglass',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'dia2Intro', 'dia1main', 'multiWarroLetras', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear'
+  'PROGRAM_Main', 'PROGRAM_Intro', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear'
 ]
 
 import { default as Lights } from '../geometry/canvas'

@@ -22,7 +22,7 @@ export function programsByShape(mapping) {
   const trianguloBottomLeft = _.range(150, 210 + centroOffsetLeft);
   const trianguloBottomRight = _.range(300, 360 + centroOffsetRight);
   const trianguloBottomBottom = inv(basePataLeft).concat(basePataRight);
-  const trianguloBottom = _.flatten([trianguloBottomBottom, trianguloBottomRight, inv(trianguloBottomLeft)])
+  const trianguloBottom = _.flatten([basePataRight, trianguloBottomRight, inv(trianguloBottomLeft), inv(basePataLeft)])
 
   const trianguloTopLeft = _.range(360 + centroOffsetRight, 450-quiebre_arriba);
   const trianguloTopRight = _.range(210 + centroOffsetLeft, 300-quiebre_arriba);
@@ -40,6 +40,7 @@ export function programsByShape(mapping) {
   ])
 
   // Una permutación random de pedazos de a 20 luces
+  const shuffleSegments5 = _.flatten(_.shuffle(_.map(_.range(0,120), i => _.range(i*5, (i+1)*5))))
   const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
   const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
   const trianguloBottomShuffle = _.shuffle(trianguloBottom)
@@ -73,10 +74,10 @@ export function programsByShape(mapping) {
 
   const knownMappings = {
     pataLeft, pataRight,
-    trianguloBottom, trianguloTop,
+    trianguloBottom, trianguloTop, trianguloBottomLeft, trianguloBottomRight, trianguloTopRight, trianguloTopLeft,
     trianguloBottomBottom, trianguloTopTop,
     Warro, reloj, V1, V2, V1L, V1R, V2L, V2R,
-    shuffle, shuffleSegments10, shuffleSegments20, trianguloBottomShuffle,
+    shuffle, shuffleSegments10, shuffleSegments20, shuffleSegments5, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
     mini_w, allOfIt
   };

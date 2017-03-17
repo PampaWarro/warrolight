@@ -10,6 +10,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
     this.averageVolume = 0;
     this.averageVolumeSmoothed = 0;
     this.averageVolumeSmoothedSlow = 0;
+    this.medianVolume10 = _.map(_.range(15), () => 0)
+    this.medianVolume = 0
     let self = this;
 
     if(window.singletonAudioStream){
@@ -72,6 +74,12 @@ export class SoundBasedFunction extends TimeTickedFunction{
         self.averageVolume = getAverageVolume(byteFrequencyData, config.minFreq, config.maxFreq);
         self.averageVolumeSmoothed = (self.averageVolume+2*self.averageVolumeSmoothed)/3
         self.averageVolumeSmoothedSlow = (self.averageVolume+600*self.averageVolumeSmoothed)/601
+
+
+        self.medianVolume10.push(self.averageVolume)
+        self.medianVolume10 = self.medianVolume10.slice(1)
+        self.medianVolume = _.sortBy(self.medianVolume10)[7]
+
         self.analyzeRawAudioData(byteFrequencyData)
 
         // self.bassesAverageVolume = getAverageVolume(array, 32);

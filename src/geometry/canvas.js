@@ -111,12 +111,20 @@ export default class Canvas extends React.Component {
         const x = X[i]
         const y = Y[i]
 
-        let power = (r + g + b - 150) * 2
+        let power = (r + g + b)
         if (power < 0) power = 0
 
-        let lightRadius = (20 + (r + g + b) / (255 * 3) * 80) * 0.7
+        let lightRadius = (10 + (r + g + b) / (255 * 3) * 80) * 1
 
-        let [or, og, ob] = [r + power, g + power, b + power]
+        let m = 2;
+        if(power < 200){
+          m = 4;
+        } else if (power < 100){
+          m = 8;
+        } else if (power < 50){
+          m = 16;
+        }
+        let [or, og, ob] = [r * m, g *m, b * m]
         if (or > 255) or = 255
         if (og > 255) og = 255
         if (ob > 255) ob = 255
@@ -124,7 +132,7 @@ export default class Canvas extends React.Component {
         ctx.beginPath()
 
       lightRadius = lightRadius /6;
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+      ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
 
         // let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
         // gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)

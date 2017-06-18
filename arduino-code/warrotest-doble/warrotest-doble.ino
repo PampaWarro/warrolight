@@ -96,7 +96,7 @@ void writeLeds(int pos, byte r, byte g, byte  b){
 
 void loop() { 
   int c = 0;
-  int stripSize = NUM_LEDS*2;
+  int stripSize = NUM_LEDS;
   if(Serial.available() >= 2) {
     int encoding = Serial.read();
     if(encoding == ENCODING_POS_RGB){

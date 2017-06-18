@@ -51,8 +51,8 @@ export class Func extends TimeTickedFunction {
   static configSchema() {
     let config = super.configSchema();
     config.speed = {type: Number, min: 1, max: 20, default: 4};
-    config.decay = {type: Number, min: 0.98, max: 0.99999, step: 0.001, default: 0.985};
-    config.chance = {type: Number, min: 0.90, max: 0.99, step: 0.001, default: 0.95};
+    config.decay = {type: Number, min: 0.8, max: 0.999, step: 0.001, default: 0.985};
+    config.chance = {type: Number, min: 0.8, max: 0.999, step: 0.001, default: 0.95};
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
     return config;
   }

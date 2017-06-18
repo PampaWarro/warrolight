@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { default as warroStripes } from '../geometry/warro'
+import { default as warroStripes } from '../geometry/geometry-wchica'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = ['debugSetup',

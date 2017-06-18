@@ -14,4 +14,4 @@ export const Func = createMultiProgram([
   {duration: 2*seg, program: programsByShape({trianguloTop: AllWhite})},
   {duration: 2*seg, program: programsByShape({V1: AllWhite})},
   {duration: 2*seg, program: programsByShape({V2: AllWhite})},
-], true)
+], false)

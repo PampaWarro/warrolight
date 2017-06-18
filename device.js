@@ -41,9 +41,11 @@ module.exports = class Device {
   }
 
   setState(rgbArray) {
-    const newState = _.range(this.numberOfLights)
+    // Initialize everything black
+    const newState = _.map(_.range(this.numberOfLights), () => arrayFromRGB("#000000"))
+
     for (let i = 0; i < this.numberOfLights; i++) {
-      newState[i] = arrayFromRGB(rgbArray[i])
+      newState[i] = arrayFromRGB(rgbArray[i % rgbArray.length])
     }
     this.state = newState
   }

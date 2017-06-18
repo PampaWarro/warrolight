@@ -12,25 +12,43 @@ const path = require('path');
 const Device = require('./device')
 const Multiplexer = require('./multiplexer')
 
-var device1, device2, device3, device4
-var multiplexer
+let multiplexer;
+let numberOfLights = 1;
 
-device1 = new Device(300, 'COM4')
-device2 = new Device(300, 'COM5')
-
+// W Chica
+const device1 = new Device(150, 'COM15');
 setTimeout(() => {
-  multiplexer = new Multiplexer(600, [device1, device2], (index) => {
-    if(index < 150) {
-      return [1, index]
-    } else if(index < 300) {
-      return [0, index - 150]
-  } else if(index < 450) {
-      return [0, index - 150]
+  multiplexer = new Multiplexer(150, [device1], (index) => {
+    // Skip the first 7 leds on the strip, which are on the back of thw small W
+    if(index < 7){
+      return [0, 8]
     } else {
-      return [1, index - 300]
+      return [0, index]
     }
   })
+  numberOfLights = multiplexer.numberOfLights
 }, 6000)
+
+
+// W grande
+// var device1, device2
+// device1 = new Device(300, 'COM4')
+// device2 = new Device(300, 'COM5')
+//
+// setTimeout(() => {
+//   multiplexer = new Multiplexer(600, [device1, device2], (index) => {
+//     if(index < 150) {
+//       return [1, index]
+//     } else if(index < 300) {
+//       return [0, index - 150]
+//   } else if(index < 450) {
+//       return [0, index - 150]
+//     } else {
+//       return [1, index - 300]
+//     }
+//   })
+//  numberOfLights = multiplexer.numberOfLights
+// }, 6000)
 
 let state = "off"
 io.on('connection', (socket) => {
@@ -86,19 +104,20 @@ io.on('connection', (socket) => {
     }
   }
 
+
   const djActions = {
     "off": {
       description: "APAGAR +5s",
-      run: temporalEffectAction(t => _.range(0,600).map(i => '#000000'), 5000)
+      run: temporalEffectAction(t => _.range(0,numberOfLights).map(i => '#000000'), 5000)
     },
     "white": {
       description: "WHITE +5s",
-      run: temporalEffectAction(t => _.range(0,600).map(i => '#777777'), 5000)
+      run: temporalEffectAction(t => _.range(0,numberOfLights).map(i => '#777777'), 5000)
     },
     "warro": {
       description: "Logo Pampa Warro +2s",
       run: temporalEffectAction(t => {
-        let todoNaranja = _.range(0,600).map(i => '#FF9933')
+        let todoNaranja = _.range(0,numberOfLights).map(i => '#FF9933')
         _.each(_.range(0,30).concat(_.range(450,480)), i => todoNaranja[i] = "#000000")
         return todoNaranja
       }, 2000)

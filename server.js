@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
       djActionRunning = true;
       setTimeout(() => djActionRunning = false, 1000);
       if (multiplexer) {
-        multiplexer.setState(_.range(0,600).map(i => '#990066'))
+        multiplexer.setState(_.range(0,multiplexer.numberOfLights).map(i => '#990066'))
       }
     }
   })

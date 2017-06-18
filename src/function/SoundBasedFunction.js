@@ -73,7 +73,7 @@ export class SoundBasedFunction extends TimeTickedFunction{
         // calculate average
         self.averageVolume = getAverageVolume(byteFrequencyData, config.minFreq, config.maxFreq);
         self.averageVolumeSmoothed = (self.averageVolume+2*self.averageVolumeSmoothed)/3
-        self.averageVolumeSmoothedSlow = (self.averageVolume+600*self.averageVolumeSmoothed)/601
+        self.averageVolumeSmoothedSlow = (self.averageVolume+10*self.averageVolumeSmoothedSlow)/11
 
 
         self.medianVolume10.push(self.averageVolume)

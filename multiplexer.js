@@ -16,7 +16,7 @@ module.exports = class Multiplexer {
 
   setState(newState) {
     const newStates = this.devices.map(
-      device => _.range(device.numberOfLights)
+      device => _.map(_.range(device.numberOfLights), i => '#00000')
     )
     const targetDevice = this.targetDevice
     const targetPosition = this.targetPosition

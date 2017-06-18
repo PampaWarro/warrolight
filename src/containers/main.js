@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { default as warroStripes } from '../geometry/warro'
+import { default as warroStripes } from '../geometry/geometry-wchica'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
@@ -8,7 +8,7 @@ const ProgramNames = [
   'rainbow2', 'white-spear', 'rainbow-horizontal', 'rainbow-hourglass',
   'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
   'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'PROGRAM_Main', 'PROGRAM_Intro', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear'
+  'PROGRAM_Main', 'PROGRAM_Intro', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves'
 ]
 
 import { default as Lights } from '../geometry/canvas'
@@ -38,7 +38,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'debugShapes';
+    const initial = 'water-flood';
     let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,

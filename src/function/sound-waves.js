@@ -20,11 +20,11 @@ export class Func extends SoundBasedFunction {
         speed: Math.pow(relativeVolume, 2) * 1 + 0.05,
         // speed: 0.1,
         intensity: relativeVolume,
-        distance: 0.1,
+        distance: self.config.initialDistance,
         color: relativeVolume,
         saturation: 0.9,
         update: function () {
-          this.distance += this.speed * self.config.speed
+          this.distance += (self.config.haciaAfuera ? 1 : -1) * this.speed * self.config.speed
           this.intensity = this.intensity * (3 + Math.sqrt(relativeVolume)) / 4
         }
       }
@@ -57,7 +57,7 @@ export class Func extends SoundBasedFunction {
         let d = Math.sqrt(x * x + y * y)
 
         let distance = Math.abs(dot.distance - d);
-        let maxDis = 2;
+        let maxDis = this.config.waveWidth;
         if (distance < maxDis) {
           let [r2, g2, b2] = ColorUtils.HSVtoRGB(dot.color, dot.saturation, (1 - distance / maxDis) * dot.intensity * 1)
           r = r + r2;
@@ -87,10 +87,14 @@ export class Func extends SoundBasedFunction {
   static configSchema() {
     let config = super.configSchema();
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
+    config.initialDistance = {type: Number, min: 0, max: 40, step: 0.1, default: 0}
+    config.centerY =  {type: Number, min: 0, max: 40, step: 0.1, default: 0}
+    config.centerX =  {type: Number, min: -30, max: 30, step: 0.1, default: 0}
+    config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2}
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
     config.speed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}
     // config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 50}
-    // config.doble = {type: Boolean, default: true}
+    config.haciaAfuera = {type: Boolean, default: true}
     // config.toneColor  = {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
     return config;
   }

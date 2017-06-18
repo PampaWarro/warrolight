@@ -17,7 +17,7 @@ export class Func extends SoundBasedFunction {
     const geometry = this.position || this.geometry;
 
     let vol = this.averageVolume * 0.9 + 0.1;
-    // vol = 0.3
+    vol = 0.3
     for (let i = 0; i < this.numberOfLeds; i++) {
       let posY = 1 - (geometry.y[i] / geometry.height);
       let volumeHeight = Math.max(0, this.averageVolume * 8 - 0.1);

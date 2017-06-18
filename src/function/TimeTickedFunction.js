@@ -20,12 +20,12 @@ export class TimeTickedFunction {
     this.startTime = new Date();
 
     const frame =() => {
-      this.interval = setTimeout(frame, (1000 / config.frequencyInHertz));
+      this.interval = setTimeout(frame, (1000 / 60));
       this.timeInMs = new Date() - this.startTime;
-      this.drawFrame(draw, done);
+      this.drawFrame(colorsArray => draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness))), done);
     }
 
-    this.interval = setTimeout(frame, (1000 / config.frequencyInHertz));
+    this.interval = setTimeout(frame, (1000 / 60));
 
     done()
   }
@@ -37,7 +37,8 @@ export class TimeTickedFunction {
   static configSchema(){
     // Child classes should call super.configSchema and extend this object
     return {
-      frequencyInHertz: {type: Number, min: 1, max: 300, default: 70}
+      globalBrightness: {type: Number, min: 0, max: 1, step: 0.01, default: 1},
+      // frequencyInHertz: {type: Number, min: 1, max: 300, default: 60},
     }
   }
 }

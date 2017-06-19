@@ -5,29 +5,35 @@ export function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
 
   const quiebre_abajo = 30;
-  const quiebre_abajo_left = quiebre_abajo - 3;
-  const quiebre_abajo_right = quiebre_abajo + 1;
+  const quiebre_abajo_left = quiebre_abajo + 3;
+  const quiebre_abajo_right = quiebre_abajo + 3;
 
-  const centroOffsetLeft = -2;
-  const centroOffsetRight = -1;
+  const centroOffsetLeft = 4;
+  const centroOffsetRight = 3;
 
-  const quiebre_arriba = 33;
+  const comienzoTira1 = 0 + 4
+  const comienzoTira2 = 150 + 5
+  const comienzoTira3 = 300 + 4
+  const comienzoTira4 = 450 - 0
+
+  const quiebre_arriba = 30;
+  const quiebre_arriba_left = quiebre_arriba;
+  const quiebre_arriba_right = quiebre_arriba
 
   const pataLeft = _.range(quiebre_abajo_left, 150)
   const pataRight = _.range(450+quiebre_abajo_right, 600)
 
-  const basePataLeft =  _.range(0, quiebre_abajo_left);
-  const basePataRight =  _.range(450, 450+quiebre_abajo_right);
+  const basePataLeft =  _.range(comienzoTira1, quiebre_abajo_left);
+  const basePataRight =  _.range(comienzoTira4, 450+quiebre_abajo_right);
 
-  const trianguloBottomLeft = _.range(150, 210 + centroOffsetLeft);
-  const trianguloBottomRight
-    = _.range(300, 360 + centroOffsetRight);
+  const trianguloBottomLeft = _.range(comienzoTira2, 210 + centroOffsetLeft);
+  const trianguloBottomRight = _.range(comienzoTira3, 360 + centroOffsetRight);
   const trianguloBottomBottom = inv(basePataLeft).concat(basePataRight);
   const trianguloBottom = _.flatten([basePataRight, trianguloBottomRight, inv(trianguloBottomLeft), inv(basePataLeft)])
 
-  const trianguloTopLeft = _.range(360 + centroOffsetRight, 450-quiebre_arriba);
-  const trianguloTopRight = _.range(210 + centroOffsetLeft, 300-quiebre_arriba);
-  const trianguloTopTop = _.range(300-quiebre_arriba, 300).concat(inv(_.range(450-quiebre_arriba, 450)));
+  const trianguloTopLeft = _.range(360 + centroOffsetRight, 450-quiebre_arriba_right);
+  const trianguloTopRight = _.range(210 + centroOffsetLeft, 300-quiebre_arriba_left);
+  const trianguloTopTop = _.range(300-quiebre_arriba_left, 300).concat(inv(_.range(450-quiebre_arriba_right, 450)));
   const trianguloTop = _.flatten([trianguloTopLeft, inv(trianguloTopTop), inv(trianguloTopRight)])
 
   // Una permutación random de todas las luces. PSYCHO MIND FUCK
@@ -47,13 +53,13 @@ export function getShapes(mapping) {
   const trianguloBottomShuffle = _.shuffle(trianguloBottom)
 
   // La W warra
-  const Warro = _.flatten([inv(pataLeft), _.range(150,300), inv(_.range(300, 450)), pataRight])
+  const Warro = _.flatten([inv(pataLeft), _.range(comienzoTira2,300), inv(_.range(comienzoTira3, 450)), pataRight])
 
   // Las V V
   const V1L = pataLeft;
-  let V1R = _.range(150,300-quiebre_arriba);
+  let V1R = _.range(comienzoTira2,300-quiebre_arriba_left);
   const V2R = pataRight;
-  let V2L = _.range(300,450-quiebre_arriba);
+  let V2L = _.range(comienzoTira3,450-quiebre_arriba_right);
 
   const V1 = inv(V1L).concat(V1R)
   const V2 = inv(V2L).concat(V2R)
@@ -61,7 +67,7 @@ export function getShapes(mapping) {
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(150, 300), inv(_.range(300, 450)), inv(basePataRight)])
 
-  const allOfIt = _.range(0, 600)
+  const allOfIt = _.range(comienzoTira1, 600)
   // Numeros y letras
   const char_1 = _.range(150, 300)
   const char_2 = _.flatten([inv(trianguloBottomBottom), trianguloBottomLeft, trianguloTopRight, trianguloTopTop])

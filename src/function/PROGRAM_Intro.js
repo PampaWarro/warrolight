@@ -24,7 +24,7 @@ const schedule = [
     {duration: 3*60*seg, program: programsByShape({trianguloBottom: [animateParamProgram(Stars, 'brillo', 10, brillo => Math.min(1, brillo+0.001)), {decay: 0.97, probability: 0.0003, brillo: 0}]})},
     {duration: 24*60*60*seg, program: createMultiProgram([
         {duration: 1*seg, program: programsByShape({trianguloBottomLeft: VolumeBars, trianguloBottomRight: VolumeBars})},
-        {duration: 2*60*seg*60*24, program: createMultiProgram([
+        {duration: 2*60*seg, program: createMultiProgram([
           {duration: 0.3*seg, program: programsByShape({trianguloBottomLeft: Rainbow})},
           {duration: 0.3*seg, program: programsByShape({trianguloBottomRight: Rainbow})},
           {duration: 0.3*seg, program: programsByShape({trianguloBottomBottom: Rainbow})},

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { default as warroStripes } from '../geometry/geometry-wchica'
+// import { default as warroStripes } from '../geometry/geometry-wchica'
+import { default as warroStripes } from '../geometry/geometry-wgrande'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
@@ -38,7 +39,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'water-flood';
+    const initial = 'debugSetup';
     let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,

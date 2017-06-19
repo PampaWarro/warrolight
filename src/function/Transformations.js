@@ -1,5 +1,5 @@
-import {getShapes} from './shape-mapping-wchica'
-// import {getShapes} from './shape-mapping-wgrande'
+// import {getShapes} from './shape-mapping-wchica'
+import {getShapes} from './shape-mapping-wgrande'
 
 const _ = require('lodash')
 

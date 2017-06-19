@@ -13,10 +13,10 @@ export class Func extends SoundBasedFunction {
 
     this.createDot = () => {
       let relativeVolume = Math.min(1, self.averageVolume / self.maxVolume);
-      console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
+      //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
       return {
-        centerX: 0,
-        centerY: 0,
+        centerX: this.config.centerX,
+        centerY: this.config.centerY,
         speed: Math.pow(relativeVolume, 2) * 1 + 0.05,
         // speed: 0.1,
         intensity: relativeVolume,
@@ -42,7 +42,7 @@ export class Func extends SoundBasedFunction {
 
       if (this.dots.length > 150) {
         this.dots.shift();
-        console.log("making space")
+        console.log("SoundWaves: making space")
       }
     }
 
@@ -52,8 +52,8 @@ export class Func extends SoundBasedFunction {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0]
       _.each(this.dots, dot => {
-        let y = geometry.y[i] - geometry.height / 2;
-        let x = geometry.x[i] - geometry.width / 2;
+        let y = geometry.y[i] - geometry.height / 2 + dot.centerY;
+        let x = geometry.x[i] - geometry.width / 2 - dot.centerX;
         let d = Math.sqrt(x * x + y * y)
 
         let distance = Math.abs(dot.distance - d);
@@ -88,8 +88,8 @@ export class Func extends SoundBasedFunction {
     let config = super.configSchema();
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     config.initialDistance = {type: Number, min: 0, max: 40, step: 0.1, default: 0}
-    config.centerY =  {type: Number, min: 0, max: 40, step: 0.1, default: 0}
-    config.centerX =  {type: Number, min: -30, max: 30, step: 0.1, default: 0}
+    config.centerY =  {type: Number, min: -20, max: 20, step: 1, default: 0}
+    config.centerX =  {type: Number, min: -20, max: 20, step: 1, default: 0}
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2}
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
     config.speed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}

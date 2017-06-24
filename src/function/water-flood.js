@@ -16,19 +16,19 @@ export class Func extends SoundBasedFunction {
     const colors = new Array(this.numberOfLeds)
     const geometry = this.position || this.geometry;
 
-    let vol = this.averageVolume * 0.9 + 0.1;
-    vol = 0.3
+    let vol = this.averageRelativeVolumeSmoothed;
+
     for (let i = 0; i < this.numberOfLeds; i++) {
       let posY = 1 - (geometry.y[i] / geometry.height);
-      let volumeHeight = Math.max(0, this.averageVolume * 8 - 0.1);
+      let volumeHeight = Math.max(0, (vol+0.1)*(vol+0.1));
       let whiteBorderWidth = 0.95
 
       if (this.config.whiteBorder && (posY < volumeHeight) && (posY > (volumeHeight*whiteBorderWidth))) {
-        colors[i] = "#ffffff";
+        colors[i] = "#666666";
       } else if (posY < volumeHeight) {
         let timeY = Math.sin(geometry.y[i] * this.config.escala + this.timeInMs * this.config.velocidad / 50);
         let timeX = Math.sin(geometry.x[i] * this.config.escala + this.timeInMs * this.config.velocidad / 20);
-        colors[i] = ColorUtils.HSVtoHex(this.config.color + 0.6 + (timeX * 0.05 + 0.025), 1, timeY * vol + vol);
+        colors[i] = ColorUtils.HSVtoHex(this.config.color + 0.6 + (timeX * 0.05 + 0.025), 1, timeY+0.7);
       } else {
         colors[i] = "#000000";
       }
@@ -38,10 +38,17 @@ export class Func extends SoundBasedFunction {
     done();
   }
 
+  static presets() {
+    return {
+      "default": {velocidad: 0.4, whiteBorder: true},
+      "gold": {velocidad: 0.1, whiteBorder: false, escala: 0.5, color: 0.42}
+    }
+  }
+
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-    res.escala = {type: Number, min: 0.01, max: 5, step: 0.01, default: 0.3}
+    res.escala = {type: Number, min: 0.01, max: 5, step: 0.01, default: 1}
     res.color = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
     res.velocidad = {type: Number, min: -3, max: 3, step: 0.01, default: 0.4}
     res.whiteBorder = {type: Boolean, default: false}

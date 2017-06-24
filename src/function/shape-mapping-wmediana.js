@@ -62,7 +62,7 @@ export function getShapes(mapping) {
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(comienzoTira2, 300), inv(_.range(comienzoTira3, 450)), inv(basePataRight)])
 
-  const allOfIt = _.range(comienzoTira1, 600)
+  const allOfIt = _.flatten([_.range(comienzoTira1, 150),_.range(comienzoTira2, 300),_.range(comienzoTira3, 450),_.range(comienzoTira4, 600)])
 
   // Numeros y letras
   const char_1 = _.range(150, 300)

@@ -33,6 +33,7 @@ export class Func extends TimeTickedFunction {
     return {
       slowMarks: {speed: 3, sameColorLeds: 5, brillo: 0},
       fastMarks: {speed: 4, sameColorLeds: 20, brillo: 0.3},
+      purpleDots: {speed: 2, sameColorLeds: 7, brillo: 0},
     }
   }
 

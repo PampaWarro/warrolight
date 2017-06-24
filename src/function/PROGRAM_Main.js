@@ -18,13 +18,35 @@ const ColorSpear = require("./color-spear").Func;
 const Hourglass = require("./rainbow-hourglass").Func;
 const MixMusicW = require("./mixMusicW").Func;
 const AliveDots = require("./aliveDots").Func;
+const SoundWaves = require("./sound-waves").Func;
+const WaterFlood = require("./water-flood").Func;
 const AliveDotsSpeed = require("./aliveDotsSpeed").Func;
 const baseTime = 1*1000;
 
 let flowMulti = MusicFlow
 
+let soundWavesPresets = _.map(SoundWaves.presets(), preset => {
+  return {duration: 60 * baseTime, program: programsByShape({allOfIt: [SoundWaves, preset]})}
+});
+
+let waterPresets = _.map(WaterFlood.presets(), preset => {
+  return {duration: 60 * baseTime, program: programsByShape({allOfIt: [WaterFlood, preset]})}
+});
+
 const schedule = [
+  {
+    duration: 30*baseTime,
+    program: programsByShape({
+      Warro: animateParamProgram(animateParamProgram(Radial, 'escala', 1, s => Math.max((s*1.01)%15, 0.5), 'power',60*30, p => Math.max(1, Math.random()*40)))
+    })
+  },
+  {duration: 60*baseTime, program: programsByShape({Warro: [animateParamProgram(SoundWaves, 'centerX', 120, x => -x), {centerX: -20, speed: 0.5}]})},
+  ... soundWavesPresets,
+  ... waterPresets,
   {duration: 60 * baseTime, program: programsByShape({reloj: [animateParamProgram(AliveDotsSpeed, 'toneColor', 1, s => (s+0.005)%1), AliveDots.presets().normal]})},
+  {duration: 30*baseTime, program: programsByShape({allOfIt: [Radial, {centerY: 17.3, velocidad: 10, power: 15}]})},
+  {duration: 15*baseTime, program: programsByShape({Warro: [Radial, {power: 20, escala: 10, velocidad: 10, centerX: -30, centerY: 17.3}]})},
+  {duration: 15*baseTime, program: programsByShape({Warro: [Radial, {power: 20, escala: 10, velocidad: 10}]})},
   {duration: 60 * baseTime, program: programsByShape({Warro: [animateParamProgram(AliveDots, 'toneColor', 1, s => (s+0.005)%1), AliveDots.presets().musicMediaSlow]})},
   {duration: 30 * baseTime, program: programsByShape({allOfIt: [Stars, Stars.presets().slowBlue]})},
   {duration: 30 * baseTime, program: programsByShape({Warro: [animateParamProgram(Stars, 'starsColor', 1, s => (s+0.005)%1), Stars.presets().pocasSlow]})},
@@ -39,14 +61,12 @@ const schedule = [
   {duration: 30 * baseTime, program: programsByShape({Warro: [AliveDots, AliveDots.presets().musicModerado]})},
   {duration: 30 * baseTime, program: programsByShape({Warro: [AliveDots, AliveDots.presets().musicQuilombo]})},
 
-  {duration: 15*baseTime, program: programsByShape({Warro: [Radial, {power: 20, escala: 10, velocidad: 10, centerX: -30, centerY: 17}]})},
-  {duration: 15*baseTime, program: programsByShape({Warro: [Radial, {power: 20, escala: 10, velocidad: 10}]})},
   {duration: 30*baseTime, program: programsByShape({Warro: [animateParamProgram(VolumeDot, 'numberOfOnLeds', 5, n => (n+1) % 150), {multiplier: 3, numberOfOnLeds: 1}]})},
   {duration: 30*baseTime, program: programsByShape({Warro: [Radial, {power: 20, escala: 1, velocidad: 10}]})},
   {duration: 30*baseTime, program: programsByShape({trianguloTop: [SpeedingSpear, {spearLength: 10}]})},
   {duration: 30*baseTime, program: programsByShape({V1L: VolumeBars, V2R: VolumeBars, trianguloTopRight: VolumeBars, trianguloTopLeft: VolumeBars, trianguloBottomLeft: VolumeBars, trianguloBottomRight: VolumeBars})},
   {duration: 30*baseTime, program: programsByShape({Warro: [SpeedingSpear, {speed: 10, colorVariety: 1, spearLength: 3}]})},
-  {duration: 30*baseTime, program: programsByShape({reloj: [Radial, {power: 15, escala: 5, centerX: -15, centerY: 17}]})},
+  {duration: 30*baseTime, program: programsByShape({reloj: [Radial, {power: 15, escala: 5, centerX: -15, centerY: 17.3}]})},
   {duration: 30*baseTime, program: programsByShape({reloj: [ColorSpear, {spearLength: 50, speed: 8}]})},
   {duration: 90*baseTime, program: createMultiProgram([
     {duration: 500, program: programsByShape({"trianguloTop": flowMulti})},
@@ -58,16 +78,10 @@ const schedule = [
     {duration: 500, program: programsByShape({"V2R": flowMulti})},
     {duration: 500, program: programsByShape({"V2L": flowMulti})},
   ], true)},
-  {duration: 30*baseTime, program: programsByShape({Warro: [Rainbow, Rainbow.presets().fastMarks]})},
+  {duration: 15*baseTime, program: programsByShape({Warro: [Rainbow, Rainbow.presets().fastMarks]})},
+  {duration: 30*baseTime, program: programsByShape({Warro: [Rainbow, Rainbow.presets().purpleDots]})},
   {duration: 30*baseTime, program: programsByShape({Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
   {duration: 30*baseTime, program: MixMusicW},
-  {
-    duration: 30*baseTime,
-    program: programsByShape({
-      Warro: animateParamProgram(animateParamProgram(Radial, 'escala', 1, s => (s+0.01)%15), 'power',60*30, p => Math.max(1, Math.random()*40))
-    })
-  },
-  {duration: 30*baseTime, program: programsByShape({allOfIt: [Radial, {centerY: 17, velocidad: 10, power: 15}]})},
   {duration: 30*baseTime, program: programsByShape({Warro: [Stars, Stars.presets().pocasMoving]})},
   {duration: 30*baseTime, program: programsByShape({V1L: VolumeBars, V1R: VolumeBars, V2L: VolumeBars, V2R: VolumeBars})},
   {duration: 30*baseTime, program: Hourglass},
@@ -96,4 +110,4 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-export const Func = createMultiProgram(schedule, true)
+export const Func = createMultiProgram(schedule, false)

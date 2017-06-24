@@ -6,11 +6,12 @@ import { default as warroStripes } from '../geometry/geometry-wmediana'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup', 'debugShapes', 'aliveDots', 'aliveDotsSpeed', 'heart',
-  'rainbow2', 'white-spear', 'rainbow-horizontal', 'rainbow-hourglass',
-  'all-white', 'all-off', 'blink', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial',
-  'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-  'PROGRAM_Main', 'PROGRAM_Intro', 'fire', 'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves'
+  'debugSetup', 'debugShapes', 'all-white', 'all-off',
+  'aliveDots', 'aliveDotsSpeed', 'heart',
+  //'rainbow2', 'white-spear',  'rainbow-horizontal', 'rainbow-hourglass',
+  'rainbow', 'stars', 'musicFlow', 'musicFreqs',  'radial', // 'vertical',  'blink'
+  //'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
+  'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 ]
 
 import { default as Lights } from '../geometry/canvas'
@@ -40,7 +41,7 @@ export class Simulator extends React.Component {
     }
 
     const programs = this.programs = this.getPrograms();
-    const initial = 'debugSetup';
+    const initial = 'all-off';
     let initialConfig = this.getConfig(programs[initial].config);
     this.state = {
       selected: initial,

@@ -8,10 +8,12 @@ export class SoundBasedFunction extends TimeTickedFunction{
 
   start(config, draw, done){
     this.averageVolume = 0;
+    this.averageRelativeVolume = 0;
     this.averageVolumeSmoothed = 0;
     this.averageVolumeSmoothedSlow = 0;
     this.medianVolume15 = _.map(_.range(15), () => 0)
     this.medianVolume = 0
+    this.maxVolume = 0;
     let self = this;
 
     if(window.singletonAudioStream){
@@ -33,7 +35,6 @@ export class SoundBasedFunction extends TimeTickedFunction{
       }
     }
 
-    this.maxVolume = 0;
 
     function getAverageVolume(array, from=0, to=null) {
       let values = 0;
@@ -74,7 +75,6 @@ export class SoundBasedFunction extends TimeTickedFunction{
         self.averageVolume = getAverageVolume(byteFrequencyData, config.minFreq, config.maxFreq);
         self.averageVolumeSmoothed = (self.averageVolume+2*self.averageVolumeSmoothed)/3
         self.averageVolumeSmoothedSlow = (self.averageVolume+20*self.averageVolumeSmoothedSlow)/21
-
         // Plot
         self.plotEnergyHistogram(self);
 
@@ -87,6 +87,8 @@ export class SoundBasedFunction extends TimeTickedFunction{
 
         // self.bassesAverageVolume = getAverageVolume(array, 32);
         self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
+        self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1)
+        self.averageRelativeVolumeSmoothed = self.averageVolumeSmoothed / (self.maxVolume || 1)
 
         // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
         self.processInterval = setTimeout(computeSoundStats, config.soundSamplingFreq);
@@ -178,7 +180,7 @@ export class SoundBasedFunction extends TimeTickedFunction{
     config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 16};
     config.maxFreq = {type: Number, min: 1, max: 512, step: 1, default: 512};
     config.minFreq = {type: Number, min: 0, max: 512, step: 1, default: 0};
-    config.showHistogram = {type: Boolean, default: false};
+    config.showHistogram = {type: Boolean, default: true};
     return config;
   }
 }

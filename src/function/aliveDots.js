@@ -68,12 +68,12 @@ export class Func extends SoundBasedFunction {
 
   static presets(){
     return {
-      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 70, toneColor: 0.5},
-      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 90, toneColor: 0.55, doble: false},
+      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 50, toneColor: 0.5},
+      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 70, toneColor: 0.55, doble: false},
       "constanteRapidoPocas": {musicWeight: 0, speedWeight: 2, numberOfParticles: 10, toneColor: 0.3},
-      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 150, toneColor: 0.5},
-      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 150, toneColor: 0.5, doble: false, brillo: 1},
-      "musicQuilombo": {musicWeight: 1, speedWeight: 1, numberOfParticles: 70, toneColor: 0.7}
+      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 100, toneColor: 0.5},
+      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 100, toneColor: 0.5, doble: false, brillo: 1},
+      "musicQuilombo": {musicWeight: 1, speedWeight: 1, numberOfParticles: 50, toneColor: 0.7}
     }
   }
 

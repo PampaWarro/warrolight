@@ -11,8 +11,8 @@ export class Func extends TimeTickedFunction{
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.position || this.geometry;
 
-      const dx = geometry.x[i] - 30 - this.config.centerX;
-      const dy = geometry.y[i] - 34.6  + this.config.centerY;
+      const dx = geometry.x[i] - geometry.width/2 - this.config.centerX;
+      const dy = geometry.y[i] - geometry.height  + this.config.centerY;
 
       const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
 

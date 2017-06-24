@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 // import { default as warroStripes } from '../geometry/geometry-wchica'
-import { default as warroStripes } from '../geometry/geometry-wgrande'
+// import { default as warroStripes } from '../geometry/geometry-wgrande'
+import { default as warroStripes } from '../geometry/geometry-wmediana'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = ['debugSetup',

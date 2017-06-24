@@ -1,5 +1,6 @@
 // import {getShapes} from './shape-mapping-wchica'
-import {getShapes} from './shape-mapping-wgrande'
+// import {getShapes} from './shape-mapping-wgrande'
+import {getShapes} from './shape-mapping-wmediana'
 
 const _ = require('lodash')
 
@@ -19,7 +20,12 @@ export function programsByShape(mapping) {
 
         let localLeds = _.extend({}, leds, {numberOfLeds: map.length})
         // Map new geometry
-        localLeds.position = { x: [... Array(map.length)], y: [... Array(map.length)] }
+        localLeds.position = {
+          x: [... Array(map.length)],
+          y: [... Array(map.length)],
+          height: leds.geometry.height,
+          width: leds.geometry.width
+        }
         for (let i =  0; i < map.length; i++) {
           localLeds.position.x[i] = leds.geometry.x[map[i]]
           localLeds.position.y[i] = leds.geometry.y[map[i]]

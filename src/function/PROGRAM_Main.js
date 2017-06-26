@@ -110,4 +110,4 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-export const Func = createMultiProgram(schedule, false)
+export const Func = createMultiProgram(schedule, true)

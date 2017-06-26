@@ -6,7 +6,7 @@ import { default as warroStripes } from '../geometry/geometry-wmediana'
 import { default as Geometry } from '../geometry/geometry'
 
 const ProgramNames = [
-  'debugSetup', 'debugShapes', 'all-white', 'all-off',
+  'all-off', 'remote-test', 'debugSetup', 'debugShapes', 'all-white',
   'aliveDots', 'aliveDotsSpeed', 'heart',
   //'rainbow2', 'white-spear',  'rainbow-horizontal', 'rainbow-hourglass',
   'rainbow', 'stars', 'musicFlow', 'musicFreqs',  'radial', // 'vertical',  'blink'

@@ -35,22 +35,22 @@ const hideY = 34.6
 
 export default [
   // Led 1
-  new Stripe(hideX, hideY, hideX, hideY, 37),
-  new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT,QUART_LEDS),
+  new Stripe(hideX, hideY, hideX, hideY, 39),
+  new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT,21),
   new Stripe(PORTION   , HEIGHT - 0, 0, HEIGHT - HEIGHT,  LEDS_LONG),
 
   // Led 2
-  new Stripe(hideX, hideY, hideX, hideY, 37),
+  new Stripe(hideX, hideY, hideX, hideY, 39),
   new Stripe(PORTION   , HEIGHT - 0, 2*PORTION, 0, LEDS_LONG),
-  new Stripe(2 * PORTION   , 0, HALF_WIDTH, HEIGHT - HEIGHT     , QUART_LEDS),
+  new Stripe(2 * PORTION   , 0, HALF_WIDTH, HEIGHT - HEIGHT, QUART_LEDS - 2),
 
   // Led 3
   new Stripe(hideX, hideY, hideX, hideY, 37),
-  new Stripe(2*PORTION   , HEIGHT - 0, PORTION, 0, LEDS_LONG),
-  new Stripe(PORTION   , 0, HALF_WIDTH, HEIGHT - HEIGHT, QUART_LEDS),
+  new Stripe(2*PORTION   , HEIGHT - 0, PORTION, 0, LEDS_LONG - 1),
+  new Stripe(PORTION   , 0, HALF_WIDTH, HEIGHT - HEIGHT, QUART_LEDS + 1),
 
   //  Led 4
-  new Stripe(hideX, hideY, hideX, hideY, 37),
-  new Stripe(HALF_WIDTH, HEIGHT, 2*PORTION , HEIGHT, QUART_LEDS),
+  new Stripe(hideX, hideY, hideX, hideY, 34),
+  new Stripe(HALF_WIDTH - 1, HEIGHT, 2*PORTION , HEIGHT, QUART_LEDS + 3),
   new Stripe(2*PORTION , HEIGHT - 0, WIDTH, HEIGHT - HEIGHT, LEDS_LONG),
 ]

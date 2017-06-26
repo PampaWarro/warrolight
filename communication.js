@@ -32,18 +32,18 @@ let numberOfLights = 1;
 
 // W grande
 var device1, device2
-device1 = new Device(300, 'COM17')
+device1 = new Device(300, 'COM4')
 device2 = new Device(300, 'COM5')
 
 setTimeout(() => {
   multiplexer = new Multiplexer(600, [device1, device2], (index) => {
     if (index < 150) {
-      if (index < 37)
+      if (index < 41)
         return [0, 0]
 
       return [0, index]
     } else if (index < 300) {
-      if ((index - 150) < 37)
+      if ((index - 150) < 40)
         return [0, 0]
 
       return [0, index]
@@ -53,7 +53,7 @@ setTimeout(() => {
 
       return [1, index - 300]
     } else {
-      if ((index - 450) < 37)
+      if ((index - 450) < 34)
         return [0, 0]
 
       return [1, index - 300]

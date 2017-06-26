@@ -5,14 +5,14 @@ export function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
   const portion = 90
 
-  const comienzoTira1 = 0 + 37
-  const comienzoTira2 = 150 + 37
+  const comienzoTira1 = 0 + 39
+  const comienzoTira2 = 150 + 40
   const comienzoTira3 = 300 + 37
-  const comienzoTira4 = 450 + 37
+  const comienzoTira4 = 450 + 34
 
   const quiebre_abajo = 22;
-  const quiebre_abajo_left = comienzoTira1 + quiebre_abajo + 0;
-  const quiebre_abajo_right = comienzoTira4 + quiebre_abajo + 0;
+  const quiebre_abajo_left = comienzoTira1 + quiebre_abajo + -1;
+  const quiebre_abajo_right = comienzoTira4 + quiebre_abajo + 4;
 
   const centroOffsetLeft = 0;
   const centroOffsetRight = 0;

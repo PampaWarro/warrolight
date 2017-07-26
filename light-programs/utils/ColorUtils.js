@@ -1,11 +1,11 @@
-export class ColorUtils {
-  static red: '#FF0000'
-  static green: '#00FF00'
-  static blue: '#0000FF'
-  static yellow: '#ffff00'
-  static orange: '#FFA500'
-  static purple: '#FF00FF'
-  static black: '#000000'
+module.exports = class ColorUtils {
+  // static red: '#FF0000'
+  // static green: '#00FF00'
+  // static blue: '#0000FF'
+  // static yellow: '#ffff00'
+  // static orange: '#FFA500'
+  // static purple: '#FF00FF'
+  // static black: '#000000'
 
   static rgbToHex(r, g, b) {
     function componentToHex(c) {

@@ -11,6 +11,7 @@ const path = require('path');
 
 const Device = require('./device')
 const Multiplexer = require('./multiplexer')
+const LightProgram = require('./light-programs/main-program')
 
 let multiplexer;
 let numberOfLights = 1;
@@ -31,7 +32,7 @@ let numberOfLights = 1;
 
 
 // W grande
-var device1 = new Device(300, 'COM6')
+var device1 = new Device(150, 'COM15')
 
 setTimeout(() => {
   multiplexer = new Multiplexer(150, [device1], (index) => {
@@ -42,17 +43,11 @@ setTimeout(() => {
       return [0, index]
     }
   })
- numberOfLights = multiplexer.numberOfLights
 
- setInterval(() => {
-    let colorArray = _.map(_.range(150), function(){
-      if(Math.random() > 0.5){
-        return "#ff37e0"
-      } else
-        return "#4ccaff"
-    })
-    multiplexer.setState(colorArray)
- }, 16)
+  numberOfLights = multiplexer.numberOfLights
+
+  let program = new LightProgram((colorArray) => multiplexer.setState(colorArray))
+  program.startProgram()
 }, 2000)
 
 let state = "off"

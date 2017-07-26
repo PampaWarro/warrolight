@@ -31,7 +31,8 @@ module.exports = class Device {
     })
 
     this.setupCommunication()
-
+    this.freshData = false;
+    this.waitingResponse = true;
     this.dataBuffer = []
 
     this.getFPS = () => {
@@ -48,21 +49,35 @@ module.exports = class Device {
       newState[i] = arrayFromRGB(rgbArray[i % rgbArray.length])
     }
     this.state = newState
+    this.freshData = true;
+    this.sendNextFrame();
   }
 
   sendNextFrame() {
-    this.initEncoding()
+    if(this.freshData && !this.waitingResponse) {
+      this.initEncoding()
 
-    let dim = 1
-    for (let i = 0; i < this.numberOfLights; i++) {
-      this.writePixel(i,
-        this.state[i][0]/dim,
-        this.state[i][1]/dim,
-        this.state[i][2]/dim
-      )
+      let dim = 1
+      for (let i = 0; i < this.numberOfLights; i++) {
+        this.writePixel(i,
+          this.state[i][0] / dim,
+          this.state[i][1] / dim,
+          this.state[i][2] / dim
+        )
+      }
+      this.freshData = false;
+      this.waitingResponse = true;
+      this.flush()
     }
-    this.flush()
   }
+
+  handleData(data) {
+    this.logDebug(this.getFPS)
+    this.lastReceived = now()
+    this.waitingResponse = false;
+    this.sendNextFrame()
+  }
+
 
   initEncoding() {
     this.write([this.encoding]);
@@ -150,13 +165,6 @@ module.exports = class Device {
 
   handleDrain(err) {
     this.logInfo('Port drained.')
-  }
-
-
-  handleData(data) {
-    this.logDebug(this.getFPS)
-    this.lastReceived = now()
-    this.sendNextFrame()
   }
 
   logDebug(message) {

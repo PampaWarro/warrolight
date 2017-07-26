@@ -21,12 +21,12 @@ module.exports = class TimeTickedFunction {
     this.startTime = new Date();
 
     const frame =() => {
-      this.interval = setTimeout(frame, (1000 / 60));
+      this.interval = setTimeout(frame, (1000 / 30));
       this.timeInMs = new Date() - this.startTime;
       this.drawFrame(colorsArray => draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness))), done);
     }
 
-    this.interval = setTimeout(frame, (1000 / 60));
+    this.interval = setTimeout(frame, (1000 / 30));
 
     done()
   }

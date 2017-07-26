@@ -35,9 +35,16 @@ module.exports = class Device {
     this.waitingResponse = true;
     this.dataBuffer = []
 
-    this.getFPS = () => {
-      const FPS = (1000/(now() - this.lastReceived)).toFixed(1)
-      return this.devicePort + ' - received pingback. FPS: ' + FPS
+    this.lastPrint = 0;
+    this.framesCount = 0;
+  }
+
+  logFPS(){
+    if(now() - this.lastPrint > 1000) {
+      const FPS = (this.framesCount*1000 / (now() - this.lastPrint)).toFixed(1)
+      this.framesCount = 0
+      this.lastPrint = now()
+      this.logDebug(this.devicePort + ' - received pingback. FPS: ' + FPS)
     }
   }
 
@@ -72,8 +79,8 @@ module.exports = class Device {
   }
 
   handleData(data) {
-    this.logDebug(this.getFPS)
-    this.lastReceived = now()
+    this.logFPS()
+    this.framesCount++
     this.waitingResponse = false;
     this.sendNextFrame()
   }
@@ -125,9 +132,6 @@ module.exports = class Device {
   }
 
   setupCommunication() {
-
-    this.lastReceived = now();
-
     this.port.on('open', () => {
       this.logInfo('Port open. Data rate: ' + this.port.options.baudRate);
       setTimeout(this.sendInitialKick.bind(this), 2000)

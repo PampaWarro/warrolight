@@ -31,36 +31,29 @@ let numberOfLights = 1;
 
 
 // W grande
-var device1, device2
-device1 = new Device(300, 'COM4')
-device2 = new Device(300, 'COM5')
+var device1 = new Device(300, 'COM6')
 
 setTimeout(() => {
-  multiplexer = new Multiplexer(600, [device1, device2], (index) => {
+  multiplexer = new Multiplexer(150, [device1], (index) => {
     if (index < 150) {
-      if (index < 41)
+      if (index < 0)
         return [0, 0]
 
       return [0, index]
-    } else if (index < 300) {
-      if ((index - 150) < 40)
-        return [0, 0]
-
-      return [0, index]
-    } else if (index < 450) {
-      if ((index - 300 < 37))
-        return [0, 0]
-
-      return [1, index - 300]
-    } else {
-      if ((index - 450) < 34)
-        return [0, 0]
-
-      return [1, index - 300]
     }
   })
  numberOfLights = multiplexer.numberOfLights
-}, 6000)
+
+ setInterval(() => {
+    let colorArray = _.map(_.range(150), function(){
+      if(Math.random() > 0.5){
+        return "#ff37e0"
+      } else
+        return "#4ccaff"
+    })
+    multiplexer.setState(colorArray)
+ }, 16)
+}, 2000)
 
 let state = "off"
 io.on('connection', (socket) => {
@@ -82,6 +75,7 @@ io.on('connection', (socket) => {
   let djActionInterval = 0;
   let djActionStartTime = 0;
   let colorFunc = null;
+
   function temporalEffectAction(getColorsFunc, timeInc){
     const emitTimeRemaining = _.throttle(t => io.sockets.emit('data', {stateTimeRemaining: t}), 200)
     return () => {

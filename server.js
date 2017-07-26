@@ -2,27 +2,17 @@ const _ = require('lodash');
 const express = require('express');
 
 const http = require('http');
-const app = express();
-const server = http.createServer(app);
+
+const express = express();
+const server = http.createServer(express);
+
 const io = require('socket.io').listen(server);
 const now = require('performance-now');
 
 const path = require('path');
-const webpack = require('webpack');
-const config = require('./webpack.config');
 
-const compiler = webpack(config);
 
-const Device = require('./device')
-const Multiplexer = require('./multiplexer')
-
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: "/"
-}));
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.get('*', function (req, res, next) {
+express.get('/', function (req, res) {
   var filename = path.join(compiler.outputPath,'index.html');
   compiler.outputFileSystem.readFile(filename, function(err, result){
     if (err) {

@@ -16,6 +16,8 @@ const {
   rgbToVga
 } = require('./colorEncoding')
 
+let reconnectTime = 1000;
+
 module.exports = class Device {
 
   constructor(numberOfLights, devicePort, verbosity) {
@@ -25,12 +27,8 @@ module.exports = class Device {
     this.devicePort = devicePort
     this.encoding = ENCODING_RGB
 
-    this.port = new SerialPort(devicePort, {
-      baudRate: 1152000 / 2,
-      parser: SerialPort.parsers.readline("\n")
-    })
-
     this.setupCommunication()
+
     this.freshData = false;
     this.waitingResponse = true;
     this.dataBuffer = []
@@ -79,6 +77,22 @@ module.exports = class Device {
   }
 
   handleData(data) {
+    if(data){
+      data = data.replace(/[^\w]+/gi, "")
+
+      if(data === 'YEAH'){
+        this.logInfo("Reconnected")
+      } else if (data !== 'OK') {
+        this.logInfo(`UNEXPECTED MSG'${data}'`)
+      }
+    }
+
+    clearTimeout(this.reconnectTimeout);
+
+    this.reconnectTimeout = setTimeout(() => {
+      this.sendInitialKick()
+    }, reconnectTime)
+
     this.logFPS()
     this.framesCount++
     this.waitingResponse = false;
@@ -119,52 +133,76 @@ module.exports = class Device {
   }
 
   flush() {
-    this.port.write(Buffer.from(this.dataBuffer))
+    if(this.port) {
+      this.port.write(Buffer.from(this.dataBuffer))
+    }
     this.dataBuffer = [];
   }
 
   sendInitialKick(){
-    this.port.write(
-      Buffer.from([1, 2, 255, 0, 255]), () => {
-        this.logInfo('Initial kick of data sent')
-      }
-    )
+    if(this.port) {
+      this.port.write('XXX', (err) => {
+          if(err){
+            this.handleError(err)
+          } else {
+            this.logInfo('Initial kick of data sent')
+          }
+        }
+      )
+
+      this.reconnectTimeout = setTimeout(() => {
+        this.sendInitialKick()
+      }, reconnectTime)
+    }
   }
 
   setupCommunication() {
-    this.port.on('open', () => {
-      this.logInfo('Port open. Data rate: ' + this.port.options.baudRate);
-      setTimeout(this.sendInitialKick.bind(this), 2000)
-    })
+    // const setRetry = function() { setTimeout(tryOpenPort, 2000) };
 
-    this.port.on('error', this.handleError.bind(this))
-    this.port.on('data', this.handleData.bind(this))
-    this.port.on('drain', this.handleData.bind(this))
-    this.port.on('close', this.handleClose.bind(this))
+    const tryOpenPort = () => {
+      try {
+        this.port = new SerialPort(this.devicePort, {
+          baudRate: 1152000 / 2,
+          parser: SerialPort.parsers.readline("\n")
+        })
+
+        this.port.on('open', () => {
+          this.logInfo('Port open. Data rate: ' + this.port.options.baudRate);
+          setTimeout(this.sendInitialKick.bind(this), 100)
+        })
+
+        this.port.on('error', this.handleError.bind(this))
+        this.port.on('data', this.handleData.bind(this))
+        this.port.on('drain', this.handleDrain.bind(this))
+        this.port.on('close', this.handleClose.bind(this))
+        this.port.on('disconnect', this.handleClose.bind(this))
+      } catch (err) {
+        this.logInfo("Error retrying to open port. ", err)
+        setTimeout(() => this.setupCommunication(), 2000);
+      }
+    };
+    if(!this.port) {
+      tryOpenPort();
+    }
   }
 // open errors will be emitted as an error event
   handleError(err) {
-    this.logError('Error: ' + err.message)
+    if(this.port) {
+      this.logError('Error: ' + err.message)
+      var oldPort = this.port;
+      // To prevent reentrancy with handlers
+      this.port = null;
+      oldPort.close();
+      setTimeout(() => this.setupCommunication(), 2000);
+    }
   }
 
   handleClose(err) {
-    this.logInfo('Port closed.')
-
-    const setRetry = function() { setTimeout(retry, 2000) }
-    var retry = () => {
-      console.log('retrying...', this.devicePort)
-      try {
-      this.port = new SerialPort(this.devicePort, {
-        baudRate: 1152000 / 2,
-        parser: SerialPort.parsers.readline("\n")
-      })
-      } catch (e) {
-        setRetry()
-      }
-
-      this.setupCommunication()
+    if(this.port) {
+      this.logInfo('Port closed.')
+      this.port = null;
+      setTimeout(() => this.setupCommunication(), 2000);
     }
-    setRetry()
   }
 
   handleDrain(err) {
@@ -174,25 +212,25 @@ module.exports = class Device {
   logDebug(message) {
     if (this.verbosity <= DEBUG) {
       message = (typeof message === 'function') ? message() : message
-      console.log(this.devicePort, message)
+      console.log(new Date(), this.devicePort, message)
     }
   }
 
   logInfo(message) {
     if (this.verbosity <= INFO) {
-      console.log(this.devicePort, message)
+      console.log(new Date(), this.devicePort, message)
     }
   }
 
   logWarning(message) {
     if (this.verbosity <= WARNING) {
-      console.log(this.devicePort, message)
+      console.log(new Date(), this.devicePort, message)
     }
   }
 
   logError(message) {
     if (this.verbosity <= ERROR) {
-      console.log(this.devicePort, message)
+      console.log(new Date(), this.devicePort, message)
     }
   }
 }

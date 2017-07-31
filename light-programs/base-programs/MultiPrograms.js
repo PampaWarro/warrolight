@@ -7,6 +7,7 @@ module.exports = function createMultiProgram(programSchedule, random = false) {
       // Shallow copy of schedule
       this.programSchedule = [].concat(programSchedule).map(item => _.extend({}, item))
       this.nextPosition = 0;
+      this.config = config;
       _.each(this.programSchedule, scheduleItem => scheduleItem.programInstance = new scheduleItem.program(config, leds))
     }
 

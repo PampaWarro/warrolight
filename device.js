@@ -1,20 +1,36 @@
 const _ = require('lodash')
 const SerialPort = require('serialport')
 const now = require('performance-now')
-const { DEBUG, INFO, WARNING, ERROR } = require('./log')
+
+const {DEBUG, INFO, WARNING, ERROR} = {
+  DEBUG: 1,
+  INFO: 2,
+  WARNING: 3,
+  ERROR: 4
+}
 
 const notEqual = (a, b) => {
   return a[0] !== b[0] || a[1] !== b[1] || a[2] !== b[2]
 }
 
-const {
-  ENCODING_RGB,
-  ENCODING_VGA,
-  ENCODING_POS_RGB,
-  ENCODING_POS_VGA,
-  arrayFromRGB,
-  rgbToVga
-} = require('./colorEncoding')
+const ENCODING_POS_RGB = 1;
+const ENCODING_POS_VGA = 2;
+const ENCODING_VGA = 3;
+const ENCODING_RGB = 4;
+
+const arrayFromRGB = rgb => {
+  if (!rgb) {
+    return //console.warn("Valor de RGB nulo: ", rgb);
+  }
+  const red = parseInt(rgb.substr(1, 2), 16)
+  const blue = parseInt(rgb.substr(3, 2), 16)
+  const green = parseInt(rgb.substr(5, 2), 16)
+  return [red, blue, green]
+}
+
+const rgbToVga = (r, g, b) => {
+  return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)
+}
 
 let reconnectTime = 1000;
 

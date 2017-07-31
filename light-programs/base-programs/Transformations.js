@@ -10,6 +10,7 @@ module.exports = function programsByShape(mapping) {
   return class {
     constructor(config, leds) {
       this.instances = {};
+      this.config = config;
       _.each(mapping, (Program, shapeName) => {
         let map = knownMappings[shapeName]
 

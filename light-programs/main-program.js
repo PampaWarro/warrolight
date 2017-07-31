@@ -1,7 +1,6 @@
-// import { default as warroStripes } from '../geometry/geometry-wchica'
-// import { default as warroStripes } from '../geometry/geometry-wgrande'
 const warroStripes = require('./geometry-wchica')
 const Geometry = require('./geometry')
+const _ = require('lodash');
 
 // const ProgramNames = [
 //   'all-off', 'remote-test', 'debugSetup', 'debugShapes', 'all-white',
@@ -15,13 +14,13 @@ const Geometry = require('./geometry')
 const programNames = ["radial", "stars", "debugShapes"]
 
 
-module.exports = class LightProgram {
+module.exports = class LightController {
   constructor(setLightsCbk) {
     this.setLightsCbk = setLightsCbk
 
     const geometry = new Geometry(warroStripes)
 
-    this.config = {
+    this.defaultConfig = {
       frequencyInHertz: 60
     }
 
@@ -30,55 +29,75 @@ module.exports = class LightProgram {
       geometry: geometry
     }
 
-    const programs = this.programs = this.getPrograms();
-
-
-    this.currentProgramName = 'debugShapes'
-    let initialConfig = this.getConfig(programs[this.currentProgramName].config);
-    this.currentProgram = new (programs[this.currentProgramName].func)(initialConfig, this.layout)
-
     this.leds = []
 
     this.getLeds = (index) => this.leds[index]
+
+    this.programs = _.keyBy(_.map(programNames, this.loadProgram), 'name')
+    this.setCurrentProgram('radial')
   }
 
-  startProgram() {
-    this.currentProgram.start(
-      this.getConfig(this.programs[this.currentProgramName].config),
-      (leds) => this.updateLeds(leds),
-      () => ({})
-    )
+  getProgramsSchema() {
+    return _.map(this.programs, p => {
+      return {name: p.name, config: p.configSchema}
+    })
   }
 
-  getConfig(configDef = {}) {
-    for (let paramName in configDef) {
-      if (this.config[paramName] === undefined && configDef[paramName].default !== undefined) {
-        this.config[paramName] = configDef[paramName].default;
+  getCurrentConfig() {
+    return this.currentProgram ? this.currentProgram.config : {};
+  }
+
+  start() {
+    if(this.currentProgram) {
+      this.currentProgram.start(
+        this.getConfig(this.programs[this.currentProgramName].configSchema),
+        (leds) => this.updateLeds(leds),
+        () => ({})
+      )
+      this.running = true;
+    }
+  }
+
+  stop(){
+    this.running = false;
+    if(this.currentProgram){
+      this.currentProgram.stop();
+    }
+  }
+
+  getConfig(configSchema = {}) {
+    let config = this.defaultConfig;
+    for (let paramName in configSchema) {
+      if (config[paramName] === undefined && configSchema[paramName].default !== undefined) {
+        config[paramName] = configSchema[paramName].default;
       }
     }
-    return this.config
+    return config
   }
 
   setCurrentProgram(name) {
     let selectedProgram = this.programs[name];
-    let updatedConfig = this.getConfig(selectedProgram.config);
+    if(selectedProgram) {
+      if(this.running && this.currentProgram) {
+        this.currentProgram.stop();
+      }
+      this.currentProgramName = name
+      let program = this.programs[name];
+      let config = this.getConfig(program.configSchema);
+      this.currentProgram = new (program.generator)(config, this.layout)
+      if(this.running){
+        this.start();
+      }
+    }
   }
 
   loadProgram(name) {
     const FunctionClass = require('./programs/' + name);
     return {
       name: name,
-      config: FunctionClass.configSchema ? FunctionClass.configSchema() : FunctionClass.config,
-      func: FunctionClass
+      configSchema: FunctionClass.configSchema(),
+      generator: FunctionClass
     }
-  }
-
-  getPrograms() {
-    const Programs = {}
-    for (let program of programNames) {
-      Programs[program] = this.loadProgram(program)
-    }
-    return Programs
   }
 
   updateLeds(leds) {

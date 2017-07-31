@@ -1,16 +1,7 @@
-import * as React from 'react'
-import { connect } from 'react-redux'
-// import { default as warroStripes } from '../geometry/geometry-wchica'
-// import { default as warroStripes } from '../geometry/geometry-wgrande'
-import { default as warroStripes } from '../geometry/geometry-wmediana'
-import { default as Geometry } from '../geometry/geometry'
-
 const ProgramNames = ['debugSetup',
 'all-white', 'all-off', 'blink', 'pw',
 'rainbow', 'stars', 'musicFlow', 'musicFreqs',
 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
-
-import { default as Lights } from '../geometry/canvas'
 
 class Item extends React.Component {
   render() {
@@ -18,78 +9,75 @@ class Item extends React.Component {
   }
 }
 
-export class Simulator extends React.Component {
+// $(function () {
+const socket = io();
+// });
+
+class Simulator extends React.Component {
   constructor() {
     super(...arguments)
-
-    const geometry = new Geometry(warroStripes)
 
     this.config = {
       frequencyInHertz: 60
     }
 
-    this.layout = {
-      numberOfLeds: geometry.leds,
-      geometry: geometry
-    }
+    this.programs = []
+    const initial = 'blink';
 
-    const programs = this.programs = this.getPrograms();
-    const initial = 'control';
     this.state = {
-      selected: initial,
-      overrideTriangle: false,
-      programs,
-      func: new (programs[initial].func)(this.getConfig(programs[initial].config), this.layout)
+      selected: null,
+      programs: []
     }
 
     this.leds = []
 
-
-    const compose = (index) => {
-      const x = geometry.x[index]
-      const y = geometry.y[index]
-      const triangle = y < geometry.height / 2
-        && x >= geometry.width / 3
-        && x <= geometry.width * 2 / 3
-      return triangle ? '#ff0000' : this.leds[index]
-    }
-
-    this.getLeds = (index) => {
-      return this.state.overrideTriangle
-        ? compose(index)
-        : this.leds[index]
-    }
+    this.getLeds = (index) => this.leds[index]
   }
 
   startCurrent() {
-    this.state.func.start(
-      this.getConfig(this.programs[this.state.selected].config),
-      (leds) => this.updateLeds(leds),
-      () => ({})
-    )
+
   }
 
   stopCurrent() {
-    this.state.func.stop()
+
+  }
+
+  _initializeState(state) {
+    this.setState({
+      programs: _.keyBy(state.programs, 'name'),
+      selected: state.currentProgramName,
+      currentConfig: state.currentConfig
+    })
+    console.log(state)
+  }
+
+  _stateChange(state) {
+    this.setState({
+      selected: state.currentProgramName,
+      currentConfig: state.currentConfig,
+      remoteChange: true
+    })
+    console.log(state)
   }
 
   componentDidMount() {
-    this.startCurrent()
+    socket.on('completeState', this._initializeState.bind(this));
+    socket.on('stateChange', this._stateChange.bind(this));
   }
 
   componentWillUnmount() {
-    this.stopCurrent()
+    //this.stopCurrent()
   }
 
   componentWillUpdate(newProps, newState) {
-    if (this.state.func !== newState.func) {
-      this.stopCurrent()
+    if (this.state.currentConfig !== newState.currentConfig && !newState.remoteChange) {
+      socket.emit("updateConfigParam", newState.currentConfig)
     }
   }
 
   componentDidUpdate(oldProps, oldState) {
     if (oldState.func !== this.state.func) {
-      this.startCurrent()
+      //this.startCurrent()
     }
   }
 
@@ -98,38 +86,8 @@ export class Simulator extends React.Component {
     this.setCurrentProgram(key)
   }
 
-  getConfig(configDef = {}) {
-    for (let paramName in configDef) {
-      if (this.config[paramName] === undefined && configDef[paramName].default !== undefined) {
-        this.config[paramName] = configDef[paramName].default;
-      }
-    }
-    return this.config
-  }
-
   setCurrentProgram(name) {
-    let selectedProgram = this.programs[name];
-    this.setState({
-      selected: name,
-      func: new (selectedProgram.func)(this.getConfig(selectedProgram.config), this.layout)
-    })
-  }
-
-  getProgram(name) {
-    const mod = require('../function/' + name);
-    return {
-      name: name,
-      config: mod.Func.configSchema ? mod.Func.configSchema() : mod.config,
-      func: mod.Func
-    }
-  }
-
-  getPrograms() {
-    const Programs = {}
-    for (let program of ProgramNames) {
-      Programs[program] = this.getProgram(program)
-    }
-    return Programs
+    socket.emit("setCurrentProgram", name)
   }
 
   updateLeds(leds) {
@@ -148,23 +106,32 @@ export class Simulator extends React.Component {
       }
     }
 
-    let currentProgram = this.state.programs[this.state.selected];
-
     let configOptions = [];
-    for (let paramName in currentProgram.config){
-      if(currentProgram.config[paramName].type === Boolean){
-        configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
-      } else {
-        configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]} configRef={this.config} field={paramName}/>);
+    let currentProgram = {name: "NO SELECTED PROGRAM"}
+    if(this.state.selected) {
+      currentProgram = this.state.programs[this.state.selected];
+
+      for (let paramName in currentProgram.config) {
+        let val = this.state.currentConfig[paramName];
+        if (currentProgram.config[paramName].type === Boolean) {
+          configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]}
+                                           configRef={this.state.currentConfig} val={val} field={paramName}/>);
+        } else {
+          configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]}
+                                          configRef={this.state.currentConfig} val={val} field={paramName}/>);
+        }
       }
     }
+
+    let geometryX = [0]
+    let geometryY = [0]
 
     {
       return (<div>
         <div className="contain">
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
-            <Lights ref="simulator" width="600" height="346" stripes={warroStripes} getColor={this.getLeds}/>
+            <LightsCanvas width="600" height="346" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
           </div>
           <div className="controls">
             <div>
@@ -190,7 +157,7 @@ class NumberParam extends React.Component {
     this.min = (props.configDefinition || {}).min || 0;
     this.max = (props.configDefinition || {}).max || 100;
     this.step = (props.configDefinition || {}).step || 1;
-    this.state = {value: this.getVal()}
+    this.state = {value: props.val, configRes: props.configRef}
     this.handleChange = this.handleChange.bind(this);
     this.name = ""+Math.random();
   }
@@ -199,14 +166,15 @@ class NumberParam extends React.Component {
     this.setVal(event.target.value);
   }
 
-  getVal(){
-    return  this.configRef[this.field];
+  componentWillReceiveProps(nextProps){
+    this.setState({value: nextProps.val})
   }
 
   setVal(val){
     let value = parseFloat(val);
     this.setState({value: value});
     this.configRef[this.field] = value;
+    socket.emit('updateConfigParam', this.configRef)
   }
 
   render() {
@@ -228,7 +196,7 @@ class BooleanParam extends React.Component {
     super(props);
     this.configRef = props.configRef;
     this.field = props.field;
-    this.state = {value: this.getVal()}
+    this.state = {value: props.val}
     this.handleChange = this.handleChange.bind(this);
     this.name = ""+Math.random();
   }
@@ -237,14 +205,11 @@ class BooleanParam extends React.Component {
     this.setVal(event.target.checked);
   }
 
-  getVal(){
-    return  this.configRef[this.field];
-  }
-
   setVal(val){
     let value = val;
     this.setState({value: value});
     this.configRef[this.field] = value;
+    socket.emit('updateConfigParam', this.configRef)
   }
 
   render() {
@@ -259,16 +224,3 @@ class BooleanParam extends React.Component {
     );
   }
 }
-
-
-export default connect(state => state.program || {}, {
-  setCurrentProgram: (name) => ({
-    type: 'set current program',
-    name
-  }),
-  send: (leds) => ({
-    type: 'send',
-    msgType: 'leds',
-    payload: leds
-  })
-})(Simulator)

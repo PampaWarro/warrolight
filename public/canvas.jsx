@@ -1,9 +1,3 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-
-import { default as Geometry } from './geometry'
-
-
 /**
  * We need a regex that matches stuff like #FF00DD and groups the three 0-255 values
  */
@@ -12,22 +6,20 @@ const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
 /**
  * Returns an array of three elements with the 0-255 values for R, G, B
  */
-export function hexToRgb(hex) {
+
+function hexToRgb(hex) {
   var result = hexRegex.exec(hex);
   return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null
 }
 
-export default class Canvas extends React.Component {
+class LightsCanvas extends React.Component {
   constructor() {
     super(...arguments)
+
     this.getColor = this.props.getColor
-    this.geometry = new Geometry(
-      this.props.stripes,
-      this.props.width,
-      this.props.height,
-      this.props.xMargin || 10,
-      this.props.yMargin || 10
-    )
+    this.geometryX = this.props.geometryX
+    this.geometryY = this.props.geometryY
+
     this.state = {
       renderingEnabled: true
     }
@@ -41,13 +33,8 @@ export default class Canvas extends React.Component {
 
   componentWillReceiveProps(newProps) {
     this.getColor = newProps.getColor
-    this.geometry = new Geometry(
-      newProps.stripes,
-      newProps.width,
-      newProps.height,
-      newProps.xMargin || 10,
-      newProps.yMargin || 10
-    )
+    this.geometryX = newProps.geometryX
+    this.geometryY = newProps.geometryY
   }
 
   componentDidMount() {
@@ -89,7 +76,7 @@ export default class Canvas extends React.Component {
   drawCanvas() {
     const drawStartTime = performance.now();
 
-    const leds = this.geometry.leds
+    const leds = this.geometryX.length
     const ctx = this.refs.canvas.getContext('2d')
 
     ctx.globalCompositeOperation = 'source-over'
@@ -99,8 +86,8 @@ export default class Canvas extends React.Component {
     ctx.globalCompositeOperation = 'lighter'
 
     if(this.state.renderingEnabled) {
-      const X = this.geometry.x
-      const Y = this.geometry.y
+      const X = this.geometryX
+      const Y = this.geometryY
 
       for (let i = 0; i < leds; i++) {
         const color = this.getColor(i)

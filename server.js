@@ -1,47 +1,58 @@
 const _ = require('lodash');
 const express = require('express');
+const app = express();
+const http = require('http').Server(app);
 
-const http = require('http');
+exports.createRemoteControl = function(lightProgram) {
+  app.use(express.static('public'))
 
-const express = express();
-const server = http.createServer(express);
-
-const io = require('socket.io').listen(server);
-const now = require('performance-now');
-
-const path = require('path');
-
-
-express.get('/', function (req, res) {
-  var filename = path.join(compiler.outputPath,'index.html');
-  compiler.outputFileSystem.readFile(filename, function(err, result){
-    if (err) {
-      return next(err);
-    }
-    res.set('content-type','text/html');
-    res.send(result);
-    res.end();
-  });
-})
-
-
-
-let djActionRunning = false;
-io.on('connection', (socket) => {
-  socket.on('message', (data) => {
-    if (data.action === 'leds') {
-      if (multiplexer && !djActionRunning) {
-        multiplexer.setState(data.payload)
-      }
-    } else if (data.action === "dj-action"){
-      console.log(`DJ ACTION ${data.payload}`)
-      djActionRunning = true;
-      setTimeout(() => djActionRunning = false, 1000);
-      if (multiplexer) {
-        multiplexer.setState(_.range(0,multiplexer.numberOfLights).map(i => '#990066'))
-      }
-    }
+  app.get('/', function (req, res) {
+    res.send("DALE NENE")
   })
-});
 
-server.listen(3001, '0.0.0.0')
+  http.listen(3001, '0.0.0.0', function () {
+    console.log("Warro lights server running on port 3001")
+  })
+
+  const io = require('socket.io').listen(http);
+
+  io.on('connection', (socket) => {
+    socket.emit('completeState', {
+      programs: lightProgram.getProgramsSchema(),
+      currentProgramName: lightProgram.currentProgramName,
+      currentConfig: lightProgram.getCurrentConfig()
+    })
+
+    socket.on('updateConfigParam', (config) => {
+      lightProgram.currentProgram.config = config;
+
+      socket.broadcast.emit('stateChange', {
+        currentProgramName: lightProgram.currentProgramName,
+        currentConfig: lightProgram.getCurrentConfig()
+      })
+    })
+
+    socket.on('setCurrentProgram', (programKey) => {
+      lightProgram.setCurrentProgram(programKey)
+
+      io.emit('stateChange', {
+        currentProgramName: lightProgram.currentProgramName,
+        currentConfig: lightProgram.getCurrentConfig()
+      })
+      /*if (data.action === 'leds') {
+        if (multiplexer && !djActionRunning) {
+          multiplexer.setState(data.payload)
+        }
+      } else if (data.action === "dj-action") {
+        console.log(`DJ ACTION ${data.payload}`)
+        djActionRunning = true;
+        setTimeout(() => djActionRunning = false, 1000);
+        if (multiplexer) {
+          multiplexer.setState(_.range(0, multiplexer.numberOfLights).map(i => '#990066'))
+        }
+      }*/
+    })
+  });
+}
+
+

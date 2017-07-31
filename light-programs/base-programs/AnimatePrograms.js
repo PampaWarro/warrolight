@@ -1,7 +1,7 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
 
-export function animateParamProgram(Program, parameter, frequency, change) {
+module.exports = function animateParamProgram(Program, parameter, frequency, change) {
   return class Func extends Program {
     drawFrame(draw, done) {
       this.count = (this.count || 0) + 1;

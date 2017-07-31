@@ -12,7 +12,7 @@ const Geometry = require('./geometry')
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["radial", "stars"]
+const programNames = ["radial", "stars", "debugShapes"]
 
 
 module.exports = class LightProgram {
@@ -33,7 +33,7 @@ module.exports = class LightProgram {
     const programs = this.programs = this.getPrograms();
 
 
-    this.currentProgramName = 'radial'
+    this.currentProgramName = 'debugShapes'
     let initialConfig = this.getConfig(programs[this.currentProgramName].config);
     this.currentProgram = new (programs[this.currentProgramName].func)(initialConfig, this.layout)
 
@@ -65,7 +65,7 @@ module.exports = class LightProgram {
   }
 
   loadProgram(name) {
-    const FunctionClass = require('./' + name);
+    const FunctionClass = require('./programs/' + name);
     return {
       name: name,
       config: FunctionClass.configSchema ? FunctionClass.configSchema() : FunctionClass.config,

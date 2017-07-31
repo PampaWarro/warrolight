@@ -1,7 +1,7 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
 
-export function getShapes(mapping) {
+module.exports = function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
 
   const pataLeft = _.range(113, 143)

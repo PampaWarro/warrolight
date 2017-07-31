@@ -1,10 +1,10 @@
-// import {getShapes} from './shape-mapping-wchica'
-// import {getShapes} from './shape-mapping-wgrande'
-import {getShapes} from './shape-mapping-wmediana'
-
 const _ = require('lodash')
 
-export function programsByShape(mapping) {
+const getShapes = require('./shape-mapping-wchica')
+// const getShapes = require('./shape-mapping-wgrande')
+// const getShapes = require('./shape-mapping-wmediana')
+
+module.exports = function programsByShape(mapping) {
   const knownMappings = getShapes()
 
   return class {
@@ -84,28 +84,3 @@ export function programsByShape(mapping) {
     }
   }
 }
-
-function getMappedFunction(Program, mappingFunction) {
-  return class {
-    constructor(config) {
-      this.instance = new Program(config);
-    }
-
-    start(config, draw, done) {
-      this.instance.start(config, function (colors) {
-        draw(mappingFunction(colors))
-      }, done)
-      done()
-    }
-
-    stop() {
-      this.instance.stop()
-    }
-
-    static configSchema() {
-      return Program.configSchema()
-    }
-  }
-}
-
-

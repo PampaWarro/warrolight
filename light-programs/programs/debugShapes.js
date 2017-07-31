@@ -1,15 +1,16 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 
-import {programsByShape} from "./Transformations";
-import {createMultiProgram} from "./MultiPrograms";
+const programsByShape = require("../base-programs/Transformations");
+const createMultiProgram = require("../base-programs/MultiPrograms");
 
-const AllWhite = require("./all-white").Func;
+const AllWhite = require("./all-white");
+const AllOff = require("./all-off");
 
-var seg = 1000;
+let seg = 1000;
 
-
-export const Func = createMultiProgram([
+module.exports = createMultiProgram([
   {duration: 2*seg, program: programsByShape({trianguloBottom: AllWhite})},
   {duration: 2*seg, program: programsByShape({trianguloTop: AllWhite})},
   {duration: 2*seg, program: programsByShape({V1: AllWhite})},

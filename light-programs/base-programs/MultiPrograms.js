@@ -1,7 +1,7 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
 
-export function createMultiProgram(programSchedule, random = false) {
+module.exports = function createMultiProgram(programSchedule, random = false) {
   return class {
     constructor(config, leds) {
       // Shallow copy of schedule

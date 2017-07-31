@@ -1,7 +1,7 @@
-const TimeTickedFunction = require("./TimeTickedFunction");
-const ColorUtils = require("./utils/ColorUtils");
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class Func extends TimeTickedFunction {
+module.exports = class Stars extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.stars = [... Array(this.numberOfLeds)].map(() => [0, 0, 0]);

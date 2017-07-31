@@ -150,6 +150,8 @@ module.exports = class Device {
         }
       )
 
+      clearTimeout(this.reconnectTimeout);
+
       this.reconnectTimeout = setTimeout(() => {
         this.sendInitialKick()
       }, reconnectTime)

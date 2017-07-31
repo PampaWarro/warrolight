@@ -41,13 +41,20 @@
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
+// This variable is persisted even after reseting the arduino. That allows cycling through
+// different programs of light
+__attribute__((section(".noinit"))) unsigned int program;
+
 void setup() {
+  program = (program + 1) % 2;
+  //program = 0;
+
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
 
   Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-  Serial.setTimeout(4000);
+
   //Serial.println("Hello world!");  // prints hello with ending line break
 
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -125,43 +132,15 @@ void loop() {
   }
 }
 
-int time = 0;
-int sines[] = {0, 12, 25, 38, 50, 63, 75, 87, 99, 110, 122, 133, 143, 154, 164, 173, 182, 191, 199, 207, 214, 221, 227, 232, 237, 241, 245, 248, 251, 253, 254, 254, 254, 254, 252, 250, 248, 245, 241, 236, 231, 226, 220, 213, 206, 198, 190, 181, 172, 162, 152, 142, 131, 120, 108, 97, 85, 73, 61, 48, 35, 23, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 29, 42, 54, 67, 79, 91, 103, 114, 125, 136, 147, 157, 167, 176, 185, 194, 202, 209, 216, 223, 229, 234};
 
-void arduinoProgram() {
-  if (time % 120 > 120) {
-    for (int i = 0; i < NUM_LEDS; i++) {
-      writeLeds(i, (time * 3 + i) % 256, 0, (time * 9 + i) % 256);
-    }
-  } else {
-    int r = random(256);
-    int g = random(256);
-    int b = random(256);
-
-    for (int i = 0; i < NUM_LEDS; i++) {
-      int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
-      writeLedsHSB(i, (i * 1 + time * 7) % 255, 255, sines[(i + time * 2) % 150]);
-    }
-  }
-  
-  byte debugCycle = (time/10)%3;
-  if(debugCycle == 0){
-    writeLeds(0,10,0,20);
-  } else {
-    writeLeds(0,0,0,0);
-  }
-  
-  FastLED.show();
-  time = (time + 1) % 10000;
-}
 
 int waitingCount = 0;
 void readLedsFromSerial() {
   if (!connected) {
-    if(Serial.available() >= 3){
+    if (Serial.available() >= 3) {
       if (Serial.read() == 'X' && Serial.read() == 'X' && Serial.read() == 'X') {
         connected = true;
-        Serial.println("YEAH");    
+        Serial.println("YEAH");
       } else {
         drainSerial();
       }
@@ -169,10 +148,10 @@ void readLedsFromSerial() {
     return;
   }
 
-  if(Serial.available() < 2){
+  if (Serial.available() < 2) {
     waitingCount++;
 
-    if(waitingCount > 10000){
+    if (waitingCount > 30000) {
       waitingCount = 0;
       delay(500);
       reconnect();
@@ -242,6 +221,101 @@ void readLedsFromSerial() {
 
   // Protocolo que entiende node.js
   Serial.println("OK"); // ASCII printable characters
+}
+
+
+unsigned long time = 0;
+void arduinoProgram() {
+  if (program == 0) {
+    programStars();
+    /*for (int i = 0; i < NUM_LEDS; i++) {
+      writeLeds(i, (time * 3 + i) % 256, 0, (time * 9 + i) % 256);
+      }*/
+  } else {
+    programRainbow();
+  }
+
+  byte debugCycle = (time / 10) % 3;
+  if (debugCycle == 0) {
+    writeLeds(0, 10, 0, 20);
+  } else {
+    writeLeds(0, 0, 0, 0);
+  }
+
+  FastLED.show();
+  time++;
+}
+
+boolean programInitialized = false;
+
+/////////////////////////////////////////////////////////////////////////////////////
+// STARS ////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+byte stars[NUM_LEDS];
+byte starsColors[NUM_LEDS];
+byte starsSaturation[NUM_LEDS];
+
+int PARAM_CHANCE = 1000;
+int PARAM_DECAY = 9900;
+int PARAM_TONE = 0;
+
+void programStars() {
+  if (!programInitialized) {
+    memset(stars, 0, sizeof(stars));
+    memset(stars, 0, sizeof(starsColors));
+    memset(stars, 0, sizeof(starsSaturation));
+    int i = rng(0, 1000);
+    PARAM_CHANCE = 1000 - i;
+    PARAM_DECAY = 9999 - i;
+    PARAM_TONE = rng(0,255);
+    programInitialized = true;
+  }
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (rng(0, PARAM_CHANCE) == 0) {
+      stars[i] = min(255, (int)stars[i] + rng(20, 255));
+      starsColors[i] = rng(0, 10)+(time/10 % 255);
+      starsSaturation[i] = rng(0, 150)+50;
+    }
+    if (stars[i] > 0) {
+      stars[i] = max(0, (((long)stars[i]) * PARAM_DECAY / 10000));
+    }
+
+    //byte pos = i+(time/5)%NUM_LEDS;
+    byte pos = i;
+    writeLedsHSB(pos, ((int)starsColors[i]+PARAM_TONE)%255, starsSaturation[i], stars[i]);
+  }
+
+  if(time % (180) == 0) {
+    programInitialized = false;
+  }
+}
+
+// create a random integer from 0 - 65535
+unsigned int rng(int from, int to) {
+  static unsigned int y = 0;
+  y += micros(); // seeded with changing number
+  y ^= y << 2; y ^= y >> 7; y ^= y << 7;
+  return y % (to - from) + from;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+// RAINBOW //////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+byte sines[] = {0, 12, 25, 38, 50, 63, 75, 87, 99, 110, 122, 133, 143, 154, 164, 173, 182, 191, 199, 207, 214, 221, 227, 232, 237, 241, 245, 248, 251, 253, 254, 254, 254, 254, 252, 250, 248, 245, 241, 236, 231, 226, 220, 213, 206, 198, 190, 181, 172, 162, 152, 142, 131, 120, 108, 97, 85, 73, 61, 48, 35, 23, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 29, 42, 54, 67, 79, 91, 103, 114, 125, 136, 147, 157, 167, 176, 185, 194, 202, 209, 216, 223, 229, 234};
+int PARAM_SPEED = 20;
+void programRainbow() {
+  if (!programInitialized) {
+    PARAM_SPEED = random(1, 6);
+    programInitialized = true;
+  }
+  
+  for (int i = 0; i < NUM_LEDS; i++) {
+    int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
+    writeLedsHSB(i, (i * 1 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i + time * PARAM_SPEED) % 150]);
+  }
 }
 
 

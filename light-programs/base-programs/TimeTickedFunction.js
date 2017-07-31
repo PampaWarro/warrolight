@@ -1,4 +1,4 @@
-const ColorUtils = require("./utils/ColorUtils");
+const ColorUtils = require("./../utils/ColorUtils");
 const _ = require('lodash')
 
 module.exports = class TimeTickedFunction {
@@ -32,7 +32,7 @@ module.exports = class TimeTickedFunction {
   }
 
   stop() {
-    clearInterval(this.interval)
+    clearTimeout(this.interval)
   }
 
   static configSchema(){

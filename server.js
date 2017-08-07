@@ -43,14 +43,16 @@ exports.createRemoteControl = function(lightProgram) {
     socket.on('updateConfigParam', (config) => {
       lightProgram.currentProgram.config = config;
 
+
       socket.broadcast.emit('stateChange', {
         currentProgramName: lightProgram.currentProgramName,
         currentConfig: lightProgram.getCurrentConfig()
       })
     })
 
-    socket.on('soundValue', (value) => {
-      soundEmitter.emit('sound', value)
+    socket.on('SV', (value) => {
+      // it is sent as integer 0-10000 to reduce size
+      soundEmitter.emit('sound', value/10000)
     })
 
     socket.on('setCurrentProgram', (programKey) => {

@@ -39,7 +39,7 @@ module.exports = class TimeTickedFunction {
     // Child classes should call super.configSchema and extend this object
     return {
       globalBrightness: {type: Number, min: 0, max: 1, step: 0.01, default: 1},
-      fps: {type: Number, min: 1, max: 60, default: 30},
+      fps: {type: Number, min: 5, max: 60, default: 40},
     }
   }
 }

@@ -94,7 +94,7 @@ class MicrophoneClient extends React.Component {
       let lastTime = new Date();
       //self.audioProcessorNode.onaudioprocess = function(e) {
       self.processInterval = setTimeout(function computeSoundStats() {
-        if (self.state.micOn) {
+        if (self.state.micOn && socket.connected) {
           //var sample = e.inputBuffer.getChannelData(0);
 
           // get the average, bincount is fftsize / 2
@@ -102,11 +102,10 @@ class MicrophoneClient extends React.Component {
           self.analyser.getByteFrequencyData(byteFrequencyData);
 
           // calculate average
-          self.averageVolume = getAverageVolume(byteFrequencyData, 0, 64);
+          self.averageVolume = getAverageVolume(byteFrequencyData, 0, null);
 
-          if (self.state.micOn) {
-            socket.emit('soundValue', self.averageVolume);
-          }
+          // Send integer sound value to reduce message byte size
+          socket.emit('SV', Math.round(self.averageVolume * 10000));
 
           // Plot
           self.plotEnergyHistogram(self);
@@ -116,9 +115,9 @@ class MicrophoneClient extends React.Component {
           self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1);
         }
         // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
-        self.processInterval = setTimeout(computeSoundStats, 2);
+        self.processInterval = setTimeout(computeSoundStats, 25);
         lastTime = new Date();
-      }, 2);
+      }, 25);
 
       // stream -> mediaSource -> analyser -> javascriptNode -> destination
       self.mediaStreamSource.connect(self.analyser);

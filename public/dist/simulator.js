@@ -44,7 +44,8 @@ class Simulator extends React.Component {
       currentConfig: state.currentConfig,
       remoteChange: true
     });
-    console.log(state);
+
+    console.log(state.currentProgramName, state.currentConfig);
   }
 
   componentDidMount() {
@@ -58,6 +59,7 @@ class Simulator extends React.Component {
 
   componentWillUpdate(newProps, newState) {
     if (this.state.currentConfig !== newState.currentConfig && !newState.remoteChange) {
+      console.log("ENTIRE CHANGING TO", newState.currentConfig);
       socket.emit("updateConfigParam", newState.currentConfig);
     }
   }
@@ -89,7 +91,7 @@ class Simulator extends React.Component {
       if (key === this.state.selected) {
         menuItems.push(React.createElement(
           Item,
-          { key: key, className: 'selected', onClick: e => this.handleProgramClick(key, e) },
+          { key: key, className: 'selected' },
           this.state.programs[key].name
         ));
       } else {
@@ -108,7 +110,7 @@ class Simulator extends React.Component {
 
       for (let paramName in currentProgram.config) {
         let val = this.state.currentConfig[paramName];
-        if (currentProgram.config[paramName].type === Boolean) {
+        if (_.isBoolean(currentProgram.config[paramName].default)) {
           configOptions.push(React.createElement(BooleanParam, { key: paramName, configDefinition: currentProgram.config[paramName],
             configRef: this.state.currentConfig, val: val, field: paramName }));
         } else {
@@ -135,7 +137,7 @@ class Simulator extends React.Component {
               'h3',
               null,
               'Current Program: ',
-              currentProgram.name,
+              this.state.selected,
               ' '
             ),
             React.createElement(LightsCanvas, { width: '400', height: '10', geometryX: geometryX, geometryY: geometryY, getColor: this.getLeds })
@@ -188,12 +190,11 @@ class Item extends React.Component {
 class NumberParam extends React.Component {
   constructor(props) {
     super(props);
-    this.configRef = props.configRef;
     this.field = props.field;
     this.min = (props.configDefinition || {}).min || 0;
     this.max = (props.configDefinition || {}).max || 100;
     this.step = (props.configDefinition || {}).step || 1;
-    this.state = { value: props.val, configRes: props.configRef };
+    this.state = { value: props.val, configRef: props.configRef };
     this.handleChange = this.handleChange.bind(this);
     this.name = "" + Math.random();
   }
@@ -203,14 +204,15 @@ class NumberParam extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ value: nextProps.val });
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
   }
 
   setVal(val) {
     let value = parseFloat(val);
-    this.setState({ value: value });
-    this.configRef[this.field] = value;
-    socket.emit('updateConfigParam', this.configRef);
+    this.setState({ value: value, configRef: this.state.configRef });
+    this.state.configRef[this.field] = value;
+    console.log("PARAM CHANGE", this.state.configRef);
+    socket.emit('updateConfigParam', this.state.configRef);
   }
 
   render() {
@@ -241,9 +243,8 @@ class NumberParam extends React.Component {
 class BooleanParam extends React.Component {
   constructor(props) {
     super(props);
-    this.configRef = props.configRef;
     this.field = props.field;
-    this.state = { value: props.val };
+    this.state = { value: props.val, configRef: props.configRef };
     this.handleChange = this.handleChange.bind(this);
     this.name = "" + Math.random();
   }
@@ -252,11 +253,16 @@ class BooleanParam extends React.Component {
     this.setVal(event.target.checked);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
+  }
+
   setVal(val) {
     let value = val;
+    this.state.configRef[this.field] = value;
     this.setState({ value: value });
-    this.configRef[this.field] = value;
-    socket.emit('updateConfigParam', this.configRef);
+    console.log("BOOL PARAM CHANGE", this.state.configRef);
+    socket.emit('updateConfigParam', this.state.configRef);
   }
 
   render() {

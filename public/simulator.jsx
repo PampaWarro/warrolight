@@ -92,6 +92,10 @@ class Simulator extends React.Component {
     this.refs.simulator.getNextFrame();
   }
 
+  selectPreset(preset){
+    socket.emit("setPreset", preset)
+  }
+
   render() {
     let menuItems = [];
     for (let key in this.state.programs){
@@ -103,6 +107,7 @@ class Simulator extends React.Component {
     }
 
     let configOptions = [];
+    let presets = [];
     let currentProgram = {name: "NO SELECTED PROGRAM"}
     if(this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
@@ -117,26 +122,33 @@ class Simulator extends React.Component {
                                           configRef={this.state.currentConfig} val={val} field={paramName}/>);
         }
       }
+
+
+      for(let preset of currentProgram.presets){
+        presets.push(<a className="preset" href="#" key={preset} onClick={e => this.selectPreset(preset)}>{preset} </a>)
+      }
     }
 
     let geometryX = [0]
     let geometryY = [0]
+    //<LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
 
     {
       return (<div>
         <div className="contain">
+          <div>
+            <h2>Pampa Warro Lights</h2>
+          </div>
           <div className="simulator">
-            <h3>Current Program: { this.state.selected } </h3>
-            <LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
           </div>
           <div className="controls">
-            <div>
-              <h2>Pampa Warro</h2>
-            </div>
             <div className="menuItems">{ menuItems }</div>
             <div className="configuration">
-              <h3>Configuration</h3>
+              <h3>{ this.state.selected } </h3>
+              <div className="config-items">
               {configOptions}
+              </div>
+              {presets}
             </div>
           </div>
           <MicrophoneClient></MicrophoneClient>

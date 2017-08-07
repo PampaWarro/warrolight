@@ -1,12 +1,12 @@
-import {ColorUtils} from "../utils/ColorUtils";
-import {SoundBasedFunction} from "./SoundBasedFunction";
+const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
+const _ = require('lodash');
 
-export class Func extends SoundBasedFunction {
+module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;
     let self = this;
-    this.lastVolume = 0;
 
     this.createDot = () => {
       return {
@@ -22,7 +22,7 @@ export class Func extends SoundBasedFunction {
             this.val += 0.05
           }
           let vol = self.medianVolume * 5;
-          this.pos = this.pos + (vol * vol * 6) * self.config.speedWeight * this.speed
+          this.pos = this.pos + (vol * vol * 2) * self.config.speedWeight * this.speed
 
           this.pos = this.pos % self.numberOfLeds
           // this.intensity = vol
@@ -61,7 +61,6 @@ export class Func extends SoundBasedFunction {
       this.stars[roundPosNext] = [ru, gu, bu];
     })
 
-    this.lastVolume = this.averageVolumeSmoothed
     draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), this.config.brillo)));
   }
 
@@ -75,7 +74,7 @@ export class Func extends SoundBasedFunction {
     let config = super.configSchema();
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     config.speedWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
-    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 50}
+    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 30}
     config.toneColor  = {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
     return config;
   }

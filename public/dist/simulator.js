@@ -85,6 +85,10 @@ class Simulator extends React.Component {
     this.refs.simulator.getNextFrame();
   }
 
+  selectPreset(preset) {
+    socket.emit("setPreset", preset);
+  }
+
   render() {
     let menuItems = [];
     for (let key in this.state.programs) {
@@ -104,6 +108,7 @@ class Simulator extends React.Component {
     }
 
     let configOptions = [];
+    let presets = [];
     let currentProgram = { name: "NO SELECTED PROGRAM" };
     if (this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
@@ -118,10 +123,20 @@ class Simulator extends React.Component {
             configRef: this.state.currentConfig, val: val, field: paramName }));
         }
       }
+
+      for (let preset of currentProgram.presets) {
+        presets.push(React.createElement(
+          'a',
+          { className: 'preset', href: '#', key: preset, onClick: e => this.selectPreset(preset) },
+          preset,
+          ' '
+        ));
+      }
     }
 
     let geometryX = [0];
     let geometryY = [0];
+    //<LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
 
     {
       return React.createElement(
@@ -132,28 +147,17 @@ class Simulator extends React.Component {
           { className: 'contain' },
           React.createElement(
             'div',
-            { className: 'simulator' },
+            null,
             React.createElement(
-              'h3',
+              'h2',
               null,
-              'Current Program: ',
-              this.state.selected,
-              ' '
-            ),
-            React.createElement(LightsCanvas, { width: '400', height: '10', geometryX: geometryX, geometryY: geometryY, getColor: this.getLeds })
+              'Pampa Warro Lights'
+            )
           ),
+          React.createElement('div', { className: 'simulator' }),
           React.createElement(
             'div',
             { className: 'controls' },
-            React.createElement(
-              'div',
-              null,
-              React.createElement(
-                'h2',
-                null,
-                'Pampa Warro'
-              )
-            ),
             React.createElement(
               'div',
               { className: 'menuItems' },
@@ -165,9 +169,15 @@ class Simulator extends React.Component {
               React.createElement(
                 'h3',
                 null,
-                'Configuration'
+                this.state.selected,
+                ' '
               ),
-              configOptions
+              React.createElement(
+                'div',
+                { className: 'config-items' },
+                configOptions
+              ),
+              presets
             )
           ),
           React.createElement(MicrophoneClient, null)

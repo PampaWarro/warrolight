@@ -11,7 +11,7 @@ const _ = require('lodash');
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugShapes", "all-off", "all-white"]
+const programNames = ["aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugShapes", "all-off", "all-white"]
 
 
 module.exports = class LightController {
@@ -39,12 +39,20 @@ module.exports = class LightController {
 
   getProgramsSchema() {
     return _.map(this.programs, p => {
-      return {name: p.name, config: p.configSchema}
+      return {name: p.name, config: p.configSchema, presets: p.generator.presets ? _.keys(p.generator.presets()) : [] }
     })
   }
 
   getCurrentConfig() {
     return this.currentProgram ? this.currentProgram.config : {};
+  }
+
+  getCurrentPresets() {
+    if(this.currentProgram && this.programs[this.currentProgramName].generator.presets){
+      return this.programs[this.currentProgramName].generator.presets();
+    } else {
+      return [];
+    }
   }
 
   start() {

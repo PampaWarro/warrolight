@@ -1,5 +1,5 @@
 <head>
-<meta name="viewport" content="width=device-width"/>
+    <meta name="viewport" content="width=device-width"/>
 </head>
 
 
@@ -8,20 +8,24 @@
         margin: 0;
         padding: 0;
     }
+
     body {
         font-family: sans-serif;
         background-color: black;
         color: white;
         font-size: 14px;
         box-sizing: border-box;
+        padding-bottom: 200px;
     }
-    a{
+
+    a {
 
     }
 
-    h1, h2, h3{
-        margin-top: 0.1em;
-        margin-bottom: 0.1em;
+    h1, h2, h3 {
+        margin-top: 0.2em;
+        text-align: center;
+        margin-bottom: 0.2em;
     }
 
     .mic-client {
@@ -30,8 +34,10 @@
         right: 0px;
         border: solid 1px white;
         width: 100%;
+        background-color: black;
     }
-    .mic-client .buttons{
+
+    .mic-client .buttons {
         padding: 5px;
     }
 
@@ -45,95 +51,133 @@
         padding: 5px;
         text-align: center;
     }
+
     .state-danger {
         background-color: darkred;
     }
-    .state-ok{
+
+    .state-ok {
         background-color: green;
     }
-    .state-warning{
+
+    .state-warning {
         background-color: darkgoldenrod;
     }
 
-    @media (min-width: 768px) {
-      .contain {
-          display: flex;
-      }
-      .simulator{
-          order: 3;
-      }
-      .controls{
-          order: 2;
-          background-color: #333;
-          width: 350px;
-          display: flex;
-          flex-direction: column;
-          flex-wrap: wrap;
-      }
-      .controls > div
-      {
-          text-align: center;
-          padding: 10px;
-      }
+    .controls {
+        display: grid;
+        grid-template-columns: 125px auto;
     }
 
-    @media (max-width: 768px) {
-      .simulator{
-          display: inline-block;
-          padding: 5px;
-      }
-      .controls{
-          background-color: #333;
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-      }
-      .controls > div
-      {
-          flex: 1 0 45%;
-          text-align: center;
-          padding: 10px;
-      }
-      .controls > div:first-child
-      {
-          flex: 0 1 100%;
-      }
+    .menuItems {
+        grid-column-start: 1;
+    }
+
+    .configuration {
+        grid-column-start: 2;
+        padding: 10px;
+    }
+
+    .controls {
+        background-color: #333;
+        width: 100%;
     }
 
     .menuItems {
         margin: 0;
         padding: 0;
-        columns: 2;
     }
+
     .menuItems a {
         text-align: center;
         text-decoration: none;
         margin: 1px;
-        padding: 2px;
+        padding: 5px 2px;
         display: block;
         background-color: #222;
         word-break: break-all;
     }
+
     .menuItems a:hover {
-      background-color: black;
+        background-color: black;
     }
+
     .menuItems a:selected {
-      background-color: #444;
+        background-color: #444;
+    }
+
+    config-items {
     }
     .config-item {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 185px;
         align-items: center;
-        justify-content: space-between;
+        /*justify-content: space-between;*/
+        padding: 5px 0px;
     }
-    .config-item input {
+
+    .config-item span {
+        font-size: 12px;
+        grid-column: 1;
+        text-align: right;
+        word-break: break-all;
+    }
+
+    .config-item > div{
+        grid-column: 2;
         vertical-align: middle;
         margin-left: 10px;
-
+        /*text-align: right;*/
     }
-    a, a:hover, a:active{
+
+    .config-item > div > strong {
+        width: 45px;
+        display: inline-block;
+        text-align: right;
+    }
+
+    .preset {
+        display: inline-block;
+        margin: 5px;
+    }
+
+    a, a:hover, a:active {
         color: #a7b4ff
     }
+
+    input[type=range] {
+        -webkit-appearance: none;
+        margin: 10px 0px;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+        /*width: 150px;*/
+        height: 3px;
+        background: #999;
+        border: none;
+        border-radius: 3px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #a7b4ff;
+        margin-top: -8px;
+    }
+
+    input[type=range]:hover::-webkit-slider-thumb, input[type=range]:focus::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-webkit-slider-thumb:active {
+        outline: none;
+        background: #ffdf10;
+    }
+
+    input[type=range]:focus::-webkit-slider-runnable-track {
+        background: #ccc;
+    }
+
+
 </style>
 
 <div id="app"></div>

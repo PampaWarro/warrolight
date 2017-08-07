@@ -58,14 +58,15 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
       // Plot
       // self.plotEnergyHistogram(self);
 
-      self.medianVolume15.push(self.averageVolume)
-      self.medianVolume15 = self.medianVolume15.slice(1)
-      self.medianVolume = _.sortBy(self.medianVolume15)[7]
 
       // self.bassesAverageVolume = getAverageVolume(array, 32);
       self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
       self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1)
       self.averageRelativeVolumeSmoothed = self.averageVolumeSmoothed / (self.maxVolume || 1)
+
+      self.medianVolume15.push(self.averageRelativeVolume)
+      self.medianVolume15 = self.medianVolume15.slice(1)
+      self.medianVolume = _.sortBy(self.medianVolume15)[7]
 
       // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
       self.processInterval = setTimeout(computeSoundStats, 1000/self.config.fps);

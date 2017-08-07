@@ -41,7 +41,6 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
 
   static presets(){
     return {
-      fastDobleDesdeCentro: {speed: 5, doble: true, haciaAfuera: true},
     }
   }
 

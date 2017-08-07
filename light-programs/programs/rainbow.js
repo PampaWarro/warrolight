@@ -1,7 +1,7 @@
-import {ColorUtils} from "../utils/ColorUtils";
-import {TimeTickedFunction} from "./TimeTickedFunction";
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
 
-export class Func extends TimeTickedFunction {
+module.exports = class Rainbow extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
 
@@ -20,13 +20,12 @@ export class Func extends TimeTickedFunction {
       let colIndex = Math.floor(((this.time + i) / this.config.sameColorLeds)) % this.colorSet.length;
 
       let col = this.colorSet[colIndex];
-      if (col == "#5500CC")
+      if (col === "#5500CC")
         newColors[i] = col;
       else
         newColors[i] = ColorUtils.dim(col, this.config.brillo);
     }
     draw(newColors);
-    done()
   }
 
   static presets() {

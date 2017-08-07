@@ -1,8 +1,8 @@
-import {ColorUtils} from "../utils/ColorUtils";
-import {SoundBasedFunction} from "./SoundBasedFunction";
-var _ = require("lodash");
+const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
+const _ = require("lodash");
 
-export class Func extends SoundBasedFunction {
+module.exports = class SoundWaves extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;

@@ -1,18 +1,8 @@
-const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho'];
-
-class Item extends React.Component {
-  render() {
-    return React.createElement(
-      'a',
-      { href: '#', onClick: this.props.onClick },
-      this.props.children
-    );
-  }
+if (!window.socket) {
+  window.socket = io();
 }
 
-// $(function () {
-const socket = io();
-// });
+const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho'];
 
 class Simulator extends React.Component {
   constructor() {
@@ -148,7 +138,7 @@ class Simulator extends React.Component {
               currentProgram.name,
               ' '
             ),
-            React.createElement(LightsCanvas, { width: '600', height: '346', geometryX: geometryX, geometryY: geometryY, getColor: this.getLeds })
+            React.createElement(LightsCanvas, { width: '400', height: '10', geometryX: geometryX, geometryY: geometryY, getColor: this.getLeds })
           ),
           React.createElement(
             'div',
@@ -177,10 +167,21 @@ class Simulator extends React.Component {
               ),
               configOptions
             )
-          )
+          ),
+          React.createElement(MicrophoneClient, null)
         )
       );
     }
+  }
+}
+
+class Item extends React.Component {
+  render() {
+    return React.createElement(
+      'a',
+      { href: '#', onClick: this.props.onClick },
+      this.props.children
+    );
   }
 }
 
@@ -283,4 +284,4 @@ class BooleanParam extends React.Component {
   }
 }
 
-//# sourceMappingURL=selector.js.map
+//# sourceMappingURL=simulator.js.map

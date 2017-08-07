@@ -55,6 +55,8 @@ module.exports = class ColorUtils {
       let b = parseInt(hex.substring(4, 6), 16);
 
       return [r, g, b];
+    } else {
+      console.log("hexToRgb called without value")
     }
   }
 

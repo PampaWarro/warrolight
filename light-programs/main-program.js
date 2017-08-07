@@ -11,7 +11,7 @@ const _ = require('lodash');
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["radial", "stars", "debugShapes"]
+const programNames = ["musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugShapes", "all-off", "all-white"]
 
 
 module.exports = class LightController {
@@ -34,7 +34,7 @@ module.exports = class LightController {
     this.getLeds = (index) => this.leds[index]
 
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), 'name')
-    this.setCurrentProgram('radial')
+    this.setCurrentProgram(programNames[0])
   }
 
   getProgramsSchema() {

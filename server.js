@@ -1,7 +1,17 @@
 const _ = require('lodash');
+
+const fs = require('fs');
+const privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
+
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
+
+const http = require('http').createServer(app);
+const httpsServer = require('https').createServer(credentials, app);
+
+const soundEmitter = require("./sound-broadcast")
 
 exports.createRemoteControl = function(lightProgram) {
   app.use(express.static('public'))
@@ -10,11 +20,18 @@ exports.createRemoteControl = function(lightProgram) {
     res.send("DALE NENE")
   })
 
-  http.listen(3001, '0.0.0.0', function () {
-    console.log("Warro lights server running on port 3001")
+  // httpServer.listen(8080);
+  // httpsServer.listen(8443);
+
+  // http.listen(3001, '0.0.0.0', function () {
+  //   console.log("Warro lights server running on port 3001")
+  // })
+
+  httpsServer.listen(3443, '0.0.0.0', function () {
+    console.log("Warro lights HTTPS server running on port 3443")
   })
 
-  const io = require('socket.io').listen(http);
+  const io = require('socket.io').listen(httpsServer);
 
   io.on('connection', (socket) => {
     socket.emit('completeState', {
@@ -30,6 +47,10 @@ exports.createRemoteControl = function(lightProgram) {
         currentProgramName: lightProgram.currentProgramName,
         currentConfig: lightProgram.getCurrentConfig()
       })
+    })
+
+    socket.on('soundValue', (value) => {
+      soundEmitter.emit('sound', value)
     })
 
     socket.on('setCurrentProgram', (programKey) => {

@@ -1,17 +1,11 @@
+if(!window.socket) {
+  window.socket = io();
+}
+
 const ProgramNames = ['debugSetup',
 'all-white', 'all-off', 'blink', 'pw',
 'rainbow', 'stars', 'musicFlow', 'musicFreqs',
 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
-
-class Item extends React.Component {
-  render() {
-    return <a href="#" onClick={this.props.onClick}>{this.props.children}</a>
-  }
-}
-
-// $(function () {
-const socket = io();
-// });
 
 class Simulator extends React.Component {
   constructor() {
@@ -131,7 +125,7 @@ class Simulator extends React.Component {
         <div className="contain">
           <div className="simulator">
             <h3>Current Program: { currentProgram.name } </h3>
-            <LightsCanvas width="600" height="346" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
+            <LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
           </div>
           <div className="controls">
             <div>
@@ -143,9 +137,16 @@ class Simulator extends React.Component {
               {configOptions}
             </div>
           </div>
+          <MicrophoneClient></MicrophoneClient>
         </div>
       </div>)
     }
+  }
+}
+
+class Item extends React.Component {
+  render() {
+    return <a href="#" onClick={this.props.onClick}>{this.props.children}</a>
   }
 }
 

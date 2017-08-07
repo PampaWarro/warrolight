@@ -21,25 +21,25 @@ module.exports = class TimeTickedFunction {
     this.startTime = new Date();
 
     const frame =() => {
-      this.interval = setTimeout(frame, (1000 / 30));
+      this.nextTickTimeout = setTimeout(frame, (1000 / this.config.fps));
       this.timeInMs = new Date() - this.startTime;
       this.drawFrame(colorsArray => draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness))), done);
     }
 
-    this.interval = setTimeout(frame, (1000 / 30));
+    this.nextTickTimeout = setTimeout(frame, (1000 / this.config.fps));
 
     done()
   }
 
   stop() {
-    clearTimeout(this.interval)
+    clearTimeout(this.nextTickTimeout)
   }
 
   static configSchema(){
     // Child classes should call super.configSchema and extend this object
     return {
       globalBrightness: {type: Number, min: 0, max: 1, step: 0.01, default: 1},
-      // frequencyInHertz: {type: Number, min: 1, max: 300, default: 60},
+      fps: {type: Number, min: 1, max: 60, default: 30},
     }
   }
 }

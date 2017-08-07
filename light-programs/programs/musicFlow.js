@@ -1,7 +1,7 @@
-import {ColorUtils} from "../utils/ColorUtils";
-import {SoundBasedFunction} from "./SoundBasedFunction";
+const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
 
-export class Func extends SoundBasedFunction{
+module.exports = class MusicFlow extends SoundBasedFunction{
   constructor(config, leds) {
     super(config, leds);
   }
@@ -20,14 +20,14 @@ export class Func extends SoundBasedFunction{
     this.time += this.config.speed;
     this.realTime += 1;
 
-    let vol = this.averageVolume*this.config.multiplier;
+    let vol = this.averageRelativeVolume*this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){
       vol = vol/3*0;
     }
 
-    let newVal = ColorUtils.HSVtoHex((vol*4+this.realTime/2000)%1, 1, Math.min(vol*vol*10, 1));
+    let newVal = ColorUtils.HSVtoHex((vol+this.realTime/2000)%1, 1, Math.min(vol*vol/3, 1));
 
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.doble){
@@ -64,9 +64,9 @@ export class Func extends SoundBasedFunction{
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();
-    res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 3};
+    res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
     res.speed = {type: Number, min: 1, max: 30, step: 1, default: 1};
-    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.1};
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2};
     res.doble = {type: Boolean, default: true};
     res.haciaAfuera = {type: Boolean, default: true};
     return res;

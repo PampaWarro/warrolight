@@ -24,6 +24,23 @@
         margin-bottom: 0.1em;
     }
 
+    .mic-client {
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        border: solid 1px white;
+        width: 100%;
+    }
+    .mic-client .buttons{
+        padding: 5px;
+    }
+
+    #music {
+        background-color: #333;
+        height: 100px;
+        width: 400px;
+    }
+
     .state {
         padding: 5px;
         text-align: center;
@@ -58,19 +75,6 @@
           text-align: center;
           padding: 10px;
       }
-    }
-
-    .dj-dash.controls{
-        width: 100%;
-    }
-    .dj-dash.controls .menuItems{
-        columns: inherit
-    }
-    .dj-dash.controls a{
-        font-size: 1.5em;
-        display: block;
-        padding: 20px;
-        margin: 10px;
     }
 
     @media (max-width: 768px) {
@@ -128,7 +132,7 @@
 
     }
     a, a:hover, a:active{
-        color: #DDD
+        color: #a7b4ff
     }
 </style>
 
@@ -139,7 +143,13 @@
 <script src="lib/lodash.js"></script>
 <script src="lib/react.js"></script>
 <script src="lib/react-dom.js"></script>
+<script src="lib/NoSleep.js"></script>
 <script src="/dist/canvas.js"></script>
-<script src="/dist/selector.js"></script>
+<script src="/dist/microphoneClient.js"></script>
+<script src="/dist/simulator.js"></script>
 <script src="/dist/root.js"></script>
+
+<script type="text/javascript">
+
+</script>
 

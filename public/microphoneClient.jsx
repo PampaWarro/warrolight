@@ -57,8 +57,21 @@ class MicrophoneClient extends React.Component {
         alert('Error' + err.toString());
       }
 
+      let audioops = {
+        "mandatory": {
+          "googEchoCancellation": "false",
+          "googAutoGainControl": "false",
+          "googNoiseSuppression": "false",
+          "googHighpassFilter": "false"
+        },
+        "optional": []
+      };
+
       if (navigator.getUserMedia) {
-        navigator.getUserMedia({video: false, audio: true}, onSuccess, onError);
+        navigator.getUserMedia({
+          video: false,
+          audio: audioops
+        }, onSuccess, onError);
       } else if (navigator.webkitGetUserMedia) {
         navigator.webkitGetUserMedia({video: false, audio: true}, onSuccess, onError);
       }
@@ -69,10 +82,81 @@ class MicrophoneClient extends React.Component {
       to = to || array.length;
       // get all the frequency amplitudes
       for (var i = from; i < to; i++) {
-        values += array[i];
+        values += array[i] //*array[i];
       }
-      return values / (array.length * (to - from));
+      return (values / (array.length * (to - from)));
     }
+
+    function createAudioMeter(audioContext) {
+      var processor = audioContext.createScriptProcessor(512);
+      processor.onaudioprocess = volumeAudioProcess;
+      processor.volume = 0;
+
+      // this will have no effect, since we don't copy the input to the output,
+      // but works around a current Chrome bug.
+      processor.connect(audioContext.destination);
+
+      processor.shutdown =
+        function(){
+          this.disconnect();
+          this.onaudioprocess = null;
+        };
+
+      return processor;
+    }
+
+    var lastVolumes = [];
+    function volumeAudioProcess( event ) {
+      var buf = event.inputBuffer.getChannelData(0);
+      var bufLength = buf.length;
+      var sum = 0;
+      var x;
+
+      // Do a root-mean-square on the samples: sum up the squares...
+      for (var i=0; i<bufLength; i++) {
+        x = buf[i];
+        sum += x * x;
+      }
+
+      // ... then take the square root of the sum.
+      var energy =  Math.sqrt(sum / bufLength);
+
+      // Now smooth this out with the averaging factor applied
+      // to the previous sample - take the max here because we
+      // want "fast attack, slow release."
+      lastVolumes.push(energy);
+
+      /*
+      self.averageVolume = energy
+      // self.bassesAverageVolume = getAverageVolume(array, 32);
+      self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
+      self.averageRelativeVolume = Math.min(1, self.averageVolume / (self.maxVolume || 1))
+
+      // Plot
+      self.plotEnergyHistogram(self);
+      */
+    }
+
+    const interval = 100;
+    self.processRawInterval = setTimeout(function computeVolume(){
+      if(self.state.micOn && socket.connected && lastVolumes.length) {
+        // calculate average
+        self.averageVolume = _.reduce(lastVolumes, function(memo, num){ return memo + num; }, 0)/lastVolumes.length;
+        lastVolumes = [];
+
+        // Send integer sound value to reduce message byte size
+        socket.emit('SV', Math.round(self.averageVolume*10000))
+
+        // Plot
+        self.plotEnergyHistogram(self);
+
+        // self.bassesAverageVolume = getAverageVolume(array, 32);
+        self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
+        self.averageRelativeVolume = Math.min(1, self.averageVolume / (self.maxVolume || 1))
+      }
+      self.processRawInterval = setTimeout(computeVolume, interval);
+    }, interval);
+
 
     function createAnalyzer(stream) {
       self.stream = stream;
@@ -85,11 +169,15 @@ class MicrophoneClient extends React.Component {
       self.audioContext = window.singletonAudioContext;
       self.mediaStreamSource = self.audioContext.createMediaStreamSource(stream);
 
+      self.mediaStreamSource.connect(createAudioMeter(self.audioContext));
+      return;
+      /*
       self.analyser = self.audioContext.createAnalyser();
       self.analyser.smoothingTimeConstant = 0.0;
       self.analyser.fftSize = 512;
 
       self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
+      */
 
       let lastTime = new Date();
       //self.audioProcessorNode.onaudioprocess = function(e) {
@@ -112,7 +200,7 @@ class MicrophoneClient extends React.Component {
 
           // self.bassesAverageVolume = getAverageVolume(array, 32);
           self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
-          self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1)
+          self.averageRelativeVolume = Math.min(1, self.averageVolume / (self.maxVolume || 1))
         }
         // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
         self.processInterval = setTimeout(computeSoundStats, 25);
@@ -177,7 +265,8 @@ class MicrophoneClient extends React.Component {
   }
 
   turnOff(){
-    this.setState({micOn: false});
+    this.setState({micOn: false})
+    this.maxVolume = 0.00001
     noSleep.disable();
   }
 

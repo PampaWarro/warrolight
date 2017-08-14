@@ -11,7 +11,7 @@ const app = express();
 const http = require('http').createServer(app);
 const httpsServer = require('https').createServer(credentials, app);
 
-const soundEmitter = require("./sound-broadcast")
+require('./volume-broadcaster')
 
 exports.createRemoteControl = function(lightProgram) {
   app.use(express.static('public'))
@@ -50,10 +50,10 @@ exports.createRemoteControl = function(lightProgram) {
       })
     })
 
-    socket.on('SV', (value) => {
-      // it is sent as integer 0-10000 to reduce size
-      soundEmitter.emit('sound', value/10000)
-    })
+    // socket.on('SV', (value) => {
+    //   // it is sent as integer 0-10000 to reduce size
+    //   soundEmitter.emit('sound', value/10000)
+    // })
 
     socket.on('setPreset', (presetName) => {
       let presets = lightProgram.getCurrentPresets();

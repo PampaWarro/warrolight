@@ -49,7 +49,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
-    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.1};
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
     return res;
   }
 }

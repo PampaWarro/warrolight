@@ -7,7 +7,11 @@ const LightController = require('./light-programs/main-program')
 let multiplexer;
 
 // W chica
-var device1 = new Device(150, 'COM15')
+var serialDevice = '/dev/ttyACM0'
+if(/^win/.test(process.platform)){
+  serialDevice = 'COM15'
+}
+var device1 = new Device(150, serialDevice)
 
 setTimeout(() => {
   multiplexer = new Multiplexer(150, [device1], (index) => {

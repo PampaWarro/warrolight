@@ -11,7 +11,7 @@ const _ = require('lodash');
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugShapes", "all-off", "all-white"]
+const programNames = ["PROGRAM_Main", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
 
 
 module.exports = class LightController {

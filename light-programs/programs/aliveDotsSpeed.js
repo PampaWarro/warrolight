@@ -21,8 +21,8 @@ module.exports = class Func extends SoundBasedFunction {
           if(this.val < this.intensity){
             this.val += 0.05
           }
-          let vol = self.medianVolume * 5;
-          this.pos = this.pos + (vol * vol * 2) * self.config.speedWeight * this.speed
+          let vol = self.medianVolume;
+          this.pos = this.pos + (vol * vol * 4) * self.config.speedWeight * this.speed
 
           this.pos = this.pos % self.numberOfLeds
           // this.intensity = vol

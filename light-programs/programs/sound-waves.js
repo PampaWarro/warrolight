@@ -12,7 +12,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     this.dots = []
 
     this.createDot = () => {
-      let relativeVolume = Math.min(1, self.averageVolume / self.maxVolume);
+      let relativeVolume = self.averageRelativeVolume
       //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
       return {
         centerX: this.config.centerX,
@@ -34,15 +34,15 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
   drawFrame(draw, done) {
     let timeSinceLastCreation = new Date() - this.lastCreation;
-    if ((timeSinceLastCreation > 25 && this.averageVolume > 0.05) || (timeSinceLastCreation > 500 && this.averageVolume > 0.02)) {
+    if ((timeSinceLastCreation > 50 && this.averageRelativeVolume > 0.3) || (timeSinceLastCreation > 500 && this.averageRelativeVolume > 0.1)) {
       this.dots.push(this.createDot())
       this.lastCreation = new Date();
 
       this.dots = _.filter(this.dots, d => d.intensity > 0.0001);
 
-      if (this.dots.length > 150) {
+      if (this.dots.length > 15) {
         this.dots.shift();
-        console.log("SoundWaves: making space")
+        // console.log("SoundWaves: making space", this.dots.length)
       }
     }
 
@@ -75,13 +75,13 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
   static presets() {
     return {
-      "hexagono": {initialDistance: 19.8, haciaAfuera: false, speed: 0.6, waveWidth: 1},
+      "hexagono": {initialDistance: 19.8, haciaAfuera: false, speed: 0.6, waveWidth: 2},
       "default": {},
       "deLasPuntas": {speed: 1, waveWidth: 2, initialDistance: 40, haciaAfuera: false, brillo: 0.5},
       "centroLento": {speed: 0.1},
       "centroLentoDark": {speed: 0.1, brillo: 0.25},
       "centroFast": {speed: 2},
-      "centroBrightFast": {speed: 0.7, brillo: 2, waveWidth: 0.5},
+      "centroBrightFast": {speed: 0.7, brillo: 2, waveWidth: 2},
       "abajoFast": {centerY: -17.3, speed: 2},
       "xInvertida": {initialDistance: 15, haciaAfuera: false},
       "deArribaAbajo": {initialDistance: 40, centerY: -17, haciaAfuera: false, speed: 2}
@@ -95,7 +95,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     config.initialDistance = {type: Number, min: 0, max: 40, step: 0.1, default: 0}
     config.centerY =  {type: Number, min: -20, max: 20, step: 1, default: 0}
     config.centerX =  {type: Number, min: -20, max: 20, step: 1, default: 0}
-    config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2}
+    config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5}
     config.speed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}
     config.haciaAfuera = {type: Boolean, default: true}
 

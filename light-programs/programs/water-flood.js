@@ -50,7 +50,7 @@ module.exports = class Func extends SoundBasedFunction {
     let res = super.configSchema();
     res.escala = {type: Number, min: 0.01, max: 5, step: 0.01, default: 1}
     res.color = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
-    res.velocidad = {type: Number, min: -3, max: 3, step: 0.01, default: 0.4}
+    res.velocidad = {type: Number, min: -3, max: 3, step: 0.01, default: 0.6}
     res.whiteBorder = {type: Boolean, default: false}
     return res;
   }

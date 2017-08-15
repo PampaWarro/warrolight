@@ -33,7 +33,6 @@
         bottom: 0px;
         right: 0px;
         border: solid 1px white;
-        width: 100%;
         background-color: black;
     }
 
@@ -43,7 +42,6 @@
 
     #music {
         background-color: #333;
-        height: 100px;
         width: 400px;
     }
 
@@ -64,37 +62,28 @@
         background-color: darkgoldenrod;
     }
 
-    .controls {
-        display: grid;
-        grid-template-columns: 125px auto;
-    }
-
-    .menuItems {
-        grid-column-start: 1;
-    }
 
     .configuration {
-        grid-column-start: 2;
         padding: 10px;
     }
 
     .controls {
-        background-color: #333;
         width: 100%;
     }
 
     .menuItems {
         margin: 0;
         padding: 0;
+        text-align: center;
     }
 
     .menuItems a {
         text-align: center;
         text-decoration: none;
         margin: 1px;
-        padding: 5px 2px;
-        display: block;
-        background-color: #222;
+        padding: 5px 5px;
+        display: inline-block;
+        background-color: #333;
         word-break: break-all;
     }
 
@@ -106,27 +95,24 @@
         background-color: #444;
     }
 
-    config-items {
-    }
     .config-item {
-        display: grid;
-        grid-template-columns: auto 185px;
-        align-items: center;
+        text-align: center;
         /*justify-content: space-between;*/
         padding: 5px 0px;
     }
 
     .config-item span {
         font-size: 12px;
-        grid-column: 1;
         text-align: right;
         word-break: break-all;
+        display: inline-block;
+        width: 110px;
     }
 
     .config-item > div{
-        grid-column: 2;
         vertical-align: middle;
         margin-left: 10px;
+        display: inline-block;
         /*text-align: right;*/
     }
 
@@ -189,11 +175,6 @@
 <script src="lib/react-dom.js"></script>
 <script src="lib/NoSleep.js"></script>
 <script src="/dist/canvas.js"></script>
-<script src="/dist/microphoneClient.js"></script>
+<script src="/dist/microphoneViewer.js"></script>
 <script src="/dist/simulator.js"></script>
 <script src="/dist/root.js"></script>
-
-<script type="text/javascript">
-
-</script>
-

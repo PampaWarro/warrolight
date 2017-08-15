@@ -37,7 +37,7 @@ module.exports = class Stars extends TimeTickedFunction {
       pocasSlow: {decay: 0.97, probability: 0.0003},
       pocasFast: {decay: 0.88, probability: 0.02},
       slowBlue: {decay: 0.97, probability: 0.003, starsColor: 0.58, brillo: 0.05},
-      muchasFast: {decay: 0.88, probability: 0.1},
+      muchasFast: {decay: 0.88, probability: 0.05},
       muchasSlow: {decay: 0.95, probability: 0.06},
       pocasMoving: {decay: 0.97, probability: 0.002, move: true, brillo: 1}
     }

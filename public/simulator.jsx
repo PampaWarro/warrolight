@@ -151,7 +151,7 @@ class Simulator extends React.Component {
               {presets}
             </div>
           </div>
-          <MicrophoneClient></MicrophoneClient>
+          <MicrophoneViewer></MicrophoneViewer>
         </div>
       </div>)
     }

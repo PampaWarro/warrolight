@@ -32,7 +32,7 @@ const rgbToVga = (r, g, b) => {
   return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)
 }
 
-let reconnectTime = 1000;
+let reconnectTime = 500;
 
 module.exports = class Device {
 

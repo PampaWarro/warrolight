@@ -1,7 +1,7 @@
-import {ColorUtils} from "../utils/ColorUtils";
-import {TimeTickedFunction} from "./TimeTickedFunction";
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const ColorUtils = require("./../utils/ColorUtils");
 
-export class Func extends TimeTickedFunction {
+module.exports = class ColorSpear extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;
@@ -24,7 +24,7 @@ export class Func extends TimeTickedFunction {
       newColors[(punta + i) % this.numberOfLeds] = ColorUtils.HSVtoHex(
         ((this.time + i * this.config.colorVariety) % colorTime) / colorTime,
         1,
-        this.config.brillo,
+        this.config.brillo
       )
     }
     draw(newColors);

@@ -180,7 +180,7 @@ class Simulator extends React.Component {
               presets
             )
           ),
-          React.createElement(MicrophoneClient, null)
+          React.createElement(MicrophoneViewer, null)
         )
       );
     }

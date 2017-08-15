@@ -134,7 +134,7 @@ void loop() {
 
 
 
-int waitingCount = 0;
+unsigned long lastConnectionTime = millis();
 void readLedsFromSerial() {
   if (!connected) {
     if (Serial.available() >= 3) {
@@ -143,22 +143,21 @@ void readLedsFromSerial() {
         Serial.println("YEAH");
       } else {
         drainSerial();
+        delay(50);
       }
     }
     return;
   }
 
-  if (Serial.available() < 2) {
-    waitingCount++;
-
-    if (waitingCount > 30000) {
-      waitingCount = 0;
+  if (Serial.available() < 2) {   
+    if ((millis() - lastConnectionTime) > 2000) {
+      lastConnectionTime = millis();
       delay(500);
       reconnect();
     }
     return;
   }
-  waitingCount = 0;
+  lastConnectionTime = millis();
 
   int encoding = Serial.read();
   if (encoding == ENCODING_POS_RGB) {

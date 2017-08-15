@@ -22,9 +22,9 @@ module.exports =  class Func extends SoundBasedFunction {
           if(this.val < this.intensity){
             this.val += 0.05
           }
-          let vol = self.averageVolumeSmoothed;
+          let vol = self.averageRelativeVolumeSmoothed;
           let volDiff = (vol - self.lastVolume);
-          this.pos = this.pos + this.speed * (vol*vol) * 10000 * self.config.musicWeight * volDiff + (self.config.doble ? this.direction : 1) * self.config.speedWeight * this.speed
+          this.pos = this.pos + this.speed * (vol*vol) * 100 * self.config.musicWeight * volDiff + (self.config.doble ? this.direction : 1) * self.config.speedWeight * this.speed
 
           this.pos = this.pos % self.numberOfLeds
           // this.intensity = vol
@@ -69,12 +69,12 @@ module.exports =  class Func extends SoundBasedFunction {
 
   static presets(){
     return {
-      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 50, toneColor: 0.5},
-      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 70, toneColor: 0.55, doble: false},
-      "constanteRapidoPocas": {musicWeight: 0, speedWeight: 2, numberOfParticles: 10, toneColor: 0.3},
-      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 100, toneColor: 0.5},
-      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 100, toneColor: 0.5, doble: false, brillo: 1},
-      "musicQuilombo": {musicWeight: 1, speedWeight: 1, numberOfParticles: 50, toneColor: 0.7}
+      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 20, toneColor: 0.5},
+      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 20, toneColor: 0.55, doble: false},
+      "constanteRapidoPocas": {musicWeight: 0, speedWeight: 1, numberOfParticles: 10, toneColor: 0.3},
+      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 20, toneColor: 0.5},
+      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 20, toneColor: 0.5, doble: false, brillo: 1},
+      "musicQuilombo": {musicWeight: 1, speedWeight: 0.5, numberOfParticles: 15, toneColor: 0.7}
     }
   }
 
@@ -83,7 +83,7 @@ module.exports =  class Func extends SoundBasedFunction {
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
     config.speedWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 0.1}
-    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 30}
+    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 20}
     config.doble = {type: Boolean, default: true}
     config.toneColor  = {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
     return config;

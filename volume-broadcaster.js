@@ -1,4 +1,4 @@
-const mic = require('./mic');
+const mic = require('./mic/mic');
 const fs = require('fs');
 
 const soundEmitter = require("./sound-broadcast")

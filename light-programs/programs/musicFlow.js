@@ -66,7 +66,7 @@ module.exports = class MusicFlow extends SoundBasedFunction{
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
     res.speed = {type: Number, min: 1, max: 30, step: 1, default: 1};
-    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2};
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
     res.doble = {type: Boolean, default: true};
     res.haciaAfuera = {type: Boolean, default: true};
     return res;

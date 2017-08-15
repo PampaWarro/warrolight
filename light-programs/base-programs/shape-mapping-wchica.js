@@ -41,6 +41,8 @@ module.exports = function getShapes(mapping) {
   const V1 = inv(V1L).concat(V1R)
   const V2 = inv(V2L).concat(V2R)
 
+  const X = inv(V1R).concat(V2L)
+
   // Reloj de arena
   const reloj = _.range(38, 112)
 
@@ -50,7 +52,7 @@ module.exports = function getShapes(mapping) {
     pataLeft, pataRight,
     trianguloBottom, trianguloTop, trianguloBottomLeft, trianguloBottomRight, trianguloTopRight, trianguloTopLeft,
     trianguloBottomBottom, trianguloTopTop,
-    Warro, reloj, V1, V2, V1L, V1R, V2L, V2R,
+    Warro, reloj, V1, V2, V1L, V1R, V2L, V2R, X,
     shuffle, shuffleSegments10, shuffleSegments20, shuffleSegments5, trianguloBottomShuffle,
     allOfIt
   };

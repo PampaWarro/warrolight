@@ -27,7 +27,6 @@ soundEmitter.on('sound', (volume) => {
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 })
 
-
 module.exports = class SoundBasedFunction extends TimeTickedFunction{
   constructor(config, leds) {
     super(config, leds);
@@ -68,6 +67,8 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
       self.medianVolume15 = self.medianVolume15.slice(1)
       self.medianVolume = _.sortBy(self.medianVolume15)[7]
 
+      soundEmitter.emit('volume', {level: self.averageRelativeVolume, max: self.maxVolume})
+
       // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
       self.processInterval = setTimeout(computeSoundStats, 1000/self.config.fps);
       lastTime = new Date();
@@ -77,17 +78,14 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
   }
 
   stop() {
+    clearTimeout(this.processInterval)
+    console.log("Cancelando coso")
     super.stop();
-    clearInterval(this.processInterval)
   }
 
   // Override and extend config Schema
   static configSchema(){
     let config = super.configSchema();
-    // config.soundSamplingFreq = {type: Number, min: 1, max: 100, step: 1, default: 16};
-    // config.maxFreq = {type: Number, min: 1, max: 512, step: 1, default: 512};
-    // config.minFreq = {type: Number, min: 0, max: 512, step: 1, default: 0};
-    // config.showHistogram = {type: Boolean, default: true};
     return config;
   }
 }

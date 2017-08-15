@@ -23,15 +23,19 @@ exports.createRemoteControl = function(lightProgram) {
   // httpServer.listen(8080);
   // httpsServer.listen(8443);
 
-  // http.listen(3001, '0.0.0.0', function () {
-  //   console.log("Warro lights server running on port 3001")
-  // })
-
-  httpsServer.listen(3443, '0.0.0.0', function () {
-    console.log("Warro lights HTTPS server running on port 3443")
+  http.listen(3001, '0.0.0.0', function () {
+    console.log("Warro lights server running on port 3001")
   })
 
-  const io = require('socket.io').listen(httpsServer);
+  // httpsServer.listen(3443, '0.0.0.0', function () {
+  //   console.log("Warro lights HTTPS server running on port 3443")
+  // })
+
+  const io = require('socket.io').listen(http);
+
+  require("./sound-broadcast").on('volume', _.throttle((volData) => {
+    io.emit('micSample', volData)
+  }, 100))
 
   io.on('connection', (socket) => {
     socket.emit('completeState', {
@@ -39,7 +43,6 @@ exports.createRemoteControl = function(lightProgram) {
       currentProgramName: lightProgram.currentProgramName,
       currentConfig: lightProgram.getCurrentConfig()
     })
-
 
     socket.on('updateConfigParam', (config) => {
       lightProgram.currentProgram.config = config;

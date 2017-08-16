@@ -21,9 +21,19 @@ module.exports = class TimeTickedFunction {
     this.startTime = new Date();
 
     const frame =() => {
-      this.nextTickTimeout = setTimeout(frame, (1000 / this.config.fps));
+      let start = new Date();
       this.timeInMs = new Date() - this.startTime;
       this.drawFrame(colorsArray => draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness))), done);
+
+      let drawingTimeMs = new Date() - start
+      let remainingTime = (1000 / this.config.fps) - drawingTimeMs
+
+      if(drawingTimeMs > 100) {
+        console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`)
+      }
+      // Schedule next frame for the remaing time considering how long it took to do the drawing
+      // We wait at least 10ms in order to throttle CPU to give room for IO, serial and other critical stuff
+      this.nextTickTimeout = setTimeout(frame, Math.max(10, remainingTime));
     }
 
     this.nextTickTimeout = setTimeout(frame, (1000 / this.config.fps));

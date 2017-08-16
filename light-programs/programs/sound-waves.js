@@ -7,7 +7,6 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     super(config, leds);
     this.time = 0;
     let self = this;
-    this.lastVolume = 0;
     this.lastCreation = new Date();
     this.dots = []
 
@@ -17,7 +16,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
       return {
         centerX: this.config.centerX,
         centerY: this.config.centerY,
-        speed: Math.pow(relativeVolume, 2) * 1 + 0.05,
+        speed: relativeVolume * relativeVolume + 0.05,
         // speed: 0.1,
         intensity: relativeVolume,
         distance: self.config.initialDistance,
@@ -34,13 +33,13 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
   drawFrame(draw, done) {
     let timeSinceLastCreation = new Date() - this.lastCreation;
-    if ((timeSinceLastCreation > 50 && this.averageRelativeVolume > 0.3) || (timeSinceLastCreation > 500 && this.averageRelativeVolume > 0.1)) {
+    if ((timeSinceLastCreation > 100 && this.averageRelativeVolume > 0.3) || (timeSinceLastCreation > 500 && this.averageRelativeVolume > 0.1)) {
       this.dots.push(this.createDot())
       this.lastCreation = new Date();
 
-      this.dots = _.filter(this.dots, d => d.intensity > 0.0001);
+      this.dots = _.filter(this.dots, d => d.intensity > 0.001);
 
-      if (this.dots.length > 15) {
+      if (this.dots.length > 30) {
         this.dots.shift();
         // console.log("SoundWaves: making space", this.dots.length)
       }

@@ -79,7 +79,6 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
 
   stop() {
     clearTimeout(this.processInterval)
-    console.log("Cancelando coso")
     super.stop();
   }
 

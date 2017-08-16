@@ -34,7 +34,7 @@ exports.createRemoteControl = function(lightProgram) {
   const io = require('socket.io').listen(http);
 
   require("./sound-broadcast").on('volume', _.throttle((volData) => {
-    io.emit('micSample', volData)
+    io.volatile.emit('micSample', volData)
   }, 100))
 
   io.on('connection', (socket) => {

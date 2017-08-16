@@ -114,9 +114,11 @@ const schedule = [
   {duration: 20*baseTime, program: programsByShape({Warro: [Stars, Stars.presets().pocasSlow]})},
   {duration: 30 * baseTime, program: programsByShape({Warro: [Stars, Stars.presets().pocasFast]})},
 
+
+
   // {duration: 10*baseTime, program: programsByShape({Warro: Fire})},
 ]
 // las formas que se pueden usar están definidas en Transformation
 
 
-module.exports = createMultiProgram(schedule, false)
+module.exports = createMultiProgram(schedule, true)

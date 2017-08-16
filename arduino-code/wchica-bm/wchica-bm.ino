@@ -139,6 +139,7 @@ void readLedsFromSerial() {
   if (!connected) {
     if (Serial.available() >= 3) {
       if (Serial.read() == 'X' && Serial.read() == 'X' && Serial.read() == 'X') {
+        drainSerial();
         connected = true;
         Serial.println("YEAH");
       } else {
@@ -214,6 +215,8 @@ void readLedsFromSerial() {
     } else {
       return reconnect();
     }
+  } else {
+    return reconnect();
   }
 
   FastLED.show();

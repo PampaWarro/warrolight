@@ -143,6 +143,7 @@ class Simulator extends React.Component {
           </div>
           <div className="controls">
             <div className="menuItems">{ menuItems }</div>
+            <LightsSimulator height="400" width="600"></LightsSimulator>
             <div className="configuration">
               <h3>{ this.state.selected } </h3>
               <div className="config-items">

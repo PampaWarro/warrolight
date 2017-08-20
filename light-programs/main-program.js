@@ -12,7 +12,8 @@ const _ = require('lodash');
 // ]
 
 const programNames = ["PROGRAM_Main", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
-
+const Emitter = require('events')
+let lightsSampleEmitter = new Emitter()
 
 module.exports = class LightController {
   constructor(setLightsCbk) {
@@ -99,6 +100,14 @@ module.exports = class LightController {
     }
   }
 
+  onLights(cbk) {
+    lightsSampleEmitter.on('lights', cbk)
+  }
+
+  removeOnLights(cbk) {
+    lightsSampleEmitter.removeListener('lights', cbk)
+  }
+
   loadProgram(name) {
     const FunctionClass = require('./programs/' + name);
     return {
@@ -109,6 +118,7 @@ module.exports = class LightController {
   }
 
   updateLeds(leds) {
+    lightsSampleEmitter.emit('lights', leds)
     this.setLightsCbk(leds)
   }
 }

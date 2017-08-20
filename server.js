@@ -38,11 +38,28 @@ exports.createRemoteControl = function(lightProgram) {
   }, 100))
 
   io.on('connection', (socket) => {
+    let simulating = false;
+
     socket.emit('completeState', {
       programs: lightProgram.getProgramsSchema(),
       currentProgramName: lightProgram.currentProgramName,
       currentConfig: lightProgram.getCurrentConfig()
     })
+
+    socket.on('startSamplingLights', (ack) => {
+      simulating = true
+      console.log('Client requested startSamplingLights')
+      ack(lightProgram.layout)
+    })
+    socket.on('stopSamplingLights', () => simulating = false)
+
+    let lightsCbk = lights => {
+        if(simulating) {
+            socket.volatile.emit('lightsSample', lights)
+        }
+    }
+
+    lightProgram.onLights(lightsCbk)
 
     socket.on('updateConfigParam', (config) => {
       lightProgram.currentProgram.config = config;
@@ -52,6 +69,10 @@ exports.createRemoteControl = function(lightProgram) {
         currentConfig: lightProgram.getCurrentConfig()
       })
     })
+
+    socket.on('disconnect', function () {
+        lightProgram.removeOnLights(lightsCbk)
+    });
 
     // socket.on('SV', (value) => {
     //   // it is sent as integer 0-10000 to reduce size

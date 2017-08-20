@@ -1,0 +1,1 @@
+{"version":3,"sources":["root.jsx"],"names":["ReactDOM","render","document","getElementById"],"mappings":"AAAAA,SAASC,MAAT,CACE,oBAAC,SAAD,OADF,EAEEC,SAASC,cAAT,CAAwB,KAAxB,CAFF","file":"root.js","sourcesContent":["ReactDOM.render(\r\n  <Simulator />,\r\n  document.getElementById('app')\r\n);"]}

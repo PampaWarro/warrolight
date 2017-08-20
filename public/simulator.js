@@ -163,6 +163,7 @@ class Simulator extends React.Component {
               { className: 'menuItems' },
               menuItems
             ),
+            React.createElement(LightsSimulator, { height: '400', width: '600' }),
             React.createElement(
               'div',
               { className: 'configuration' },
@@ -299,5 +300,4 @@ class BooleanParam extends React.Component {
     );
   }
 }
-
 //# sourceMappingURL=simulator.js.map

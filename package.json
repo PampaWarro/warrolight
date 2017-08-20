@@ -25,5 +25,8 @@
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.1",
     "style-loader": "^0.13.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }

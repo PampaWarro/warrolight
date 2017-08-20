@@ -162,5 +162,4 @@ class LightsCanvas extends React.Component {
     ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
   }
 }
-
 //# sourceMappingURL=canvas.js.map

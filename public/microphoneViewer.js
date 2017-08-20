@@ -101,5 +101,4 @@ class MicrophoneViewer extends React.Component {
     );
   }
 }
-
 //# sourceMappingURL=microphoneViewer.js.map

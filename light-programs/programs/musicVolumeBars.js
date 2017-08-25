@@ -52,7 +52,6 @@ module.exports =  class Func extends SoundBasedFunction{
   static configSchema(){
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
-    res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     return res;
   }
 }

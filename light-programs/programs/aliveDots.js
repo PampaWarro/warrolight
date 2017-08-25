@@ -35,10 +35,15 @@ module.exports =  class Func extends SoundBasedFunction {
       }
     }
 
-    this.dots = _.map(_.range(this.config.numberOfParticles), i => this.createDot())
   }
 
-  drawFrame(draw, done) {
+  start(config, draw, done){
+      super.start(config, draw, done)
+      this.dots = _.map(_.range(this.config.numberOfParticles), i => this.createDot())
+  }
+
+
+    drawFrame(draw, done) {
     // let decay = this.config.decay;
     this.time++
     this.stars = [... Array(this.numberOfLeds)].map(() => [0, 0, 0]);
@@ -69,11 +74,11 @@ module.exports =  class Func extends SoundBasedFunction {
 
   static presets(){
     return {
-      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 20, toneColor: 0.5},
-      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 20, toneColor: 0.55, doble: false},
+      "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 15, toneColor: 0.5},
+      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 15, toneColor: 0.55, doble: false},
       "constanteRapidoPocas": {musicWeight: 0, speedWeight: 1, numberOfParticles: 10, toneColor: 0.3},
-      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 20, toneColor: 0.5},
-      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 20, toneColor: 0.5, doble: false, brillo: 1},
+      "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 15, toneColor: 0.5},
+      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 15, toneColor: 0.5, doble: false, brillo: 1},
       "musicQuilombo": {musicWeight: 1, speedWeight: 0.5, numberOfParticles: 15, toneColor: 0.7}
     }
   }
@@ -83,7 +88,7 @@ module.exports =  class Func extends SoundBasedFunction {
     config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
     config.speedWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 0.1}
-    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 20}
+    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 10}
     config.doble = {type: Boolean, default: true}
     config.toneColor  = {type: Number, min: 0, max: 1, step: 0.01, default: 0.5}
     return config;

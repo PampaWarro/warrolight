@@ -5,13 +5,13 @@ const _ = require('lodash');
 // const ProgramNames = [
 //   'all-off', 'remote-test', 'debugSetup', 'debugShapes', 'all-white',
 //   'aliveDots', 'aliveDotsSpeed', 'heart',
-//   //'rainbow2', 'white-spear',  'rainbow-horizontal', 'rainbow-hourglass',
+//   //'rainbow2', 'white-',  'rainbow-horizontal', 'rainbow-hourglass',
 //   'rainbow', 'stars', 'musicFlow', 'musicFreqs',  'radial', // 'vertical',  'blink'
 //   //'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["PROGRAM_Main", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
+const programNames = ["rays", "PROGRAM_Main", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
 const Emitter = require('events')
 let lightsSampleEmitter = new Emitter()
 
@@ -65,6 +65,11 @@ module.exports = class LightController {
       )
       this.running = true;
     }
+  }
+
+  restart(){
+    this.currentProgram.stop()
+    this.currentProgram.start(this.currentProgram.config,(leds) => this.updateLeds(leds),() => ({}))
   }
 
   stop() {

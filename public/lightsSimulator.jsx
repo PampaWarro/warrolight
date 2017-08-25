@@ -131,7 +131,7 @@ class LightsSimulator extends React.Component {
     }
 
     render() {
-        return <div>
+        return <div className="lights-sim">
             <div>
                 <input type="checkbox" data-id={'renderToggle'} checked={this.state.renderingEnabled}
                        onChange={this.__changeSelection.bind(this)}/><label>Simular</label>

@@ -89,6 +89,10 @@ class Simulator extends React.Component {
     socket.emit("setPreset", preset);
   }
 
+  restartProgram() {
+    socket.emit("restartProgram");
+  }
+
   render() {
     let menuItems = [];
     for (let key in this.state.programs) {
@@ -171,7 +175,12 @@ class Simulator extends React.Component {
                 'h3',
                 null,
                 this.state.selected,
-                ' '
+                ' \xA0',
+                React.createElement(
+                  'a',
+                  { href: 'javascript:void(0);', onClick: e => this.restartProgram() },
+                  'restart'
+                )
               ),
               React.createElement(
                 'div',

@@ -132,7 +132,7 @@ class LightsSimulator extends React.Component {
     render() {
         return React.createElement(
             'div',
-            null,
+            { className: 'lights-sim' },
             React.createElement(
                 'div',
                 null,

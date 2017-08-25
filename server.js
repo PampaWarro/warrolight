@@ -53,6 +53,8 @@ exports.createRemoteControl = function(lightProgram) {
     })
     socket.on('stopSamplingLights', () => simulating = false)
 
+    socket.on('restartProgram', () => lightProgram.restart())
+
     let lightsCbk = lights => {
         if(simulating) {
             socket.volatile.emit('lightsSample', lights)

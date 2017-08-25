@@ -96,6 +96,10 @@ class Simulator extends React.Component {
     socket.emit("setPreset", preset)
   }
 
+  restartProgram(){
+    socket.emit("restartProgram")
+  }
+
   render() {
     let menuItems = [];
     for (let key in this.state.programs){
@@ -145,7 +149,9 @@ class Simulator extends React.Component {
             <div className="menuItems">{ menuItems }</div>
             <LightsSimulator height="400" width="600"></LightsSimulator>
             <div className="configuration">
-              <h3>{ this.state.selected } </h3>
+              <h3>{ this.state.selected } &nbsp;
+                <a href="javascript:void(0);" onClick={e => this.restartProgram()}>restart</a>
+              </h3>
               <div className="config-items">
               {configOptions}
               </div>

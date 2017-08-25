@@ -30,6 +30,7 @@
 
 // How many leds in your strip?
 #define NUM_LEDS 150
+//#define NUM_LEDS 50
 
 // For led chips like Neopixels, which have a data line, ground, and power, you just
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
@@ -46,7 +47,7 @@ CRGB leds[NUM_LEDS];
 __attribute__((section(".noinit"))) unsigned int program;
 
 void setup() {
-  program = (program + 1) % 2;
+  program = (program + 1) % 3;
   //program = 0;
 
   // Uncomment/edit one of the following lines for your leds arrangement.
@@ -229,12 +230,11 @@ void readLedsFromSerial() {
 unsigned long time = 0;
 void arduinoProgram() {
   if (program == 0) {
-    programStars();
-    /*for (int i = 0; i < NUM_LEDS; i++) {
-      writeLeds(i, (time * 3 + i) % 256, 0, (time * 9 + i) % 256);
-      }*/
-  } else {
+    programSusi();
+  } else if (program == 1){
     programRainbow();
+  } else {
+    programStars();
   }
 
   byte debugCycle = (time / 10) % 3;
@@ -288,7 +288,7 @@ void programStars() {
     writeLedsHSB(pos, ((int)starsColors[i]+PARAM_TONE)%255, starsSaturation[i], stars[i]);
   }
 
-  if(time % (180) == 0) {
+  if(time % (60*3*10) == 0) {
     programInitialized = false;
   }
 }
@@ -310,15 +310,26 @@ byte sines[] = {0, 12, 25, 38, 50, 63, 75, 87, 99, 110, 122, 133, 143, 154, 164,
 int PARAM_SPEED = 20;
 void programRainbow() {
   if (!programInitialized) {
-    PARAM_SPEED = random(1, 6);
+    PARAM_SPEED = random(1, 1);
     programInitialized = true;
   }
   
   for (int i = 0; i < NUM_LEDS; i++) {
     int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
-    writeLedsHSB(i, (i * 1 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i + time * PARAM_SPEED) % 150]);
+    writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i*6 + time * PARAM_SPEED) % 150]);
   }
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////
+// SUSI /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+void programSusi() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if(i == ((time/20) % NUM_LEDS)){
+      writeLedsHSB(i, 130+((time/10) % 100), 255, 255);
+    } else {
+      writeLeds(i, 0,0,0);
+    }
+  }
+}
 

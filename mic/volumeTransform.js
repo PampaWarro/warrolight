@@ -26,10 +26,10 @@ MeasureVolume.prototype._transform = function (chunk, encoding, callback) {
       speechSample = speechSample + secondByte * 256;
     }
 
-    totalSound = Math.max(totalSound, Math.abs(speechSample));
+    totalSound += speechSample*speechSample;
   }
 
-  const volume = totalSound / 32767.0;
+  const volume = Math.sqrt(totalSound) / (32767.0*chunk.length/2);
 
   this.emit('volumeSample', volume);
 

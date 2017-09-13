@@ -4,20 +4,21 @@ const _ = require('lodash')
 module.exports = function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
 
-  const pataLeft = _.range(113, 143)
-  const pataRight = _.range(7, 37)
+  const offset = 7
+  const pataLeft = _.range(113 + offset, 143 + offset)
+  const pataRight = _.range(7 + offset, 37 + offset)
 
-  const basePataLeft =  _.range(0, 7);
-  const basePataRight =  _.range(143, 150);
+  const basePataLeft =  _.range(0 + offset, 7 + offset);
+  const basePataRight =  _.range(143 + offset, 150 + offset);
 
-  const trianguloBottomLeft = _.range(97, 112);
-  const trianguloBottomRight = _.range(37, 52);
+  const trianguloBottomLeft = _.range(97 + offset, 112 + offset);
+  const trianguloBottomRight = _.range(37 + offset, 52 + offset);
   const trianguloBottomBottom = inv(basePataLeft).concat(basePataRight);
   const trianguloBottom = _.flatten([basePataRight, trianguloBottomRight, inv(trianguloBottomLeft), inv(basePataLeft)])
 
-  const trianguloTopLeft = _.range(52, 67);
-  const trianguloTopRight = _.range(82, 97);
-  const trianguloTopTop = _.range(68, 82);
+  const trianguloTopLeft = _.range(52 + offset, 67 + offset);
+  const trianguloTopRight = _.range(82 + offset, 97 + offset);
+  const trianguloTopTop = _.range(68 + offset, 82 + offset);
   const trianguloTop = _.flatten([trianguloTopLeft, inv(trianguloTopTop), inv(trianguloTopRight)])
 
   // Una permutación random de todas las luces. PSYCHO MIND FUCK
@@ -30,13 +31,13 @@ module.exports = function getShapes(mapping) {
   const trianguloBottomShuffle = _.shuffle(trianguloBottom)
 
   // La W warra
-  const Warro = _.range(8,143)
+  const Warro = _.range(8 + offset,143 + offset)
 
   // Las V V
   const V1L = pataLeft;
-  let V1R = _.range(82,112);
+  let V1R = _.range(82 + offset,112 + offset);
   const V2R = pataRight;
-  let V2L = _.range(38,67);
+  let V2L = _.range(38 + offset,67 + offset);
 
   const V1 = inv(V1L).concat(V1R)
   const V2 = inv(V2L).concat(V2R)
@@ -46,7 +47,7 @@ module.exports = function getShapes(mapping) {
   // Reloj de arena
   const reloj = _.range(38, 112)
 
-  const allOfIt = _.range(7, 143)
+  const allOfIt = _.range(7 + offset, 143 + offset)
 
   return {
     pataLeft, pataRight,

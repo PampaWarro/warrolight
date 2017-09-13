@@ -17,9 +17,10 @@ const ColorSpear = require("./color-spear");
 const AliveDots = require("./aliveDots");
 const SoundWaves = require("./../../light-programs/programs/sound-waves");
 const WaterFlood = require("./water-flood");
+const Rays = require("./rays");
 const AliveDotsSpeed = require("./aliveDotsSpeed");
 
-const baseTime = 0.1*1000;
+const baseTime = 0.5*1000;
 
 function getAllPresets(funcClass, time){
   return _.map(funcClass.presets(), preset => {
@@ -28,6 +29,7 @@ function getAllPresets(funcClass, time){
 }
 
 const schedule = [
+  ... getAllPresets(Rays, 60),
 
   ... getAllPresets(SoundWaves, 60),
   {duration: 60*baseTime, program: programsByShape({Warro: [animateParamProgram(SoundWaves, 'centerX', 120, x => -x), {centerX: -20, speed: 0.5}]})},

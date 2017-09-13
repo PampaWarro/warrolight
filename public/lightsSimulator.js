@@ -12,7 +12,7 @@ class LightsSimulator extends React.Component {
         super(...arguments);
 
         this.state = {
-            renderingEnabled: true
+            renderingEnabled: false
         };
 
         this.lastFrameTime = performance.now();

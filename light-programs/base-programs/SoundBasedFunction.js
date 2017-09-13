@@ -27,6 +27,7 @@ soundEmitter.on('sound', (volume) => {
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 })
 
+let maxVolume = 0;
 module.exports = class SoundBasedFunction extends TimeTickedFunction{
   constructor(config, leds) {
     super(config, leds);
@@ -39,7 +40,6 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
     this.averageVolumeSmoothedSlow = 0;
     this.medianVolume15 = _.map(_.range(15), () => 0)
     this.medianVolume = 0
-    this.maxVolume = 0;
     let self = this;
 
     function getAverageVolume(array, from=0, to=null) {
@@ -59,7 +59,8 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
 
 
       // self.bassesAverageVolume = getAverageVolume(array, 32);
-      self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
+      maxVolume = (Math.max(maxVolume, self.averageVolume)*300+self.averageVolume)/301;
+      self.maxVolume = maxVolume
       self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1)
       self.averageRelativeVolumeSmoothed = self.averageVolumeSmoothed / (self.maxVolume || 1)
 

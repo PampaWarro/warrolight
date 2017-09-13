@@ -29,8 +29,8 @@
 #include "FastLED.h"
 
 // How many leds in your strip?
-#define NUM_LEDS 150
-//#define NUM_LEDS 50
+// #define NUM_LEDS 150
+#define NUM_LEDS 75
 
 // For led chips like Neopixels, which have a data line, ground, and power, you just
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
@@ -47,7 +47,7 @@ CRGB leds[NUM_LEDS];
 __attribute__((section(".noinit"))) unsigned int program;
 
 void setup() {
-  program = (program + 1) % 3;
+  program = (program + 1) % 2;
   //program = 0;
 
   // Uncomment/edit one of the following lines for your leds arrangement.
@@ -230,12 +230,14 @@ void readLedsFromSerial() {
 unsigned long time = 0;
 void arduinoProgram() {
   if (program == 0) {
-    programSusi();
-  } else if (program == 1){
     programRainbow();
+  //} else if (program == 1){
+    
   } else {
     programStars();
   }
+
+  //programSusi();
 
   byte debugCycle = (time / 10) % 3;
   if (debugCycle == 0) {

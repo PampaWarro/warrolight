@@ -9,14 +9,14 @@ let multiplexer;
 // W chica
 var serialDevice = '/dev/ttyACM0'
 if(/^win/.test(process.platform)){
-  serialDevice = 'COM15'
+  serialDevice = 'COM6'
 }
 var device1 = new Device(150, serialDevice)
 
 setTimeout(() => {
   multiplexer = new Multiplexer(150, [device1], (index) => {
     if (index < 150) {
-      if (index < 0)
+      if (index < 15)
         return [0, 0]
 
       return [0, index]

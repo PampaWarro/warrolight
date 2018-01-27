@@ -32,7 +32,7 @@ const rgbToVga = (r, g, b) => {
   return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)
 }
 
-let reconnectTime = 1000;
+let reconnectTime = 3000;
 
 module.exports = class Device {
 
@@ -98,7 +98,9 @@ module.exports = class Device {
 
       if(data === 'YEAH'){
         this.logInfo("Reconnected")
-      } else if (data !== 'OK') {
+      } else if (data == 'OK') {
+        //this.logInfo(`ACK`)
+      } else {
         this.logInfo(`UNEXPECTED MSG'${data}'`)
       }
     } else {

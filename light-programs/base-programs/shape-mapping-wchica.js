@@ -4,7 +4,7 @@ const _ = require('lodash')
 module.exports = function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
 
-  const offset = 7
+  const offset = -7
   const pataLeft = _.range(113 + offset, 143 + offset)
   const pataRight = _.range(7 + offset, 37 + offset)
 

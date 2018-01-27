@@ -28,6 +28,10 @@
 
 #include "FastLED.h"
 
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
 // How many leds in your strip?
 // #define NUM_LEDS 150
 #define NUM_LEDS 150
@@ -46,18 +50,15 @@ CRGB leds[NUM_LEDS];
 // different programs of light
 __attribute__((section(".noinit"))) unsigned int program;
 
-void setup() {
-  program = (program + 1) % 2;
-  //program = 0;
+RF24 radio(7, 8); // CE, CSN
+const byte address[6] = "90909";
 
+int PAYLOAD_SIZE = 32;
+
+void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
-
-  Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-  //Serial.begin(230400/4);           // set up Serial library at 1152000 bps, the same than in Node.js
-
-  //Serial.println("Hello world!");  // prints hello with ending line break
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -69,6 +70,16 @@ void setup() {
   leds[3] = CRGB::Blue;
 
   FastLED.show();
+  //Serial.begin(9600);
+  radio.begin();
+  radio.openReadingPipe(0, 0xF0F0F0F0F0);
+  radio.setChannel(124);
+  radio.setPALevel(RF24_PA_HIGH);  
+  //radio.enableDynamicPayloads();
+  radio.setPayloadSize(PAYLOAD_SIZE);
+  radio.setDataRate(RF24_2MBPS);
+  radio.setAutoAck(true);
+  radio.startListening();
 }
 
 byte ENCODING_POS_RGB = 1;
@@ -126,12 +137,44 @@ void drainSerial() {
 boolean waitingSerial = true;
 int waitingCounter = 0;
 void loop() {
-  if (connected || Serial.available() >= 2) {
+  /*if (connected || Serial.available() >= 2) {
     readLedsFromSerial();
-  } else {
+    } else {
     waitingCounter = 0;
     arduinoProgram();
-  }
+    }*/
+
+
+  if (radio.available()) {   
+    byte data[PAYLOAD_SIZE];
+    while (radio.available()) {                                   // While there is data ready
+      radio.read( &data, sizeof(data));             // Get the payload
+    }
+    int pos = data[0];                 
+    //Serial.print("Received ");
+    //Serial.println(pos);
+
+    int offset = data[0];
+    for (int i = 2; i+2 < PAYLOAD_SIZE; i+=3) {
+      writeLeds(offset+i/3, data[i],data[i+1],data[i+2]);   
+    }
+    if(offset+10> 145){
+      FastLED.show();
+    }
+    
+    /*delay(500);
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Black;
+    }
+    leds[0] = CRGB::Black;
+    leds[1] = CRGB::Red;
+    leds[2] = CRGB::Green;
+    leds[3] = CRGB::Blue;
+
+    FastLED.show();
+    */
+  } 
 }
 
 
@@ -156,7 +199,7 @@ void readLedsFromSerial() {
     return;
   }
 
-  if (Serial.available() < 2) {   
+  if (Serial.available() < 2) {
     if ((millis() - lastConnectionTime) > 2000) {
       lastConnectionTime = millis();
       delay(500);
@@ -236,8 +279,8 @@ unsigned long time = 0;
 void arduinoProgram() {
   if (program == 0) {
     programRainbow();
-  //} else if (program == 1){
-    
+    //} else if (program == 1){
+
   } else {
     programStars();
   }
@@ -276,15 +319,15 @@ void programStars() {
     int i = rng(0, 1000);
     PARAM_CHANCE = 1000 - i;
     PARAM_DECAY = 9999 - i;
-    PARAM_TONE = rng(0,255);
+    PARAM_TONE = rng(0, 255);
     programInitialized = true;
   }
 
   for (int i = 0; i < NUM_LEDS; i++) {
     if (rng(0, PARAM_CHANCE) == 0) {
       stars[i] = min(255, (int)stars[i] + rng(20, 255));
-      starsColors[i] = rng(0, 10)+(time/10 % 255);
-      starsSaturation[i] = rng(0, 150)+50;
+      starsColors[i] = rng(0, 10) + (time / 10 % 255);
+      starsSaturation[i] = rng(0, 150) + 50;
     }
     if (stars[i] > 0) {
       stars[i] = max(0, (((long)stars[i]) * PARAM_DECAY / 10000));
@@ -292,10 +335,10 @@ void programStars() {
 
     //byte pos = i+(time/5)%NUM_LEDS;
     byte pos = i;
-    writeLedsHSB(pos, ((int)starsColors[i]+PARAM_TONE)%255, starsSaturation[i], stars[i]);
+    writeLedsHSB(pos, ((int)starsColors[i] + PARAM_TONE) % 255, starsSaturation[i], stars[i]);
   }
 
-  if(time % (60*3*10) == 0) {
+  if (time % (60 * 3 * 10) == 0) {
     programInitialized = false;
   }
 }
@@ -320,10 +363,10 @@ void programRainbow() {
     //PARAM_SPEED = random(1, 1);
     programInitialized = true;
   }
-  
+
   for (int i = 0; i < NUM_LEDS; i++) {
     int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
-    writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i*6 + time * PARAM_SPEED) % 150]);
+    writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i * 6 + time * PARAM_SPEED) % 150]);
   }
 }
 
@@ -332,10 +375,10 @@ void programRainbow() {
 /////////////////////////////////////////////////////////////////////////////////////
 void programSusi() {
   for (int i = 0; i < NUM_LEDS; i++) {
-    if(i == ((time/20) % NUM_LEDS)){
-      writeLedsHSB(i, 130+((time/10) % 100), 255, 255);
+    if (i == ((time / 20) % NUM_LEDS)) {
+      writeLedsHSB(i, 130 + ((time / 10) % 100), 255, 255);
     } else {
-      writeLeds(i, 0,0,0);
+      writeLeds(i, 0, 0, 0);
     }
   }
 }

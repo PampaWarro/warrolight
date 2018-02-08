@@ -1,29 +1,21 @@
 const _ = require('lodash');
 
-const Device = require('./device')
-const Multiplexer = require('./multiplexer')
+const LightDeviceSerial = require('./LightDeviceSerial')
+const LightDeviceUDP = require('./LightDeviceUDP')
+const DeviceMultiplexer = require('./DeviceMultiplexer')
 const LightController = require('./light-programs/main-program')
 
-let multiplexer;
-
-// W chica
-var serialDevice = '/dev/ttyACM0'
-if(/^win/.test(process.platform)){
-  serialDevice = 'COM6'
-}
-var device1 = new Device(150, serialDevice)
+const device1 = new LightDeviceSerial(150, 'COM21', '/dev/ttyACM0');
+// const device1 = new LightDeviceUDP(150);
 
 setTimeout(() => {
-  multiplexer = new Multiplexer(150, [device1], (index) => {
+  let multiplexer = new DeviceMultiplexer(150, [device1], (index) => {
     if (index < 150) {
-      if (index < 15)
-        return [0, 0]
-
       return [0, index]
     }
   })
 
-  let program = new LightController((colorArray) => multiplexer.setState(colorArray))
+  let program = new LightController(colorArray => multiplexer.setState(colorArray))
   program.start()
 
   const server = require("./server")

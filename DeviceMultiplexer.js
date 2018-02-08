@@ -1,14 +1,15 @@
 const _ = require('lodash')
 
-module.exports = class Multiplexer {
+module.exports = class DeviceMultiplexer {
 
-  constructor(numberOfLights, devices, mapping) {
+  constructor(numberOfLights, devices, lightToDeviceMapping) {
     this.numberOfLights = numberOfLights
     this.devices = devices
     this.targetDevice = []
     this.targetPosition = []
+
     for (let i = 0; i < numberOfLights; i++) {
-      const [ device, position ] = mapping(i)
+      const [ device, position ] = lightToDeviceMapping(i)
       this.targetDevice[i] = device
       this.targetPosition[i] = position
     }

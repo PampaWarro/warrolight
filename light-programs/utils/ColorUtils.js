@@ -59,6 +59,11 @@ module.exports = class ColorUtils {
       console.log("hexToRgb called without value")
     }
   }
+  static mix(hexColor, hexColor2, ratio) {
+    let [r, g, b] = ColorUtils.hexToRgb(hexColor);
+    let [r2, g2, b2] = ColorUtils.hexToRgb(hexColor2);
+    return ColorUtils.rgbToHex(r*(1-ratio)+r2*ratio, g*(1-ratio)+g2*ratio, b*(1-ratio)+b2*ratio)
+  }
 
   static dim(hexColor, number) {
     var [r, g, b] = ColorUtils.hexToRgb(hexColor);

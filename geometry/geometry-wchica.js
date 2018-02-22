@@ -1,4 +1,4 @@
-const Stripe = require('./stripe')
+const Stripe = require('../light-programs/stripe')
 
 /**
  * Geometry for the warro: 7 stripes

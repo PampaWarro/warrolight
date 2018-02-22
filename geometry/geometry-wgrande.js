@@ -1,4 +1,4 @@
-import { default as Stripe } from './stripe'
+const Stripe = require('../light-programs/stripe')
 
 /**
  * Geometry for the warro: 7 stripes
@@ -30,7 +30,7 @@ const LAST_LED = 1
 
 // El orden de los segmentos es clave. Replica cómo vamos a conectar las luces y el orden natural de esos 600 leds
 
-export default [
+module.exports = [
   // Led 1
   new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT, HALF_LEDS/2),
   new Stripe(PORTION   , HEIGHT - 0, 0, HEIGHT - HEIGHT,  LEDS_LONG),

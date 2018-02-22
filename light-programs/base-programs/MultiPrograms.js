@@ -2,7 +2,7 @@
 const _ = require('lodash')
 const ColorUtils = require('../utils/ColorUtils')
 
-let CROSSFADE_TIME_MS = 5000;
+let CROSSFADE_TIME_MS = 10000;
 
 module.exports = function createMultiProgram(programSchedule, random = false) {
   return class  {
@@ -41,6 +41,8 @@ module.exports = function createMultiProgram(programSchedule, random = false) {
         this.past = this.current;
         this.past.fadeStartTime = new Date();
 
+        // PICK A RANDOM CROSSFADE TIME
+        CROSSFADE_TIME_MS = Math.random()*10000;
         setTimeout(() => {
           if(this.past) {
             this.past.programInstance.stop();

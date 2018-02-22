@@ -2,11 +2,6 @@ if(!window.socket) {
   window.socket = io();
 }
 
-const ProgramNames = ['debugSetup',
-'all-white', 'all-off', 'blink', 'pw',
-'rainbow', 'stars', 'musicFlow', 'musicFreqs',
-'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho']
-
 class Simulator extends React.Component {
   constructor() {
     super(...arguments)
@@ -143,6 +138,7 @@ class Simulator extends React.Component {
           <div>
             <h2>Pampa Warro Lights</h2>
           </div>
+          <DevicesStatus></DevicesStatus>
           <div className="simulator">
           </div>
           <div className="controls">

@@ -2,8 +2,6 @@ if (!window.socket) {
   window.socket = io();
 }
 
-const ProgramNames = ['debugSetup', 'all-white', 'all-off', 'blink', 'pw', 'rainbow', 'stars', 'musicFlow', 'musicFreqs', 'vertical', 'radial', 'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho'];
-
 class Simulator extends React.Component {
   constructor() {
     super(...arguments);
@@ -158,6 +156,7 @@ class Simulator extends React.Component {
               'Pampa Warro Lights'
             )
           ),
+          React.createElement(DevicesStatus, null),
           React.createElement('div', { className: 'simulator' }),
           React.createElement(
             'div',
@@ -309,4 +308,5 @@ class BooleanParam extends React.Component {
     );
   }
 }
+
 //# sourceMappingURL=simulator.js.map

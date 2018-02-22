@@ -90,18 +90,18 @@ class LightsSimulator extends React.Component {
 
                 ctx.beginPath();
 
-                lightRadius = lightRadius / 6;
+                lightRadius = lightRadius / 24;
                 ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
 
-                let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
-                gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
-                // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
-                gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
-                // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.5)`)
-                gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.25)`)
-                // gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
-                gradient.addColorStop(1,   `rgba(${r}, ${g}, ${b}, 0)`)
-                ctx.fillStyle = gradient
+                // let gradient = ctx.createRadialGradient(x, y, 0, x, y, lightRadius)
+                // gradient.addColorStop(0,     `rgba(${or}, ${og}, ${ob}, 1)`)
+                // // gradient.addColorStop(0.065, `rgba(${or}, ${og}, ${ob}, 1)`)
+                // gradient.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 1)`)
+                // // gradient.addColorStop(0.25,  `rgba(${r}, ${g}, ${b}, 0.5)`)
+                // gradient.addColorStop(0.5,   `rgba(${r}, ${g}, ${b}, 0.25)`)
+                // // gradient.addColorStop(1,     `rgba(${0}, ${0}, ${0}, 1)`)
+                // gradient.addColorStop(1,   `rgba(${r}, ${g}, ${b}, 0)`)
+                // ctx.fillStyle = gradient
 
 
                 ctx.arc(x, y, lightRadius, Math.PI * 2, false);

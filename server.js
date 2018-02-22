@@ -13,7 +13,7 @@ const http = require('http').createServer(app);
 
 require('./volume-broadcaster')
 
-exports.createRemoteControl = function(lightProgram) {
+exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   app.use(express.static('public'))
 
   app.get('/', function (req, res) {
@@ -62,6 +62,8 @@ exports.createRemoteControl = function(lightProgram) {
     }
 
     lightProgram.onLights(lightsCbk)
+
+    deviceMultiplexer.onDeviceStatus(devicesStatus => socket.emit('devicesStatus', devicesStatus))
 
     socket.on('updateConfigParam', (config) => {
       lightProgram.currentProgram.config = config;

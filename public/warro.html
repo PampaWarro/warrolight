@@ -168,6 +168,27 @@
         background: #ccc;
     }
 
+    .devices  {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .device {
+        background-color: gray;
+        padding: 4px;
+        margin: 4px;
+        text-align: center;
+    }
+    .device-running {
+        background-color: green;
+    }
+    .device-error {
+        background-color: red;
+    }
+    .device-connecting {
+        background-color: darkgoldenrod;
+    }
 
 </style>
 
@@ -180,6 +201,7 @@
 <script src="lib/react-dom.js"></script>
 <script src="lib/NoSleep.js"></script>
 <script src="canvas.js"></script>
+<script src="devicesStatus.js"></script>
 <script src="microphoneViewer.js"></script>
 <script src="lightsSimulator.js"></script>
 <script src="simulator.js"></script>

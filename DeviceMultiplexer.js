@@ -1,5 +1,6 @@
 const _ = require('lodash')
 
+
 module.exports = class DeviceMultiplexer {
 
   constructor(numberOfLights, devices, lightToDeviceMapping) {
@@ -9,10 +10,19 @@ module.exports = class DeviceMultiplexer {
     this.targetPosition = []
 
     for (let i = 0; i < numberOfLights; i++) {
-      const [ device, position ] = lightToDeviceMapping(i)
+      const [device, position] = lightToDeviceMapping(i)
       this.targetDevice[i] = device
       this.targetPosition[i] = position
     }
+    this.statusCbk = () => null;
+
+    setInterval(() => this.statusCbk(_.map(devices, d => {
+      return {state: d.deviceState, deviceId: d.deviceId, lastFps: d.lastFps}
+    }, 1000)))
+  }
+
+  onDeviceStatus(cbk) {
+    this.statusCbk = cbk;
   }
 
   setState(newState) {

@@ -63,6 +63,7 @@ module.exports = class LightDevice {
       if (now() - this.lastPrint > 1000) {
         const FPS = (this.framesCount * 1000 / (now() - this.lastPrint)).toFixed(1)
         this.framesCount = 0
+        this.lastFps = FPS;
         this.lastPrint = now()
         this.logInfo(`[${this.deviceId}] FPS: ${FPS}`.green)
       }

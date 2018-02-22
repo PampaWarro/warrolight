@@ -130,7 +130,7 @@ class MicrophoneClient extends React.Component {
       // self.bassesAverageVolume = getAverageVolume(array, 32);
       self.maxVolume = Math.max(self.maxVolume, self.averageVolume);
       self.averageRelativeVolume = Math.min(1, self.averageVolume / (self.maxVolume || 1))
-        // Plot
+       // Plot
       self.plotEnergyHistogram(self);
       */
     }
@@ -174,7 +174,7 @@ class MicrophoneClient extends React.Component {
       self.analyser = self.audioContext.createAnalyser();
       self.analyser.smoothingTimeConstant = 0.0;
       self.analyser.fftSize = 512;
-        self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
+       self.audioProcessorNode = self.audioContext.createScriptProcessor(self.analyser.frequencyBinCount, 1, 1);
       */
 
       let lastTime = new Date();
@@ -302,4 +302,5 @@ class MicrophoneClient extends React.Component {
     );
   }
 }
+
 //# sourceMappingURL=microphoneClient.js.map

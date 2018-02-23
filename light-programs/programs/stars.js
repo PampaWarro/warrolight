@@ -29,7 +29,7 @@ module.exports = class Stars extends TimeTickedFunction {
       let first = this.stars.shift();
       this.stars.push(first);
     }
-    draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), this.config.brillo)));
+    draw(this.stars.map(([r,g,b]) => ColorUtils.dim([r, g, b], this.config.brillo)));
   }
 
   static presets(){

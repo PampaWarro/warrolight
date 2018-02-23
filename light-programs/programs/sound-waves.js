@@ -47,7 +47,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
     let geometry = this.position || this.geometry;
 
-    const colors = _.map(new Array(this.numberOfLeds), c => "#000000")
+    const colors = _.map(new Array(this.numberOfLeds), c => [0,0,0])
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0]
       _.each(this.dots, dot => {
@@ -64,7 +64,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
           b = b + b2;
         }
       })
-      colors[i] = ColorUtils.rgbToHex(r * this.config.brillo, g * this.config.brillo, b * this.config.brillo)
+      colors[i] = ColorUtils.dim([r, g, b], this.config.brillo)
     }
 
     _.each(this.dots, dot => dot.update());

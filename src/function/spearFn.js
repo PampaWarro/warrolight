@@ -13,14 +13,10 @@ export class Func extends TimeTickedFunction {
     const newColors = new Array(this.numberOfLeds)
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      newColors[i] = ColorUtils.HSVtoHex(
-        0,
-        0,
-        0
-      )
+      newColors[i] = [0,0,0]
     }
     for (let i = 0; i < this.config.spearLength; i++) {
-      newColors[(punta + i) % this.numberOfLeds] = ColorUtils.HSVtoHex(
+      newColors[(punta + i) % this.numberOfLeds] = ColorUtils.HSVtoRGB(
         0,
         0,
         this.config.brillo,

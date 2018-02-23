@@ -15,7 +15,7 @@ export class Func extends TimeTickedFunction {
     const sameColorLeds = this.config.sameColorLeds * 10
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      newColors[i] = ColorUtils.HSVtoHex(
+      newColors[i] = ColorUtils.HSVtoRGB(
         (this.position.x[i] - elapsed % sameColorLeds + sameColorLeds) / sameColorLeds,
         1,
         this.config.brillo

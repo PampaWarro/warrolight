@@ -8,12 +8,12 @@ export class Func extends TimeTickedFunction{
 
     for (let i = 0; i < this.numberOfLeds; i++) {
         if (i < 30) {
-          colors[i] = '#000000'
+          colors[i] = [0,0,0]
         } else if (i >= 450 && i <= 480) {
-            colors[i] = '#000000'
+            colors[i] = [0,0,0]
         } else {
           const height = this.geometry.y[i] * 255 / 100
-          colors[i] = ColorUtils.HSVtoHex(
+          colors[i] = ColorUtils.HSVtoRGB(
             (height + elapsed) / 255,
             0.8,
             this.config.brillo

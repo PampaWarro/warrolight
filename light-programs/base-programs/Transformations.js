@@ -1,7 +1,7 @@
 const _ = require('lodash')
 
-const getShapes = require('./shape-mapping-wchica')
-// const getShapes = require('./shape-mapping-wgrande')
+// const getShapes = require('./shape-mapping-wchica')
+const getShapes = require('./shape-mapping-wgrande')
 // const getShapes = require('./shape-mapping-wmediana')
 
 module.exports = function programsByShape(mapping) {
@@ -40,7 +40,7 @@ module.exports = function programsByShape(mapping) {
         this.instances[shapeName] = new Program(specificConfig, localLeds)
         this.instances[shapeName].specificConfig = specificConfig;
       })
-      this.state = [... Array(leds.numberOfLeds)].map(()=> "#000000");
+      this.state = [... Array(leds.numberOfLeds)].map(()=> [0,0,0]);
     }
 
     start(config, draw, done) {
@@ -50,6 +50,11 @@ module.exports = function programsByShape(mapping) {
 
       _.each(this.instances, (program, mapName) => {
         const map = knownMappings[mapName]
+
+        if(!map) {
+          console.warn(`NO MAPPING FOUND WITH KEY ${mapName}. Defaulting to all`);
+          return knownMappings['all'];
+        }
 
         program.start(program.specificConfig, (colors) => {
           _.each(colors, (col, index) => this.state[map[index]] = col);

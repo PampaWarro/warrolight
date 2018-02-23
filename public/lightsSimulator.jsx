@@ -2,11 +2,6 @@ if (!window.socket) {
     window.socket = io();
 }
 
-function hexToRgb(hex) {
-    let result = hexRegex.exec(hex);
-    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null
-}
-
 class LightsSimulator extends React.Component {
     constructor() {
         super(...arguments)
@@ -62,11 +57,8 @@ class LightsSimulator extends React.Component {
             const Y = this.geometryY;
 
             for (let i = 0; i < leds; i++) {
-                const color = lights[i];
-                if (color === undefined) {
-                    return;
-                }
-                const [r, g, b] = hexToRgb(color);
+                const [r, g, b] = lights[i];
+
                 const x = X[i]*9 + 50;
                 const y = Y[i]*9 + 50;
 

@@ -7,7 +7,7 @@ module.exports = class MusicFlow extends SoundBasedFunction{
   }
 
   start(config, draw, done){
-    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => "#000000");
+    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => [0,0,0]);
     this.time = 0;
     this.realTime = 0;
     this.maxVolume = 0;
@@ -27,7 +27,7 @@ module.exports = class MusicFlow extends SoundBasedFunction{
       vol = vol/3*0;
     }
 
-    let newVal = ColorUtils.HSVtoHex((vol+this.realTime/2000)%1, 1, Math.min(vol*vol/3, 1));
+    let newVal = ColorUtils.HSVtoRGB((vol+this.realTime/2000)%1, 1, Math.min(vol*vol/3, 1));
 
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.doble){

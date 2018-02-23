@@ -57,19 +57,25 @@ module.exports = class ColorUtils {
       return [r, g, b];
     } else {
       console.log("hexToRgb called without value")
+      throw "caca"
     }
   }
-  static mix(hexColor, hexColor2, ratio) {
-    let [r, g, b] = ColorUtils.hexToRgb(hexColor);
-    let [r2, g2, b2] = ColorUtils.hexToRgb(hexColor2);
-    return ColorUtils.rgbToHex(r*(1-ratio)+r2*ratio, g*(1-ratio)+g2*ratio, b*(1-ratio)+b2*ratio)
+
+  static mix([r,g,b], [r2, g2, b2], ratio) {
+    return [Math.floor(r*(1-ratio)+r2*ratio), Math.floor(g*(1-ratio)+g2*ratio), Math.floor(b*(1-ratio)+b2*ratio)]
   }
 
-  static dim(hexColor, number) {
-    var [r, g, b] = ColorUtils.hexToRgb(hexColor);
+  static clamp(r, g, b) {
+    return [
+      Math.max(0, Math.min(255, Math.round(r))),
+      Math.max(0, Math.min(255, Math.round(g))),
+      Math.max(0, Math.min(255, Math.round(b)))];
+  }
+
+  static dim([r, g, b], number) {
     r = Math.floor(r * number);
     g = Math.floor(g * number);
     b = Math.floor(b * number);
-    return ColorUtils.rgbToHex(r, g, b);
+    return [r, g, b];
   }
 }

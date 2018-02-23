@@ -59,7 +59,7 @@ export class Func extends TimeTickedFunction {
       const index = this.mappingOrder(i)
       const color = this.colors[i]
       this.currentBright[i] = bright
-      newColors[i] = ColorUtils.HSVtoHex(
+      newColors[i] = ColorUtils.HSVtoRGB(
         color,
         1,
         this.config.brillo * this.bright[i] * bright,

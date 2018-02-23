@@ -18,7 +18,7 @@ module.exports = class DeviceMultiplexer {
 
     setInterval(() => this.statusCbk(_.map(devices, d => {
       return {state: d.deviceState, deviceId: d.deviceId, lastFps: d.lastFps}
-    }, 1000)))
+    })), 1000)
   }
 
   onDeviceStatus(cbk) {
@@ -27,7 +27,7 @@ module.exports = class DeviceMultiplexer {
 
   setState(newState) {
     const newStates = this.devices.map(
-      device => _.map(_.range(device.numberOfLights), i => '#00000')
+      device => _.map(_.range(device.numberOfLights), i => [0,0,0])
     )
     const targetDevice = this.targetDevice
     const targetPosition = this.targetPosition

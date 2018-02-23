@@ -20,7 +20,7 @@ class DevicesStatus extends React.Component {
   render() {
     let devices = this.state.devices.map(d => React.createElement(
       "div",
-      { className: `device device-${d.state}` },
+      { key: d.deviceId, className: `device device-${d.state}` },
       React.createElement(
         "div",
         null,

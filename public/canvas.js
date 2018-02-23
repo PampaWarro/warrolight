@@ -1,17 +1,3 @@
-/**
- * We need a regex that matches stuff like #FF00DD and groups the three 0-255 values
- */
-const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-
-/**
- * Returns an array of three elements with the 0-255 values for R, G, B
- */
-
-function hexToRgb(hex) {
-  var result = hexRegex.exec(hex);
-  return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
-}
-
 class LightsCanvas extends React.Component {
   constructor() {
     super(...arguments);
@@ -99,11 +85,8 @@ class LightsCanvas extends React.Component {
       const Y = this.geometryY;
 
       for (let i = 0; i < leds; i++) {
-        const color = this.getColor(i);
-        if (color === undefined) {
-          return;
-        }
-        const [r, g, b] = hexToRgb(color);
+        const [r, g, b] = this.getColor(i);
+
         const x = X[i];
         const y = Y[i];
 

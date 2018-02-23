@@ -18,7 +18,7 @@ module.exports = class Radial extends TimeTickedFunction{
       const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
 
       const v = Math.max(0, Math.sin(distance + elapsed * this.config.velocidad));
-      colors[i] = ColorUtils.HSVtoHex((distance/5+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power))
+      colors[i] = ColorUtils.HSVtoRGB((distance/5+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power))
     }
     draw(colors)
   }

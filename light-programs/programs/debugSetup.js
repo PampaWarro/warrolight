@@ -8,7 +8,7 @@ module.exports = class Func extends TimeTickedFunction{
 
     draw(colors.map((v,i) => {
       let s = i % 10 === 0 ? 0 : 1
-      return ColorUtils.HSVtoHex(Math.floor(i/50)/12*s, 0.8*s, Math.max(1 - s, this.config.brillo));
+      return ColorUtils.HSVtoRGB(Math.floor(i/50)/12*s, 0.8*s, Math.max(1 - s, this.config.brillo));
     }));
   }
 

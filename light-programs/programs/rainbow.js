@@ -19,8 +19,8 @@ module.exports = class Rainbow extends TimeTickedFunction {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let colIndex = Math.floor(((this.time + i) / this.config.sameColorLeds)) % this.colorSet.length;
 
-      let col = this.colorSet[colIndex];
-      if (col === "#5500CC")
+      let col = ColorUtils.hexToRgb(this.colorSet[colIndex]);
+      if (colIndex === 6)
         newColors[i] = col;
       else
         newColors[i] = ColorUtils.dim(col, this.config.brillo);

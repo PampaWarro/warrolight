@@ -7,7 +7,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
   }
 
   start(config, draw, done){
-    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => "#000000");
+    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => [0,0,0]);
     this.time = 0;
     this.maxVolume = 0;
 
@@ -25,13 +25,13 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
       vol = 0;
     }
 
-    let newVal = ColorUtils.HSVtoHex(0, 0, Math.min(vol*vol, 1));
+    let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol*vol, 1));
 
     for(let i=0;i<this.numberOfLeds;i++) {
       if(i % Math.round((this.numberOfLeds / this.config.numberOfOnLeds)) === 0){
         this.lastVolume[i] = newVal;
       } else {
-        this.lastVolume[i] = ColorUtils.rgbToHex(0,0,0);
+        this.lastVolume[i] = [0,0,0];
       }
     }
 

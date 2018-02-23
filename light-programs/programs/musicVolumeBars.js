@@ -9,7 +9,7 @@ module.exports =  class Func extends SoundBasedFunction{
   }
 
   start(config, draw, done){
-    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => "#000000");
+    this.lastVolume = new Array(this.numberOfLeds+1).join('0').split('').map(() => [0,0,0]);
     this.time = 0;
     this.maxVolume = 0;
 
@@ -25,7 +25,7 @@ module.exports =  class Func extends SoundBasedFunction{
 
 
     for(let i=0;i<this.numberOfLeds;i++) {
-      let newColor = "#000000";
+      let newColor = [0,0,0];
       if(i < (this.numberOfLeds)*this.volPromedio && (Math.ceil(i/3)*3)%(Math.round(this.numberOfLeds/10))){
         let tone = 0.35;
         if((i/this.numberOfLeds) > 0.5){
@@ -34,7 +34,7 @@ module.exports =  class Func extends SoundBasedFunction{
         if((i/this.numberOfLeds) > 0.7){
           tone = 0;
         }
-        newColor = ColorUtils.HSVtoHex(tone, 1, Math.min(1, vol*vol));
+        newColor = ColorUtils.HSVtoRGB(tone, 1, Math.min(1, vol*vol));
       }
       this.lastVolume[i] = newColor;
     }

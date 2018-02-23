@@ -54,14 +54,14 @@ module.exports = class Func extends SoundBasedFunction {
       let high = dot.pos - roundPos;
       let low = 1 - high;
 
-      [r, g, b] = [Math.min(255, r + low*r2), Math.min(255, g + low*g2), Math.min(255, b + low*b2)];
-      [ru, gu, bu] = [Math.min(255, ru + high * r2), Math.min(255, gu + high * g2), Math.min(255, bu + high * b2)];
+      [r, g, b] = ColorUtils.clamp(r + low*r2, g + low*g2, b + low*b2);
+      [ru, gu, bu] = ColorUtils.clamp(ru + high * r2, gu + high * g2, bu + high * b2);
 
       this.stars[roundPos] = [r, g, b];
       this.stars[roundPosNext] = [ru, gu, bu];
     })
 
-    draw(this.stars.map(([r,g,b]) => ColorUtils.dim(ColorUtils.rgbToHex(r, g, b), this.config.brillo)));
+    draw(this.stars.map(([r,g,b]) => ColorUtils.dim([r, g, b], this.config.brillo)));
   }
 
   static presets(){

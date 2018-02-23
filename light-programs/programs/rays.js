@@ -83,9 +83,7 @@ module.exports = class Stars extends SoundBasedFunction {
             }
         })
 
-        let res = this.stars.map(([r, g, b]) => ColorUtils.rgbToHex(r, g, b))
-
-        draw(res);
+        draw(this.stars);
     }
 
     static presets() {

@@ -12,16 +12,6 @@ const {DEBUG, INFO, WARNING, ERROR} = {
   ERROR: 4
 }
 
-const arrayFromRGB = rgb => {
-  if (!rgb) {
-    return //console.warn("Valor de RGB nulo: ", rgb);
-  }
-  const red = parseInt(rgb.substr(1, 2), 16)
-  const blue = parseInt(rgb.substr(3, 2), 16)
-  const green = parseInt(rgb.substr(5, 2), 16)
-  return [red, blue, green]
-}
-
 const rgbToVga = (r, g, b) => {
   return (r & 0xE0) + ((g & 0xE0) >> 3) + ((b & 0xC0) >> 6)
 }
@@ -82,10 +72,10 @@ module.exports = class LightDevice {
 
   setState(rgbArray) {
     // Initialize everything black
-    const newState = _.map(_.range(this.numberOfLights), () => arrayFromRGB("#000000"))
+    const newState = _.map(_.range(this.numberOfLights), () => [0,0,0])
 
     for (let i = 0; i < this.numberOfLights; i++) {
-      newState[i] = arrayFromRGB(rgbArray[i % rgbArray.length])
+      newState[i] = rgbArray[i % rgbArray.length]
     }
     this.state = newState
     this.freshData = true;

@@ -20,7 +20,7 @@ const WaterFlood = require("./water-flood");
 const Rays = require("./rays");
 const AliveDotsSpeed = require("./aliveDotsSpeed");
 
-const baseTime = 0.5*1000;
+const baseTime = 0.05*0.5*1000;
 
 function getAllPresets(funcClass, time){
   return _.map(funcClass.presets(), preset => {

@@ -13,7 +13,7 @@ module.exports = function createMultiProgram(programSchedule, random = false) {
       this.config = config;
       this.past = null;
       _.each(this.programSchedule, scheduleItem => scheduleItem.programInstance = new scheduleItem.program(config, leds))
-      this.drawSubprogram = _.debounce(this.drawSubprogram, 10)
+      this.drawSubprogram = _.throttle(this.drawSubprogram, 16)
     }
 
     drawSubprogram() {

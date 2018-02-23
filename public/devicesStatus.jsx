@@ -18,7 +18,7 @@ class DevicesStatus extends React.Component {
   }
 
   render() {
-    let devices = this.state.devices.map(d => <div className={`device device-${d.state}`}>
+    let devices = this.state.devices.map(d => <div key={d.deviceId} className={`device device-${d.state}`}>
       <div>{d.deviceId}</div>
       <div>{d.state}</div>
       <div>{d.lastFps}</div>

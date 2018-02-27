@@ -18,7 +18,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
     this.freshData = false;
     this.waitingResponse = true;
-    this.dataBuffer = []
+    this.dataBuffer = [0]
 
     this.packageCount = 0
 

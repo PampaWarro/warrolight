@@ -28,8 +28,8 @@ module.exports = class Radial extends TimeTickedFunction{
     let res = super.configSchema();
     res.escala =  {type: Number, min: 0.1, max: 100, step: 0.1, default: 5}
     res.velocidad =  {type: Number, min: -50, max: 50, step: 0.1, default: -5}
-    res.centerY =  {type: Number, min: 0, max: 40, step: 0.1, default: 0}
-    res.centerX =  {type: Number, min: -30, max: 30, step: 0.1, default: 0}
+    res.centerY =  {type: Number, min: -20, max: 40, step: 0.1, default: 0}
+    res.centerX =  {type: Number, min: -50, max: 50, step: 0.1, default: 0}
     res.power =  {type: Number, min: 0, max: 10, step: 0.1, default: 1}
     return res;
   }

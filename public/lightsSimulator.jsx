@@ -59,8 +59,9 @@ class LightsSimulator extends React.Component {
             for (let i = 0; i < leds; i++) {
                 const [r, g, b] = lights[i];
 
-                const x = X[i]*9 + 50;
-                const y = Y[i]*9 + 50;
+              let SCALE = 4;
+              const x = X[i]*SCALE + 50;
+                const y = Y[i]*SCALE + 50;
 
                 let power = r + g + b;
                 if (power < 0) power = 0;

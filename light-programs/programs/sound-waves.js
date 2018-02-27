@@ -91,7 +91,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     let config = super.configSchema();
 
     config.brillo = {type: Number, min: 0, max: 3, step: 0.01, default: 1}
-    config.initialDistance = {type: Number, min: 0, max: 40, step: 0.1, default: 0}
+    config.initialDistance = {type: Number, min: 0, max: 80, step: 0.1, default: 0}
     config.centerY =  {type: Number, min: -20, max: 20, step: 1, default: 0}
     config.centerX =  {type: Number, min: -20, max: 20, step: 1, default: 0}
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5}

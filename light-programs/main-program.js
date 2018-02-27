@@ -1,5 +1,6 @@
-// const warroStripes = require('./geometry/geometry-wchica')
-const warroStripes = require('../geometry/geometry-wgrande')
+// const warroStripes = require('../geometry/geometry-wchica')
+// const warroStripes = require('../geometry/geometry-wgrande')
+const warroStripes = require('../geometry/geometry-fuego18')
 const Geometry = require('./geometry')
 const _ = require('lodash');
 

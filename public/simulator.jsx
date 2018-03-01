@@ -1,4 +1,4 @@
-if(!window.socket) {
+if (!window.socket) {
   window.socket = io();
 }
 
@@ -87,28 +87,29 @@ class Simulator extends React.Component {
     this.refs.simulator.getNextFrame();
   }
 
-  selectPreset(preset){
+  selectPreset(preset) {
     socket.emit("setPreset", preset)
   }
 
-  restartProgram(){
+  restartProgram() {
     socket.emit("restartProgram")
   }
 
   render() {
     let menuItems = [];
-    for (let key in this.state.programs){
-      if(key === this.state.selected){
-        menuItems.push( <Item key={key} className="selected">{this.state.programs[key].name}</Item>)
+    for (let key in this.state.programs) {
+      if (key === this.state.selected) {
+        menuItems.push(<Item key={key} className="selected">{this.state.programs[key].name}</Item>)
       } else {
-        menuItems.push( <Item key={key} onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
+        menuItems.push(<Item key={key}
+                             onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
       }
     }
 
     let configOptions = [];
     let presets = [];
     let currentProgram = {name: "NO SELECTED PROGRAM"}
-    if(this.state.selected) {
+    if (this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
 
       for (let paramName in currentProgram.config) {
@@ -123,7 +124,7 @@ class Simulator extends React.Component {
       }
 
 
-      for(let preset of currentProgram.presets){
+      for (let preset of currentProgram.presets) {
         presets.push(<a className="preset" href="#" key={preset} onClick={e => this.selectPreset(preset)}>{preset} </a>)
       }
     }
@@ -135,6 +136,7 @@ class Simulator extends React.Component {
     {
       return (<div>
         <div className="contain">
+          <CnxStatus></CnxStatus>
           <div>
             <h2>Pampa Warro Lights</h2>
           </div>
@@ -142,16 +144,18 @@ class Simulator extends React.Component {
           <div className="simulator">
           </div>
           <div className="controls">
-            <div className="menuItems">{ menuItems }</div>
-            <LightsSimulator height="400" width="600"></LightsSimulator>
-            <div className="configuration">
-              <h3>{ this.state.selected } &nbsp;
-                <a href="javascript:void(0);" onClick={e => this.restartProgram()}>restart</a>
-              </h3>
-              <div className="config-items">
-              {configOptions}
+            <div className="menuItems">{menuItems}</div>
+            <div className="simControls">
+              <div className="configuration">
+                <h3>{this.state.selected} &nbsp;
+                  <a href="javascript:void(0);" onClick={e => this.restartProgram()}>restart</a>
+                </h3>
+                <div className="config-items">
+                  {configOptions}
+                </div>
+                {presets}
               </div>
-              {presets}
+              <LightsSimulator height="400" width="600"></LightsSimulator>
             </div>
           </div>
           <MicrophoneViewer></MicrophoneViewer>
@@ -168,7 +172,7 @@ class Item extends React.Component {
 }
 
 class NumberParam extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.field = props.field;
     this.min = (props.configDefinition || {}).min || 0;
@@ -176,18 +180,18 @@ class NumberParam extends React.Component {
     this.step = (props.configDefinition || {}).step || 1;
     this.state = {value: props.val, configRef: props.configRef}
     this.handleChange = this.handleChange.bind(this);
-    this.name = ""+Math.random();
+    this.name = "" + Math.random();
   }
 
   handleChange(event) {
     this.setVal(event.target.value);
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.setState({value: nextProps.val, configRef: nextProps.configRef})
   }
 
-  setVal(val){
+  setVal(val) {
     let value = parseFloat(val);
     this.setState({value: value, configRef: this.state.configRef});
     this.state.configRef[this.field] = value;
@@ -197,36 +201,37 @@ class NumberParam extends React.Component {
 
   render() {
     return (
-    <div className="config-item">
-      <span>{this.field}:&nbsp;</span>
-      <div>
-        <strong>{this.state.value}&nbsp;</strong>
-        <input type="range" name={this.name} min={this.min} step={this.step} max={this.max} value={this.state.value} onChange={this.handleChange}/>
+      <div className="config-item">
+        <span>{this.field}:&nbsp;</span>
+        <div>
+          <strong>{this.state.value}&nbsp;</strong>
+          <input type="range" name={this.name} min={this.min} step={this.step} max={this.max} value={this.state.value}
+                 onChange={this.handleChange}/>
+        </div>
       </div>
-    </div>
     );
   }
 }
 
 
 class BooleanParam extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.field = props.field;
     this.state = {value: props.val, configRef: props.configRef}
     this.handleChange = this.handleChange.bind(this);
-    this.name = ""+Math.random();
+    this.name = "" + Math.random();
   }
 
   handleChange(event) {
     this.setVal(event.target.checked);
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.setState({value: nextProps.val, configRef: nextProps.configRef})
   }
 
-  setVal(val){
+  setVal(val) {
     let value = val;
     this.state.configRef[this.field] = value;
     this.setState({value: value});

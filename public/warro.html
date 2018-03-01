@@ -1,5 +1,6 @@
+<html>
 <head>
-    <meta name="viewport" content="width=device-width"/>
+    <meta name="viewport" content="width=device-width,maximum-scale=1, minimum-scale=1"/>
 </head>
 
 
@@ -20,6 +21,14 @@
 
     a {
 
+    }
+
+    .lights-sim {
+        overflow: hidden;
+    }
+
+    canvas {
+        border: solid 1px gray;
     }
 
     h1, h2, h3 {
@@ -63,7 +72,8 @@
     }
 
     .lights-sim {
-        float: left;
+        margin-left: 10px;
+        margin-top: 10px;
     }
 
 
@@ -74,6 +84,10 @@
 
     .controls {
         width: 100%;
+    }
+    .simControls{
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .menuItems {
@@ -189,6 +203,9 @@
     .device-connecting {
         background-color: darkgoldenrod;
     }
+    .status-warning {background-color: #e3cb24}
+    .status-danger {background-color: darkred}
+    .status-success {background-color: green}
 
 </style>
 
@@ -201,8 +218,10 @@
 <script src="lib/react-dom.js"></script>
 <script src="lib/NoSleep.js"></script>
 <script src="canvas.js"></script>
+<script src="cnxStatus.js"></script>
 <script src="devicesStatus.js"></script>
 <script src="microphoneViewer.js"></script>
 <script src="lightsSimulator.js"></script>
 <script src="simulator.js"></script>
 <script src="root.js"></script>
+</html>

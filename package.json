@@ -17,16 +17,19 @@
   "dependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "cli-table2": "^0.2.0",
     "colors": "^1.1.2",
     "dgram": "^1.0.1",
     "express": "^4.14.0",
     "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "performance-now": "^2.0.0",
     "react": "^15.4.1",
     "serialport": "^4.0.7",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.1",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "terminal-kit": "^1.14.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0"

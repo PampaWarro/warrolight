@@ -11,8 +11,8 @@ const ENCODING_RGB = 4;
 
 
 module.exports = class LightDeviceUDP extends LightDevice {
-  constructor(numberOfLights) {
-    super(numberOfLights, "udp");
+  constructor(numberOfLights, expectedIp) {
+    super(numberOfLights, "E "+expectedIp);
 
     this.encoding = ENCODING_RGB
 

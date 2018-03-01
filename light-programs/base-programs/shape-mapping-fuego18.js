@@ -88,6 +88,7 @@ module.exports = function getShapes(mapping) {
   const char_r = _.flatten([trianguloBottomLeft, trianguloTop, inv(trianguloBottomRight)])
   const char_w = Warro
 
+  const X = inv(V1R).concat(V2L)
 
   return {
     pataLeft, pataRight,
@@ -96,7 +97,7 @@ module.exports = function getShapes(mapping) {
     Warro, reloj, V1, V2, V1L, V1R, V2L, V2R,
     shuffle, shuffleSegments10, shuffleSegments20, shuffleSegments5, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
-    mini_w, allOfIt, totemL1, totemL2, totemR1, totemR2
+    mini_w, allOfIt, totemL1, totemL2, totemR1, totemR2, X
   };
 }
 

@@ -51,17 +51,25 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
       console.log('Client requested startSamplingLights')
       ack(lightProgram.layout)
     })
-    socket.on('stopSamplingLights', () => simulating = false)
+    socket.on('stopSamplingLights', () => {
+      console.log('Client stoppedSamplingLights')
+      return simulating = false;
+    })
 
     socket.on('restartProgram', () => lightProgram.restart())
 
     let lightsCbk = lights => {
-        if(simulating) {
-            socket.volatile.emit('lightsSample', lights)
-        }
+      if(simulating) {
+          socket.volatile.emit('lightsSample', lights)
+      }
     }
 
+    console.log("Remote control connnected")
     lightProgram.onLights(lightsCbk)
+
+    // socket.on('reconnect', function () {
+    // });
+
 
     deviceMultiplexer.onDeviceStatus(devicesStatus => socket.emit('devicesStatus', devicesStatus))
 
@@ -75,6 +83,7 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     })
 
     socket.on('disconnect', function () {
+        console.log("Remote control DISCONNNECTED")
         lightProgram.removeOnLights(lightsCbk)
     });
 

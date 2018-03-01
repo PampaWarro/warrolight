@@ -1,7 +1,4 @@
 require('colors')
-
-console.log("Hola".red)
-
 const _ = require('lodash')
 const now = require('performance-now')
 
@@ -40,7 +37,7 @@ module.exports = class LightDevice {
     this.lastPrint = 0;
     this.framesCount = 0;
 
-    setInterval(() => this.logDeviceState(), 1000)
+    setInterval(() => this.logDeviceState(), 250)
   }
 
   updateState(state) {
@@ -48,25 +45,17 @@ module.exports = class LightDevice {
     this.logDeviceState();
   }
 
-  logDeviceState(){
-    if(this.deviceState === this.STATE_RUNNING) {
-      if (now() - this.lastPrint > 1000) {
+  logDeviceState() {
+    if (this.deviceState === this.STATE_RUNNING) {
+      if (now() - this.lastPrint > 250) {
         const FPS = (this.framesCount * 1000 / (now() - this.lastPrint)).toFixed(1)
         this.framesCount = 0
         this.lastFps = FPS;
         this.lastPrint = now()
-        this.logInfo(`[${this.deviceId}] FPS: ${FPS}`.green)
+        this.logInfo(`FPS: ${FPS}`.green)
       }
     } else {
-      let msg = `[${this.deviceId}] ${this.deviceState}`;
-      if (this.deviceState === this.STATE_CONNECTING) {
-        msg = msg.yellow;
-      } else if (this.deviceState === this.STATE_ERROR) {
-        msg = msg.red;
-      } if (this.deviceState === this.STATE_OFF) {
-        msg = msg.gray;
-      }
-      this.logInfo(msg)
+
     }
   }
 
@@ -93,25 +82,27 @@ module.exports = class LightDevice {
   logDebug(message) {
     if (this.verbosity <= DEBUG) {
       message = (typeof message === 'function') ? message() : message
-      console.log(new Date(), this.deviceId, message.cyan)
+      this.logInfo(message)
     }
   }
 
   logInfo(message) {
     if (this.verbosity <= INFO) {
-      console.log(new Date(), this.deviceId, message)
+      this.lastStateMsg = message;
     }
   }
 
   logWarning(message) {
     if (this.verbosity <= WARNING) {
-      console.log(new Date(), this.deviceId, message.yellow)
+      this.logInfo(message)
+      // console.log(new Date(), this.deviceId, message.yellow)
     }
   }
 
   logError(message) {
     if (this.verbosity <= ERROR) {
-      console.log(new Date(), this.deviceId, message.red)
+      this.logInfo(message)
+      // console.log(new Date(), this.deviceId, message.red)
     }
   }
 }

@@ -15,7 +15,7 @@ class LightsSimulator extends React.Component {
         this.frameCount = 0;
     }
 
-    componentDidMount() {
+    turnOnSimulation() {
         socket.emit('startSamplingLights', layout => {
             this.geometryX = layout.geometry.x;
             this.geometryY = layout.geometry.y;
@@ -24,9 +24,24 @@ class LightsSimulator extends React.Component {
             this.maxX = _.max(this.geometryX);
             this.maxY = _.max(this.geometryY);
         });
+    }
 
+    turnOffSimulation() {
+        socket.emit('stopSamplingLights', layout => {});
+    }
+
+    componentDidMount() {
         socket.on('lightsSample', lights => {
+            console.log("Lights data");
             this.drawCanvas(lights);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.state.renderingEnabled) {
+                this.turnOffSimulation();
+            } else if (!document.hidden && this.state.renderingEnabled) {
+                this.turnOnSimulation();
+            }
         });
     }
 
@@ -60,8 +75,8 @@ class LightsSimulator extends React.Component {
                 const [r, g, b] = lights[i];
 
                 let SCALE = 4;
-                const x = X[i] * SCALE + 50;
-                const y = Y[i] * SCALE + 50;
+                const x = X[i] * SCALE + 5 * SCALE;
+                const y = Y[i] * SCALE + 5 * SCALE;
 
                 let power = r + g + b;
                 if (power < 0) power = 0;
@@ -120,6 +135,11 @@ class LightsSimulator extends React.Component {
     }
 
     __changeSelection() {
+        if (this.state.renderingEnabled) {
+            this.turnOffSimulation();
+        } else {
+            this.turnOnSimulation();
+        }
         this.setState({ renderingEnabled: !this.state.renderingEnabled });
     }
 

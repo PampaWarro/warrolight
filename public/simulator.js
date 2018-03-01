@@ -103,7 +103,8 @@ class Simulator extends React.Component {
       } else {
         menuItems.push(React.createElement(
           Item,
-          { key: key, onClick: e => this.handleProgramClick(key, e) },
+          { key: key,
+            onClick: e => this.handleProgramClick(key, e) },
           this.state.programs[key].name
         ));
       }
@@ -147,6 +148,7 @@ class Simulator extends React.Component {
         React.createElement(
           'div',
           { className: 'contain' },
+          React.createElement(CnxStatus, null),
           React.createElement(
             'div',
             null,
@@ -166,27 +168,31 @@ class Simulator extends React.Component {
               { className: 'menuItems' },
               menuItems
             ),
-            React.createElement(LightsSimulator, { height: '400', width: '600' }),
             React.createElement(
               'div',
-              { className: 'configuration' },
-              React.createElement(
-                'h3',
-                null,
-                this.state.selected,
-                ' \xA0',
-                React.createElement(
-                  'a',
-                  { href: 'javascript:void(0);', onClick: e => this.restartProgram() },
-                  'restart'
-                )
-              ),
+              { className: 'simControls' },
               React.createElement(
                 'div',
-                { className: 'config-items' },
-                configOptions
+                { className: 'configuration' },
+                React.createElement(
+                  'h3',
+                  null,
+                  this.state.selected,
+                  ' \xA0',
+                  React.createElement(
+                    'a',
+                    { href: 'javascript:void(0);', onClick: e => this.restartProgram() },
+                    'restart'
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'config-items' },
+                  configOptions
+                ),
+                presets
               ),
-              presets
+              React.createElement(LightsSimulator, { height: '400', width: '600' })
             )
           ),
           React.createElement(MicrophoneViewer, null)
@@ -253,7 +259,8 @@ class NumberParam extends React.Component {
           this.state.value,
           '\xA0'
         ),
-        React.createElement('input', { type: 'range', name: this.name, min: this.min, step: this.step, max: this.max, value: this.state.value, onChange: this.handleChange })
+        React.createElement('input', { type: 'range', name: this.name, min: this.min, step: this.step, max: this.max, value: this.state.value,
+          onChange: this.handleChange })
       )
     );
   }

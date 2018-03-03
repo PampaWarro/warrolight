@@ -30,8 +30,8 @@ class MicrophoneViewer extends React.Component {
   componentDidMount() {
     socket.on('micViewerReady', this._initializeState.bind(this));
 
-    socket.on('micSample', ({ level, max }) => {
-      this.plotEnergyHistogram(level, max);
+    socket.on('micSample', samples => {
+      _.each(samples, ({ level, max }) => this.plotEnergyHistogram(level, max));
     });
 
     this.createHistogramCanvas();

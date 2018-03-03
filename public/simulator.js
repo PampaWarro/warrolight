@@ -190,7 +190,11 @@ class Simulator extends React.Component {
                   { className: 'config-items' },
                   configOptions
                 ),
-                presets
+                React.createElement(
+                  'div',
+                  { className: 'presets' },
+                  presets
+                )
               ),
               React.createElement(LightsSimulator, { height: '400', width: '600' })
             )

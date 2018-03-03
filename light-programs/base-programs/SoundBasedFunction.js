@@ -27,52 +27,80 @@ soundEmitter.on('sound', (volume) => {
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 })
 
+//
+// const sndpeek = require('sndpeek');
+// sndpeek.startListening();
+// sndpeek.on('data', function({centroid, flux, rms, mffc, ...other}) {
+//   realSound = rms;
+//   clearTimeout(fakeSoundTimeout)
+//   clearInterval(fakingSoundInterval)
+//   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
+// })
+
+let averageVolume = 0;
+let averageRelativeVolume = 0;
+let averageVolumeSmoothed = 0;
+let averageVolumeSmoothedSlow = 0;
+let averageRelativeVolumeSmoothed = 0;
+let medianVolume15 = _.map(_.range(15), () => 0)
+let medianVolume = 0
+let lastTime = new Date();
 let maxVolume = 0;
+let processInterval = setTimeout(function computeSoundStats() {
+  // calculate average
+  averageVolume = realSound;
+  averageVolumeSmoothed = (averageVolume + 2 * averageVolumeSmoothed) / 3
+  averageVolumeSmoothedSlow = (averageVolume + 20 * averageVolumeSmoothedSlow) / 21
+
+  // Plot
+  // self.plotEnergyHistogram(self);
+
+
+  // self.bassesAverageVolume = getAverageVolume(array, 32);
+  maxVolume = (Math.max(maxVolume, averageVolume)*300+averageVolume)/301;
+  averageRelativeVolume = averageVolume / (maxVolume || 1)
+  averageRelativeVolumeSmoothed = averageVolumeSmoothed / (maxVolume || 1)
+
+  medianVolume15.push(averageRelativeVolume)
+  medianVolume15 = medianVolume15.slice(1)
+  medianVolume = _.sortBy(medianVolume15)[7]
+
+  soundEmitter.emit('volume', {level: averageRelativeVolume, max: maxVolume})
+
+  // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
+  processInterval = setTimeout(computeSoundStats, 1000/60);
+  lastTime = new Date();
+}, 1000/60);
+
+
 module.exports = class SoundBasedFunction extends TimeTickedFunction{
   constructor(config, leds) {
     super(config, leds);
   }
 
   start(config, draw, done){
-    this.averageVolume = 0;
-    this.averageRelativeVolume = 0;
-    this.averageVolumeSmoothed = 0;
-    this.averageVolumeSmoothedSlow = 0;
-    this.medianVolume15 = _.map(_.range(15), () => 0)
-    this.medianVolume = 0
+    this.averageVolume = averageVolume;
+    this.averageRelativeVolume = averageRelativeVolume;
+    this.averageVolumeSmoothed = averageVolumeSmoothed;
+    this.averageVolumeSmoothedSlow = averageVolumeSmoothedSlow;
+    this.medianVolume15 = medianVolume15
+    this.medianVolume = medianVolume
     let self = this;
 
-    function getAverageVolume(array, from=0, to=null) {
-      return realSound;
-    }
-
-    let lastTime = new Date();
-
-    self.processInterval = setTimeout(function computeSoundStats() {
+    self.processInterval = setTimeout(function updateValues() {
       // calculate average
-      self.averageVolume = getAverageVolume();
-      self.averageVolumeSmoothed = (self.averageVolume + 2 * self.averageVolumeSmoothed) / 3
-      self.averageVolumeSmoothedSlow = (self.averageVolume + 20 * self.averageVolumeSmoothedSlow) / 21
+      self.averageVolume = averageVolume
+      self.averageVolumeSmoothed = averageVolumeSmoothed
+      self.averageVolumeSmoothedSlow = averageVolumeSmoothedSlow
 
-      // Plot
-      // self.plotEnergyHistogram(self);
-
-
-      // self.bassesAverageVolume = getAverageVolume(array, 32);
-      maxVolume = (Math.max(maxVolume, self.averageVolume)*300+self.averageVolume)/301;
       self.maxVolume = maxVolume
-      self.averageRelativeVolume = self.averageVolume / (self.maxVolume || 1)
-      self.averageRelativeVolumeSmoothed = self.averageVolumeSmoothed / (self.maxVolume || 1)
+      self.averageRelativeVolume = averageRelativeVolume
+      self.averageRelativeVolumeSmoothed = averageRelativeVolumeSmoothed
 
-      self.medianVolume15.push(self.averageRelativeVolume)
-      self.medianVolume15 = self.medianVolume15.slice(1)
-      self.medianVolume = _.sortBy(self.medianVolume15)[7]
+      self.medianVolume15 = medianVolume15
+      self.medianVolume = medianVolume
 
-      soundEmitter.emit('volume', {level: self.averageRelativeVolume, max: self.maxVolume})
-
-      // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
-      self.processInterval = setTimeout(computeSoundStats, 1000/self.config.fps);
-      lastTime = new Date();
+      self.processInterval = setTimeout(updateValues, 1000/self.config.fps);
     }, 1000/self.config.fps);
 
     super.start(config, draw, done)

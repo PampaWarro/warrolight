@@ -153,7 +153,9 @@ class Simulator extends React.Component {
                 <div className="config-items">
                   {configOptions}
                 </div>
+                <div className={'presets'}>
                 {presets}
+                </div>
               </div>
               <LightsSimulator height="400" width="600"></LightsSimulator>
             </div>

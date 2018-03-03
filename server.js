@@ -33,9 +33,18 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
 
   const io = require('socket.io').listen(http);
 
-  require("./sound-broadcast").on('volume', _.throttle((volData) => {
-    io.volatile.emit('micSample', volData)
-  }, 100))
+
+  let lastVolumes = [];
+
+  let flushVolume = _.throttle(() => {
+    io.volatile.emit('micSample', lastVolumes)
+    lastVolumes = [];
+  }, 100)
+
+  require("./sound-broadcast").on('volume', volData => {
+    lastVolumes.push(volData);
+    flushVolume();
+  })
 
   io.on('connection', (socket) => {
     let simulating = false;

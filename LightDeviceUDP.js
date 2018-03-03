@@ -11,8 +11,11 @@ const ENCODING_RGB = 4;
 
 
 module.exports = class LightDeviceUDP extends LightDevice {
-  constructor(numberOfLights, expectedIp) {
+  constructor(numberOfLights, expectedIp, udpPort) {
     super(numberOfLights, "E "+expectedIp);
+
+    this.expectedIp = expectedIp;
+    this.udpPort = udpPort;
 
     this.encoding = ENCODING_RGB
 
@@ -135,9 +138,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   }
 
   setupCommunication() {
-
     this.udpSocket = dgram.createSocket('udp4');
-    this.udpPort = 6666;
 
     this.udpSocket.on('listening', () => {
       const address = this.udpSocket.address();
@@ -146,20 +147,26 @@ module.exports = class LightDeviceUDP extends LightDevice {
     });
 
     this.udpSocket.on('message', (message, remote) => {
-      this.remotePort = remote.port;
-      this.remoteAddress = remote.address;
-      if(!this.connected) {
-        this.handleArduinoData(message.toString())
+      console.log(message.toString(), remote.address)
+      if(remote.address === this.expectedIp) {
+        this.remotePort = remote.port;
+        this.remoteAddress = remote.address;
 
-        this.connected = true;
+        if (!this.connected) {
+          console.log(`Connected to ${this.remoteAddress}:${this.remotePort}`)
+          this.handleArduinoData(message.toString())
 
-        setInterval(() => {
-          this.framesCount++
-          this.waitingResponse = false;
-          this.sendNextFrame()
-        }, 16)
+          this.connected = true;
+
+          setInterval(() => {
+            this.framesCount++
+            this.waitingResponse = false;
+            this.sendNextFrame()
+          }, 16)
+        }
       }
     });
+
 
     this.udpSocket.on('error', (err) => {this.handleError(err)})
     this.udpSocket.on('close', () => {this.handleError("socket closed. Falta manejarlo")})

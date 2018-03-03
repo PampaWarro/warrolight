@@ -8,7 +8,7 @@ IPAddress myDns(192, 168, 1, 1);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
-unsigned int localPort = 8888; // local port to listen on
+unsigned int localPort = 5555; // local port to listen on
 
 // buffers for receiving and sending data
 //char ReplyBuffer[] = "acknowledged";       // a string to send back
@@ -45,7 +45,7 @@ void setupUDPConnection() {
 void broadcastAlive() {
   Serial.println("Broadcasting I exist...");
   IPAddress remoteIp(255, 255, 255, 255);
-  Udp.beginPacket(remoteIp, 6666);
+  Udp.beginPacket(remoteIp, 5555);
   Udp.write("YEAH");
   Udp.endPacket();
 }

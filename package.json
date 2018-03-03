@@ -26,6 +26,7 @@
     "performance-now": "^2.0.0",
     "react": "^15.4.1",
     "serialport": "^4.0.7",
+    "sndpeek": "^1.0.2",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.1",
     "style-loader": "^0.13.1",

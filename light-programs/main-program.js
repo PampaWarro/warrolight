@@ -13,7 +13,7 @@ const _ = require('lodash');
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["PROGRAM_Main", "rays", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "radial", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
+const programNames = ["radial", "PROGRAM_Main", "rays", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "stars", "debugSetup", "debugShapes", "all-off", "all-white"]
 const Emitter = require('events')
 let lightsSampleEmitter = new Emitter()
 

@@ -1,4 +1,5 @@
 const dgram = require('dgram');
+const now = require('performance-now')
 
 const LightDevice = require('./LightDevice')
 
@@ -20,8 +21,8 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.encoding = ENCODING_RGB
 
     this.freshData = false;
-    this.waitingResponse = true;
     this.dataBuffer = [0]
+    this.connected = false;
 
     this.packageCount = 0
 
@@ -30,7 +31,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   }
 
   sendNextFrame() {
-    if(this.freshData && !this.waitingResponse) {
+    if(this.connected && this.freshData) {
       this.initEncoding()
 
       let dim = 1
@@ -42,7 +43,6 @@ module.exports = class LightDeviceUDP extends LightDevice {
         )
       }
       this.freshData = false;
-      this.waitingResponse = true;
       this.flush()
     }
   }
@@ -54,7 +54,10 @@ module.exports = class LightDeviceUDP extends LightDevice {
       if(data === 'YEAH'){
         this.logInfo("Reconnected")
         this.updateState(this.STATE_RUNNING);
-      } else if (data === 'OK') {
+      } else if (data.startsWith("PERF")) {
+        let perfCount = parseInt(data.substring(4) || 0);
+        this.lastFps = perfCount;
+        // console.log("Perf ", perfCount)
         //this.logInfo(`ACK`)
       } else {
         this.logInfo(`UNEXPECTED MSG'${data}'`)
@@ -66,14 +69,21 @@ module.exports = class LightDeviceUDP extends LightDevice {
     clearTimeout(this.reconnectTimeout);
 
     this.reconnectTimeout = setTimeout(() => {
-      this.sendInitialKick()
+      this.connected = false;
+      this.updateState(this.STATE_CONNECTING);
+      this.logInfo(`no data`)
     }, reconnectTime)
-
-    this.framesCount++
-    this.waitingResponse = false;
-    this.sendNextFrame()
   }
 
+  // Override parent
+  logDeviceState() {
+    if (this.deviceState === this.STATE_RUNNING) {
+      if (now() - this.lastPrint > 250) {
+        this.logInfo(`FPS: ${this.lastFps}`.green)
+        this.lastPrint = now()
+      }
+    }
+  }
 
   initEncoding() {
     this.write([this.encoding]);
@@ -118,27 +128,16 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.dataBuffer = [this.packageCount++ % 256];
   }
 
-  sendInitialKick(){
-    if(this.port) {
-      this.port.write('XXX', (err) => {
-          if(err){
-            this.handleError(err)
-          } else {
-            this.logInfo('Initial kick of data sent')
-          }
-        }
-      )
-
-      clearTimeout(this.reconnectTimeout);
-
-      this.reconnectTimeout = setTimeout(() => {
-        this.sendInitialKick()
-      }, reconnectTime)
-    }
-  }
-
   setupCommunication() {
     this.udpSocket = dgram.createSocket('udp4');
+
+    this.udpSocket.on('error', (err) => {
+      this.udpSocket.close();
+      this.updateState(this.STATE_ERROR);
+      this.logError('Error: ' + err.message)
+      // Create socket again
+      setTimeout(() => this.setupCommunication(), 500);
+    });
 
     this.udpSocket.on('listening', () => {
       const address = this.udpSocket.address();
@@ -147,26 +146,27 @@ module.exports = class LightDeviceUDP extends LightDevice {
     });
 
     this.udpSocket.on('message', (message, remote) => {
-      console.log(message.toString(), remote.address)
+      // console.log(message.toString(), remote.address)
       if(remote.address === this.expectedIp) {
         this.remotePort = remote.port;
         this.remoteAddress = remote.address;
 
         if (!this.connected) {
           console.log(`Connected to ${this.remoteAddress}:${this.remotePort}`)
-          this.handleArduinoData(message.toString())
-
           this.connected = true;
-
-          setInterval(() => {
-            this.framesCount++
-            this.waitingResponse = false;
-            this.sendNextFrame()
-          }, 16)
+          this.updateState(this.STATE_RUNNING);
         }
+
+        this.handleArduinoData(message.toString())
       }
     });
 
+    setInterval(() => {
+      // Es UDP, no esperamos respuesta
+      if(this.connected) {
+        this.sendNextFrame()
+      }
+    }, 16)
 
     this.udpSocket.on('error', (err) => {this.handleError(err)})
     this.udpSocket.on('close', () => {this.handleError("socket closed. Falta manejarlo")})

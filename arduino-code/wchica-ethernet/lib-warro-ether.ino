@@ -18,6 +18,7 @@ EthernetUDP Udp;
 void setupUDPConnection(unsigned int port, byte ipSegment) {
   // MAC address and IP address (in case DHCP fails)
   byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, ipSegment };
+  localPort = port;
 
     // start the Ethernet and UDP:
   IPAddress useIp(192, 168, 0, ipSegment);

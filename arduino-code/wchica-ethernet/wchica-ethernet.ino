@@ -23,13 +23,14 @@ int frameCount = 0;
 void loop() {
   if(withIp) {
     unsigned long nowMs = millis();
-    if(!connected) {      
-      broadcastAlive();
-      delay(1000);    
-    } else if(nowMs - lastPerfStatus > 1000){
-      broadcastPerf(frameCount);
-      frameCount = 0;
+    if(nowMs - lastPerfStatus > 1000) {
       lastPerfStatus = nowMs;
+      if(!connected) {      
+        broadcastAlive();       
+      } else {
+        broadcastPerf(frameCount);
+        frameCount = 0;        
+      }
     }
   
     if(checkForNewUDPMsg(ledsBuffer)) {

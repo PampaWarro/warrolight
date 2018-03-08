@@ -36,14 +36,6 @@ const LAST_LED = 1
 // El orden de los segmentos es clave. Replica cómo vamos a conectar las luces y el orden natural de esos 600 leds
 
 module.exports = [
-  // Left totems
-  new Stripe(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
-  new Stripe(-DISTANCE_TOTEMS, TOTEM_Y, -DISTANCE_TOTEMS - TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
-
-  // Right totems
-  new Stripe(WIDTH, TOTEM_Y, WIDTH + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
-  new Stripe(WIDTH + DISTANCE_TOTEMS, TOTEM_Y, WIDTH + DISTANCE_TOTEMS + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
-
   // Led 1
   new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT, HALF_LEDS / 2),
   new Stripe(PORTION, HEIGHT - 0, 0, HEIGHT - HEIGHT, LEDS_LONG),
@@ -59,5 +51,13 @@ module.exports = [
   //  Led 4
   new Stripe(HALF_WIDTH, HEIGHT, 2 * PORTION, HEIGHT, HALF_LEDS / 2),
   new Stripe(2 * PORTION, HEIGHT - 0, WIDTH, HEIGHT - HEIGHT, LEDS_LONG),
+
+  // Left totems
+  new Stripe(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+  new Stripe(-DISTANCE_TOTEMS, TOTEM_Y, -DISTANCE_TOTEMS - TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+
+  // Right totems
+  new Stripe(WIDTH, TOTEM_Y, WIDTH + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+  new Stripe(WIDTH + DISTANCE_TOTEMS, TOTEM_Y, WIDTH + DISTANCE_TOTEMS + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
 ]
 

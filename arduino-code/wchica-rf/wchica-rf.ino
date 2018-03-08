@@ -11,16 +11,8 @@ const byte address[6] = "90909";
 
 int PAYLOAD_SIZE = 32;
 
-byte ledsR[NUM_LEDS];
-byte ledsG[NUM_LEDS];
-byte ledsB[NUM_LEDS];
-
 void setup() {
-  Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-
-  for (int i = 0; i < NUM_LEDS; i++) {
-    writeLeds(i, 0, 0, 0);
-  }
+  Serial.begin(576000 * 4);         // set up Serial library at 1152000 bps, the same than in Node.js
 
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);
@@ -28,41 +20,18 @@ void setup() {
   radio.setPALevel(RF24_PA_HIGH);
   radio.setPayloadSize(PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
-  //radio.enableDynamicPayloads();  
-  radio.setAutoAck(true);
+  //radio.enableDynamicPayloads();
+  radio.setAutoAck(false);
   radio.stopListening();
 }
 
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
+//byte ENCODING_POS_RGB = 1;
+//byte ENCODING_POS_VGA = 2;
+//byte ENCODING_VGA = 3;
 byte ENCODING_RGB = 4;
+byte ENCODING_RGB565 = 5;
 
-int j = 0;
-byte pos = 3;
-byte r = 0;
-byte g = 0;
-byte b = 0;
-
-byte vgaRed(byte vga) {
-  return ((vga & 0xE0) >> 5) * 32;
-}
-byte vgaBlue(byte vga) {
-  return ((vga & 0x03)) * 64;
-}
-byte vgaGreen(byte vga) {
-  return ((vga & 0x1C) >> 2) * 32;
-}
-
-void writeLeds(int pos, byte r, byte g, byte  b) {
-  if (pos < 150) {
-    ledsR[pos] = r;
-    ledsG[pos] = g;
-    ledsB[pos] = b;
-  }
-}
-
-int stripSize = NUM_LEDS;
+int stripSize = NUM_LEDS*2;
 
 boolean connected = false;
 void reconnect() {
@@ -80,16 +49,14 @@ void drainSerial() {
 boolean waitingSerial = true;
 int waitingCounter = 0;
 void loop() {
-  if (connected || Serial.available() >= 2) {
+  if (connected || (Serial.available() >= 2)) {
     readLedsFromSerial();
   } else {
     waitingCounter = 0;
-    arduinoProgram();
   }
 }
 
-
-
+char ledData[3 * NUM_LEDS * 2 + 2];
 unsigned long lastConnectionTime = millis();
 void readLedsFromSerial() {
   if (!connected) {
@@ -110,7 +77,7 @@ void readLedsFromSerial() {
     return;
   }
 
-  if (Serial.available() < 2) {   
+  if (Serial.available() < 2) {
     if ((millis() - lastConnectionTime) > 2000) {
       lastConnectionTime = millis();
       delay(500);
@@ -121,12 +88,13 @@ void readLedsFromSerial() {
   lastConnectionTime = millis();
 
   int encoding = Serial.read();
-  if (encoding == ENCODING_POS_RGB) {
+  int pos = 0;
+  /*if (encoding == ENCODING_POS_RGB) {
     int j = Serial.read();
     char data[4 * j];
     int total = Serial.readBytes(data, 4 * j);
     if (total == 4 * j) {
-      for (int i = 0; i < stripSize; i++) {  
+      for (int i = 0; i < stripSize; i++) {
         writeLeds(i, 0, 0, 0);
       }
       for (int i = 0; i < j; i++) {
@@ -136,7 +104,7 @@ void readLedsFromSerial() {
     } else {
       return reconnect();
     }
-  } else if (encoding == ENCODING_POS_VGA) {
+    } else if (encoding == ENCODING_POS_VGA) {
     int j = Serial.read();
     char data[2 * j];
     int total = Serial.readBytes(data, 2 * j);
@@ -152,7 +120,7 @@ void readLedsFromSerial() {
     } else {
       return reconnect();
     }
-  } else if (encoding == ENCODING_VGA) {
+    } else if (encoding == ENCODING_VGA) {
     int j = stripSize;
     char data[j];
     int readTotal = Serial.readBytes(data, j);
@@ -164,57 +132,72 @@ void readLedsFromSerial() {
     } else {
       return reconnect();
     }
-  } else if (encoding == ENCODING_RGB) {
+    } else */
+  if (encoding == ENCODING_RGB) {
     int j = stripSize;
-    char data[3 * j];
-    int total = Serial.readBytes(data, 3 * j);
-    if (total == 3 * j) {
-      for (int i = 0; i < j; i++) {
-        writeLeds(i, data[i * 3], data[1 + i * 3], data[2 + i * 3]);
-      }
-    } else {
+
+    int total = Serial.readBytes(ledData+2, 3 * j);
+    if (total != 3 * j) {
+      return reconnect();
+    }
+  } else if (encoding == ENCODING_RGB565) {
+    int j = stripSize;
+
+    int total = Serial.readBytes(ledData+2, 2 * j);
+    if (total != 2 * j) {
       return reconnect();
     }
   } else {
+    Serial.println("WRONG ENCODING");
     return reconnect();
   }
-  
+
   transmitRadio();
 
   Serial.println("OK"); // ASCII printable characters
+
   //delay(20);
 
   // Protocolo que entiende node.js
 }
 
-
-unsigned long time = 0;
-void arduinoProgram() {
-  byte debugCycle = (time / 10) % 3;
-  if (debugCycle == 0) {
-    writeLeds(0, 10, 0, 20);
-  } else {
-    writeLeds(0, 0, 0, 0);
-  }
-
-  time++;
-}
-
+int channels[] = {124, 83};
+//int channels[] = {124};
+int bytesPerPixel = 3;
 void transmitRadio() {
-  for (int j = 0; j < NUM_LEDS;) {
-    char data[PAYLOAD_SIZE];
-    data[0] = j;
-    data[1] = 0;
-    for (int i = 2; i+2 < PAYLOAD_SIZE && j < NUM_LEDS; i+=3) {
-      data[i] = ledsR[j];
-      data[i+1] = ledsG[j];
-      data[i+2] = ledsB[j];
-      j++;
-    }
-     //radio.write(&data, sizeof(data));
-    //Serial.println("Escribi");
-    while(!radio.write(&data, sizeof(data))){
-      //Serial.println("Write failed");
+  for (int k = 0; k < 2; k++) {
+    int channel = channels[k];
+    radio.setChannel(channel);
+
+    int offset = k * bytesPerPixel * NUM_LEDS;
+    for (int j = 0; j < NUM_LEDS;) {
+      /*char data[PAYLOAD_SIZE];
+      data[0] = j;
+      data[1] = 0;
+
+      for (int i = 2; i+2 < PAYLOAD_SIZE && j < NUM_LEDS; i+=3) {
+        data[i] = ledData[j*3+offset];
+        data[i+1] = ledData[j*3+1+offset];
+        data[i+2] = ledData[j*3+2+offset];
+        j++;
+      }
+
+      radio.write(&data, sizeof(data));
+      */
+
+      ledData[offset] = j;
+      ledData[offset + 1] = 0;
+      radio.write(&ledData[offset], 32);
+            
+      offset = offset + 30;
+      j += 30/bytesPerPixel;        
+      
+      
+      //Serial.println("Escribi");
+
+      /*while(!radio.write(&data, sizeof(data))){
+        Serial.println("Write failed");
+        }*/
     }
   }
 }

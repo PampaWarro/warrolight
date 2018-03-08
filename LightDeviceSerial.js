@@ -10,6 +10,25 @@ const ENCODING_POS_RGB = 1;
 const ENCODING_POS_VGA = 2;
 const ENCODING_VGA = 3;
 const ENCODING_RGB = 4;
+const ENCODING_RGB565 = 5;
+
+
+const rgbToRgb565 = (r, g, b) => {
+  let b5 = (b >> 3) & 0x001f;
+  let g6 = ( (g >> 2) & 0x003f ) << 5;
+  let r5 = ( (r >> 3) & 0x001f ) << 11;
+
+  let bytes = (r5 | g6 | b5);
+  return [bytes >> 8, bytes & 0xff];
+}
+
+const rgb565ToRgb = (rgb565) => {
+  let b = ((rgb565 & 0x001f)) << 3
+  let g = ((rgb565 & 0x7E0) >> 5) << 2
+  let r = ((rgb565) >> 11) << 3
+
+  return [r,g,b];
+}
 
 
 module.exports = class LightDeviceSerial extends LightDevice {
@@ -95,6 +114,8 @@ module.exports = class LightDeviceSerial extends LightDevice {
         return this.write([pos, r, g, b])
       case ENCODING_POS_VGA:
         return this.write([pos, rgbToVga(r, g, b)])
+      case ENCODING_RGB565:
+        return this.write(rgbToRgb565(r, g, b))
       default:
         this.logError('Invalid encoding!')
         return
@@ -138,7 +159,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
     const tryOpenPort = () => {
       try {
         this.port = new SerialPort(this.devicePort, {
-          baudRate: 1152000 / 2,
+          baudRate: 1152000 / 2*2*2,
           parser: SerialPort.parsers.readline("\n")
         })
 

@@ -66,7 +66,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
   handleArduinoData(data) {
     if(data){
-      data = data.replace(/[^\w]+/gi, "")
+      data = data.toString().replace(/[^\w]+/gi, "")
 
       if(data === 'YEAH'){
         this.logInfo("Reconnected")
@@ -75,6 +75,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         //this.logInfo(`ACK`)
       } else {
         this.logInfo(`UNEXPECTED MSG'${data}'`)
+        console.log(`UNEXPECTED MSG'${data}'`)
       }
     } else {
       this.logInfo(`No data received`)
@@ -159,18 +160,17 @@ module.exports = class LightDeviceSerial extends LightDevice {
     const tryOpenPort = () => {
       try {
         this.port = new SerialPort(this.devicePort, {
-          baudRate: 1152000 / 2*2*2,
-          parser: SerialPort.parsers.readline("\n")
+          baudRate: 1152000/2,
         })
 
         this.port.on('open', () => {
           this.updateState(this.STATE_CONNECTING);
-          this.logInfo('Port open. Data rate: ' + this.port.options.baudRate);
+          this.logInfo('Port open. Data rate: ' + this.port.settings.baudRate);
           setTimeout(this.sendInitialKick.bind(this), 100)
         })
-
+        const parser = this.port.pipe(new SerialPort.parsers.Readline({ delimiter: '\n' }));
         this.port.on('error', this.handleError.bind(this))
-        this.port.on('data', this.handleArduinoData.bind(this))
+        parser.on('data', this.handleArduinoData.bind(this))
         this.port.on('drain', this.handleDrain.bind(this))
         this.port.on('close', this.handleClose.bind(this))
         this.port.on('disconnect', this.handleClose.bind(this))

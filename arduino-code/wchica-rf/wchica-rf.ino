@@ -12,7 +12,7 @@ const byte address[6] = "90909";
 int PAYLOAD_SIZE = 32;
 
 void setup() {
-  Serial.begin(576000 * 4);         // set up Serial library at 1152000 bps, the same than in Node.js
+  Serial.begin(1152000/2);         // set up Serial library at 1152000 bps, the same than in Node.js
 
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);
@@ -161,7 +161,8 @@ void readLedsFromSerial() {
   // Protocolo que entiende node.js
 }
 
-int channels[] = {124, 83};
+int channels[] = {110, 95};
+// int channels[] = {124, 83};
 //int channels[] = {124};
 int bytesPerPixel = 3;
 void transmitRadio() {

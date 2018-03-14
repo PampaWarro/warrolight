@@ -28,7 +28,7 @@ module.exports = class Func extends SoundBasedFunction {
       } else if (posY < volumeHeight) {
         let timeY = Math.sin(geometry.y[i] * this.config.escala + this.timeInMs * this.config.velocidad / 50);
         let timeX = Math.sin(geometry.x[i] * this.config.escala + this.timeInMs * this.config.velocidad / 20);
-        colors[i] = ColorUtils.HSVtoRGB(this.config.color + 0.6 + (timeX * 0.05 + 0.025), 1, timeY+0.7);
+        colors[i] = ColorUtils.HSVtoRGB(this.config.color + 0.6 + (timeX * 0.05 + 0.025), 1, Math.max(0, timeY+0.7));
       } else {
         colors[i] = [0,0,0];
       }

@@ -2,7 +2,7 @@ const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require('lodash')
 
-module.exports = class Radial extends TimeTickedFunction{
+module.exports = class Lineal extends TimeTickedFunction{
   drawFrame(draw, done) {
     const colors = new Array(this.numberOfLeds)
     const elapsed = (this.timeInMs) / 1000;
@@ -13,12 +13,12 @@ module.exports = class Radial extends TimeTickedFunction{
       let geometry = this.position || this.geometry;
 
       const dx = geometry.x[i] - geometry.width/2 - this.config.centerX;
-      const dy = geometry.y[i] - geometry.height  + this.config.centerY + 18; // 18 is the offset
+      // const dy = geometry.y[i] - geometry.height  + this.config.centerY;
 
-      const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
+      const distance = Math.abs(dx) * 255 / (300*this.config.escala);
 
       const v = Math.max(0, Math.sin(distance + elapsed * this.config.velocidad));
-      colors[i] = ColorUtils.HSVtoRGB((distance/5+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power))
+      colors[i] = ColorUtils.HSVtoRGB((distance/50*0+ 0*this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power) + 0.01)
     }
     draw(colors)
   }

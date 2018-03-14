@@ -89,20 +89,20 @@ module.exports = class Stars extends SoundBasedFunction {
     static presets() {
         return {
             normal: {},
-            rainbowSmoke: {decay: 0.9, globalSpeed: 0.9,  colorSaturationRange: 0, numberOfParticles: 5, colorHueAmplitude: 1},
-            colorSmoke: {brillo: 0.5, decay: 0.96, globalSpeed: 0.9,  colorSaturationRange: 0, numberOfParticles: 15, colorHueAmplitude: 1},
-            crazy: {decay: 0.2, globalSpeed: 2,  colorSaturationRange: 0, numberOfParticles: 10, colorHueAmplitude: 1},
-            fireFast: {brillo: 1, decay: 0.8, globalSpeed: 0.7,  colorSaturationRange: 0.07, numberOfParticles: 10, colorHueAmplitude: 0.12, colorHueOffset: 0.98},
-            fireSlow: {brillo: 1, decay: 0.8, globalSpeed: 0.25,  colorSaturationRange: 0.07, numberOfParticles: 10, colorHueAmplitude: 0.12, colorHueOffset: 0.98}
+            rainbowSmoke: {decay: 0.9, globalSpeed: 0.9,  colorSaturationRange: 0, numberOfParticles: 15, colorHueAmplitude: 1},
+            colorSmoke: {brillo: 0.4, decay: 0.93, globalSpeed: 4,  colorSaturationRange: 0, numberOfParticles: 30, colorHueAmplitude: 1},
+            crazy: {decay: 0.2, globalSpeed: 6,  colorSaturationRange: 0, numberOfParticles: 40, colorHueAmplitude: 1},
+            fireFast: {brillo: 1, decay: 0.8, globalSpeed: 2,  colorSaturationRange: 0.07, numberOfParticles: 50, colorHueAmplitude: 0.12, colorHueOffset: 0.98},
+            fireSlow: {brillo: 1, decay: 0.8, globalSpeed: 0.25,  colorSaturationRange: 0.07, numberOfParticles: 50, colorHueAmplitude: 0.12, colorHueOffset: 0.98}
         }
     }
 
     static configSchema() {
         let config = super.configSchema();
         config.decay = {type: Number, min: 0, max: 1, step: 0.005, default: 0.8}
-        config.globalSpeed = {type: Number, min: 0, max: 5, step: 0.005, default: 1}
+        config.globalSpeed = {type: Number, min: 0, max: 7, step: 0.005, default: 1}
         config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2}
-        config.numberOfParticles = {type: Number, min: 1, max: 30, step: 1, default: 5}
+        config.numberOfParticles = {type: Number, min: 1, max: 150, step: 1, default: 15}
         config.colorHueAmplitude = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
         config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0.05}
         config.colorSaturationRange = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2}

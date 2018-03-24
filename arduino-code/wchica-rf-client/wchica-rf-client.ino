@@ -58,7 +58,8 @@ const byte address[6] = "90909";
 void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
+  
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 1000);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -73,9 +74,14 @@ void setup() {
   //Serial.begin(9600);
   radio.begin();
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
-  
-  radio.setChannel(124);
-  //radio.setChannel(83);
+
+  // Max power 1000 mah
+  radio.setChannel(92);
+  //radio.setChannel(103);
+
+  // Max power 700 mah
+  //radio.setChannel(81);
+  //radio.setChannel(114);
   
   radio.setPALevel(RF24_PA_HIGH);  
   //radio.enableDynamicPayloads();

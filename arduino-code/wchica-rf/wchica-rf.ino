@@ -16,7 +16,8 @@ void setup() {
 
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);
-  radio.setChannel(124);
+  //radio.setChannel(81);
+  radio.setChannel(92);
   radio.setPALevel(RF24_PA_HIGH);
   radio.setPayloadSize(PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
@@ -161,9 +162,9 @@ void readLedsFromSerial() {
   // Protocolo que entiende node.js
 }
 
-int channels[] = {110, 95};
-// int channels[] = {124, 83};
-//int channels[] = {124};
+//int channels[] = {81, 114};
+int channels[] = {92, 103};
+
 int bytesPerPixel = 3;
 void transmitRadio() {
   for (int k = 0; k < 2; k++) {

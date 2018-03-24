@@ -5,10 +5,10 @@ const LightDeviceUDP = require('./LightDeviceUDP')
 const DeviceMultiplexer = require('./DeviceMultiplexer')
 const LightController = require('./light-programs/main-program')
 
-const device1 = new LightDeviceUDP(300, '192.168.0.5', 5555);
-const device2 = new LightDeviceUDP(300, '192.168.0.6', 6666);
-const deviceRF1 = new LightDeviceSerial(300, 'COM21', '/dev/ttyACM0');
-const deviceRF2 = new LightDeviceSerial(300, 'COM12', '/dev/ttyACM0');
+const device1 = new LightDeviceUDP(300, '192.168.1.2', 2222);
+const device2 = new LightDeviceUDP(300, '192.168.1.4', 4444);
+const deviceRF1 = new LightDeviceSerial(300, 'COM27', '/dev/ttyACM0');
+const deviceRF2 = new LightDeviceSerial(300, 'COM25', '/dev/ttyACM0');
 // const device2 = new LightDeviceSerial(150, 'COM16', '/dev/ttyACM0');
 // const device3 = new LightDeviceUDP(300, '192.168.0.7', 7777);
 // const device4 = new LightDeviceUDP(300, '192.168.0.8', 8888);

@@ -6,10 +6,9 @@ void setup() {
 
   // COM17 - 6666 6
   // COM16 - 5555 5
- 
-  unsigned int port = 6666;
-  
-  setupUDPConnection(port, 6);
+   
+  setupUDPConnection(2222, 2); // ETH 2
+  //setupUDPConnection(4444, 4); // ETH 4
 }
 
 bool connected = false;

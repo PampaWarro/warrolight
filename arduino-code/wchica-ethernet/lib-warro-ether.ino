@@ -21,7 +21,7 @@ void setupUDPConnection(unsigned int port, byte ipSegment) {
   localPort = port;
 
     // start the Ethernet and UDP:
-  IPAddress useIp(192, 168, 0, ipSegment);
+  IPAddress useIp(192, 168, 1, ipSegment);
   Ethernet.begin(mac, useIp, myDns, gateway, subnet);
   /*Serial.println("Trying to get an IP address using DHCP");
   if (Ethernet.begin(mac) == 0) {

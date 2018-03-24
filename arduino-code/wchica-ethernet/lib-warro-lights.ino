@@ -40,7 +40,7 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2) {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, STRIP_NUM_LEDS);    
   FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, STRIP_NUM_LEDS);    
   
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 5000);
 
   for (int i = 0; i < NUM_LEDS; i++) {   
     writeLeds(i,0,0,0);

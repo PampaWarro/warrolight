@@ -2,7 +2,7 @@
 const _ = require('lodash')
 const ColorUtils = require('../utils/ColorUtils')
 
-let CROSSFADE_TIME_MS = 10000;
+let CROSSFADE_TIME_MS = 20000;
 
 module.exports = function createMultiProgram(programSchedule, random = false) {
   return class  {

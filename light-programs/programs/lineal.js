@@ -18,7 +18,7 @@ module.exports = class Lineal extends TimeTickedFunction{
       const distance = Math.abs(dx) * 255 / (300*this.config.escala);
 
       const v = Math.max(0, Math.sin(distance + elapsed * this.config.velocidad));
-      colors[i] = ColorUtils.HSVtoRGB((distance/50*0+ 0*this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power) + 0.01)
+      colors[i] = ColorUtils.HSVtoRGB((distance/50+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power) + 0.01)
     }
     draw(colors)
   }

@@ -74,29 +74,31 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
   static presets() {
     return {
-      "hexagono": {initialDistance: 19.8, haciaAfuera: false, speed: 0.6, waveWidth: 2},
+      "hexagono": {initialDistance: 69, haciaAfuera: false, speed: 1, waveWidth: 2},
       "default": {},
       "deLasPuntas": {speed: 1, waveWidth: 2, initialDistance: 40, haciaAfuera: false, brillo: 0.5},
       "centroLento": {speed: 0.1},
       "centroLentoDark": {speed: 0.1, brillo: 0.25},
-      "centroFast": {speed: 2},
-      "centroBrightFast": {speed: 0.7, brillo: 2, waveWidth: 2},
-      "abajoFast": {centerY: -17.3, speed: 2},
+      "centroFast": {speed: 3},
+      "centroDots": {speed: 2, waveWidth: 0.5},
+      "centroBrightFast": {speed: 0.7, brillo: 2, waveWidth: 1, centerY: -17.3},
+      "abajoFast": {centerY: -17.3, speed: 3, waveWidth: 3},
       "xInvertida": {initialDistance: 15, haciaAfuera: false},
-      "deArribaAbajo": {initialDistance: 40, centerY: -17, haciaAfuera: false, speed: 2}
+      "deArribaAbajo": {initialDistance: 67, centerY: -40, haciaAfuera: false, speed: 2}
     }
   }
 
   static configSchema() {
     let config = super.configSchema();
 
-    config.brillo = {type: Number, min: 0, max: 3, step: 0.01, default: 1}
-    config.initialDistance = {type: Number, min: 0, max: 80, step: 0.1, default: 0}
+    config.brillo = {type: Number, min: 0, max: 3, step: 0.01, default: 0.5}
+    config.initialDistance = {type: Number, min: 0, max: 100, step: 0.1, default: 0}
     config.centerY =  {type: Number, min: -40, max: 40, step: 1, default: 0}
     config.centerX =  {type: Number, min: -60, max: 60, step: 1, default: 0}
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5}
     config.speed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}
     config.haciaAfuera = {type: Boolean, default: true}
+    // config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
 
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}
     // config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 50}

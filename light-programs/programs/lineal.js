@@ -18,7 +18,7 @@ module.exports = class Lineal extends TimeTickedFunction{
       const distance = Math.abs(dx) * 255 / (300*this.config.escala);
 
       const v = Math.max(0, Math.sin(distance + elapsed * this.config.velocidad));
-      colors[i] = ColorUtils.HSVtoRGB((distance/50+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power) + 0.01)
+      colors[i] = ColorUtils.HSVtoRGB((distance/50+ this.extraTime/1000) % 1, 1, Math.pow(v, this.config.power))
     }
     draw(colors)
   }
@@ -26,11 +26,11 @@ module.exports = class Lineal extends TimeTickedFunction{
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();
-    res.escala =  {type: Number, min: 0.1, max: 100, step: 0.1, default: 5}
-    res.velocidad =  {type: Number, min: -50, max: 50, step: 0.1, default: -5}
+    res.escala =  {type: Number, min: 0.1, max: 100, step: 0.1, default: 2.5}
+    res.velocidad =  {type: Number, min: -50, max: 50, step: 0.1, default: -15}
     res.centerY =  {type: Number, min: -20, max: 40, step: 0.1, default: 0}
-    res.centerX =  {type: Number, min: -50, max: 50, step: 0.1, default: 0}
-    res.power =  {type: Number, min: 0, max: 10, step: 0.1, default: 1}
+    res.centerX =  {type: Number, min: -80, max: 80, step: 0.1, default: -80}
+    res.power =  {type: Number, min: 0, max: 10, step: 0.1, default: 10}
     return res;
   }
 }

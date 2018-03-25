@@ -104,7 +104,7 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     socket.on('setPreset', (presetName) => {
       let presets = lightProgram.getCurrentPresets();
       if(presets[presetName]){
-        lightProgram.currentProgram.config = _.extend(lightProgram.getCurrentConfig(), presets[presetName]);
+        lightProgram.currentProgram.config = _.extend(lightProgram.getConfig(), presets[presetName]);
 
         io.emit('stateChange', {
           currentProgramName: lightProgram.currentProgramName,

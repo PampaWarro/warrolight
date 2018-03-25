@@ -23,6 +23,8 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){
       vol = 0;
+    } else {
+      vol = (vol - this.config.cutThreshold) / (1-this.config.cutThreshold)
     }
 
     let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol*vol, 1));
@@ -49,7 +51,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
-    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.3};
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     return res;
   }
 }

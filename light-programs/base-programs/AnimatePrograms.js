@@ -6,7 +6,7 @@ module.exports = function animateParamProgram(Program, parameter, frequency, cha
     drawFrame(draw, done) {
       this.count = (this.count || 0) + 1;
       if (this.count % frequency == 0) {
-        this.config[parameter] = change(this.config[parameter])
+        this.config[parameter] = change.apply(this, [this.config[parameter]])
       }
       super.drawFrame(draw, done)
     }

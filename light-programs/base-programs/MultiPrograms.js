@@ -4,7 +4,7 @@ const ColorUtils = require('../utils/ColorUtils')
 
 let CROSSFADE_TIME_MS = 20000;
 
-module.exports = function createMultiProgram(programSchedule, random = false) {
+module.exports = function createMultiProgram(programSchedule, random = false, crossFade = 20000) {
   return class  {
     constructor(config, leds) {
       // Shallow copy of schedule
@@ -23,7 +23,7 @@ module.exports = function createMultiProgram(programSchedule, random = false) {
         if(this.past && this.past.lastFrame) {
           let t = this.past.fadeStartTime;
 
-          let c = 1 - Math.min(1, ((new Date() - t)/ CROSSFADE_TIME_MS));
+          let c = 1 - Math.min(1, ((new Date() - t)/ crossFade));
           lastFrame = _.map(lastFrame, (f,i) => ColorUtils.mix(f, this.past.lastFrame[i], c))
         }
         this.currentDrawFunc(lastFrame)
@@ -42,7 +42,7 @@ module.exports = function createMultiProgram(programSchedule, random = false) {
         this.past.fadeStartTime = new Date();
 
         // PICK A RANDOM CROSSFADE TIME
-        CROSSFADE_TIME_MS = Math.random()*10000;
+        CROSSFADE_TIME_MS = Math.random()*crossFade;
         setTimeout(() => {
           if(this.past) {
             this.past.programInstance.stop();

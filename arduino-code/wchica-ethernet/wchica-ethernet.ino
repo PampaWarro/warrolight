@@ -7,8 +7,8 @@ void setup() {
   // COM17 - 6666 6
   // COM16 - 5555 5
    
-  setupUDPConnection(2222, 2); // ETH 2
-  //setupUDPConnection(4444, 4); // ETH 4
+  setupUDPConnection(2222, 2); // MEGA ETH 2
+  //setupUDPConnection(4444, 4); // MEGA ETH 4
 }
 
 bool connected = false;

@@ -13,7 +13,28 @@ const _ = require('lodash');
 //   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
 // ]
 
-const programNames = ["rays", "radial","lineal", "PROGRAM_Main", "aliveDots", "aliveDotsSpeed", "musicVolumeBars", "water-flood", "musicFlow", "rainbow", "sound-waves", "musicVolumeDot", "stars", "debugSetup", "debugShapes", "all-off", "all-white", "leap-test"]
+const programNames = [
+  "PROGRAM_Main",
+  "rays",
+  "stripe-patterns",
+  "sound-waves",
+  "radial",
+  "lineal",
+  "aliveDots",
+  "aliveDotsSpeed",
+  "musicVolumeBars",
+  "water-flood",
+  "musicFlow",
+  "rainbow",
+  "musicVolumeDot",
+  "stars",
+  "debugSetup",
+  "debugShapes",
+  "all-off",
+  "all-white",
+  "leap-test"
+]
+
 const Emitter = require('events')
 let lightsSampleEmitter = new Emitter()
 
@@ -81,8 +102,13 @@ module.exports = class LightController {
     }
   }
 
-  getConfig(configSchema = {}) {
+  getConfig(configSchema) {
     let config = _.clone(this.defaultConfig);
+
+    if(!configSchema) {
+      configSchema = this.programs[this.currentProgramName].configSchema;
+    }
+
     for (let paramName in configSchema) {
       if (config[paramName] === undefined && configSchema[paramName].default !== undefined) {
         config[paramName] = configSchema[paramName].default;

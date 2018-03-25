@@ -46,11 +46,6 @@ module.exports = function getShapes(mapping) {
     inv(_.range(150, 210)),
   ])
 
-  // Una permutación random de pedazos de a 20 luces
-  const shuffleSegments5 = _.flatten(_.shuffle(_.map(_.range(0,120), i => _.range(i*5, (i+1)*5))))
-  const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,60), i => _.range(i*10, (i+1)*10))))
-  const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,30), i => _.range(i*20, (i+1)*20))))
-  const trianguloBottomShuffle = _.shuffle(trianguloBottom)
 
 
   // Totems
@@ -59,10 +54,10 @@ module.exports = function getShapes(mapping) {
   const totemR1 = _.range(900,1050)
   const totemR2 = _.range(1050,1200)
 
-  const totems = [totemL1, totemL2, totemR1, totemR2]
+  const totems = _.flatten([totemL1, totemL2, totemR1, totemR2])
 
   // La W warra
-  const Warro = _.flatten([inv(pataLeft), _.range(comienzoTira2,300), inv(_.range(comienzoTira3, 450)), pataRight, ... totems])
+  const Warro = _.flatten([inv(pataLeft), _.range(comienzoTira2,300), inv(_.range(comienzoTira3, 450)), pataRight, totems])
 
   const allOfIt = _.range(comienzoTira1, 1200)
 
@@ -78,6 +73,14 @@ module.exports = function getShapes(mapping) {
   // Reloj de arena
   const reloj = _.flatten([basePataLeft, _.range(150, 300), inv(_.range(300, 450)), inv(basePataRight)])
 
+  // Una permutación random de pedazos de a 20 luces
+  const shuffleBase = [... Warro];
+  const shuffleSegments5 = _.flatten(_.shuffle(_.map(_.range(0,shuffleBase.length / 5), i => shuffleBase.slice(i*5, (i+1)*5))))
+  const shuffleSegments10 = _.flatten(_.shuffle(_.map(_.range(0,shuffleBase.length / 10), i => shuffleBase.slice(i*10, (i+1)*10))))
+  const shuffleSegments20 = _.flatten(_.shuffle(_.map(_.range(0,shuffleBase.length / 20), i => shuffleBase.slice(i*20, (i+1)*20))))
+  const trianguloBottomShuffle = _.shuffle(trianguloBottom)
+
+
   // Numeros y letras
   const char_1 = _.range(150, 300)
   const char_2 = _.flatten([inv(trianguloBottomBottom), trianguloBottomLeft, trianguloTopRight, trianguloTopTop])
@@ -90,6 +93,12 @@ module.exports = function getShapes(mapping) {
 
   const X = inv(V1R).concat(V2L)
 
+  const wings = _.flatten([totemL1, totemL2, V1L, V2R, totemR1, totemR2])
+
+  const wingsRight = _.flatten([V1R, V2R, totemR1, totemR2])
+  const wingsLeft = _.flatten([totemL1, totemL2, V1L, V2L])
+  const wingsX = _.flatten([totemL1, totemL2, X, totemR1, totemR2])
+
   return {
     pataLeft, pataRight,
     trianguloBottom, trianguloTop, trianguloBottomLeft, trianguloBottomRight, trianguloTopRight, trianguloTopLeft,
@@ -97,7 +106,8 @@ module.exports = function getShapes(mapping) {
     Warro, reloj, V1, V2, V1L, V1R, V2L, V2R,
     shuffle, shuffleSegments10, shuffleSegments20, shuffleSegments5, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
-    mini_w, allOfIt, totemL1, totemL2, totemR1, totemR2, X
+    mini_w, allOfIt, totemL1, totemL2, totemR1, totemR2, X,
+    totems, wings, wingsRight, wingsLeft, wingsX
   };
 }
 

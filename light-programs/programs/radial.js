@@ -13,7 +13,7 @@ module.exports = class Radial extends TimeTickedFunction{
       let geometry = this.position || this.geometry;
 
       const dx = geometry.x[i] - geometry.width/2 - this.config.centerX;
-      const dy = geometry.y[i] - geometry.height  + this.config.centerY + 18; // 18 is the offset
+      const dy = geometry.y[i] - geometry.height  + this.config.centerY; // 18 is the offset
 
       const distance = Math.sqrt(dx*dx + dy*dy) * 255 / (300*this.config.escala);
 

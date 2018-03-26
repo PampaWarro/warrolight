@@ -1,7 +1,7 @@
 const _ = require('lodash')
-const term = require( 'terminal-kit' ).terminal ;
-const moment = require("moment")
-const Table = require('cli-table2');
+// const term = require( 'terminal-kit' ).terminal ;
+// const moment = require("moment")
+// const Table = require('cli-table2');
 
 const colors = {
   'connecting': 'yellow',
@@ -10,7 +10,7 @@ const colors = {
 }
 
 function logDevicesStatus(devices) {
-  let table = new Table({
+  /*let table = new Table({
     head: ['Time', ... _.map(devices, 'deviceId')],
     colWidths: [10, ... _.range(0,devices.length+0).map(() => Math.floor(120 / (devices.length+1)))],
     style: {
@@ -39,7 +39,7 @@ function logDevicesStatus(devices) {
   term.nextLine(2)
   term(table.toString())
   term.restoreCursor();
-  term.column(0)
+  term.column(0)*/
 }
 
 module.exports = class DeviceMultiplexer {

@@ -7,7 +7,7 @@ class Simulator extends React.Component {
     super(...arguments)
 
     this.config = {
-      frequencyInHertz: 60
+      frequencyInHertz: 40
     }
 
     this.programs = []

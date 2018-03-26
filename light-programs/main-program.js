@@ -1,6 +1,6 @@
 // const warroStripes = require('../geometry/geometry-wchica')
 // const warroStripes = require('../geometry/geometry-wgrande')
-const warroStripes = require('../geometry/geometry-fuego18')
+const warroStripes = require('../geometry/geometry-wchica')
 const Geometry = require('./geometry')
 const _ = require('lodash');
 
@@ -14,11 +14,11 @@ const _ = require('lodash');
 // ]
 
 const programNames = [
-  "PROGRAM_Main",
-  "rays",
-  "stripe-patterns",
-  "sound-waves",
+  "PROGRAM_Main_WChica",
   "radial",
+  "rays",
+  // "stripe-patterns",
+  "sound-waves",
   "lineal",
   "aliveDots",
   "aliveDotsSpeed",
@@ -32,7 +32,7 @@ const programNames = [
   "debugShapes",
   "all-off",
   "all-white",
-  "leap-test"
+  // "leap-test"
 ]
 
 const Emitter = require('events')
@@ -45,7 +45,7 @@ module.exports = class LightController {
     const geometry = new Geometry(warroStripes)
 
     this.defaultConfig = {
-      frequencyInHertz: 60
+      frequencyInHertz: 40
     }
 
     this.layout = {

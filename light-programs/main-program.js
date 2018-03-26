@@ -15,6 +15,7 @@ const _ = require('lodash');
 
 const programNames = [
   "PROGRAM_Main",
+  "PROGRAM_Triangulo",
   "rays",
   "stripe-patterns",
   "sound-waves",

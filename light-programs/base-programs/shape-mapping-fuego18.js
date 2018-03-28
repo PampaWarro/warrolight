@@ -5,15 +5,15 @@ module.exports = function getShapes(mapping) {
   const inv = arr => [].concat(arr).reverse()
 
   const quiebre_abajo = 30;
-  const quiebre_abajo_left = quiebre_abajo + 3;
-  const quiebre_abajo_right = quiebre_abajo + 3;
+  const quiebre_abajo_left = quiebre_abajo + 2;
+  const quiebre_abajo_right = quiebre_abajo + 2;
 
-  const centroOffsetLeft = 4;
-  const centroOffsetRight = 3;
+  const centroOffsetLeft = 2;
+  const centroOffsetRight = 0;
 
-  const comienzoTira1 = 0 + 4
-  const comienzoTira2 = 150 + 5
-  const comienzoTira3 = 300 + 4
+  const comienzoTira1 = 0 + 2
+  const comienzoTira2 = 150 + 0
+  const comienzoTira3 = 300 + 2
   const comienzoTira4 = 450 - 0
 
   const quiebre_arriba = 30;

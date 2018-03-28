@@ -7,6 +7,7 @@ module.exports = class Radial extends TimeTickedFunction{
     const colors = new Array(this.numberOfLeds)
     const elapsed = (this.timeInMs) / 1000;
 
+
     this.extraTime = (this.extraTime || 0) + Math.random()*10;
 
     for (let i = 0; i < this.numberOfLeds; i++) {

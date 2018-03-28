@@ -6,6 +6,7 @@ const programsByShape = require("../base-programs/Transformations");
 
 const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");
+const Lineal = require("./lineal");
 const Stars = require("./stars")
 const VolumeDot = require("./musicVolumeDot");
 const VolumeBars = require("./musicVolumeBars");
@@ -74,6 +75,7 @@ const schedule = [
   {duration: 30 * baseTime, program: programsByShape({Warro: MusicFlow})},
   {duration: 30 * baseTime, program: programsByShape({Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]})},
 
+  ... getAllPresets(Lineal, 30, 'allOfIt'),
 
   ... getAllPresets(SoundWaves, 60, 'allOfIt'),
   {
@@ -210,4 +212,4 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-module.exports = createMultiProgram(schedule, false)
+module.exports = createMultiProgram(schedule, true)

@@ -21,7 +21,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
         intensity: relativeVolume,
         distance: self.config.initialDistance,
         color: relativeVolume,
-        saturation: 0.9,
+        saturation: 0.95,
         update: function () {
           this.distance += (self.config.haciaAfuera ? 1 : -1) * this.speed * self.config.speed
           this.intensity = this.intensity * (3 + Math.sqrt(relativeVolume)) / 4

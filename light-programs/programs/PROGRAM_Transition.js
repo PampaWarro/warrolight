@@ -22,7 +22,7 @@ let singleBlueFire = {
 
 const schedule = [
   {duration: 5 * 60 * baseTime, program: programsByShape({
-    trianguloBottom: [Rays, {brillo: 1, decay: 0.9, globalSpeed: 3,  colorSaturationRange: 0.07, numberOfParticles: 1, colorHueAmplitude: 0, colorHueOffset: 0.07, singleDirection: true}],
+    reloj: [Rays, {brillo: 1, decay: 0.9, globalSpeed: 3,  colorSaturationRange: 0.07, numberOfParticles: 1, colorHueAmplitude: 0, colorHueOffset: 0.07, singleDirection: true}],
     totemL1:  [Rays, singleBlueFire],
     totemL2:  [Rays, singleBlueFire],
     totemR1:  [Rays, singleBlueFire],

@@ -53,8 +53,8 @@ module.exports = [
   new Stripe(2 * PORTION, HEIGHT - 0, WIDTH, HEIGHT - HEIGHT, LEDS_LONG),
 
   // Left totems
-  new Stripe(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
   new Stripe(-DISTANCE_TOTEMS, TOTEM_Y, -DISTANCE_TOTEMS - TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+  new Stripe(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
 
   // Right totems
   new Stripe(WIDTH, TOTEM_Y, WIDTH + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),

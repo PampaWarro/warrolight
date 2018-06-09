@@ -14,9 +14,8 @@ const _ = require('lodash');
 // ]
 
 const programNames = [
-    "debugShapes",
-    "PROGRAM_Transition",
     "PROGRAM_Triangulo",
+    "PROGRAM_Transition",
     "PROGRAM_Main",
     "rays",
     "stripe-patterns",
@@ -31,10 +30,11 @@ const programNames = [
     "rainbow",
     "musicVolumeDot",
     "stars",
-    "debugSetup",
-  "all-off",
-  "all-white",
-  "leap-test"
+    "all-off",
+    "all-white",
+    "leap-test",
+    "debugShapes",
+    "debugSetup"
 ]
 
 const Emitter = require('events')

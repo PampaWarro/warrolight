@@ -23,9 +23,15 @@ setTimeout(() => {
     } else if (index < 600) {
       return [1, index - 300]
     } else if(index < 900) {
-      return [2,index - 600]
+      if(index < 750)
+        return [3,index - 600]
+      else
+        return [2,index - 600 - 150]
     }else {
-      return [3,index - 900]
+      if(index < 1050)
+        return [2,index - 900 + 150]
+      else
+        return [3,index - 900]
     }
   })
 

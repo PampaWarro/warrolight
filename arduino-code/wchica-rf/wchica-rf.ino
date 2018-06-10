@@ -162,9 +162,10 @@ void readLedsFromSerial() {
   // Protocolo que entiende node.js
 }
 
-//int channels[] = {81, 114};
-int channels[] = {92, 103};
+int channels[] = {81, 114};
+//int channels[] = {92, 103};
 
+byte frameNumber = 0;
 int bytesPerPixel = 3;
 void transmitRadio() {
   for (int k = 0; k < 2; k++) {
@@ -188,7 +189,7 @@ void transmitRadio() {
       */
 
       ledData[offset] = j;
-      ledData[offset + 1] = 0;
+      ledData[offset + 1] = frameNumber;
       radio.write(&ledData[offset], 32);
             
       offset = offset + 30;
@@ -202,5 +203,6 @@ void transmitRadio() {
         }*/
     }
   }
+  frameNumber++;
 }
 

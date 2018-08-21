@@ -6,6 +6,8 @@
 // How many leds in your strip?
 #define NUM_LEDS 150
 
+#define NUM_CHANNELS 1
+
 RF24 radio(7, 8); // CE, CSN
 const byte address[6] = "90909";
 
@@ -32,7 +34,7 @@ void setup() {
 byte ENCODING_RGB = 4;
 byte ENCODING_RGB565 = 5;
 
-int stripSize = NUM_LEDS*2;
+int stripSize = NUM_LEDS*NUM_CHANNELS;
 
 boolean connected = false;
 void reconnect() {
@@ -57,7 +59,7 @@ void loop() {
   }
 }
 
-char ledData[3 * NUM_LEDS * 2 + 2];
+char ledData[3 * NUM_LEDS * NUM_CHANNELS + 2];
 unsigned long lastConnectionTime = millis();
 void readLedsFromSerial() {
   if (!connected) {
@@ -163,11 +165,11 @@ void readLedsFromSerial() {
 }
 
 //int channels[] = {81, 114};
-int channels[] = {92, 103};
+int channels[] = {92};
 
 int bytesPerPixel = 3;
 void transmitRadio() {
-  for (int k = 0; k < 2; k++) {
+  for (int k = 0; k < NUM_CHANNELS; k++) {
     int channel = channels[k];
     radio.setChannel(channel);
 

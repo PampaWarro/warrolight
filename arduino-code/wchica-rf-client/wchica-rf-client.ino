@@ -48,7 +48,7 @@ CRGB leds[NUM_LEDS];
 
 // This variable is persisted even after reseting the arduino. That allows cycling through
 // different programs of light
-__attribute__((section(".noinit"))) unsigned int program;
+// __attribute__((section(".noinit"))) unsigned int program;
 
 RF24 radio(7, 8); // CE, CSN
 const byte address[6] = "90909";
@@ -59,7 +59,7 @@ void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 1000);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -138,28 +138,16 @@ void writeLedsHSB(int pos, byte h, byte s, byte  b) {
 
 int stripSize = NUM_LEDS;
 
-
-boolean connected = false;
-void reconnect() {
-  connected = false;
-  drainSerial();
-}
-
-void drainSerial() {
-  // Drain incoming bytes
-  while (Serial.available() > 0) {
-    Serial.read();
-  }
-}
-
-boolean waitingSerial = true;
 int waitingCounter = 0;
 
 byte data[PAYLOAD_SIZE];
+unsigned long lastFrame = millis();
 
 void loop() {
   int ledSize = 3;   
 
+  unsigned long nowMs = millis();
+  
   if (radio.available()) {           
     while (radio.available()) {                     // While there is data ready
       radio.read( &data, sizeof(data));             // Get the payload
@@ -179,6 +167,12 @@ void loop() {
     if(offset+30/ledSize> 145){
       FastLED.show();
     }
-  } 
+    lastFrame = nowMs;  
+  } else {
+    if((nowMs - lastFrame) > 1000) {
+      arduinoProgram();
+      FastLED.show();
+    } 
+  }
 }
 

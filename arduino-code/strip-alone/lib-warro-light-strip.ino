@@ -38,7 +38,7 @@ void setupLeds(int numLeds, int dataPin1) {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, STRIP_NUM_LEDS);    
     
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);
 
   for (int i = 0; i < NUM_LEDS; i++) {   
     writeLeds(i,0,0,0);

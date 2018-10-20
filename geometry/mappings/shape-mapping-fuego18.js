@@ -1,4 +1,3 @@
-// import {Func} from "./rainbow";
 const _ = require('lodash')
 
 module.exports = function getShapes(mapping) {

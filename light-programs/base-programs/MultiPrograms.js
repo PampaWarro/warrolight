@@ -6,13 +6,13 @@ let CROSSFADE_TIME_MS = 20000;
 
 module.exports = function createMultiProgram(programSchedule, random = false, crossFade = 20000) {
   return class  {
-    constructor(config, leds) {
+    constructor(config, leds, mapping) {
       // Shallow copy of schedule
       this.programSchedule = [].concat(programSchedule).map(item => _.extend({}, item))
       this.nextPosition = 0;
       this.config = config;
       this.past = null;
-      _.each(this.programSchedule, scheduleItem => scheduleItem.programInstance = new scheduleItem.program(config, leds))
+      _.each(this.programSchedule, scheduleItem => scheduleItem.programInstance = new scheduleItem.program(config, leds, mapping))
       this.drawSubprogram = _.throttle(this.drawSubprogram, 16)
     }
 

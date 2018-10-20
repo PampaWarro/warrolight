@@ -57,9 +57,8 @@ module.exports = class DeviceMultiplexer {
     }
     this.statusCbk = () => null;
 
+    // Report devices' states every 250ms
     setInterval(() => {
-      logDevicesStatus(devices);
-
       this.statusCbk(_.map(devices, d => {
         return {state: d.deviceState, deviceId: d.deviceId, lastFps: d.lastFps}
       }));
@@ -71,16 +70,21 @@ module.exports = class DeviceMultiplexer {
   }
 
   setState(newState) {
-    const newStates = this.devices.map(
+    const deviceStateArrays = this.devices.map(
       device => _.map(_.range(device.numberOfLights), i => [0,0,0])
     )
     const targetDevice = this.targetDevice
     const targetPosition = this.targetPosition
-    for (let i = 0; i < this.numberOfLights; i++) {
-      newStates[targetDevice[i]][targetPosition[i]] = newState[i]
+
+    for (let i = 0; i < newState; i++) {
+      let deviceIndex = targetDevice[i];
+      if(deviceIndex >= 0) {
+        deviceStateArrays[deviceIndex][targetPosition[i]] = newState[i]
+      }
     }
+
     for (let i = 0; i < this.devices.length; i++) {
-      this.devices[i].setState(newStates[i])
+      this.devices[i].setState(deviceStateArrays[i])
     }
   }
 }

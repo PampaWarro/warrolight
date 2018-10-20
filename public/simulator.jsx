@@ -109,6 +109,7 @@ class Simulator extends React.Component {
     let configOptions = [];
     let presets = [];
     let currentProgram = {name: "NO SELECTED PROGRAM"}
+
     if (this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
 
@@ -123,26 +124,23 @@ class Simulator extends React.Component {
         }
       }
 
-
       for (let preset of currentProgram.presets) {
         presets.push(<a className="preset" href="#" key={preset} onClick={e => this.selectPreset(preset)}>{preset} </a>)
       }
     }
 
-    let geometryX = [0]
-    let geometryY = [0]
-    //<LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
-
     {
       return (<div>
         <div className="contain">
-          <CnxStatus></CnxStatus>
-          <div>
-            <h2>Pampa Warro Lights</h2>
+
+          <div className={'top-header'}>
+            <div>Setup</div>
+
+            <div><CnxStatus/>&nbsp;&nbsp; <strong>Warro Lights</strong></div>
           </div>
-          <DevicesStatus></DevicesStatus>
-          <div className="simulator">
-          </div>
+
+          <DevicesStatus/>
+
           <div className="controls">
             <div className="menuItems">{menuItems}</div>
             <div className="simControls">
@@ -160,7 +158,8 @@ class Simulator extends React.Component {
               <LightsSimulator height="400" width="600"></LightsSimulator>
             </div>
           </div>
-          <MicrophoneViewer></MicrophoneViewer>
+
+          <MicrophoneViewer/>
         </div>
       </div>)
     }
@@ -169,7 +168,7 @@ class Simulator extends React.Component {
 
 class Item extends React.Component {
   render() {
-    return <a href="#" onClick={this.props.onClick}>{this.props.children}</a>
+    return <a href="#" className={this.props.className} onClick={this.props.onClick}>{this.props.children}</a>
   }
 }
 

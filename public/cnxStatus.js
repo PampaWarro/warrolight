@@ -62,8 +62,8 @@ class CnxStatus extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { className: "status-" + this.state.level },
+      "span",
+      { className: "cnx-status status-" + this.state.level },
       this.state.status
     );
   }

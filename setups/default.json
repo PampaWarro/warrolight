@@ -1,0 +1,90 @@
+{
+  "w-chica-rf": {
+    "geometryModule": "geometry-wchica",
+    "shapeMappingModule": "shape-mapping-wchica",
+    "lights": 150,
+    "outputDevices": {
+      "serial": {
+        "type": "LightDeviceSerial",
+        "params": {
+          "numberOfLights": 150,
+          "devicePortWindows": "COM25",
+          "devicePortUnix": "/dev/ttyACM0"
+        }
+      }
+    },
+    "lightsToDevicesMapping": [
+      {
+        "from": 0,
+        "to": 150,
+        "baseIndex": 0,
+        "deviceName": "serial"
+      }
+    ]
+  },
+  "fuego-2018": {
+    "geometryModule": "geometry-fuego18",
+    "shapeMappingModule": "shape-mapping-fuego18",
+    "lights": 1200,
+    "outputDevices": {
+      "ether1": {
+        "type": "LightDeviceUDP",
+        "params": {
+          "numberOfLights": 300,
+          "ip": "192.168.1.2",
+          "udpPort": 2222
+        }
+      },
+      "ether2": {
+        "type": "LightDeviceUDP",
+        "params": {
+          "numberOfLights": 300,
+          "ip": "192.168.1.4",
+          "udpPort": 4444
+        }
+      },
+      "rf1": {
+        "type": "LightDeviceSerial",
+        "params": {
+          "numberOfLights": 300,
+          "devicePortWindows": "COM27",
+          "devicePortUnix": "/dev/ttyACM0"
+        }
+      },
+      "rf2": {
+        "type": "LightDeviceSerial",
+        "params": {
+          "numberOfLights": 300,
+          "devicePortWindows": "COM25",
+          "devicePortUnix": "/dev/ttyACM1"
+        }
+      }
+    },
+    "lightsToDevicesMapping": [
+      {
+        "from": 0,
+        "to": 300,
+        "baseIndex": 0,
+        "deviceName": "ether1"
+      },
+      {
+        "from": 300,
+        "to": 600,
+        "baseIndex": 0,
+        "deviceName": "ether2"
+      },
+      {
+        "from": 600,
+        "to": 900,
+        "baseIndex": 0,
+        "deviceName": "rf1"
+      },
+      {
+        "from": 900,
+        "to": 1200,
+        "baseIndex": 0,
+        "deviceName": "rf2"
+      }
+    ]
+  }
+}

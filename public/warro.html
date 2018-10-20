@@ -94,6 +94,9 @@
         margin: 0;
         padding: 0;
         text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: stretch;
     }
 
     .menuItems a {
@@ -101,17 +104,21 @@
         text-decoration: none;
         margin: 1px;
         padding: 5px 5px;
-        display: inline-block;
         background-color: #333;
         word-break: break-all;
+        flex-grow: 1;
+        border-radius: 2px;
     }
 
     .menuItems a:hover {
-        background-color: black;
+        box-shadow: inset 0px 0px 6px white;
     }
 
-    .menuItems a:selected {
-        background-color: #444;
+    .menuItems .selected, .menuItems a:active {
+        background-color: green;
+        color: white;
+        box-shadow: inset 0px 0px 6px #23ff02;
+        text-shadow: 0px 0px 2px white;
     }
 
     .config-item {
@@ -177,7 +184,7 @@
         margin-top: -8px;
     }
 
-    input[type=range]:hover::-webkit-slider-thumb, input[type=range]:focus::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-webkit-slider-thumb:active {
+    input[type=range]:hover::-webkit-slider-thumb, input[type=range]:active, input[type=range]:focus::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb:hover, input[type=range]:active::-webkit-slider-thumb {
         outline: none;
         background: #ffdf10;
     }
@@ -190,6 +197,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background: #222;
+        margin-bottom: 2px;
     }
 
     .device {
@@ -197,19 +206,34 @@
         padding: 4px;
         margin: 4px;
         text-align: center;
+        border-radius: 2px;
     }
-    .device-running {
+    .device-running, .status-success {
         background-color: green;
+        box-shadow: inset 0px 0px 6px #23ff02;
     }
-    .device-error {
-        background-color: red;
+    .device-error, .status-danger {
+        background-color: #960000;
+        box-shadow: inset 0px 0px 6px red;
     }
-    .device-connecting {
+    .device-connecting, .status-warning {
         background-color: darkgoldenrod;
+        box-shadow: inset 0px 0px 6px yellow;
     }
-    .status-warning {background-color: #e3cb24}
-    .status-danger {background-color: darkred}
-    .status-success {background-color: green}
+
+    .top-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 10px;
+        background: #222;
+    }
+
+    .cnx-status {
+        padding: 5px;
+        display: inline-block;
+        border-radius: 5px;
+    }
 
 </style>
 

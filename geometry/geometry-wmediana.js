@@ -1,4 +1,4 @@
-import { default as Stripe } from './stripe'
+import { default as Stripe } from './Stripe'
 
 /**
  * Geometry for the warro: 7 stripes

@@ -113,6 +113,7 @@ class Simulator extends React.Component {
     let configOptions = [];
     let presets = [];
     let currentProgram = { name: "NO SELECTED PROGRAM" };
+
     if (this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
 
@@ -137,10 +138,6 @@ class Simulator extends React.Component {
       }
     }
 
-    let geometryX = [0];
-    let geometryY = [0];
-    //<LightsCanvas width="400" height="10" geometryX={geometryX} geometryY={geometryY} getColor={this.getLeds}/>
-
     {
       return React.createElement(
         'div',
@@ -148,18 +145,27 @@ class Simulator extends React.Component {
         React.createElement(
           'div',
           { className: 'contain' },
-          React.createElement(CnxStatus, null),
           React.createElement(
             'div',
-            null,
+            { className: 'top-header' },
             React.createElement(
-              'h2',
+              'div',
               null,
-              'Pampa Warro Lights'
+              'Setup'
+            ),
+            React.createElement(
+              'div',
+              null,
+              React.createElement(CnxStatus, null),
+              '\xA0\xA0 ',
+              React.createElement(
+                'strong',
+                null,
+                'Warro Lights'
+              )
             )
           ),
           React.createElement(DevicesStatus, null),
-          React.createElement('div', { className: 'simulator' }),
           React.createElement(
             'div',
             { className: 'controls' },
@@ -210,7 +216,7 @@ class Item extends React.Component {
   render() {
     return React.createElement(
       'a',
-      { href: '#', onClick: this.props.onClick },
+      { href: '#', className: this.props.className, onClick: this.props.onClick },
       this.props.children
     );
   }

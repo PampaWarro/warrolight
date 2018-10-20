@@ -1,17 +1,5 @@
-// const warroStripes = require('../geometry/geometry-wchica')
-// const warroStripes = require('../geometry/geometry-wgrande')
-const warroStripes = require('../geometry/geometry-fuego18')
-const Geometry = require('./geometry')
+const Geometry = require('./Geometry')
 const _ = require('lodash');
-
-// const ProgramNames = [
-//   'all-off', 'remote-test', 'debugSetup', 'debugShapes', 'all-white',
-//   'aliveDots', 'aliveDotsSpeed', 'heart',
-//   //'rainbow2', 'white-',  'rainbow-horizontal', 'rainbow-hourglass',
-//   'rainbow', 'stars', 'musicFlow', 'musicFreqs',  'radial', // 'vertical',  'blink'
-//   //'mixRainbowTriangulos', 'mixMusicW', 'mixMusicPsycho',
-//   'PROGRAM_Main',  'musicVolumeDot', 'musicVolumeBars', 'speeding-spear', 'water-flood', 'sound-waves' //'fire',  'PROGRAM_Intro'
-// ]
 
 const programNames = [
   "PROGRAM_Transition",
@@ -41,14 +29,16 @@ const Emitter = require('events')
 let lightsSampleEmitter = new Emitter()
 
 module.exports = class LightController {
-  constructor(setLightsCbk) {
+  constructor(setLightsCbk, geometryDefinition, geometryMapping) {
     this.setLightsCbk = setLightsCbk
 
-    const geometry = new Geometry(warroStripes)
+    const geometry = new Geometry(geometryDefinition)
 
     this.defaultConfig = {
       frequencyInHertz: 60
     }
+
+    this.mapping = geometryMapping;
 
     this.layout = {
       numberOfLeds: geometry.leds,
@@ -128,7 +118,7 @@ module.exports = class LightController {
       this.currentProgramName = name
       let program = this.programs[name];
       let config = this.getConfig(program.configSchema);
-      this.currentProgram = new (program.generator)(config, this.layout)
+      this.currentProgram = new (program.generator)(config, this.layout, this.mapping)
       if (this.running) {
         this.start();
       }

@@ -12,10 +12,10 @@ const ENCODING_RGB = 4;
 
 
 module.exports = class LightDeviceUDP extends LightDevice {
-  constructor(numberOfLights, expectedIp, udpPort) {
-    super(numberOfLights, "E "+expectedIp);
+  constructor({numberOfLights, ip, udpPort}) {
+    super(numberOfLights, "E "+ip);
 
-    this.expectedIp = expectedIp;
+    this.expectedIp = ip;
     this.udpPort = udpPort;
 
     this.encoding = ENCODING_RGB

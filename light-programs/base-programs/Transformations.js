@@ -1,22 +1,23 @@
 const _ = require('lodash')
 
-// const getShapes = require('./shape-mapping-wchica')
-const getShapes = require('./shape-mapping-fuego18')
+const getShapes = require('../../geometry/mappings/shape-mapping-wchica')
+// const getShapes = require('./shape-mapping-fuego18')
 // const getShapes = require('./shape-mapping-wmediana')
 
 module.exports = function programsByShape(mapping) {
-  const knownMappings = getShapes()
-
   return class {
-    constructor(config, leds) {
+    constructor(config, leds, geometryMapping) {
       this.instances = {};
       this.config = config;
+
+      this.knownMappings = geometryMapping()
+
       _.each(mapping, (Program, shapeName) => {
-        let map = knownMappings[shapeName]
+        let map = this.knownMappings[shapeName]
 
         if(!map){
           console.warn(`Shape mapping '${shapeName}' not found. Using shape 'allOfIt'`)
-          map = knownMappings.allOfIt;
+          map = this.knownMappings.allOfIt;
         }
 
         let localLeds = _.extend({}, leds, {numberOfLeds: map.length})
@@ -49,11 +50,11 @@ module.exports = function programsByShape(mapping) {
       const debouncedDraw = _.debounce(draw, 5);
 
       _.each(this.instances, (program, mapName) => {
-        const map = knownMappings[mapName]
+        const map = this.knownMappings[mapName]
 
         if(!map) {
           console.warn(`NO MAPPING FOUND WITH KEY ${mapName}. Defaulting to all`);
-          return knownMappings['all'];
+          return this.knownMappings['all'];
         }
 
         program.start(program.specificConfig, (colors) => {

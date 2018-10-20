@@ -32,12 +32,14 @@ const rgb565ToRgb = (rgb565) => {
 
 
 module.exports = class LightDeviceSerial extends LightDevice {
-  constructor(numberOfLights, devicePortWindows, devicePortUnix) {
-    super(numberOfLights, devicePortWindows);
+  constructor({numberOfLights, devicePortWindows, devicePortUnix}) {
+    const port = /^win/.test(process.platform) ? devicePortWindows : devicePortUnix;
 
+    super(numberOfLights, port);
+
+    this.devicePort = port;
     this.encoding = ENCODING_RGB
 
-    this.devicePort = /^win/.test(process.platform) ? devicePortWindows : devicePortUnix;
 
     this.freshData = false;
     this.waitingResponse = true;

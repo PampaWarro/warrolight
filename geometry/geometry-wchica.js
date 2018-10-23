@@ -32,7 +32,7 @@ const LAST_LED = 1
 
 module.exports = [
   // Led 1
-  new Stripe(WIDTH, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - 0,  LEDS_LONG),
+  new Stripe(WIDTH, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - 0,  LEDS_LONG - 1),
 
   new Stripe(2 * PORTION, HEIGHT - 0, PORTION, HEIGHT - HEIGHT,LEDS_LONG),
 

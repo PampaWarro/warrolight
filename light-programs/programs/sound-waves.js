@@ -51,7 +51,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0]
       _.each(this.dots, dot => {
-        let y = geometry.y[i] - (geometry.height - 18) / 2 + dot.centerY;
+        let y = geometry.y[i] - (geometry.height - 0) / 2 + dot.centerY;
         let x = geometry.x[i] - geometry.width / 2 - dot.centerX;
         let d = Math.sqrt(x * x + y * y)
 

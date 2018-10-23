@@ -48,7 +48,7 @@ function createLightsMultiplexer(totalLightsCount, devices, lightsToDevicesMappi
   // For each segment, save that light 'i' of the strip corresponds to light 'j' of device 'deviceName'
   _.each(lightsToDevicesMapping, ({from, to, baseIndex, deviceName}) => {
     for(let i=from; i < to; i++) {
-      let j = (to - from + i) + baseIndex;
+      let j = i - from + baseIndex;
       if(!lightToDevice[i]) {
         lightToDevice[i] = [namesToIndex[deviceName], j];
       } else {

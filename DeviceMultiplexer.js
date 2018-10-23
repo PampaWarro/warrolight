@@ -76,7 +76,7 @@ module.exports = class DeviceMultiplexer {
     const targetDevice = this.targetDevice
     const targetPosition = this.targetPosition
 
-    for (let i = 0; i < newState; i++) {
+    for (let i = 0; i < newState.length; i++) {
       let deviceIndex = targetDevice[i];
       if(deviceIndex >= 0) {
         deviceStateArrays[deviceIndex][targetPosition[i]] = newState[i]

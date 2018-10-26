@@ -59,7 +59,7 @@ void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 1000);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -71,7 +71,7 @@ void setup() {
   leds[3] = CRGB::Blue;
 
   FastLED.show();
-  //Serial.begin(9600);
+  Serial.begin(9600);
   radio.begin();
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
 
@@ -81,7 +81,7 @@ void setup() {
 
   // Max power 700 mah
   //radio.setChannel(81);
-  //radio.setChannel(114);
+  // radio.setChannel(114);
   
   radio.setPALevel(RF24_PA_HIGH);  
   //radio.enableDynamicPayloads();
@@ -154,9 +154,10 @@ void drainSerial() {
 
 boolean waitingSerial = true;
 int waitingCounter = 0;
-
+int partsCount = 0;
 byte data[PAYLOAD_SIZE];
-
+int lastFrame = 0;
+boolean painted = false;
 void loop() {
   int ledSize = 3;   
 
@@ -165,8 +166,24 @@ void loop() {
       radio.read( &data, sizeof(data));             // Get the payload
     }
     int pos = data[0];                 
+    byte frame = data[1];
     //Serial.print("Received ");
     //Serial.println(pos);
+
+    if(frame != lastFrame) {
+      if(painted) {
+        painted = false;
+      } else {
+        painted = true;
+        partsCount = 0;
+        /*for (int i = 0; i < 75; i+=1) {  
+          writeLeds(i, 255,0,0);
+        }*/
+        FastLED.show();
+      }
+    }
+    lastFrame = frame;
+    partsCount++;
 
     int offset = data[0];
     for (int i = 2; i+2 < PAYLOAD_SIZE; i+=ledSize) {      
@@ -176,9 +193,17 @@ void loop() {
         writeLedsRgb565(offset+i/ledSize, data[i], data[i+1]);      
       }
     }
-    if(offset+30/ledSize> 145){
+    if((offset+30/ledSize) > 145){
+      if(partsCount != 15) {
+        /*for (int i = 0; i < 20; i+=1) {  
+          writeLeds(i, 255,255,0);
+        }*/
+      }
+      partsCount = 0;
       FastLED.show();
+      painted = true;
     }
+    
   } 
 }
 

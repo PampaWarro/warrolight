@@ -2,9 +2,9 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
-  "PROGRAM_Transition",
-  "PROGRAM_Triangulo",
   "PROGRAM_Main",
+  // "PROGRAM_Transition",
+  // "PROGRAM_Triangulo",
   "rays",
   "stripe-patterns",
   "sound-waves",

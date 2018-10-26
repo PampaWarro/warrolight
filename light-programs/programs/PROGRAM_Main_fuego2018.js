@@ -1,7 +1,6 @@
 // import {Func} from "./rainbow";
 const _ = require('lodash')
 const createMultiProgram = require("../base-programs/MultiPrograms");
-const recolorProgram = require("../base-programs/RecolorPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/Transformations");
 
@@ -21,7 +20,7 @@ const WaterFlood = require("./water-flood");
 const Rays = require("./rays");
 const AliveDotsSpeed = require("./aliveDotsSpeed");
 
-const baseTime = 0.1*0.5*1000;
+const baseTime = 1*0.5*1000;
 
 function getAllPresets(funcClass, time, shape = 'Warro'){
   return _.map(funcClass.presets(), preset => {
@@ -37,13 +36,21 @@ function sineScale(s) {
 let flowDefault = [MusicFlow, MusicFlow.presets().default]
 
 const schedule = [
-  {duration: 30 * baseTime, program: programsByShape({Warro: [Radial, {centerY: 17.3, velocidad: 2, power: 5}]})},
+  {duration: 60 * baseTime, program: createMultiProgram([
+    {duration: 500 , program: programsByShape({totems: [Rainbow, Rainbow.presets().purpleDots]})},
+    {duration: 500 , program: programsByShape({wings: [Rainbow, Rainbow.presets().purpleDots]})},
+    {duration: 500 , program: programsByShape({wingsLeft: [Rainbow, Rainbow.presets().purpleDots]})},
+    {duration: 500 , program: programsByShape({wingsRight: [Rainbow, Rainbow.presets().purpleDots]})},
+    {duration: 500 , program: programsByShape({wingsX: [Rainbow, Rainbow.presets().purpleDots]})},
+  ], true, 0)},
 
-  // {
-  //   duration: 30 * baseTime, program: createMultiProgram([
-  //   {duration: 10000, program: programsByShape({"shuffleSegments10": [MusicFlow, MusicFlow.presets().mediumDoble]})},
-  //   {duration: 10000, program: programsByShape({"shuffleSegments20": [MusicFlow, MusicFlow.presets().mediumDoble]})}
-  // ], true)},
+  {duration: 60 * baseTime, program: programsByShape({totemL1: flowDefault, totemL2: flowDefault, totemR1: flowDefault, totemR2: flowDefault, V1L: flowDefault, V2R: flowDefault})},
+
+  {
+    duration: 30 * baseTime, program: createMultiProgram([
+    {duration: 10000, program: programsByShape({"shuffleSegments10": [MusicFlow, MusicFlow.presets().mediumDoble]})},
+    {duration: 10000, program: programsByShape({"shuffleSegments20": [MusicFlow, MusicFlow.presets().mediumDoble]})}
+  ], true)},
   {
     duration: 90 * baseTime, program: createMultiProgram([
     {duration: 500, program: programsByShape({"trianguloTop": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
@@ -54,6 +61,10 @@ const schedule = [
     {duration: 500, program: programsByShape({"V1L": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
     {duration: 500, program: programsByShape({"V2R": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
     {duration: 500, program: programsByShape({"V2L": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
+    {duration: 500, program: programsByShape({"totemL1": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
+    {duration: 500, program: programsByShape({"totemL2": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
+    {duration: 500, program: programsByShape({"totemR1": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
+    {duration: 500, program: programsByShape({"totemR2": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
   ], true, 10000)
   },
   {duration: 30 * baseTime, program: programsByShape({Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})},
@@ -97,7 +108,7 @@ const schedule = [
     duration: 30 * baseTime,
     program: programsByShape({reloj: [Radial, {power: 15, escala: 5, centerX: -15, centerY: 17.3}]})
   },
-  {duration: 30 * baseTime, program: programsByShape({X: Radial})},
+  {duration: 30 * baseTime, program: programsByShape({X: Radial, totemL1: Radial, totemR1: Radial})},
   {duration: 30 * baseTime, program: programsByShape({trianguloTop: Radial, wings: Radial})},
   {duration: 30 * baseTime, program: animateParamProgram(Radial, 'velocidad', 1, s => (s + 0.01) % 15)},
 
@@ -199,4 +210,4 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-module.exports = recolorProgram(createMultiProgram(schedule, false, 1000));
+module.exports = createMultiProgram(schedule, false)

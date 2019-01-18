@@ -189,14 +189,15 @@ void explosion() {
   if (!programInitialized || expLife < 0) {
       expIntensity = rdm(5, 25);
       expLife = expIntensity;   
-      expCenter = rdm(1, 150);
+      expCenter = rdm(1, 25);
       setRandom(PARAM_COLOR_TONE, 1, 255);
       setRandom(PARAM_SATURATION, 0, 255);
   }
   byte colTone = getP(PARAM_COLOR_TONE);
   byte colSat = getP(PARAM_SATURATION);
   for (int i = 0; i < NUM_LEDS_PROGRAM; i++) {
-    if(abs(i-expCenter) < (expIntensity - expLife)) {
+    int d = abs(i % 25 - expCenter); 
+    if(d < (expIntensity - expLife)) {
       long fb = min(255, max(0, (255/expIntensity)*expLife));
       byte b = (byte) round(256*((fb/256.0*fb/256.0)));
       writeLedsHSB(i, colTone, colSat, b);

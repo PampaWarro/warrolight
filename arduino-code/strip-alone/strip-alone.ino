@@ -11,21 +11,22 @@ void setup() {
     program = 0;
   else
     program = (program + 1) % 5;
+
+  // For developing, force program
+  //program = 4;
+    
   // Generate random seed using analog pin noise
   randomSeed(analogRead(0));
 
   // Global seed makes sure each time the lights are different
   globalSeed = random(32000);
   
-  // program = 3; 
-  
   setupLeds(150,6); 
   
   initParams();
   
   // Show with lights selected program
-  for (int i = 0; i < 50;
-  i++) {   
+  for (int i = 0; i < 50; i++) {   
     writeLeds(i,0,0,0);
   }
   

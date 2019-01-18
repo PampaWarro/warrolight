@@ -32,6 +32,10 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
+__attribute__((section(".noinit"))) unsigned int program;
+__attribute__((section(".noinit"))) unsigned int lastTime;
+unsigned int globalSeed = lastTime;
+
 // How many leds in your strip?
 // #define NUM_LEDS 150
 #define NUM_LEDS 150
@@ -58,19 +62,32 @@ const byte address[6] = "90909";
 void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB::Black;
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);
+
+  if (program > 100)
+    program = 0;
+  else
+    program = (program + 1) % 5;
+
+  // Generate random seed using analog pin noise
+  randomSeed(analogRead(0));
+
+  // Global seed makes sure each time the lights are different
+  globalSeed = random(32000);
+
+  initParams();
+
+  // Show with lights selected program
+  for (int i = 0; i < 50; i++) {
+    writeLeds(i, 0, 0, 0);
   }
 
-  leds[0] = CRGB::Black;
-  leds[1] = CRGB::Red;
-  leds[2] = CRGB::Green;
-  leds[3] = CRGB::Blue;
+  writeLeds(0 + program, 255, 50, 255); // pink
 
   FastLED.show();
+  delay(300);
+
   //Serial.begin(9600);
   radio.begin();
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
@@ -82,8 +99,8 @@ void setup() {
   // Max power 700 mah
   //radio.setChannel(81);
   //radio.setChannel(114);
-  
-  radio.setPALevel(RF24_PA_HIGH);  
+
+  radio.setPALevel(RF24_PA_HIGH);
   //radio.enableDynamicPayloads();
   radio.setPayloadSize(PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
@@ -122,11 +139,11 @@ void writeLeds(int pos, byte r, byte g, byte  b) {
 }
 
 void writeLedsRgb565(int pos, byte ba, byte bb) {
-    int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff)) ;
-    byte b = ((rgb565 & 0x001f)) << 3;
-    byte g = ((rgb565 & 0x7E0) >> 5) << 2;
-    byte r = ((rgb565) >> 11) << 3;
-    writeLeds(pos, r, g, b);     
+  int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff)) ;
+  byte b = ((rgb565 & 0x001f)) << 3;
+  byte g = ((rgb565 & 0x7E0) >> 5) << 2;
+  byte r = ((rgb565) >> 11) << 3;
+  writeLeds(pos, r, g, b);
 }
 
 void writeLedsHSB(int pos, byte h, byte s, byte  b) {
@@ -142,37 +159,39 @@ int waitingCounter = 0;
 
 byte data[PAYLOAD_SIZE];
 unsigned long lastFrame = millis();
+unsigned long lastAnimationFrame = millis();
 
 void loop() {
-  int ledSize = 3;   
+  int ledSize = 3;
 
   unsigned long nowMs = millis();
-  
-  if (radio.available()) {           
+
+  if (radio.available()) {
     while (radio.available()) {                     // While there is data ready
       radio.read( &data, sizeof(data));             // Get the payload
     }
-    int pos = data[0];                 
+    int pos = data[0];
     //Serial.print("Received ");
     //Serial.println(pos);
 
     int offset = data[0];
-    for (int i = 2; i+2 < PAYLOAD_SIZE; i+=ledSize) {      
-      if(ledSize == 3) {
-        writeLeds(offset+i/ledSize, data[i],data[i+1],data[i+2]);   
-      } else if(ledSize == 2) {
-        writeLedsRgb565(offset+i/ledSize, data[i], data[i+1]);      
+    for (int i = 2; i + 2 < PAYLOAD_SIZE; i += ledSize) {
+      if (ledSize == 3) {
+        writeLeds(offset + i / ledSize, data[i], data[i + 1], data[i + 2]);
+      } else if (ledSize == 2) {
+        writeLedsRgb565(offset + i / ledSize, data[i], data[i + 1]);
       }
     }
-    if(offset+30/ledSize> 145){
+    if (offset + 30 / ledSize > 145) {
       FastLED.show();
     }
-    lastFrame = nowMs;  
+    lastFrame = nowMs;
   } else {
-    if((nowMs - lastFrame) > 1000) {
+    if ((nowMs - lastFrame) > 1000 && (nowMs - lastAnimationFrame) > 20) {
       arduinoProgram();
       FastLED.show();
-    } 
+      lastAnimationFrame = nowMs;
+    }
   }
 }
 

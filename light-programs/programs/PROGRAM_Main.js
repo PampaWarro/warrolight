@@ -199,4 +199,5 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-module.exports = recolorProgram(createMultiProgram(schedule, false, 1000));
+// module.exports = recolorProgram(createMultiProgram(schedule, false, 1000));
+module.exports = createMultiProgram(schedule, true, 1000);

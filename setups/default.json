@@ -22,9 +22,9 @@
       }
     ]
   },
-  "fuego-2018": {
-    "geometryModule": "geometry-fuego18",
-    "shapeMappingModule": "shape-mapping-fuego18",
+  "fuego-2019": {
+    "geometryModule": "geometry-fuego19",
+    "shapeMappingModule": "shape-mapping-fuego19",
     "lights": 1200,
     "outputDevices": {
       "ether1": {

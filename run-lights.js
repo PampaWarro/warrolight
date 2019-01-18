@@ -74,8 +74,8 @@ function createLightsMultiplexer(totalLightsCount, devices, lightsToDevicesMappi
 }
 
 setTimeout(() => {
-  // let setupName = 'fuego-2018';
-  let setupName = 'w-chica-rf';
+  let setupName = 'fuego-2019';
+  // let setupName = 'w-chica-rf';
 
   let {geometryModule, shapeMappingModule, lights, outputDevices, lightsToDevicesMapping} = setup[setupName];
 

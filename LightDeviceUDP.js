@@ -26,7 +26,6 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
     this.packageCount = 0
 
-    console.log("Called onece")
     this.setupCommunication()
   }
 

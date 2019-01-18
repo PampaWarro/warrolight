@@ -25,6 +25,7 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
 
   http.listen(3001, '0.0.0.0', function () {
     console.log("Warro lights server running on port 3001")
+    console.log("Remote control in: http://localhost:3001/warro.html")
   })
 
   // httpsServer.listen(3443, '0.0.0.0', function () {

@@ -1,7 +1,12 @@
 # warrolight
 
 
-*Prerequisitos*: Tener node.js instalado o instalar de acá: https://nodejs.org/en/download/
+*Prerequisitos*:
+
+1. Tener node.js instalado o instalar de acá: https://nodejs.org/en/download/
+1. Tener sox instalado (en mac instalar con `brew install sox`).
+
+*Instrucciones*:
 
 1. Bajar el repo con `git clone`
 1. Abrir una consola en el directorio `warrolight`

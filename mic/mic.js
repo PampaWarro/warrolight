@@ -6,13 +6,6 @@ var MeasureVolume = require('./volumeTransform.js');
 var PassThrough = require('stream').PassThrough;
 var EventEmitter = require('events');
 
-var AudioFrame = function AudioFrame(channels, metadata) {
-  var options = options || {}
-  var that = this;
-  that.channels = channels;
-  that.metadata = metadata;
-}
-
 var mic = function mic(options) {
   options = options || {};
   var that = {};
@@ -109,12 +102,12 @@ var mic = function mic(options) {
 
     // TODO: deinterleave channels for stereo support.
     var channels = [buffer];
-    var audioFrame = new AudioFrame(channels, {
+
+    audioEmitter.emit('audioframe', {
+      channels: channels,
       sampleRate: this._sampleRate,
       frameSize: buffer.length
     });
-    // console.log("Emitting audio frame:", audioFrame);
-    audioEmitter.emit('audioframe', audioFrame);
   };
 
   that.stop = function stop() {

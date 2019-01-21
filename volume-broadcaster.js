@@ -13,31 +13,51 @@ const soundEmitter = require("./sound-broadcast")
 // });
 
 function startMic(){
-  let micInstance = mic({ 'rate': '2000', 'channels': '1', 'bitwidth': 16 });
-  let micInputStream = micInstance.getAudioStream();
+  let micInstance = mic({ 'rate': 44100, 'channels': 1, 'bitwidth': 16 });
+  let audioEmitter = micInstance.getAudioEmitter();
 
-  micInputStream.on('error', function(err) {
+  audioEmitter.on('error', function(err) {
     console.log("Microphone Error in Input Stream: " + err);
   });
 
-  micInputStream.on('data', function(){})
+  audioEmitter.on('data', function(){})
 
   let lastTest = new Date();
-  micInputStream.on('volumeSample', function(volume) {
-    soundEmitter.emit('sound', volume)
 
-    // let elapsed = new Date() - lastTest;
-    // if(elapsed > 1000) {
-    //   console.log(`${elapsed}ms VOLUME`, Math.round(volume * 100), new Array(Math.round(volume * 60) + 1).join('#'))
-    //   lastTest = new Date();
-    // }
+  // Calculate and emit RMS events.
+  audioEmitter.on('audioframe', function(frame) {
+    var rmsChannels = new Array(frame.channels.length);
+    for (var i = 0; i < frame.channels.length; i++) {
+      var channel = frame.channels[i];
+      rmsChannels[i] = Math.sqrt(channel.reduce(function(accumulator, value) {
+        return accumulator + (value*value);
+      }, 0))
+    }
+    audioEmitter.emit('audiorms', {
+      max: Math.max(...rmsChannels),
+      channels: rmsChannels
+    });
   });
 
-  micInputStream.on('startComplete', function() {
+  // Very rough onset detector. When ratio between current RMS and moving
+  // average is over threshold, that's an onset.
+  var runningAverage = 0;
+  audioEmitter.on('audiorms', function(rms) {
+    rms = rms.max;
+    if (runningAverage > 0) {
+      var ratio = rms/runningAverage;
+      if (ratio > 10) {
+        console.log("onset!");
+      }
+    }
+    runningAverage = .8 * runningAverage + .2 * rms;
+  });
+
+  audioEmitter.on('startComplete', function() {
     console.log("Microphone listening");
   });
 
-  micInputStream.on('audioProcessExitComplete', function() {
+  audioEmitter.on('audioProcessExitComplete', function() {
     console.log("Microphone stopped listening. Retrying in 1s");
     setTimeout(startMic, 1000)
   });

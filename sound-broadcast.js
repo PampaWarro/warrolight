@@ -1,10 +1,10 @@
 const EventEmitter = require('events');
 
-class SoundAmplitude extends EventEmitter {
+class AudioEmitter extends EventEmitter {
 
 }
 
-module.exports = new SoundAmplitude();
+module.exports = new AudioEmitter();
 
 module.exports.on("sound", (value) => {
   // console.log("Received sound ", value)

@@ -4,7 +4,6 @@ var isWindows = require('os').type().indexOf('Windows') > -1;
 var osEndianness = require('os').endianness();
 var MeasureVolume = require('./volumeTransform.js');
 var PassThrough = require('stream').PassThrough;
-var EventEmitter = require('events');
 
 var mic = function mic(options) {
   options = options || {};
@@ -27,7 +26,7 @@ var mic = function mic(options) {
   var format, formatEndian, formatEncoding;
   var audioProcess = null;
   var infoStream = new PassThrough;
-  var audioEmitter = new EventEmitter();
+  var soundEmitter = options.soundEmitter;
   var audioProcessOptions = {
     stdio: ['ignore', 'pipe', 'ignore']
   };
@@ -75,7 +74,7 @@ var mic = function mic(options) {
 
       audioProcess.on('exit', function(code, sig) {
         if(code != null && sig === null) {
-          audioEmitter.emit('audioProcessExitComplete');
+          soundEmitter.emit('audioProcessExitComplete');
           if(debug) console.log("recording audioProcess has exited with code = %d", code);
         }
       });
@@ -88,7 +87,7 @@ var mic = function mic(options) {
       if(debug) {
         audioProcess.stderr.pipe(infoStream);
       }
-      audioEmitter.emit('startComplete');
+      soundEmitter.emit('startComplete');
     } else {
       if(debug) {
         throw new Error("Duplicate calls to start(): Microphone already started!");
@@ -96,6 +95,7 @@ var mic = function mic(options) {
     }
   };
 
+  var offsetSamples = 0;
   that._processRawAudioBuffer = function(rawBuffer) {
     var buffer = new Float32Array(rawBuffer.buffer, rawBuffer.byteOffset,
       rawBuffer.length / 4);
@@ -103,18 +103,22 @@ var mic = function mic(options) {
     // TODO: deinterleave channels for stereo support.
     var channels = [buffer];
 
-    audioEmitter.emit('audioframe', {
+    soundEmitter.emit('audioframe', {
       channels: channels,
       sampleRate: this._sampleRate,
-      frameSize: buffer.length
+      frameSize: buffer.length,
+      offsetSamples: offsetSamples,
+      offsetSeconds: offsetSamples / this._sampleRate
     });
+
+    offsetSamples += buffer.length;
   };
 
   that.stop = function stop() {
     if(audioProcess != null) {
       audioProcess.kill('SIGTERM');
       audioProcess = null;
-      audioEmitter.emit('stopComplete');
+      soundEmitter.emit('stopComplete');
       if(debug) console.log("Microhphone stopped");
     }
   };
@@ -122,8 +126,8 @@ var mic = function mic(options) {
   that.pause = function pause() {
     if(audioProcess != null) {
       audioProcess.kill('SIGSTOP');
-      audioEmitter.pause();
-      audioEmitter.emit('pauseComplete');
+      soundEmitter.pause();
+      soundEmitter.emit('pauseComplete');
       if(debug) console.log("Microphone paused");
     }
   };
@@ -131,14 +135,14 @@ var mic = function mic(options) {
   that.resume = function resume() {
     if(audioProcess != null) {
       audioProcess.kill('SIGCONT');
-      audioEmitter.resume();
-      audioEmitter.emit('resumeComplete');
+      soundEmitter.resume();
+      soundEmitter.emit('resumeComplete');
       if(debug) console.log("Microphone resumed");
     }
   }
 
-  that.getAudioEmitter = function getAudioEmitter() {
-    return audioEmitter;
+  that.getSoundEmitter = function getSoundEmitter() {
+    return soundEmitter;
   }
 
   if(debug) {

@@ -41,7 +41,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
       if (this.dots.length > 45) {
         this.dots.shift();
-        console.log("SoundWaves: making space", this.dots.length)
+        // console.log("SoundWaves: making space", this.dots.length)
       }
     }
 

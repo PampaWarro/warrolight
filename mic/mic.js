@@ -104,6 +104,7 @@ var mic = function mic(options) {
     var channels = [buffer];
 
     soundEmitter.emit('audioframe', {
+      center: channels[0],
       channels: channels,
       sampleRate: this._sampleRate,
       frameSize: buffer.length,

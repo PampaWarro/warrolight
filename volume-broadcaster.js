@@ -48,13 +48,44 @@ function startMic(){
       // center = sqrt(sum(channels^2))
       center: Math.sqrt(rmsChannels.reduce((a, b) => a + b*b), 0),
       channels: rmsChannels,
+      sampleRate: frame.sampleRate,
+      frameSize: frame.frameSize,
+      offsetSamples: frame.offsetSamples,
+      offsetSeconds: frame.offsetSeconds
+    });
+  });
+
+  // Apply windowing to audio frames.
+  function cosineSumWindow(a0, N) {
+    // https://en.wikipedia.org/wiki/Window_function#Hann_and_Hamming_windows
+    const w = new Float32Array(N);
+    for (var i = 0; i < N; i++) {
+      w[i] = a0 - (1 - a0) * Math.cos(2 * Math.PI * i / (N - 1));
+    }
+    return w;
+  }
+  // a0=25/46 == Hamming window.
+  const precalcWindow = cosineSumWindow(25/46, frameSize);
+  soundEmitter.on('audioframe', function(frame) {
+    function applyWindow(channel) {
+      const windowed = new Float32Array(channel.length);
+      channel.forEach(function(value, i) {
+        windowed[i] = precalcWindow[i] * value;
+      });
+      return windowed;
+    }
+    soundEmitter.emit('audiowindowedframe', {
+      center: applyWindow(frame.center),
+      channels: frame.channels.map(applyWindow),
+      sampleRate: frame.sampleRate,
+      frameSize: frame.frameSize,
       offsetSamples: frame.offsetSamples,
       offsetSeconds: frame.offsetSeconds
     });
   });
 
   // Calculate and emit FFT.
-  soundEmitter.on('audioframe', function(frame) {
+  soundEmitter.on('audiowindowedframe', function(frame) {
     var fftChannels = new Array(frame.channels.length);
     for (var i = 0; i < frame.channels.length; i++) {
       const out = fftChannels[i] = fft.createComplexArray();
@@ -85,7 +116,7 @@ function startMic(){
     const center = new Float32Array(absoluteChannels[0].length);
     for (var i = 0; i < center.length; i++) {
       center[i] = Math.sqrt(
-        frame.channels.map(channel => Math.pow(channel[i], 2)).reduce(
+        absoluteChannels.map(channel => Math.pow(channel[i], 2)).reduce(
         (accumulator, value) => accumulator + value, 0));
     }
     soundEmitter.emit('audiofftabsolute', {
@@ -130,7 +161,7 @@ function startMic(){
     });
   });
   soundEmitter.on('audiospectralcentroid', function(frame) {
-    // console.log(frame.center.bin);
+    //console.log(frame.center.bin);
   });
 
   frequencyBands = {
@@ -182,6 +213,14 @@ function startMic(){
     });
   });
 
+  soundEmitter.on('audiobands', function(frame) {
+    // console.log(
+    //   frame.center.bass.energy.toFixed(3),
+    //   frame.center.mid.energy.toFixed(3),
+    //   frame.center.high.energy.toFixed(3),
+    // );
+  });
+
   // TODO: make this a setting (per-band?).
   const onsetThreshold = 1.2;
 
@@ -198,8 +237,8 @@ function startMic(){
     }
     function rectifiedNorm(a, b) {
       var sum = 0;
-      a.forEach(function(value, index) {
-        const diff = b[index] - value;
+      a.forEach(function(value, i) {
+        const diff = b[i] - value;
         if (diff > 0) {
           sum += diff;
         }
@@ -235,46 +274,63 @@ function startMic(){
   });
 
   // Rough onset detector, applied to spectral flux.
-  var previousBands = null;
+  const previousBands = [null, null];
+  function isPeak(v0, v1, v2) {
+    if (v0 <= 0) return false;
+    if (v1 <= 0) return false;
+    if (v2 <= 0) return false;
+    return v1 >= v0 && v1 >= v2;
+  }
+  const perBandMovingAverage = {}
   soundEmitter.on('audiospectralflux', function(frame) {
     // TODO: support other channels, not only center.
     const bands = frame.center.perBand;
+    if (!previousBands[1]) {
+      previousBands[1] = bands;
+      return;
+    }
+    if (!previousBands[0]) {
+      previousBands[0] = previousBands[1];
+      previousBands[1] = bands;
+    }
     // Log per band with fixed decimals:
     // console.log(bands.bass.toFixed(2),
     //   bands.mid.toFixed(2),
     //   bands.high.toFixed(2));
-    if (previousBands != null) {
-      const perBandOnsets = [];
-      for (bandName in bands) {
-        const oldValue = previousBands[bandName];
-        if (oldValue == 0) {
-          continue;
-        }
-        const newValue = bands[bandName];
-        const ratio = newValue/oldValue;
-        if (ratio > onsetThreshold) {
-          perBandOnsets.push({
-            bandName: bandName,
-            energy: newValue,
-            ratio: ratio
-          });
-        }
+    const perBandOnsets = [];
+    for (bandName in bands) {
+      perBandMovingAverage[bandName] = (
+        0.1*bands[bandName] + 0.9*(perBandMovingAverage[bandName] || 0));
+      if (previousBands[1][bandName] <= perBandMovingAverage[bandName]) {
+        continue;  // Skip frame with below average energy.
       }
-      perBandOnsets.sort((a, b) => b.energy - a.energy);
-      if (perBandOnsets.length > 0) {
-        soundEmitter.emit('audiobandonset', {
-          perBand: perBandOnsets,
-          max: perBandOnsets[0],
-          offsetSamples: frame.offsetSamples,
-          offsetSeconds: frame.offsetSeconds
+      const values = [
+        previousBands[0][bandName],
+        previousBands[1][bandName],
+        bands[bandName],
+      ];
+      if (isPeak(...values)) {
+        perBandOnsets.push({
+          bandName: bandName,
+          energy: values[1],
         });
       }
     }
-    previousBands = bands;
+    perBandOnsets.sort((a, b) => b.energy - a.energy);
+    if (perBandOnsets.length > 0) {
+      soundEmitter.emit('audiobandonset', {
+        perBand: perBandOnsets,
+        max: perBandOnsets[0],
+        offsetSamples: frame.offsetSamples,
+        offsetSeconds: frame.offsetSeconds
+      });
+    }
+    previousBands[0] = previousBands[1];
+    previousBands[1] = bands;
   });
 
   // Band onsets filtered by exponential decay threshold.
-  const halfLife = 1;
+  const halfLife = .5;
   const perBandPeaks = {};
   soundEmitter.on('audiobandonset', function(frame) {
     var perBandFilteredOnsets = [];
@@ -283,20 +339,19 @@ function startMic(){
       const peak = perBandPeaks[onset.bandName];
       if (peak) {
         const dt = frame.offsetSeconds - peak.offsetSeconds;
-        const onsetValue = onset.ratio;
+        const onsetValue = onset.energy;
         const peakValue = peak.value;
         const decayFactor = Math.pow(2, -dt/halfLife);
-        // console.log(onsetValue, peakValue, decayFactor);
         if (onsetValue > peakValue * decayFactor) {
           perBandFilteredOnsets.push(onset);
           perBandPeaks[onset.bandName] = {
-            value: onset.ratio,
+            value: onset.energy,
             offsetSeconds: frame.offsetSeconds
           };
         }
       } else {
         perBandPeaks[onset.bandName] = {
-          value: onset.ratio,
+          value: onset.energy,
           offsetSeconds: frame.offsetSeconds
         };
       }

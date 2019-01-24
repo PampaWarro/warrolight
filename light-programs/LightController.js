@@ -2,6 +2,7 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
+  "musicVolumeDot",
   "PROGRAM_Main",
   // "PROGRAM_Transition",
   // "PROGRAM_Triangulo",
@@ -19,7 +20,6 @@ const programNames = [
   "circles",
   "musicFlow",
   "rainbow",
-  "musicVolumeDot",
   "stars",
   "debugSetup",
   "debugShapes",

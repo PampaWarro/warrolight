@@ -36,15 +36,62 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
 
 
   let lastVolumes = [];
+  let lastRawVolumes = [];
+  let lastBands = [];
 
   let flushVolume = _.throttle(() => {
-    io.volatile.emit('micSample', lastVolumes)
+    io.emit('micSample', lastVolumes)
     lastVolumes = [];
-  }, 100)
+  }, 50)
 
   require("./sound-broadcast").on('volume', volData => {
-    lastVolumes.push(volData);
-    flushVolume();
+    // lastVolumes.push(volData);
+    // flushVolume();
+  })
+
+  let avg = 3;
+  let soundBroadcast = require("./sound-broadcast");
+
+  let counter = 0;
+  setInterval(() => {
+    console.log(`${counter} samples in last second`);
+    counter = 0;
+  }, 1000)
+
+  let tempOnset = null;
+  soundBroadcast.on('audiospectralflux', ({center}) => {
+    counter++;
+    lastRawVolumes.push(center.perBand);
+    if(lastRawVolumes.length > avg) {
+      let avgLastVolumes = {
+        bass: _.sum(_.map(lastRawVolumes, 'bass'))/avg,
+        mid: _.sum(_.map(lastRawVolumes, 'mid'))/avg,
+        high: _.sum(_.map(lastRawVolumes, 'high'))/avg
+      }
+      if(tempOnset) {
+        avgLastVolumes = {... lastVolumes, tempOnset}
+        tempOnset = null;
+      }
+      lastVolumes.push(avgLastVolumes);
+      flushVolume();
+      lastRawVolumes.shift();
+    }
+  })
+
+  soundBroadcast.on('audiobandfilteredonset', ({perBand}) => {
+    _.each(perBand, ({bandName}) => {
+      let last = {};
+      if(lastVolumes.length) {
+        last = lastVolumes[lastVolumes.length-1];
+      } else {
+        if(tempOnset) {
+          console.log("missing onset")
+        } else {
+          tempOnset = last;
+        }
+      }
+      last['onset'+bandName] = 1;
+    })
   })
 
   io.on('connection', (socket) => {

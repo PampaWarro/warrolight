@@ -9,9 +9,9 @@ var mic = function mic(options) {
   options = options || {};
   var that = {};
   var endian = osEndianness == "BE"? "big" : "little";
-  var bitwidth = 32;
-  var encoding = 'floating-point';
-  var rate = that._sampleRate = options.rate || 44100;
+  var outputBitwidth = 32;
+  var outputEncoding = 'floating-point';
+  var outputRate = that._sampleRate = options.rate || 44100;
   var channels = that._channels = options.channels || 1;
   if (channels != 1) {
     // TODO: stereo support.
@@ -21,7 +21,7 @@ var mic = function mic(options) {
   var exitOnSilence = options.exitOnSilence || 0;
   var fileType = options.fileType || 'raw';
   var frameSize = options.frameSize || 512;
-  var bufferSize = frameSize * channels * bitwidth / 8;
+  var bufferSize = frameSize * channels * outputBitwidth / 8;
   var debug = options.debug || false;
   var format, formatEndian, formatEncoding;
   var audioProcess = null;
@@ -36,28 +36,43 @@ var mic = function mic(options) {
   }
 
   // Setup format variable for arecord call
-  if(encoding === 'unsigned-integer') {
+  if(outputEncoding === 'unsigned-integer') {
     formatEncoding = 'U';
   } else {
     formatEncoding = 'S';
   }
-  format = formatEncoding + bitwidth + '_' + osEndianness;
+  format = formatEncoding + outputBitwidth + '_' + osEndianness;
 
   that.start = function start() {
     if(audioProcess === null) {
       if(isWindows){
-        var params = ['-b', bitwidth, '--endian', endian,
-          '-c', channels, '-r', rate, '-e', encoding,
-          '-t' , 'waveaudio', 'default', '-p', '--buffer', bufferSize, '-V',
-          '-V'];
+        var params = [
+          // Parameters for input (-t wave audio)
+          // '-b', '16',
+          // '--endian', endian,
+          '-c', channels,
+          // '-r', '44100',
+          // '-e', 'signed-integer',
+          '-t' , 'waveaudio', 'default',
+
+          // Parameters for output (- means pipe it)
+          '-b', outputBitwidth,
+          '--endian', endian,
+          '-c', channels,
+          '-r', outputRate,
+          '-e', outputEncoding,
+          '--buffer', bufferSize,
+          '-t' , 'raw',
+          '-'
+        ];
 
         audioProcess = spawn('sox', params, audioProcessOptions)
 
         console.log(params.join(" "))
       }
       else if(isMac){
-        let params = ['-b', bitwidth, '--endian', endian,
-          '-c', channels, '-r', rate, '-e', encoding,
+        let params = ['-b', outputBitwidth, '--endian', endian,
+          '-c', channels, '-r', outputRate, '-e', outputEncoding,
           '-t', fileType, '--buffer', bufferSize, '-'];
 
         console.log("rec", params.join(' '))
@@ -65,7 +80,7 @@ var mic = function mic(options) {
       }
       else {
         // TODO: fix this branch, no idea about the args for this program.
-        let params = ['-c', channels, '-r', rate, '-f',
+        let params = ['-c', channels, '-r', outputRate, '-f',
           format, '-D', device, '-B', '100000'];
 
         console.log("arecord", params.join(' '))

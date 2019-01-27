@@ -97,22 +97,27 @@ var mic = function mic(options) {
 
   var offsetSamples = 0;
   that._processRawAudioBuffer = function(rawBuffer) {
-    var buffer = new Float32Array(rawBuffer.buffer, rawBuffer.byteOffset,
+    var samples = new Float32Array(rawBuffer.buffer, rawBuffer.byteOffset,
       rawBuffer.length / 4);
 
     // TODO: deinterleave channels for stereo support.
-    var channels = [buffer];
+    const channels = [{
+      samples: samples
+    }];
+    const center = channels[0];
+    const allChannels = [center].concat(channels);
 
     soundEmitter.emit('audioframe', {
-      center: channels[0],
+      center: center,
       channels: channels,
+      allChannels: allChannels,
       sampleRate: this._sampleRate,
-      frameSize: buffer.length,
+      frameSize: samples.length,
       offsetSamples: offsetSamples,
       offsetSeconds: offsetSamples / this._sampleRate
     });
 
-    offsetSamples += buffer.length;
+    offsetSamples += samples.length;
   };
 
   that.stop = function stop() {

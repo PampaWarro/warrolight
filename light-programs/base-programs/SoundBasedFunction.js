@@ -20,8 +20,8 @@ function startFakeSound(){
 // After 1sec without mic sound, fake wave
 let fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 
-soundEmitter.on('audiorms', (rms) => {
-  realSound = rms.center;
+soundEmitter.on('processedaudioframe', frame => {
+  realSound = frame.center.rms;
   clearTimeout(fakeSoundTimeout)
   clearInterval(fakingSoundInterval)
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)

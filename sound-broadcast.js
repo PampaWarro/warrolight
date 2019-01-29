@@ -93,6 +93,7 @@ class SoundEmitter extends EventEmitter {
   }
 
   init(config) {
+    config.emitter = this;
     this._modules = topologicalSort(loadModules(config));
     this.on('audioframe', this._processAudioFrame);
   }
@@ -130,6 +131,23 @@ const soundEmitter = new SoundEmitter();
 
 soundEmitter.on('processedaudioframe', frame => {
   // console.log(frame.center.spectralBands.bass.energy);
+});
+
+soundEmitter.on('throttledpeak', peak => {
+  // function replaceAt(s, i, c) {
+  //   return s.substr(0, i) + c + s.substr(i+1);
+  // }
+  // var msg = new Array(30).join(' ');
+  // if (peak.bandName == 'bass') {
+  //   msg = replaceAt(msg, 0, '*');
+  // }
+  // if (peak.bandName == 'mid') {
+  //   msg = replaceAt(msg, msg.length/2, '*');
+  // }
+  // if (peak.bandName == 'high') {
+  //   msg = replaceAt(msg, msg.length-1, '*');
+  // }
+  // console.log(msg);
 });
 
 module.exports = soundEmitter;

@@ -4,7 +4,7 @@
 class RMS {
   rms(samples) {
     // sqrt(sum(sample^2)).
-    return Math.sqrt(samples.reduce((a, x) => a + x*x, 0));
+    return Math.sqrt(samples.reduce((a, x) => a + x*x, 0)/samples.length);
   }
   run(frame, emitter) {
     const that = this;

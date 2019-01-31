@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 // Easy measure of overall sound energy level. Basically, the area under the
 // curve of the waveform, also equal to the level of the DC signal that would
 // provide the same average power as the periodic signal
@@ -10,10 +12,14 @@ class RMS {
     const that = this;
     frame.allChannels.forEach(channel => {
       channel.rms = that.rms(channel.samples);
+      _.forOwn(channel.filteredBands, band => {
+        band.rms = that.rms(band.samples);
+      });
     });
   }
 }
 
 module.exports = {
+  deps: ['filteredBands'],
   init: options => new RMS(options)
 }

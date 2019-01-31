@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 function rectifiedNorm(a, b) {
   let sum = 0;
   a.forEach((value, i) => {
@@ -26,12 +28,18 @@ class SpectralFlux {
       const spectrum = channel.absolutefft;
       const spectralFlux = rectifiedNorm(previousSpectrum, spectrum);
       channel.spectralFlux = spectralFlux;
-      // TODO: per-band flux.
+      _.forOwn(channel.spectralBands, (band, bandName) => {
+        const previousSpectrum = previousChannel.spectralBands[
+          bandName].subspectrum;
+        const spectrum = band.subspectrum;
+        const spectralFlux = rectifiedNorm(previousSpectrum, spectrum);
+        band.spectralFlux = spectralFlux;
+      });
     });
   }
 }
 
 module.exports = {
-  deps: ['absolutefft'],
+  deps: ['absolutefft', 'spectralBands'],
   init: config => new SpectralFlux(config),
 }

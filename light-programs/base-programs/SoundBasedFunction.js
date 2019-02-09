@@ -6,6 +6,7 @@ const soundEmitter = require("../../sound-broadcast")
 // Fake sound wave with random
 let lastRandom = 0;
 let realSound = 0;
+let currentAudioFrame = null;
 let fakingSoundInterval = 0;
 let t = 0;
 function startFakeSound(){
@@ -22,6 +23,7 @@ let fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 
 soundEmitter.on('processedaudioframe', frame => {
   realSound = frame.center.rms;
+  currentAudioFrame = frame;
   clearTimeout(fakeSoundTimeout)
   clearInterval(fakingSoundInterval)
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
@@ -79,6 +81,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
   }
 
   start(config, draw, done){
+    this.currentAudioFrame = currentAudioFrame;
     this.averageVolume = averageVolume;
     this.averageRelativeVolume = averageRelativeVolume;
     this.averageVolumeSmoothed = averageVolumeSmoothed;
@@ -89,6 +92,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
 
     self.processInterval = setTimeout(function updateValues() {
       // calculate average
+      self.currentAudioFrame = currentAudioFrame;
       self.averageVolume = averageVolume
       self.averageVolumeSmoothed = averageVolumeSmoothed
       self.averageVolumeSmoothedSlow = averageVolumeSmoothedSlow

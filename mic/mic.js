@@ -80,9 +80,12 @@ var mic = function mic(options) {
       });
       audioProcess.stdout.on('readable', function() {
         let data;
+        let bufferCount = 0;
         while (data = this.read(bufferSize)) {
           that._processRawAudioBuffer(data);
+          bufferCount++;
         }
+        // console.log('buffers accumulated:', bufferCount);
       });
       if(debug) {
         audioProcess.stderr.pipe(infoStream);

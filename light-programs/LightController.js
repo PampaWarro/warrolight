@@ -14,6 +14,8 @@ const programNames = [
   "aliveDotsSpeed",
   "musicVolumeBars",
   "water-flood",
+  "spectrum-flood",
+  "circles",
   "musicFlow",
   "rainbow",
   "musicVolumeDot",

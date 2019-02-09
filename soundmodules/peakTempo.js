@@ -88,7 +88,8 @@ class PeakTempo {
       estimates: estimates,
     }
   }
-  run(frame, emitter) {
+  // TODO: remove _ to re-enable when it stops being a CPU hog.
+  _run(frame, emitter) {
     const that = this;
     frame.allChannels.forEach((channel, channelIndex) => {
       const channelState = that._perChannelState[channelIndex];

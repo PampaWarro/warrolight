@@ -11,7 +11,7 @@ function loadModules(config) {
     const module = require(path.resolve(file));
     const moduleInstance = module.init(config)
     if (!moduleInstance.run) {
-      throw `Module '${id}' has no run function.`;
+      console.warn(`Module '${id}' has no run function.`);
     }
     try {
       modules[id] = {

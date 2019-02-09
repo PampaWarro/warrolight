@@ -27,6 +27,7 @@ module.exports = class Func extends SoundBasedFunction {
     const geometry = this.position || this.geometry;
 
     const spectrum = this.currentAudioFrame.center.absolutefft;
+    const spectrumNorm = this.currentAudioFrame.center.movingStats.fftPeak.max;
     if (!spectrum) {
       done();
     }
@@ -38,8 +39,9 @@ module.exports = class Func extends SoundBasedFunction {
       let posY = 1 - (geometry.y[i] / geometry.height);
       // let volumeHeight = Math.max(0, (vol+0.1)*(vol+0.1));
       let oldHeight = Math.max(0, (vol+0.1)*(vol+0.1));
-      let volumeHeight = 1*Math.sqrt(spectrum[
-        Math.floor(distanceFromCenter * spectrum.length/2)] / vol);
+      const spectrumValue = spectrum[
+        Math.floor(Math.sqrt(distanceFromCenter) * spectrum.length/2)] / spectrumNorm;
+      let volumeHeight = 1*Math.sqrt(spectrumValue);
       let whiteBorderWidth = 0.95
       //console.log(vol, oldHeight);
 

@@ -39,7 +39,8 @@ module.exports = class Func extends SoundBasedFunction {
     if (!centerChannel) {
       done();
     }
-    const vol = this.averageRelativeVolumeSmoothed;
+    const vol = centerChannel.movingStats.rms.normalizedValue;
+    const normalizedBass = centerChannel.filteredBands.bass.movingStats.rms.normalizedValue;
     const centerX = (
       this.xBounds.center +
       .25 * this.xBounds.scale *
@@ -50,6 +51,7 @@ module.exports = class Func extends SoundBasedFunction {
       .25 * this.yBounds.scale *
         Math.sin(this.timeInMs * this.config.velocidad / 800)
     );
+    const maxScale = Math.max(this.xBounds.scale, this.yBounds.scale);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       const x = geometry.x[i];
@@ -57,16 +59,17 @@ module.exports = class Func extends SoundBasedFunction {
       const rx = x - centerX;
       const ry = y - centerY;
       const r = Math.sqrt(Math.pow(rx, 2) + Math.pow(ry, 2));
+      const normalizedR = 2 * r / maxScale;
       const theta = Math.acos(rx / r);
       const radiusFactor = (
         .2 * Math.sin(this.timeInMs / 1000) +
         .2 * this.config.escala +
-        10 * centerChannel.filteredBands.bass.rms
+        .2 * centerChannel.filteredBands.bass.rms
       );
       const h = 
         (r*.1 + this.timeInMs * this.config.velocidad / 10000) % 1;
-      const s = Math.min(0.1 + 1000*centerChannel.filteredBands.high.rms, 1);
-      const v = Math.pow(Math.sin(r * radiusFactor + theta), 10)/Math.pow(r, 1);
+      const s = 1 / (1 + normalizedR);
+      const v = (.01 + .99 * Math.pow(normalizedBass, 8))*Math.pow(Math.sin(r * radiusFactor + theta), 10); ///Math.pow(r, 1);
       const color = ColorUtils.HSVtoRGB(h, s, v);
       colors[i] = color;
     }

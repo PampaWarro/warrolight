@@ -113,8 +113,11 @@ class SoundEmitter extends EventEmitter {
   _processAudioFrame(frame) {
     const that = this;
     // Run all modules in order.
-    this._modules.forEach(
-      module => module.instance.run(frame, that));
+    this._modules.forEach(module => {
+      if (module.instance.run) {
+        module.instance.run(frame, that)
+      }
+    });
     // Update current frame.
     this.previousFrame = this.currentFrame;
     this.currentFrame = frame;

@@ -132,6 +132,30 @@ class Circle extends XYBasedDrawable {
   }
 }
 
+class InfiniteCircles extends XYBasedDrawable {
+  constructor(options) {
+    options = options || {};
+    super();
+    this.center = options.center || [0, 0];
+    this.borderColor = options.borderColor || [255, 255, 255];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0];
+    this.width = options.width || 1;
+    this.period = options.period || 10;
+    this.offset = options.offset || 0;
+    this.radiusWarp = options.radiusWarp || (radius => radius);
+  }
+  colorAt(x, y) {
+    const [centerX, centerY] = this.center;
+    const [dX, dY] = [x - centerX, y - centerY];
+    const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    const d = Math.abs(this.offset + this.radiusWarp(radius)) % this.period;
+    if (Math.abs(d - this.period) < this.width) {
+      return this.borderColor;
+    }
+    return this.backgroundColor;
+  }
+}
+
 const blendFunctions = {
   normal: (base, blend) => blend,
   add: (base, blend) => ColorUtils.clamp(
@@ -222,6 +246,12 @@ module.exports = class Func extends SoundBasedFunction {
       center: [this.xBounds.center, this.yBounds.max],
       width: 5,
     });
+    this.infiniteCircles = new InfiniteCircles({
+      center: [this.xBounds.center, this.yBounds.min],
+      width: .5,
+      period: 20,
+      radiusWarp: radius => .01 * Math.pow(radius, 2),
+    });
     this.randomPixels = new RandomPixels({threshold: 0.7});
     this.rootLayer = new CompositeLayer({
       layers: [
@@ -249,6 +279,10 @@ module.exports = class Func extends SoundBasedFunction {
           drawable: this.line2,
           blendMode: 'add',
         }),
+        new DrawableLayer({
+          drawable: this.infiniteCircles,
+          blendMode: 'add',
+        }),
       ],
     });
   }
@@ -269,9 +303,12 @@ module.exports = class Func extends SoundBasedFunction {
     this.backgroundXYHue.xOffset = 10*normalizedBassSlow;
     this.line1.center[1] = this.yBounds.center + Math.cos(
       Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
-    this.line1.width = 5 + 10 * normalizedBass;
+    this.line1.width = 10 * normalizedBass;
     this.line2.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
     this.circle.radius = 10 + 50 * normalizedBass;
+    this.infiniteCircles.offset = -this.timeInMs/50;
+    this.infiniteCircles.center[0] = this.xBounds.center + Math.cos(
+      Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
     this.randomPixels.threshold = 1 - .1*normalizedHigh;
     this.randomPixels.color = ColorUtils.HSVtoRGB(0, 0, normalizedHigh);
   }

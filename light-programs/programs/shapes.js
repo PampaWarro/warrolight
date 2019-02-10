@@ -86,6 +86,7 @@ class XYHue extends XYBasedDrawable {
 
 class Line extends XYBasedDrawable {
   constructor(options) {
+    options = options || {};
     super();
     this.center = options.center || [0, 0];
     this.color = options.color || [255, 255, 255];
@@ -94,7 +95,7 @@ class Line extends XYBasedDrawable {
     this.angle = options.angle || 0;
   }
   set angle(angle) {
-    this.baseVector = [Math.cos(angle), Math.sin(angle)];
+    this.baseVector = [Math.sin(angle), Math.cos(angle)];
   }
   colorAt(x, y) {
     const [centerX, centerY] = this.center;
@@ -107,7 +108,32 @@ class Line extends XYBasedDrawable {
   }
 }
 
+class Circle extends XYBasedDrawable {
+  constructor(options) {
+    options = options || {};
+    super();
+    this.center = options.center || [0, 0];
+    this.borderColor = options.borderColor || [255, 255, 255];
+    this.fillColor = options.fillColor || [255, 255, 255];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0];
+    this.width = options.width || 1;
+    this.radius = options.radius || 10;
+  }
+  colorAt(x, y) {
+    const [centerX, centerY] = this.center;
+    const [dX, dY] = [x - centerX, y - centerY];
+    const d = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    if (Math.abs(d - this.radius) < this.width / 2) {
+      return this.borderColor;
+    } else if (d < this.radius) {
+      return this.fillColor;
+    }
+    return this.backgroundColor;
+  }
+}
+
 const blendFunctions = {
+  normal: (base, blend) => blend,
   add: (base, blend) => ColorUtils.clamp(
     base[0] + blend[0],
     base[1] + blend[1],
@@ -125,6 +151,57 @@ const blendFunctions = {
   ),
 }
 
+class Layer {
+  constructor(options) {
+    options = options || {};
+    const blendMode = options.blendMode || 'normal';
+    this.blendFunction = blendFunctions[blendMode];
+    if (!this.blendFunction) {
+      throw `Blend function '${blendMode}' not found.`;
+    }
+  }
+  apply(colors, geometry) {
+    const newColors = new Array(colors.length);
+    newColors.fill([0, 0, 0]);
+    this.draw(newColors, geometry);
+    for (let i = 0; i < colors.length; i++) {
+      const base = colors[i];
+      const blend = newColors[i];
+      if (!blend) {
+        continue;
+      }
+      colors[i] = this.blendFunction(base, blend);
+    }
+  }
+}
+
+class DrawableLayer extends Layer {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.drawable = options.drawable;
+  }
+  draw(colors, geometry) {
+    this.drawable.draw(colors, geometry);
+  }
+}
+
+class CompositeLayer extends Layer {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.layers = options.layers;
+    if (!this.layers || this.layers.length < 1) {
+      throw `Need a non-empty list of child layers, got ${this.layers}.`;
+    }
+  }
+  draw(colors, geometry) {
+    this.layers.forEach(layer => {
+      layer.apply(colors, geometry);
+    });
+  }
+}
+
 module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
@@ -134,16 +211,46 @@ module.exports = class Func extends SoundBasedFunction {
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
     this.backgroundXYHue = new XYHue();
-    this.line = new Line({
+    this.line1 = new Line({
       center: [this.xBounds.center, this.yBounds.center],
+    });
+    this.line2 = new Line({
+      center: [this.xBounds.center, this.yBounds.max],
+      width: 1,
+    });
+    this.circle = new Circle({
+      center: [this.xBounds.center, this.yBounds.max],
       width: 5,
     });
     this.randomPixels = new RandomPixels({threshold: 0.7});
-    this.layers = [
-      [this.backgroundXYHue, null],
-      [this.line, blendFunctions.multiply],
-      [this.randomPixels, null],
-    ];
+    this.rootLayer = new CompositeLayer({
+      layers: [
+        new DrawableLayer({
+          drawable: this.backgroundXYHue,
+        }),
+        new CompositeLayer({
+          layers: [
+            new DrawableLayer({
+              drawable: this.line1,
+              blendMode: 'add',
+            }),
+            new DrawableLayer({
+              drawable: this.circle,
+              blendMode: 'add',
+            }),
+          ],
+          blendMode: 'multiply',
+        }),
+        new DrawableLayer({
+          drawable: this.randomPixels,
+          blendMode: 'add',
+        }),
+        new DrawableLayer({
+          drawable: this.line2,
+          blendMode: 'add',
+        }),
+      ],
+    });
   }
 
   updateShapes() {
@@ -152,16 +259,19 @@ module.exports = class Func extends SoundBasedFunction {
       return;
     }
     const normalizedHigh = (centerChannel.filteredBands.
-      high.movingStats.rms.normalizedValue);
+      high.movingStats.rms.normalizedFastAvg);
     const normalizedBass = (centerChannel.filteredBands.
-      bass.movingStats.rms.normalizedValue);
+      bass.movingStats.rms.normalizedFastAvg);
     const normalizedBassSlow = (centerChannel.filteredBands.
       bass.movingStats.rms.normalizedAvg);
     this.backgroundXYHue.xFactor = 0.01*Math.cos(Math.PI*normalizedBassSlow);
     this.backgroundXYHue.yFactor = 0.02*Math.cos(Math.PI*normalizedHigh);
     this.backgroundXYHue.xOffset = 10*normalizedBassSlow;
-    this.line.angle = Math.PI * this.timeInMs / 5000;
-    this.line.width = 25 * normalizedBass;
+    this.line1.center[1] = this.yBounds.center + Math.cos(
+      Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
+    this.line1.width = 5 + 10 * normalizedBass;
+    this.line2.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
+    this.circle.radius = 10 + 50 * normalizedBass;
     this.randomPixels.threshold = 1 - .1*normalizedHigh;
     this.randomPixels.color = ColorUtils.HSVtoRGB(0, 0, normalizedHigh);
   }
@@ -171,26 +281,8 @@ module.exports = class Func extends SoundBasedFunction {
     this.updateShapes();
 
     const colors = new Array(this.numberOfLeds);
-    for (let i = 0; i < colors.length; i++)  {
-      colors[i] = [0, 0, 0];
-    }
-    this.layers.forEach(layer => {
-      const [drawable, blendFunction] = layer;
-      const layerColors = new Array(colors.length);
-      drawable.draw(layerColors, that.geometry);
-      for (let i = 0; i < layerColors.length; i++) {
-        const base = colors[i];
-        const blend = layerColors[i];
-        if (!blend) {
-          continue;
-        }
-        if (blendFunction) {
-          colors[i] = blendFunction(base, blend);
-        } else {
-          colors[i] = blend;
-        }
-      }
-    });
+    colors.fill([0, 0, 0]);
+    this.rootLayer.apply(colors, this.geometry);
 
     draw(colors)
     done();

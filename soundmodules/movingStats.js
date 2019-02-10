@@ -35,7 +35,7 @@ class StatsExtractor {
     this.max = null;
     this.min = null;
     this.alpha = 0.001;
-    this.fastAlpha = 0.1;
+    this.fastAlpha = 0.4;
   }
   extract(frame, object) {
     const value = this.getter(object);

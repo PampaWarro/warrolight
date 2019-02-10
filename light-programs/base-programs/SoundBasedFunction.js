@@ -81,6 +81,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
   }
 
   start(config, draw, done){
+    this.soundEmitter = soundEmitter;
     this.currentAudioFrame = currentAudioFrame;
     this.averageVolume = averageVolume;
     this.averageRelativeVolume = averageRelativeVolume;

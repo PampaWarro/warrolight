@@ -31,13 +31,16 @@ class StatsExtractor {
     this.getter = options.getter;
     this.forceZeroMin = !!options.forceZeroMin;
     this.avg = null;
+    this.fastAvg = null;
     this.max = null;
     this.min = null;
     this.alpha = 0.001;
+    this.fastAlpha = 0.1;
   }
   extract(frame, object) {
     const value = this.getter(object);
     var avg = this.avg;
+    var fastAvg = this.fastAvg;
     var min = this.min;
     var max = this.max;
     if (this.avg == null) {
@@ -45,18 +48,23 @@ class StatsExtractor {
     } else {
       avg = this.alpha * value + (1 - this.alpha) * this.avg;
     }
+    if (this.fastAvg == null) {
+      fastAvg = value;
+    } else {
+      fastAvg = this.fastAlpha * value + (1 - this.fastAlpha) * this.fastAvg;
+    }
     if (this.forceZeroMin) {
       min = 0;
     } else if (min == null) {
       min = value;
     } else {
-      min = this.alpha * this.max + (1 - this.alpha) * this.min;
+      min = this.alpha * this.avg + (1 - this.alpha) * this.min;
     }
     min = Math.min(min, value);
     if (max == null) {
       max = value;
     } else {
-      max = this.alpha * this.min + (1 - this.alpha) * this.max;
+      max = this.alpha * this.avg + (1 - this.alpha) * this.max;
     }
     max = Math.max(max, value);
     if (max < min) {
@@ -64,18 +72,23 @@ class StatsExtractor {
     }
     var normalizedValue = 0;
     var normalizedAvg = 0;
+    var normalizedFastAvg = 0;
     if (max - min > 0) {
       normalizedValue = (value - min) / (max - min);
       normalizedAvg = (avg - min) / (max - min);
+      normalizedFastAvg = (fastAvg - min) / (max - min);
     }
     this.avg = avg;
+    this.fastAvg = fastAvg;
     this.min = min;
     this.max = max;
     return {
       value: value,
       normalizedValue: normalizedValue,
       normalizedAvg: normalizedAvg,
+      normalizedFastAvg: normalizedFastAvg,
       avg: this.avg,
+      fastAvg: this.fastAvg,
       min: this.min,
       max: this.max,
     }

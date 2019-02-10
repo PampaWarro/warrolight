@@ -22,7 +22,7 @@ function findBounds(values) {
 }
 
 class Drawable {
-  draw(colors, geometry) {
+  colorAtIndex(index, geometry) {
   }
 }
 
@@ -31,10 +31,8 @@ class SolidColor extends Drawable {
     super();
     this.color = options.color || [255, 255, 255];
   }
-  draw(colors, geometry) {
-    for (let i = 0; i < colors.length; i++) {
-      colors[i] = this.color;
-    }
+  colorAtIndex(index, geometry) {
+    return this.color;
   }
 }
 
@@ -45,59 +43,54 @@ class RandomPixels extends Drawable {
     this.color = options.color || [255, 255, 255];
     this.threshold = (options.threshold === undefined)? 0 : options.threshold;
   }
-  draw(colors, geometry) {
-    for (let i = 0; i < colors.length; i++) {
-      if (Math.random() > this.threshold) {
-        colors[i] = this.color;
-      }
+  colorAtIndex(index, geometry) {
+    if (Math.random() > this.threshold) {
+      return this.color;
     }
   }
 }
 
-class XYBasedDrawable extends Drawable {
-  colorAt(x, y) {
-    return null;
-  }
-  draw(colors, geometry) {
-    for (let i = 0; i < colors.length; i++) {
-      const x = geometry.x[i];
-      const y = geometry.y[i];
-      colors[i] = this.colorAt(x, y);
-    }
+class XYDrawable extends Drawable {
+  colorAtIndex(index, geometry) {
+    const x = geometry.x[index];
+    const y = geometry.y[index];
+    return this.colorAtXY(x, y);
   }
 }
 
-class XYHue extends XYBasedDrawable {
+class XYHue extends XYDrawable {
   constructor(options) {
-    super();
     options = options || {};
+    super(options);
     this.xFactor = options.xFactor || 1;
     this.xOffset = options.xOffset || 0;
     this.yFactor = options.yFactor || 1;
     this.yOffset = options.yOffset || 0;
+    this.saturation  = options.saturation || 1;
+    this.value  = options.value || 1;
   }
-  colorAt(x, y) {
+  colorAtXY(x, y) {
     const h = (
       this.xOffset + this.xFactor * x +
       this.yOffset + this.yFactor * y) % 360;
-    return ColorUtils.HSVtoRGB(h, 1, .5);
+    return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }
 
-class Line extends XYBasedDrawable {
+class Line extends XYDrawable {
   constructor(options) {
     options = options || {};
     super();
     this.center = options.center || [0, 0];
-    this.color = options.color || [255, 255, 255];
-    this.backgroundColor = options.backgroundColor || [0, 0, 0];
+    this.color = options.color || [255, 255, 255, 1];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0, 0];
     this.width = options.width || 1;
     this.angle = options.angle || 0;
   }
   set angle(angle) {
     this.baseVector = [Math.sin(angle), Math.cos(angle)];
   }
-  colorAt(x, y) {
+  colorAtXY(x, y) {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const d = dX * this.baseVector[0] + dY * this.baseVector[1];
@@ -108,18 +101,18 @@ class Line extends XYBasedDrawable {
   }
 }
 
-class Circle extends XYBasedDrawable {
+class Circle extends XYDrawable {
   constructor(options) {
     options = options || {};
     super();
     this.center = options.center || [0, 0];
-    this.borderColor = options.borderColor || [255, 255, 255];
-    this.fillColor = options.fillColor || [255, 255, 255];
-    this.backgroundColor = options.backgroundColor || [0, 0, 0];
+    this.borderColor = options.borderColor || [255, 255, 255, 1];
+    this.fillColor = options.fillColor || [255, 255, 255, 1];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0, 1];
     this.width = options.width || 1;
-    this.radius = options.radius || 10;
+    this.radius = options.radius || 1;
   }
-  colorAt(x, y) {
+  colorAtXY(x, y) {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const d = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
@@ -132,19 +125,19 @@ class Circle extends XYBasedDrawable {
   }
 }
 
-class InfiniteCircles extends XYBasedDrawable {
+class InfiniteCircles extends XYDrawable {
   constructor(options) {
     options = options || {};
     super();
     this.center = options.center || [0, 0];
-    this.borderColor = options.borderColor || [255, 255, 255];
-    this.backgroundColor = options.backgroundColor || [0, 0, 0];
+    this.borderColor = options.borderColor || [255, 255, 255, 1];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0, 0];
     this.width = options.width || 1;
     this.period = options.period || 10;
     this.offset = options.offset || 0;
     this.radiusWarp = options.radiusWarp || (radius => radius);
   }
-  colorAt(x, y) {
+  colorAtXY(x, y) {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
@@ -162,40 +155,54 @@ const blendFunctions = {
     base[0] + blend[0],
     base[1] + blend[1],
     base[2] + blend[2],
+    base[3] + blend[3],
   ),
-  subtract: (base, blend) => ColorUtils.clamp(
+  difference: (base, blend) => ColorUtils.clamp(
     Math.abs(base[0] - blend[0]),
     Math.abs(base[1] - blend[1]),
     Math.abs(base[2] - blend[2]),
+    base[3] + blend[3],
+  ),
+  subtract: (base, blend) => ColorUtils.clamp(
+    base[0] - blend[0],
+    base[1] - blend[1],
+    base[2] - blend[2],
+    base[3] + blend[3],
   ),
   multiply: (base, blend) => ColorUtils.clamp(
     base[0] * blend[0] / 255,
     base[1] * blend[1] / 255,
     base[2] * blend[2] / 255,
+    base[3] + blend[3],
   ),
 }
 
 class Layer {
   constructor(options) {
     options = options || {};
-    const blendMode = options.blendMode || 'normal';
+    this.name = options.name || '';
+    this.alpha = (options.alpha === undefined)? 1 : options.alpha;
+    this.blendMode = options.blendMode || 'normal';
+    this.debug = !!options.debug;
+  }
+  set blendMode(blendMode) {
     this.blendFunction = blendFunctions[blendMode];
     if (!this.blendFunction) {
       throw `Blend function '${blendMode}' not found.`;
     }
   }
-  apply(colors, geometry) {
-    const newColors = new Array(colors.length);
-    newColors.fill([0, 0, 0]);
-    this.draw(newColors, geometry);
-    for (let i = 0; i < colors.length; i++) {
-      const base = colors[i];
-      const blend = newColors[i];
-      if (!blend) {
-        continue;
-      }
-      colors[i] = this.blendFunction(base, blend);
+  applyAtIndex(index, geometry, base) {
+    const blend = this.colorAtIndex(index, geometry);
+    if (!blend) {
+      return base;
     }
+    const blendResult = this.blendFunction(base, blend);
+    const alpha = this.alpha * blendResult[3];
+    const mix = ColorUtils.mix(base, blendResult, alpha);
+    if (this.debug) {
+      console.log('blend', base, blend, blendResult, alpha, mix);
+    }
+    return mix;
   }
 }
 
@@ -205,8 +212,8 @@ class DrawableLayer extends Layer {
     super(options);
     this.drawable = options.drawable;
   }
-  draw(colors, geometry) {
-    this.drawable.draw(colors, geometry);
+  colorAtIndex(index, geometry) {
+    return this.drawable.colorAtIndex(index, geometry);
   }
 }
 
@@ -219,10 +226,12 @@ class CompositeLayer extends Layer {
       throw `Need a non-empty list of child layers, got ${this.layers}.`;
     }
   }
-  draw(colors, geometry) {
+  colorAtIndex(index, geometry) {
+    let color = [0, 0, 0, 0];
     this.layers.forEach(layer => {
-      layer.apply(colors, geometry);
+      color = layer.applyAtIndex(index, geometry, color);
     });
+    return color;
   }
 }
 
@@ -234,7 +243,9 @@ module.exports = class Func extends SoundBasedFunction {
     const geometry = this.position || this.geometry;
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
-    this.backgroundXYHue = new XYHue();
+    this.backgroundXYHue = new XYHue({
+      value: .7,
+    });
     this.line1 = new Line({
       center: [this.xBounds.center, this.yBounds.center],
     });
@@ -270,18 +281,20 @@ module.exports = class Func extends SoundBasedFunction {
             }),
           ],
           blendMode: 'multiply',
+          alpha: 0.97,
         }),
         new DrawableLayer({
           drawable: this.randomPixels,
-          blendMode: 'add',
+          blendMode: 'normal',
         }),
         new DrawableLayer({
           drawable: this.line2,
-          blendMode: 'add',
+          blendMode: 'normal',
         }),
         new DrawableLayer({
           drawable: this.infiniteCircles,
-          blendMode: 'add',
+          blendMode: 'normal',
+          alpha: 0.3,
         }),
       ],
     });
@@ -318,8 +331,11 @@ module.exports = class Func extends SoundBasedFunction {
     this.updateShapes();
 
     const colors = new Array(this.numberOfLeds);
-    colors.fill([0, 0, 0]);
-    this.rootLayer.apply(colors, this.geometry);
+    colors.fill([0, 0, 0, 1]);
+    colors.forEach((baseColor, i) => {
+      const color = this.rootLayer.applyAtIndex(i, that.geometry, baseColor);
+      colors[i] = color.splice(0, 3);
+    });
 
     draw(colors)
     done();

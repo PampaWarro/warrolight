@@ -6,6 +6,7 @@ const programNames = [
   // "PROGRAM_Transition",
   // "PROGRAM_Triangulo",
   "rays",
+  "shapes",
   "stripe-patterns",
   "sound-waves",
   "radial",

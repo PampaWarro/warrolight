@@ -63,10 +63,12 @@ class MicrophoneViewer extends React.Component {
   plotEnergyHistogram(level, max) {
     let histogram = document.getElementById("music");
 
-    let h = Math.round(level * 50);
+    level = level /100;
+    let HEIGHT = this.canvasCtx.canvas.height;
+    let h = Math.round(level * HEIGHT);
     this.canvasCtx.fillStyle = `hsl(${Math.round((1 - h/50 % 1 + 0)*255)}, ${50}%, ${50}%)`;
     // this.canvasCtx.fillStyle = `#ff5500`;
-    this.canvasCtx.fillRect(300, 50 - h, 2, h);
+    this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, 50 - h, 2, h);
     // Move all left
     let imageData = this.canvasCtx.getImageData(2, 0, this.canvasCtx.canvas.width - 1, this.canvasCtx.canvas.height);
     this.canvasCtx.putImageData(imageData, 0, 0);
@@ -76,28 +78,32 @@ class MicrophoneViewer extends React.Component {
     this.canvasCtx.fillStyle = 'white'
     this.canvasCtx.font = "12px monospace";
     this.canvasCtx.clearRect(this.canvasCtx.canvas.width - 100, 0, 100, this.canvasCtx.canvas.height);
-    this.canvasCtx.fillText(`MAX Vol: ${Math.round(max*100)}`, 310, 15);
+    this.canvasCtx.fillText(`MAX Vol: ${Math.round(max*100)}`, this.canvasCtx.canvas.width - 90, 15);
     // this.canvasCtx.fillText(`    Vol: ${Math.round(this.averageVolume*100)}`, 310, 30);
-    this.canvasCtx.fillText(`REL Vol: ${Math.round(level*100)}`, 310, 45);
+    this.canvasCtx.fillText(`REL Vol: ${Math.round(level)}`, this.canvasCtx.canvas.width - 90, 45);
   }
 
   plotPerBandHistogram({bass, mid, high, onsetbass, onsetmid, onsethigh}) {
-    let HEIGHT = this.canvasCtx.canvas.height / 3;
     let histogram = document.getElementById("music");
-    let r = Math.round(bass)*2;
-    let g = Math.round(mid)*2;
-    let b = Math.round(high)*0.5;
+    let r = Math.round(bass*255);
+    let g = Math.round(mid*255);
+    let b = Math.round(high*255);
     let max = 0;
     let level = Math.min(1, (r+g+b)/(3*255));
 
-    let h = Math.round(level * HEIGHT);
 
-    // let w = 6;
+
+    // let w = 2;
+    // let HEIGHT = this.canvasCtx.canvas.height;
+    // let h = Math.round(level * HEIGHT);
     // this.canvasCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-    // this.canvasCtx.fillRect(300, HEIGHT - h, w, h);
+    // this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h, w, h);
+
     //
     let MIN = 30;
-    let w = 1;
+    let w = 2;
+    let HEIGHT = this.canvasCtx.canvas.height / 3;
+    let h = Math.round(level * HEIGHT);
     this.canvasCtx.globalCompositeOperation = "screen";
     this.canvasCtx.fillStyle = `rgba(${Math.max(MIN,r)}, ${0}, ${0})`;
     h = Math.round((r/255) * HEIGHT);
@@ -124,6 +130,8 @@ class MicrophoneViewer extends React.Component {
     }
     //
     this.canvasCtx.globalCompositeOperation = "source-over";
+
+
 
     // this.canvasCtx.fillStyle = `#ff5500`;
     // Move all left

@@ -97,7 +97,8 @@ class StatsExtractor {
 
 // Calculate running average, max and min for audio features.
 class MovingStats {
-  constructor()  {
+  constructor(options)  {
+    const bandNames = options.bandNames || ['bass', 'mid', 'high'];
     const that = this;
     this.channelExtractors = {};
     _.forOwn(channelFeatures, (options, featureName) => {
@@ -105,11 +106,19 @@ class MovingStats {
     });
     this.filteredBandExtractors = {};
     _.forOwn(filteredBandFeatures, (options, featureName) => {
-      that.filteredBandExtractors[featureName] = new StatsExtractor(options);
+      that.filteredBandExtractors[featureName] = {};
+      bandNames.forEach(bandName => {
+        that.filteredBandExtractors[
+          featureName][bandName] = new StatsExtractor(options);
+      });
     });
     this.spectralBandExtractors = {};
     _.forOwn(spectralBandFeatures, (options, featureName) => {
-      that.spectralBandExtractors[featureName] = new StatsExtractor(options);
+      that.spectralBandExtractors[featureName] = {};
+      bandNames.forEach(bandName => {
+        that.spectralBandExtractors[
+          featureName][bandName] = new StatsExtractor(options);
+      });
     });
   }
 
@@ -123,15 +132,15 @@ class MovingStats {
 
       _.forOwn(channel.filteredBands, (band, bandName) => {
         band.movingStats = {};
-        _.forOwn(that.filteredBandExtractors, (extractor, name) => {
-          band.movingStats[name] = extractor.extract(frame, band);
+        _.forOwn(that.filteredBandExtractors, (extractors, name) => {
+          band.movingStats[name] = extractors[bandName].extract(frame, band);
         });
       });
 
       _.forOwn(channel.spectralBands, (band, bandName) => {
         band.movingStats = {};
-        _.forOwn(that.spectralBandExtractors, (extractor, name) => {
-          band.movingStats[name] = extractor.extract(frame, band);
+        _.forOwn(that.spectralBandExtractors, (extractors, name) => {
+          band.movingStats[name] = extractors[bandName].extract(frame, band);
         });
       });
     });

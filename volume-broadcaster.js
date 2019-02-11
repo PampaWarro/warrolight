@@ -30,6 +30,7 @@ function startMic(){
       bassMidCrossover: 300,
       midHighCrossover: 1200,
       highCutoff: 16000,
+      bandNames: ['bass', 'mid', 'high'],
     },
   });
 

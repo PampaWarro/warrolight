@@ -31,7 +31,8 @@ class Simulator extends React.Component {
     this.setState({
       programs: _.keyBy(state.programs, 'name'),
       selected: state.currentProgramName,
-      currentConfig: state.currentConfig
+      currentConfig: state.currentConfig,
+      sendingMicData: state.sendingMicData
     });
     console.log(state);
   }
@@ -40,6 +41,7 @@ class Simulator extends React.Component {
     this.setState({
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
+      sendingMicData: state.sendingMicData,
       remoteChange: true
     });
 
@@ -205,7 +207,7 @@ class Simulator extends React.Component {
               React.createElement(LightsSimulator, { height: '400', width: '600' })
             )
           ),
-          React.createElement(MicrophoneViewer, null)
+          React.createElement(MicrophoneViewer, { enabled: this.state.sendingMicData })
         )
       );
     }

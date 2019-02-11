@@ -163,7 +163,7 @@ class LightsSimulator extends React.Component {
         }
     }
 
-    __changeSelection() {
+    toggleRenderPreview() {
         if (this.state.renderingEnabled) {
             this.turnOffSimulation();
         } else {
@@ -180,14 +180,24 @@ class LightsSimulator extends React.Component {
                 'div',
                 null,
                 React.createElement('input', { type: 'checkbox', 'data-id': 'renderToggle', checked: this.state.renderingEnabled,
-                    onChange: this.__changeSelection.bind(this) }),
+                    onChange: this.toggleRenderPreview.bind(this) }),
                 React.createElement(
                     'label',
                     null,
-                    'Simular'
+                    'Preview light output from server'
                 )
             ),
-            React.createElement('canvas', { ref: 'canvas', width: this.props.width, height: this.props.height })
+            React.createElement(
+                'div',
+                { className: 'preview-area' },
+                React.createElement('canvas', { onClick: this.toggleRenderPreview.bind(this), ref: 'canvas', width: this.props.width,
+                    height: this.props.height }),
+                this.state.renderingEnabled ? null : React.createElement(
+                    'div',
+                    { className: 'preview-btn' },
+                    'Click to START / PAUSE preview of lights'
+                )
+            )
         );
     }
 }

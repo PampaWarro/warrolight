@@ -3,12 +3,12 @@ if (!window.socket) {
 }
 
 class MicrophoneViewer extends React.Component {
-  constructor() {
-    super(...arguments)
+  constructor(props) {
+    super(props)
 
     this.state = {
-      micOn: true,
       connected: false,
+      enabled: props.enabled
     }
   }
 
@@ -18,13 +18,12 @@ class MicrophoneViewer extends React.Component {
     })
   }
 
-  _stateChange(state) {
-    this.setState({
-      selected: state.currentProgramName,
-      currentConfig: state.currentConfig,
-      remoteChange: true
-    })
-    console.log(state)
+  toggleMic() {
+    if(this.props.enabled) {
+      socket.emit('stopSendingMicData');
+    } else {
+      socket.emit('startSendingMicData');
+    }
   }
 
   componentDidMount() {
@@ -55,11 +54,6 @@ class MicrophoneViewer extends React.Component {
     }
   }
 
-  handleProgramClick(key, ev) {
-    ev.preventDefault()
-    this.setCurrentProgram(key)
-  }
-
   plotEnergyHistogram(level, max) {
     let histogram = document.getElementById("music");
 
@@ -83,54 +77,42 @@ class MicrophoneViewer extends React.Component {
     this.canvasCtx.fillText(`REL Vol: ${Math.round(level)}`, this.canvasCtx.canvas.width - 90, 45);
   }
 
-  plotPerBandHistogram({bass, mid, high, onsetbass, onsetmid, onsethigh}) {
+  plotPerBandHistogram({bass, mid, high, all}) {
     let histogram = document.getElementById("music");
     let r = Math.round(bass*255);
     let g = Math.round(mid*255);
     let b = Math.round(high*255);
+    let rms = Math.round(all*255);
     let max = 0;
     let level = Math.min(1, (r+g+b)/(3*255));
 
-
-
-    // let w = 2;
-    // let HEIGHT = this.canvasCtx.canvas.height;
-    // let h = Math.round(level * HEIGHT);
-    // this.canvasCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-    // this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h, w, h);
 
     //
     let MIN = 30;
     let w = 2;
     let HEIGHT = this.canvasCtx.canvas.height / 3;
-    let h = Math.round(level * HEIGHT);
-    this.canvasCtx.globalCompositeOperation = "screen";
-    this.canvasCtx.fillStyle = `rgba(${Math.max(MIN,r)}, ${0}, ${0})`;
-    h = Math.round((r/255) * HEIGHT);
-    this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h, w, h);
-    if(onsetbass) {
-      this.canvasCtx.fillStyle = `#fff`;
-      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT, w, 5);
-    }
+    let h;
+    if (this.state.perBand) {
+      this.canvasCtx.globalCompositeOperation = "screen";
 
-    h = Math.round((g/255) * HEIGHT);
-    this.canvasCtx.fillStyle = `rgba(${0}, ${Math.max(MIN,g)}, ${0})`;
-    this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h +HEIGHT, w, h);
-    if(onsetmid) {
-      this.canvasCtx.fillStyle = `#fff`;
-      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT + HEIGHT, w, 5);
-    }
+      this.canvasCtx.fillStyle = `rgba(${Math.max(MIN, r)}, ${0}, ${0})`;
+      h = Math.round((r / 255) * HEIGHT);
+      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h, w, h);
 
-    h = Math.round((b/255) * HEIGHT);
-    this.canvasCtx.fillStyle = `rgba(${0}, ${0}, ${Math.max(MIN,b)})`;
-    this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h+HEIGHT*2, w, h);
-    if(onsethigh) {
-      this.canvasCtx.fillStyle = `#fff`;
-      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT + HEIGHT*2-5, w, 5);
-    }
-    //
-    this.canvasCtx.globalCompositeOperation = "source-over";
+      h = Math.round((g / 255) * HEIGHT);
+      this.canvasCtx.fillStyle = `rgba(${0}, ${Math.max(MIN, g)}, ${0})`;
+      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h + HEIGHT, w, h);
 
+      h = Math.round((b / 255) * HEIGHT);
+      this.canvasCtx.fillStyle = `rgba(${0}, ${0}, ${Math.max(MIN, b)})`;
+      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h + HEIGHT * 2, w, h);
+
+      this.canvasCtx.globalCompositeOperation = "source-over";
+    } else {
+      this.canvasCtx.fillStyle = `rgba(200,200,200)`;
+      h = Math.round((rms / 255) * HEIGHT * 3);
+      this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, HEIGHT - h + HEIGHT * 2, w, h);
+    }
 
 
     // this.canvasCtx.fillStyle = `#ff5500`;
@@ -148,18 +130,18 @@ class MicrophoneViewer extends React.Component {
     this.canvasCtx.fillText(`REL Vol: ${Math.round(level*100)}`, this.canvasCtx.canvas.width - 90, 45);
   }
 
-  turnOn(){
-    this.setState({micOn: true});
-    alert("No se duerme")
-  }
-
-  turnOff(){
-    this.setState({micOn: false})
+  toggleperBandMode(e) {
+    this.setState({perBand: !this.state.perBand});
+    return false;
   }
 
   render() {
-    return <div className="mic-client">
-      <canvas id="music" width="800" height="300">a</canvas>
+    return <div className="mic-client" >
+      <a className={'perdband-btn'} href={'javascript:void(0)'} onClick={(e) => this.toggleperBandMode(e)}>{ this.state.perBand ? 'Global RMS' : 'Per band RMS' }</a>
+
+      <canvas id="music" width="800" onClick={this.toggleMic.bind(this)} height="200" style={{opacity: this.props.enabled ? '1' : '0.5'}}>a</canvas>
+
+      { this.props.enabled ? null : <div className={'preview-btn'}>Click to TURN ON / OFF server Mic input viz</div> }
     </div>
   }
 }

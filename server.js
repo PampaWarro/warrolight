@@ -46,15 +46,16 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   let lastRawVolumes = [];
   let lastBands = [];
 
+  let sendingMicData = true;
   let flushVolume = _.throttle(() => {
-    io.volatile.emit('micSample', lastVolumes)
+    if(sendingMicData) {
+      io.volatile.emit('micSample', lastVolumes)
+    }
     lastVolumes = [];
-  }, 30)
+  }, 100)
 
   let avg = 3;
-
   let last = new Date();
-
   soundBroadcast.on('processedaudioframe', (frame) => {
     let timeSinceLastFrame = new Date() - last;
     if(timeSinceLastFrame > 50) {
@@ -83,10 +84,37 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   io.on('connection', (socket) => {
     let simulating = false;
 
+    let broadcastStateChange = (includeSelf) => {
+      let state = {
+        currentProgramName: lightProgram.currentProgramName,
+        currentConfig: lightProgram.getCurrentConfig(),
+        sendingMicData
+      };
+
+      if(includeSelf) {
+        socket.emit('stateChange', state)
+      } else {
+        io.emit('stateChange', state)
+      }
+    }
+
     socket.emit('completeState', {
       programs: lightProgram.getProgramsSchema(),
       currentProgramName: lightProgram.currentProgramName,
-      currentConfig: lightProgram.getCurrentConfig()
+      currentConfig: lightProgram.getCurrentConfig(),
+      sendingMicData
+    })
+
+    socket.on('startSendingMicData', (ack) => {
+      console.log('[ON] Web client receiving MIC data'.green)
+      sendingMicData = true
+      broadcastStateChange(true);
+    })
+
+    socket.on('stopSendingMicData', (ack) => {
+      console.log('[OFF] Web client stopped receiving mic data'.gray)
+      sendingMicData = false
+      broadcastStateChange(true);
     })
 
     socket.on('startSamplingLights', (ack) => {
@@ -115,7 +143,6 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     // socket.on('reconnect', function () {
     // });
 
-
     deviceMultiplexer.onDeviceStatus(devicesStatus => socket.emit('devicesStatus', devicesStatus))
 
     socket.on('updateConfigParam', (config) => {
@@ -123,7 +150,8 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
 
       socket.broadcast.emit('stateChange', {
         currentProgramName: lightProgram.currentProgramName,
-        currentConfig: lightProgram.getCurrentConfig()
+        currentConfig: lightProgram.getCurrentConfig(),
+        sendingMicData
       })
     })
 
@@ -141,21 +169,13 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
       let presets = lightProgram.getCurrentPresets();
       if(presets[presetName]){
         lightProgram.currentProgram.config = _.extend(lightProgram.getConfig(), presets[presetName]);
-
-        io.emit('stateChange', {
-          currentProgramName: lightProgram.currentProgramName,
-          currentConfig: lightProgram.getCurrentConfig()
-        })
+        broadcastStateChange();
       }
     })
 
     socket.on('setCurrentProgram', (programKey) => {
       lightProgram.setCurrentProgram(programKey)
-
-      io.emit('stateChange', {
-        currentProgramName: lightProgram.currentProgramName,
-        currentConfig: lightProgram.getCurrentConfig()
-      })
+      broadcastStateChange();
       /*if (data.action === 'leds') {
         if (multiplexer && !djActionRunning) {
           multiplexer.setState(data.payload)

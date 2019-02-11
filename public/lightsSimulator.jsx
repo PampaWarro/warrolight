@@ -163,7 +163,7 @@ class LightsSimulator extends React.Component {
         }
     }
 
-    __changeSelection() {
+    toggleRenderPreview() {
         if(this.state.renderingEnabled) {
           this.turnOffSimulation();
         } else {
@@ -174,11 +174,15 @@ class LightsSimulator extends React.Component {
 
     render() {
         return <div className="lights-sim">
-            <div>
-                <input type="checkbox" data-id={'renderToggle'} checked={this.state.renderingEnabled}
-                       onChange={this.__changeSelection.bind(this)}/><label>Simular</label>
-            </div>
-            <canvas ref="canvas" width={this.props.width} height={this.props.height}/>
+          <div>
+            <input type="checkbox" data-id={'renderToggle'} checked={this.state.renderingEnabled}
+                   onChange={this.toggleRenderPreview.bind(this)}/><label>Preview light output from server</label>
+          </div>
+          <div className={'preview-area'}>
+            <canvas onClick={this.toggleRenderPreview.bind(this)} ref="canvas" width={this.props.width}
+                    height={this.props.height}/>
+            {this.state.renderingEnabled ? null : <div className={'preview-btn'}>Click to START / PAUSE preview of lights</div>}
+          </div>
         </div>
     }
 }

@@ -91,7 +91,7 @@ module.exports = class ColorUtils {
       Math.floor(r*(1-ratio)+r2*ratio),
       Math.floor(g*(1-ratio)+g2*ratio),
       Math.floor(b*(1-ratio)+b2*ratio),
-      Math.floor(a*(1-ratio)+a2*ratio),
+      a*(1-ratio)+a2*ratio,
     ];
   }
 

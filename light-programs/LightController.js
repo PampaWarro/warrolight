@@ -2,12 +2,14 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
+  "shapes",
+  "musicFrequencyDot",
+  "frequencyActivation",
   "musicVolumeDot",
-  "PROGRAM_Main",
   // "PROGRAM_Transition",
   // "PROGRAM_Triangulo",
+  "PROGRAM_Main",
   "rays",
-  "shapes",
   "stripe-patterns",
   "sound-waves",
   "radial",
@@ -25,7 +27,6 @@ const programNames = [
   "debugShapes",
   "all-off",
   "all-white",
-  "leap-test"
 ]
 
 const Emitter = require('events')

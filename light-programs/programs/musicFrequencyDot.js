@@ -35,18 +35,18 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     // this.maxCentroid = Math.max(this.lastFrame.spectralCentroid.bin, this.maxCentroid)
     // this.minCentroid = Math.min(this.lastFrame.spectralCentroid.bin, this.minCentroid)
     if(this.lastFrame.filteredBands) {
-      let bass = this.lastFrame.filteredBands.bass.movingStats.rms.normalizedValue;
+      let bass = this.lastFrame.filteredBands.bass.movingStats.rms.slow.normalizedValue;
       let r = Math.round(255 * bass * bass * 0.5);
-      let mid = this.lastFrame.filteredBands.mid.movingStats.rms.normalizedValue;
+      let mid = this.lastFrame.filteredBands.mid.movingStats.rms.slow.normalizedValue;
       let g = Math.round(255 * mid * mid * 4);
-      let high = this.lastFrame.filteredBands.high.movingStats.rms.normalizedValue;
+      let high = this.lastFrame.filteredBands.high.movingStats.rms.slow.normalizedValue;
       let b = Math.round(255 * high * high * 4);
 
 
       let width = Math.round((this.numberOfLeds / this.config.numberOfOnLeds));
 
       for (let i = 0; i < this.numberOfLeds; i += 1) {
-        let rms = this.lastFrame.movingStats.rms.normalizedValue;
+        let rms = this.lastFrame.movingStats.rms.slow.normalizedValue;
         let explosion = Math.ceil(this.config.multiplier * rms * rms * rms * width / 3)
         if (Math.abs((i % width - width/2)) < explosion) {
           this.lastVolume[i] = [r, g, b];

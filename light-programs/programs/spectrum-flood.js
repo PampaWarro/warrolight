@@ -27,7 +27,7 @@ module.exports = class Func extends SoundBasedFunction {
     const geometry = this.position || this.geometry;
 
     const spectrum = this.currentAudioFrame.center.absolutefft;
-    const spectrumNorm = this.currentAudioFrame.center.movingStats.fftPeak.max;
+    const spectrumNorm = this.currentAudioFrame.center.movingStats.fftPeak.slow.max;
     if (!spectrum) {
       done();
     }

@@ -39,8 +39,8 @@ module.exports = class Func extends SoundBasedFunction {
     if (!centerChannel) {
       done();
     }
-    const vol = centerChannel.movingStats.rms.normalizedValue;
-    const normalizedBass = centerChannel.filteredBands.bass.movingStats.rms.normalizedValue;
+    const vol = centerChannel.movingStats.rms.slow.normalizedValue;
+    const normalizedBass = centerChannel.filteredBands.bass.movingStats.rms.slow.normalizedValue;
     const centerX = (
       this.xBounds.center +
       .25 * this.xBounds.scale *

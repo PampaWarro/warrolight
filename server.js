@@ -63,8 +63,8 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     }
     last = new Date()
 
-    let {center: {filteredBands, movingStats: {rms: {normalizedValue}}}} = frame;
-    lastRawVolumes.push({... _.mapValues(filteredBands, b => b.movingStats.rms.normalizedValue), all: normalizedValue});
+    let {center: {filteredBands, movingStats: {rms: {slow: {normalizedValue}}}}} = frame;
+    lastRawVolumes.push({... _.mapValues(filteredBands, b => b.movingStats.rms.slow.normalizedValue), all: normalizedValue});
 
     if(lastRawVolumes.length >= avg) {
       let avgLastVolumes = {

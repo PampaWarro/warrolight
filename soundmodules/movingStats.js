@@ -31,27 +31,19 @@ class StatsExtractor {
     this.getter = options.getter;
     this.forceZeroMin = !!options.forceZeroMin;
     this.avg = null;
-    this.fastAvg = null;
     this.max = null;
     this.min = null;
-    this.alpha = 0.001;
-    this.fastAlpha = 0.4;
+    this.alpha = (options.alpha === undefined)? 0.001 : options.alpha;
   }
   extract(frame, object) {
     const value = this.getter(object);
     var avg = this.avg;
-    var fastAvg = this.fastAvg;
     var min = this.min;
     var max = this.max;
     if (this.avg == null) {
       avg = value;
     } else {
       avg = this.alpha * value + (1 - this.alpha) * this.avg;
-    }
-    if (this.fastAvg == null) {
-      fastAvg = value;
-    } else {
-      fastAvg = this.fastAlpha * value + (1 - this.fastAlpha) * this.fastAvg;
     }
     if (this.forceZeroMin) {
       min = 0;
@@ -72,23 +64,18 @@ class StatsExtractor {
     }
     var normalizedValue = 0;
     var normalizedAvg = 0;
-    var normalizedFastAvg = 0;
     if (max - min > 0) {
       normalizedValue = (value - min) / (max - min);
       normalizedAvg = (avg - min) / (max - min);
-      normalizedFastAvg = (fastAvg - min) / (max - min);
     }
     this.avg = avg;
-    this.fastAvg = fastAvg;
     this.min = min;
     this.max = max;
     return {
       value: value,
       normalizedValue: normalizedValue,
       normalizedAvg: normalizedAvg,
-      normalizedFastAvg: normalizedFastAvg,
       avg: this.avg,
-      fastAvg: this.fastAvg,
       min: this.min,
       max: this.max,
     }
@@ -102,14 +89,20 @@ class MovingStats {
     const that = this;
     this.channelExtractors = {};
     _.forOwn(channelFeatures, (options, featureName) => {
-      that.channelExtractors[featureName] = new StatsExtractor(options);
+      that.channelExtractors[featureName] = {
+        slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
+        fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
+      };
     });
     this.filteredBandExtractors = {};
     _.forOwn(filteredBandFeatures, (options, featureName) => {
       that.filteredBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
         that.filteredBandExtractors[
-          featureName][bandName] = new StatsExtractor(options);
+          featureName][bandName] = {
+            slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
+            fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
+          };
       });
     });
     this.spectralBandExtractors = {};
@@ -117,7 +110,10 @@ class MovingStats {
       that.spectralBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
         that.spectralBandExtractors[
-          featureName][bandName] = new StatsExtractor(options);
+          featureName][bandName] = {
+            slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
+            fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
+          };
       });
     });
   }
@@ -127,20 +123,29 @@ class MovingStats {
     frame.allChannels.forEach(channel => {
       channel.movingStats = {};
       _.forOwn(that.channelExtractors, (extractor, name) => {
-        channel.movingStats[name] = extractor.extract(frame, channel);
+        channel.movingStats[name] = {
+          slow: extractor.slow.extract(frame, channel),
+          fast: extractor.fast.extract(frame, channel),
+        };
       });
 
       _.forOwn(channel.filteredBands, (band, bandName) => {
         band.movingStats = {};
         _.forOwn(that.filteredBandExtractors, (extractors, name) => {
-          band.movingStats[name] = extractors[bandName].extract(frame, band);
+          band.movingStats[name] = {
+            slow: extractors[bandName].slow.extract(frame, band),
+            fast: extractors[bandName].fast.extract(frame, band),
+          };
         });
       });
 
       _.forOwn(channel.spectralBands, (band, bandName) => {
         band.movingStats = {};
         _.forOwn(that.spectralBandExtractors, (extractors, name) => {
-          band.movingStats[name] = extractors[bandName].extract(frame, band);
+          band.movingStats[name] = {
+            slow: extractors[bandName].slow.extract(frame, band),
+            fast: extractors[bandName].fast.extract(frame, band),
+          };
         });
       });
     });

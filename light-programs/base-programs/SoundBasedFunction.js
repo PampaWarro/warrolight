@@ -13,7 +13,7 @@ let lastFrameData = {
   rms: 0,
   spectralBands: {bass: {energy: 0}},
   filteredBands: {bass: {energy: 0, rms: 25}},
-  movingStats: {rms: {value: 0, normalizedValue: 0}},
+  movingStats: {rms: {slow: {value: 0, normalizedValue: 0}}},
   spectralCentroid: {bin: 100}
 };
 

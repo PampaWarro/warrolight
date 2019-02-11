@@ -29,7 +29,7 @@ class Drawable {
 class SolidColor extends Drawable {
   constructor(options) {
     super();
-    this.color = options.color || [255, 255, 255];
+    this.color = options.color || [255, 255, 255, 1];
   }
   colorAtIndex(index, geometry) {
     return this.color;
@@ -40,12 +40,20 @@ class RandomPixels extends Drawable {
   constructor(options) {
     options = options || {};
     super();
-    this.color = options.color || [255, 255, 255];
+    this.color = options.color || [255, 255, 255, 1];
     this.threshold = (options.threshold === undefined)? 0 : options.threshold;
+    this.randomAlpha = (
+      options.randomAlpha === undefined)? false : options.randomAlpha;
   }
   colorAtIndex(index, geometry) {
     if (Math.random() > this.threshold) {
-      return this.color;
+      if (this.randomAlpha) {
+        const color = this.color.slice();
+        color[3] = Math.random();
+        return color;
+      } else {
+        return this.color;
+      }
     }
   }
 }
@@ -70,7 +78,7 @@ class XYHue extends XYDrawable {
     this.value  = options.value || 1;
   }
   colorAtXY(x, y) {
-    const h = (
+    const h = Math.abs(
       this.xOffset + this.xFactor * x +
       this.yOffset + this.yFactor * y) % 360;
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
@@ -184,6 +192,7 @@ class Layer {
     this.alpha = (options.alpha === undefined)? 1 : options.alpha;
     this.blendMode = options.blendMode || 'normal';
     this.debug = !!options.debug;
+    this.enabled = (options.enabled === undefined)? true : options.enabled;
   }
   set blendMode(blendMode) {
     this.blendFunction = blendFunctions[blendMode];
@@ -192,6 +201,9 @@ class Layer {
     }
   }
   applyAtIndex(index, geometry, base) {
+    if (!this.enabled) {
+      return base;
+    }
     const blend = this.colorAtIndex(index, geometry);
     if (!blend) {
       return base;
@@ -244,86 +256,112 @@ module.exports = class Func extends SoundBasedFunction {
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
     this.backgroundXYHue = new XYHue({
+      xFactor: 0.01,
+      yFactor: 0.01,
       value: .7,
     });
-    this.line1 = new Line({
+    this.bassLine = new Line({
       center: [this.xBounds.center, this.yBounds.center],
     });
-    this.line2 = new Line({
+    this.rotor = new Line({
       center: [this.xBounds.center, this.yBounds.max],
       width: 1,
     });
-    this.circle = new Circle({
+    this.bassCircle = new Circle({
       center: [this.xBounds.center, this.yBounds.max],
       width: 5,
     });
-    this.infiniteCircles = new InfiniteCircles({
+    this.rainDots = new InfiniteCircles({
       center: [this.xBounds.center, this.yBounds.min],
       width: .5,
       period: 20,
       radiusWarp: radius => .01 * Math.pow(radius, 2),
     });
-    this.randomPixels = new RandomPixels({threshold: 0.7});
+    this.highPixels = new RandomPixels({randomAlpha: true});
+    this.fillCircle = new Circle({
+      center: [this.xBounds.center, this.yBounds.center],
+      fillColor: [0, 0, 0, 0],
+      width: 100,
+    });
     this.rootLayer = new CompositeLayer({
       layers: [
-        new DrawableLayer({
-          drawable: this.backgroundXYHue,
-        }),
         new CompositeLayer({
           layers: [
             new DrawableLayer({
-              drawable: this.line1,
-              blendMode: 'add',
+              drawable: this.backgroundXYHue,
             }),
-            new DrawableLayer({
-              drawable: this.circle,
-              blendMode: 'add',
+            new CompositeLayer({
+              layers: [
+                this.bassLineLayer = new DrawableLayer({
+                  drawable: this.bassLine,
+                  blendMode: 'add',
+                }),
+                this.bassCircleLayer = new DrawableLayer({
+                  drawable: this.bassCircle,
+                  blendMode: 'add',
+                }),
+              ],
+              blendMode: 'multiply',
+              alpha: 0.97,
             }),
           ],
-          blendMode: 'multiply',
-          alpha: 0.97,
         }),
-        new DrawableLayer({
-          drawable: this.randomPixels,
+        this.highPixelsLayer = new DrawableLayer({
+          drawable: this.highPixels,
           blendMode: 'normal',
         }),
-        new DrawableLayer({
-          drawable: this.line2,
+        this.rotorLayer = new DrawableLayer({
+          drawable: this.rotor,
           blendMode: 'normal',
         }),
-        new DrawableLayer({
-          drawable: this.infiniteCircles,
+        this.rainDotsLayer = new DrawableLayer({
+          drawable: this.rainDots,
           blendMode: 'normal',
           alpha: 0.3,
+        }),
+        this.fillCircleLayer = new DrawableLayer({
+          drawable: this.fillCircle,
+          blendMode: 'normal',
+          alpha: 0.1,
         }),
       ],
     });
   }
 
   updateShapes() {
+    this.bassCircleLayer.enabled = this.config.bassCircle;
+    this.bassLineLayer.enabled = this.config.bassLine;
+    this.fillCircleLayer.enabled = this.config.fillCircle;
+    this.highPixelsLayer.alpha = this.config.highLayerAlpha;
+    this.rotorLayer.alpha = this.config.rotorAlpha;
+    this.rainDotsLayer.alpha = this.config.rainDotsAlpha;
     const centerChannel = this.currentAudioFrame.center;
     if (!centerChannel) {
       return;
     }
     const normalizedHigh = (centerChannel.filteredBands.
-      high.movingStats.rms.normalizedFastAvg);
+      high.movingStats.rms.fast.max/centerChannel.filteredBands.
+      high.movingStats.rms.slow.max);
     const normalizedBass = (centerChannel.filteredBands.
-      bass.movingStats.rms.normalizedFastAvg);
-    const normalizedBassSlow = (centerChannel.filteredBands.
-      bass.movingStats.rms.normalizedAvg);
-    this.backgroundXYHue.xFactor = 0.01*Math.cos(Math.PI*normalizedBassSlow);
-    this.backgroundXYHue.yFactor = 0.02*Math.cos(Math.PI*normalizedHigh);
-    this.backgroundXYHue.xOffset = 10*normalizedBassSlow;
-    this.line1.center[1] = this.yBounds.center + Math.cos(
+      bass.movingStats.rms.fast.max/centerChannel.filteredBands.
+      bass.movingStats.rms.slow.max);
+    this.backgroundXYHue.xOffset = this.xBounds.scale * Math.cos(
+      Math.PI * this.timeInMs / 3000
+    );
+    this.backgroundXYHue.yOffset = this.yBounds.scale * Math.cos(
+      Math.PI * this.timeInMs / 3000
+    );
+    this.bassLine.center[1] = this.yBounds.center + Math.cos(
       Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
-    this.line1.width = 10 * normalizedBass;
-    this.line2.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
-    this.circle.radius = 10 + 50 * normalizedBass;
-    this.infiniteCircles.offset = -this.timeInMs/50;
-    this.infiniteCircles.center[0] = this.xBounds.center + Math.cos(
+    this.bassLine.width = 10 * normalizedBass;
+    this.rotor.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
+    this.bassCircle.radius = 10 + 50 * normalizedBass;
+    this.rainDots.offset = -this.timeInMs/50;
+    this.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
-    this.randomPixels.threshold = 1 - .1*normalizedHigh;
-    this.randomPixels.color = ColorUtils.HSVtoRGB(0, 0, normalizedHigh);
+    this.highPixels.threshold = 1 - .1*Math.pow(normalizedHigh, 2);
+    //this.highPixels.color = ColorUtils.HSVtoRGB(0, 0, normalizedHigh);
+    this.fillCircle.radius = 400 * (3000 - (this.timeInMs%3000))/3000;
   }
 
   drawFrame(draw, done) {
@@ -351,10 +389,12 @@ module.exports = class Func extends SoundBasedFunction {
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-    res.escala = {type: Number, min: 0.01, max: 5, step: 0.01, default: 1}
-    res.color = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
-    res.velocidad = {type: Number, min: -3, max: 3, step: 0.01, default: 0.6}
-    res.whiteBorder = {type: Boolean, default: false}
+    res.bassCircle = {type: Boolean, default: true}
+    res.bassLine = {type: Boolean, default: true}
+    res.fillCircle = {type: Boolean, default: false}
+    res.highLayerAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
+    res.rotorAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
+    res.rainDotsAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
     return res;
   }
 }

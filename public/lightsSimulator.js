@@ -13,6 +13,9 @@ class LightsSimulator extends React.Component {
         this.lastFrameTime = performance.now();
         this.lastFPS = 0;
         this.frameCount = 0;
+
+        this.onVisibilityChange = this.onVisibilityChange.bind(this);
+        this.onFocusChange = this.onFocusChange.bind(this);
     }
 
     turnOnSimulation() {
@@ -30,22 +33,48 @@ class LightsSimulator extends React.Component {
         socket.emit('stopSamplingLights', layout => {});
     }
 
+    decodeLedsColorsFromString(encodedLights) {
+        let bytes = Uint8Array.from(atob(encodedLights), c => c.charCodeAt(0));
+
+        let byLed = new Array(bytes.length / 3);
+        for (let i = 0; i < bytes.length / 3; i += 1) {
+            byLed[i] = [bytes[i * 3], bytes[i * 3 + 1], bytes[i * 3 + 2]];
+        }
+        return byLed;
+    }
+
+    onVisibilityChange() {
+        if (document.hidden && this.state.renderingEnabled) {
+            this.turnOffSimulation();
+        } else if (!document.hidden && this.state.renderingEnabled) {
+            this.turnOnSimulation();
+        }
+    }
+
+    onFocusChange() {
+        debugger;
+        if (!document.hasFocus() && this.state.renderingEnabled) {
+            this.turnOffSimulation();
+        } else if (document.hasFocus() && this.state.renderingEnabled) {
+            this.turnOnSimulation();
+        }
+    }
+
     componentDidMount() {
-        socket.on('lightsSample', lights => {
+        socket.on('lightsSample', encodedLights => {
+            const lights = this.decodeLedsColorsFromString(encodedLights);
             console.log("Lights data");
             this.drawCanvas(lights);
         });
 
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && this.state.renderingEnabled) {
-                this.turnOffSimulation();
-            } else if (!document.hidden && this.state.renderingEnabled) {
-                this.turnOnSimulation();
-            }
-        });
+        document.addEventListener('visibilitychange', this.onVisibilityChange);
+        document.onblur = this.onFocusChange;
+        document.onfocus = this.onFocusChange;
     }
 
     componentWillUnmount() {
+        document.removeEventListener('visibilitychange', this.onVisibilityChange);
+        // document.removeEventListener('blur', this.onFocusChange);
         //this.stopCurrent()
     }
 

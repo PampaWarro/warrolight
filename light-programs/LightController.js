@@ -2,11 +2,14 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
-  "PROGRAM_Main",
+  "shapes",
+  "musicFrequencyDot",
+  "frequencyActivation",
+  "musicVolumeDot",
   // "PROGRAM_Transition",
   // "PROGRAM_Triangulo",
+  "PROGRAM_Main",
   "rays",
-  "shapes",
   "stripe-patterns",
   "sound-waves",
   "radial",
@@ -19,13 +22,11 @@ const programNames = [
   "circles",
   "musicFlow",
   "rainbow",
-  "musicVolumeDot",
   "stars",
   "debugSetup",
   "debugShapes",
   "all-off",
   "all-white",
-  "leap-test"
 ]
 
 const Emitter = require('events')
@@ -145,8 +146,9 @@ module.exports = class LightController {
     }
   }
 
-  updateLeds(leds) {
-    lightsSampleEmitter.emit('lights', leds)
-    this.setLightsCbk(leds)
+  updateLeds(rgbaLeds) {
+    const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
+    lightsSampleEmitter.emit('lights', rgbLeds)
+    this.setLightsCbk(rgbLeds)
   }
 }

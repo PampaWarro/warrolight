@@ -1,17 +1,25 @@
 const _ = require('lodash');
-
 const fs = require('fs');
-// const privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-// const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-// const credentials = {key: privateKey, cert: certificate};
-
 const express = require('express');
+const { Buffer } = require('buffer');
+
+require('./volume-broadcaster')
+let soundBroadcast = require("./sound-broadcast");
+
 const app = express();
 
 const http = require('http').createServer(app);
+
+// // HTTPS
+// const privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+// const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+// const credentials = {key: privateKey, cert: certificate};
 // const httpsServer = require('https').createServer(credentials, app);
 
-require('./volume-broadcaster')
+const lightsToByteString = (ledsColorArray) => {
+  let bytes = _.flatten(ledsColorArray);
+  return Buffer.from(bytes).toString('base64');
+}
 
 exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   app.use(express.static('public'))
@@ -34,17 +42,42 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
 
   const io = require('socket.io').listen(http);
 
-
   let lastVolumes = [];
+  let lastRawVolumes = [];
+  let lastBands = [];
 
   let flushVolume = _.throttle(() => {
     io.volatile.emit('micSample', lastVolumes)
     lastVolumes = [];
-  }, 100)
+  }, 30)
 
-  require("./sound-broadcast").on('volume', volData => {
-    lastVolumes.push(volData);
-    flushVolume();
+  let avg = 3;
+
+  let last = new Date();
+
+  soundBroadcast.on('processedaudioframe', (frame) => {
+    let timeSinceLastFrame = new Date() - last;
+    if(timeSinceLastFrame > 50) {
+      console.log(`SOUND DROPPING FRAMES: Last processedaudioframe frame: ${timeSinceLastFrame}ms ago`.red)
+    }
+    last = new Date()
+
+    let {center: {filteredBands, movingStats: {rms: {normalizedValue}}}} = frame;
+    lastRawVolumes.push({... _.mapValues(filteredBands, b => b.movingStats.rms.normalizedValue), all: normalizedValue});
+
+    if(lastRawVolumes.length >= avg) {
+      let avgLastVolumes = {
+        bass: _.sum(_.map(lastRawVolumes, 'bass'))/avg,
+        mid: _.sum(_.map(lastRawVolumes, 'mid'))/avg,
+        high: _.sum(_.map(lastRawVolumes, 'high'))/avg,
+        all: _.sum(_.map(lastRawVolumes, 'all'))/avg
+      }
+
+      lastVolumes.push(avgLastVolumes);
+      flushVolume();
+
+      lastRawVolumes.shift();
+    }
   })
 
   io.on('connection', (socket) => {
@@ -57,24 +90,26 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     })
 
     socket.on('startSamplingLights', (ack) => {
+      console.log('[ON] Web client sampling lights data'.green)
       simulating = true
-      console.log('Client requested startSamplingLights')
       ack(lightProgram.layout)
     })
+
     socket.on('stopSamplingLights', () => {
-      console.log('Client stoppedSamplingLights')
-      return simulating = false;
+      console.log('[OFF] Web client stopped sampling lights'.gray)
+      simulating = false;
     })
 
     socket.on('restartProgram', () => lightProgram.restart())
 
     let lightsCbk = lights => {
       if(simulating) {
-          socket.volatile.emit('lightsSample', lights)
+          let encodedColors = lightsToByteString(lights);
+          socket.volatile.emit('lightsSample', encodedColors)
       }
     }
 
-    console.log("Remote control connnected")
+    console.log("[ON] Remote control connnected".green)
     lightProgram.onLights(lightsCbk)
 
     // socket.on('reconnect', function () {
@@ -93,7 +128,7 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     })
 
     socket.on('disconnect', function () {
-        console.log("Remote control DISCONNNECTED")
+        console.log("[OFF] Remote control DISCONNNECTED".gray)
         lightProgram.removeOnLights(lightsCbk)
     });
 

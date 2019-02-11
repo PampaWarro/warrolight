@@ -18,23 +18,15 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
   drawFrame(draw, done){
     this.time += this.config.speed;
 
-    // let vol = this.averageRelativeVolume*this.config.multiplier;
-    let vol = this.currentAudioFrame.center.movingStats.rms.normalizedValue*this.config.multiplier;
+    let size = this.config.zoom;
+    if(this.absolutefft) {
+      for (let i = 0; i < this.numberOfLeds; i++) {
+        let pos = Math.floor((i % 150)/size);
+        let vol = this.config.multiplier * this.absolutefft[pos+5]/10;
 
-    // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
-    if(vol < this.config.cutThreshold){
-      vol = 0;
-    } else {
-      vol = (vol - this.config.cutThreshold) / (1-this.config.cutThreshold)
-    }
+        let newVal = ColorUtils.HSVtoRGB(vol, 1, Math.min(vol, 1));
 
-    let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol*vol, 1));
-
-    for(let i=0;i<this.numberOfLeds;i++) {
-      if(i % Math.round((this.numberOfLeds / this.config.numberOfOnLeds)) === 0){
         this.lastVolume[i] = newVal;
-      } else {
-        this.lastVolume[i] = [0,0,0];
       }
     }
 
@@ -51,6 +43,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
   static configSchema(){
     let res = super.configSchema();
     res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
+    res.zoom = {type: Number, min: 1, max: 32, step: 1, default: 4};
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     return res;

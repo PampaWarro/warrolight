@@ -146,8 +146,9 @@ module.exports = class LightController {
     }
   }
 
-  updateLeds(leds) {
-    lightsSampleEmitter.emit('lights', leds)
-    this.setLightsCbk(leds)
+  updateLeds(rgbaLeds) {
+    const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
+    lightsSampleEmitter.emit('lights', rgbLeds)
+    this.setLightsCbk(rgbLeds)
   }
 }

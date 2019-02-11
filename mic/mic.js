@@ -1,25 +1,32 @@
 var spawn = require('child_process').spawn;
 var isMac = require('os').type() == 'Darwin';
 var isWindows = require('os').type().indexOf('Windows') > -1;
+var osEndianness = require('os').endianness();
 var MeasureVolume = require('./volumeTransform.js');
 var PassThrough = require('stream').PassThrough;
 
 var mic = function mic(options) {
   options = options || {};
   var that = {};
-  var endian = options.endian || 'little';
-  var bitwidth = options.bitwidth || '16';
-  var encoding = options.encoding || 'signed-integer';
-  var rate = options.rate || '16000';
-  var channels = options.channels || '1';
+  var endian = osEndianness == "BE"? "big" : "little";
+  var bitwidth = 32;
+  var encoding = 'floating-point';
+  var rate = that._sampleRate = options.rate || 44100;
+  var channels = that._channels = options.channels || 1;
+  if (channels != 1) {
+    // TODO: stereo support.
+    throw Error('Only 1 channel supported.');
+  }
   var device = options.device || 'plughw:1,0';
   var exitOnSilence = options.exitOnSilence || 0;
   var fileType = options.fileType || 'raw';
+  var frameSize = options.frameSize || 512;
+  var bufferSize = frameSize * channels * bitwidth / 8;
   var debug = options.debug || false;
   var format, formatEndian, formatEncoding;
   var audioProcess = null;
   var infoStream = new PassThrough;
-  var audioStream = new MeasureVolume({debug: debug});
+  var soundEmitter = options.soundEmitter;
   var audioProcessOptions = {
     stdio: ['ignore', 'pipe', 'ignore']
   };
@@ -29,24 +36,20 @@ var mic = function mic(options) {
   }
 
   // Setup format variable for arecord call
-  if(endian === 'big') {
-    formatEndian = 'BE';
-  } else {
-    formatEndian = 'LE';
-  }
   if(encoding === 'unsigned-integer') {
     formatEncoding = 'U';
   } else {
     formatEncoding = 'S';
   }
-  format = formatEncoding + bitwidth + '_' + formatEndian;
+  format = formatEncoding + bitwidth + '_' + osEndianness;
 
   that.start = function start() {
     if(audioProcess === null) {
       if(isWindows){
         var params = ['-b', bitwidth, '--endian', endian,
           '-c', channels, '-r', rate, '-e', encoding,
-          '-t' , 'waveaudio', 'default', '-p', '--buffer', '64', '-V', '-V'];
+          '-t' , 'waveaudio', 'default', '-p', '--buffer', bufferSize, '-V',
+          '-V'];
 
         audioProcess = spawn('sox', params, audioProcessOptions)
 
@@ -55,12 +58,13 @@ var mic = function mic(options) {
       else if(isMac){
         let params = ['-b', bitwidth, '--endian', endian,
           '-c', channels, '-r', rate, '-e', encoding,
-          '-t', fileType, '-'];
+          '-t', fileType, '--buffer', bufferSize, '-'];
 
         console.log("rec", params.join(' '))
         audioProcess = spawn('rec', params , audioProcessOptions)
       }
       else {
+        // TODO: fix this branch, no idea about the args for this program.
         let params = ['-c', channels, '-r', rate, '-f',
           format, '-D', device, '-B', '100000'];
 
@@ -70,15 +74,23 @@ var mic = function mic(options) {
 
       audioProcess.on('exit', function(code, sig) {
         if(code != null && sig === null) {
-          audioStream.emit('audioProcessExitComplete');
+          soundEmitter.emit('audioProcessExitComplete');
           if(debug) console.log("recording audioProcess has exited with code = %d", code);
         }
       });
-      audioProcess.stdout.pipe(audioStream);
+      audioProcess.stdout.on('readable', function() {
+        let data;
+        let bufferCount = 0;
+        while (data = this.read(bufferSize)) {
+          that._processRawAudioBuffer(data);
+          bufferCount++;
+        }
+        // console.log('buffers accumulated:', bufferCount);
+      });
       if(debug) {
         audioProcess.stderr.pipe(infoStream);
       }
-      audioStream.emit('startComplete');
+      soundEmitter.emit('startComplete');
     } else {
       if(debug) {
         throw new Error("Duplicate calls to start(): Microphone already started!");
@@ -86,11 +98,36 @@ var mic = function mic(options) {
     }
   };
 
+  var offsetSamples = 0;
+  that._processRawAudioBuffer = function(rawBuffer) {
+    var samples = new Float32Array(rawBuffer.buffer, rawBuffer.byteOffset,
+      rawBuffer.length / 4);
+
+    // TODO: deinterleave channels for stereo support.
+    const channels = [{
+      samples: samples
+    }];
+    const center = channels[0];
+    const allChannels = [center].concat(channels);
+
+    soundEmitter.emit('audioframe', {
+      center: center,
+      channels: channels,
+      allChannels: allChannels,
+      sampleRate: this._sampleRate,
+      frameSize: samples.length,
+      offsetSamples: offsetSamples,
+      offsetSeconds: offsetSamples / this._sampleRate
+    });
+
+    offsetSamples += samples.length;
+  };
+
   that.stop = function stop() {
     if(audioProcess != null) {
       audioProcess.kill('SIGTERM');
       audioProcess = null;
-      audioStream.emit('stopComplete');
+      soundEmitter.emit('stopComplete');
       if(debug) console.log("Microhphone stopped");
     }
   };
@@ -98,8 +135,8 @@ var mic = function mic(options) {
   that.pause = function pause() {
     if(audioProcess != null) {
       audioProcess.kill('SIGSTOP');
-      audioStream.pause();
-      audioStream.emit('pauseComplete');
+      soundEmitter.pause();
+      soundEmitter.emit('pauseComplete');
       if(debug) console.log("Microphone paused");
     }
   };
@@ -107,14 +144,14 @@ var mic = function mic(options) {
   that.resume = function resume() {
     if(audioProcess != null) {
       audioProcess.kill('SIGCONT');
-      audioStream.resume();
-      audioStream.emit('resumeComplete');
+      soundEmitter.resume();
+      soundEmitter.emit('resumeComplete');
       if(debug) console.log("Microphone resumed");
     }
   }
 
-  that.getAudioStream = function getAudioStream() {
-    return audioStream;
+  that.getSoundEmitter = function getSoundEmitter() {
+    return soundEmitter;
   }
 
   if(debug) {

@@ -1,8 +1,7 @@
 const mic = require('./mic/mic');
-const fs = require('fs');
-
 const soundEmitter = require("./sound-broadcast")
 
+// const fs = require('fs');
 // var outputFileStream = fs.WriteStream('output.raw');
 // micInputStream.pipe(outputFileStream);
 
@@ -13,31 +12,37 @@ const soundEmitter = require("./sound-broadcast")
 // });
 
 function startMic(){
-  let micInstance = mic({ 'rate': '2000', 'channels': '1', 'bitwidth': 16 });
-  let micInputStream = micInstance.getAudioStream();
+  let frameSize = 512;
+  let micInstance = mic({
+    rate: 44100,
+    channels: 1,
+    bitwidth: 16,
+    frameSize: frameSize,
+    soundEmitter: soundEmitter
+  });
+  soundEmitter.init({
+    channels: 1,
+    sampleRate: 44100,
+    frameSize: frameSize,
+    windowType: 'hamming',
+    frequencyBands: {
+      bassCutoff: 10,
+      bassMidCrossover: 300,
+      midHighCrossover: 1200,
+      highCutoff: 16000,
+    },
+  });
 
-  micInputStream.on('error', function(err) {
+  soundEmitter.on('error', function(err) {
     console.log("Microphone Error in Input Stream: " + err);
   });
 
-  micInputStream.on('data', function(){})
 
-  let lastTest = new Date();
-  micInputStream.on('volumeSample', function(volume) {
-    soundEmitter.emit('sound', volume)
-
-    // let elapsed = new Date() - lastTest;
-    // if(elapsed > 1000) {
-    //   console.log(`${elapsed}ms VOLUME`, Math.round(volume * 100), new Array(Math.round(volume * 60) + 1).join('#'))
-    //   lastTest = new Date();
-    // }
-  });
-
-  micInputStream.on('startComplete', function() {
+  soundEmitter.on('startComplete', function() {
     console.log("Microphone listening");
   });
 
-  micInputStream.on('audioProcessExitComplete', function() {
+  soundEmitter.on('audioProcessExitComplete', function() {
     console.log("Microphone stopped listening. Retrying in 1s");
     setTimeout(startMic, 1000)
   });

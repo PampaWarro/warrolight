@@ -13,6 +13,7 @@ function MeasureVolume(options) {
 util.inherits(MeasureVolume, Transform);
 
 MeasureVolume.prototype._transform = function (chunk, encoding, callback) {
+  // console.log(`Received ${chunk.length} bytes of data.`);
   const extra = 0;
   let totalSound = 0;
   for (let i = 0; i < chunk.length; i = i + (2 + extra)) {
@@ -33,7 +34,7 @@ MeasureVolume.prototype._transform = function (chunk, encoding, callback) {
 
   this.emit('volumeSample', volume);
 
-  // console.log("VOLUME", volume);
+  console.log("VOLUME", volume);
 
   this.push(chunk);
   callback();

@@ -61,7 +61,7 @@ var mic = function mic(options) {
           '-c', channels,
           '-r', outputRate,
           '-e', outputEncoding,
-          '--buffer', bufferSize,
+          '--buffer', bufferSize/8,
           '-t' , 'raw',
           '-'
         ];

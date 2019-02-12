@@ -46,6 +46,7 @@ let averageVolumeSmoothedSlow = 0;
 let averageRelativeVolumeSmoothed = 0;
 let medianVolume = 0
 let maxVolume = 0;
+let audioReady = false;
 
 soundEmitter.on('processedaudioframe', (frame) => {
   let {center: lastFrame} = frame;
@@ -57,6 +58,7 @@ soundEmitter.on('processedaudioframe', (frame) => {
   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
 
   currentAudioFrame = frame;
+  audioReady = true;
   lastFrameData = lastFrame
 
   _.each(maxabsolutefft, (v, i) => maxabsolutefft[i] = Math.max(maxabsolutefft[i]*0.99,lastFrame.absolutefft[i]));
@@ -102,6 +104,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
 
   start(config, draw, done){
     this.soundEmitter = soundEmitter;
+    this.audioReady = audioReady;
     this.currentAudioFrame = currentAudioFrame;
     this.averageVolume = averageVolume;
     this.averageRelativeVolume = averageRelativeVolume;
@@ -113,6 +116,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
 
     self.processInterval = setTimeout(function updateValues() {
       // calculate average
+      self.audioReady = audioReady;
       self.currentAudioFrame = currentAudioFrame;
       self.averageVolume = averageVolume
       self.averageVolumeSmoothed = averageVolumeSmoothed

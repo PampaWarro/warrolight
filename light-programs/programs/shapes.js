@@ -1,11 +1,11 @@
-const LayerBasedFunction = require("./../base-programs/LayerBasedFunction");
+const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const {
   XYHue,
   Line,
   Circle,
   InfiniteCircles,
   RandomPixels,
-} = require('./../utils/drawables');
+} = require('../utils/drawables');
 
 module.exports = class Func extends LayerBasedFunction {
   getDrawables() {
@@ -94,19 +94,13 @@ module.exports = class Func extends LayerBasedFunction {
   }
 
   updateState() {
+    // Audio independent stuff.
     this.layers.bassCircle.enabled = this.config.bassCircle;
     this.layers.bassLine.enabled = this.config.bassLine;
     this.layers.fillCircle.enabled = this.config.fillCircle;
     this.layers.highPixels.alpha = this.config.highLayerAlpha;
     this.layers.rotor.alpha = this.config.rotorAlpha;
     this.layers.rainDots.alpha = this.config.rainDotsAlpha;
-    const centerChannel = this.currentAudioFrame.center;
-    if (!centerChannel) {
-      return;
-    }
-    const audioSummary = centerChannel.summary;
-    const highNoBass = audioSummary.highRmsNoBass;
-    const normalizedBass = audioSummary.bassPeakDecay;
     this.drawables.backgroundXYHue.xOffset = .01 * this.xBounds.scale * Math.cos(
       Math.PI * this.timeInMs / 5000
     );
@@ -115,14 +109,23 @@ module.exports = class Func extends LayerBasedFunction {
     );
     this.drawables.bassLine.center[1] = this.yBounds.center + Math.cos(
       Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
-    this.drawables.bassLine.width = 2 * normalizedBass;
     this.drawables.rotor.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
-    this.drawables.bassCircle.radius = 10 + 50 * Math.pow(normalizedBass, 2);
     this.drawables.rainDots.offset = -this.timeInMs/50;
     this.drawables.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
-    this.drawables.highPixels.threshold = 1 - .1*highNoBass;
     this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
+
+    // Audio dependent stuff.
+    if (!this.audioReady) {
+      return;
+    }
+    const centerChannel = this.currentAudioFrame.center;
+    const audioSummary = centerChannel.summary;
+    const highNoBass = audioSummary.highRmsNoBass;
+    const normalizedBass = audioSummary.bassPeakDecay;
+    this.drawables.bassCircle.radius = 10 + 50 * Math.pow(normalizedBass, 2);
+    this.drawables.bassLine.width = 2 * normalizedBass;
+    this.drawables.highPixels.threshold = 1 - .1*highNoBass;
   }
 
   static presets() {

@@ -82,38 +82,44 @@ class StatsExtractor {
   }
 }
 
+const statsExtractorOptions = {
+  slow: {alpha: 0.0001},
+  fast: {alpha: 0.02},
+};
+
 // Calculate running average, max and min for audio features.
 class MovingStats {
   constructor(options)  {
     const bandNames = options.bandNames || ['bass', 'mid', 'high'];
     const that = this;
     this.channelExtractors = {};
-    _.forOwn(channelFeatures, (options, featureName) => {
-      that.channelExtractors[featureName] = {
-        slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
-        fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
-      };
+    _.forOwn(channelFeatures, (baseOptions, featureName) => {
+      that.channelExtractors[featureName] = {};
+      _.forOwn(statsExtractorOptions, (options, name) => {
+        that.channelExtractors[featureName][name] = new StatsExtractor(
+          Object.assign({}, options, baseOptions));
+      });
     });
     this.filteredBandExtractors = {};
-    _.forOwn(filteredBandFeatures, (options, featureName) => {
+    _.forOwn(filteredBandFeatures, (baseOptions, featureName) => {
       that.filteredBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
-        that.filteredBandExtractors[
-          featureName][bandName] = {
-            slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
-            fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
-          };
+        that.filteredBandExtractors[featureName][bandName] = {};
+        _.forOwn(statsExtractorOptions, (options, name) => {
+          that.filteredBandExtractors[featureName][bandName][
+            name] = new StatsExtractor(Object.assign({}, options, baseOptions));
+        });
       });
     });
     this.spectralBandExtractors = {};
-    _.forOwn(spectralBandFeatures, (options, featureName) => {
+    _.forOwn(spectralBandFeatures, (baseOptions, featureName) => {
       that.spectralBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
-        that.spectralBandExtractors[
-          featureName][bandName] = {
-            slow: new StatsExtractor(Object.assign({alpha: 0.001}, options)),
-            fast: new StatsExtractor(Object.assign({alpha: 0.02}, options)),
-          };
+        that.spectralBandExtractors[featureName][bandName] = {};
+        _.forOwn(statsExtractorOptions, (options, name) => {
+          that.spectralBandExtractors[featureName][bandName][
+            name] = new StatsExtractor(Object.assign({}, options, baseOptions));
+        });
       });
     });
   }

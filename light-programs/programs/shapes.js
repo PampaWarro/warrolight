@@ -302,7 +302,7 @@ module.exports = class Func extends SoundBasedFunction {
                 }),
               ],
               blendMode: 'multiply',
-              alpha: 0.97,
+              alpha: 0.99,
             }),
           ],
         }),
@@ -339,29 +339,25 @@ module.exports = class Func extends SoundBasedFunction {
     if (!centerChannel) {
       return;
     }
-    const normalizedHigh = (centerChannel.filteredBands.
-      high.movingStats.rms.fast.max/centerChannel.filteredBands.
-      high.movingStats.rms.slow.max);
-    const normalizedBass = (centerChannel.filteredBands.
-      bass.movingStats.rms.fast.max/centerChannel.filteredBands.
-      bass.movingStats.rms.slow.max);
-    this.backgroundXYHue.xOffset = this.xBounds.scale * Math.cos(
-      Math.PI * this.timeInMs / 3000
+    const audioSummary = centerChannel.summary;
+    const highNoBass = audioSummary.highRmsNoBass;
+    const normalizedBass = audioSummary.bassPeakDecay;
+    this.backgroundXYHue.xOffset = .01 * this.xBounds.scale * Math.cos(
+      Math.PI * this.timeInMs / 5000
     );
-    this.backgroundXYHue.yOffset = this.yBounds.scale * Math.cos(
+    this.backgroundXYHue.yOffset = .01 * this.yBounds.scale * Math.cos(
       Math.PI * this.timeInMs / 3000
     );
     this.bassLine.center[1] = this.yBounds.center + Math.cos(
       Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
-    this.bassLine.width = 10 * normalizedBass;
+    this.bassLine.width = 2 * normalizedBass;
     this.rotor.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
-    this.bassCircle.radius = 10 + 50 * normalizedBass;
+    this.bassCircle.radius = 10 + 50 * Math.pow(normalizedBass, 2);
     this.rainDots.offset = -this.timeInMs/50;
     this.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
-    this.highPixels.threshold = 1 - .1*Math.pow(normalizedHigh, 2);
-    //this.highPixels.color = ColorUtils.HSVtoRGB(0, 0, normalizedHigh);
-    this.fillCircle.radius = 400 * (3000 - (this.timeInMs%3000))/3000;
+    this.highPixels.threshold = 1 - .1*highNoBass;
+    this.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
   }
 
   drawFrame(draw, done) {

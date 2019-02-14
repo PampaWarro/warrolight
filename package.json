@@ -22,6 +22,7 @@
     "leapjs": "^0.6.4",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
+    "naudiodon": "^0.4.7",
     "performance-now": "^2.0.0",
     "react": "^15.6.2",
     "serialport": "^6.2.2",

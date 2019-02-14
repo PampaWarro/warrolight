@@ -4,96 +4,42 @@ var isWindows = require('os').type().indexOf('Windows') > -1;
 var osEndianness = require('os').endianness();
 var MeasureVolume = require('./volumeTransform.js');
 var PassThrough = require('stream').PassThrough;
+var portAudio = require('naudiodon');
+
+// console.log(portAudio.getDevices());
 
 var mic = function mic(options) {
   options = options || {};
   var that = {};
-  var endian = osEndianness == "BE"? "big" : "little";
-  var outputBitwidth = 32;
-  var outputEncoding = 'floating-point';
   var outputRate = that._sampleRate = options.rate || 44100;
   var channels = that._channels = options.channels || 1;
   if (channels != 1) {
     // TODO: stereo support.
     throw Error('Only 1 channel supported.');
   }
-  var device = options.device || 'plughw:1,0';
+  var deviceId = options.deviceId || -1;
   var exitOnSilence = options.exitOnSilence || 0;
-  var fileType = options.fileType || 'raw';
   var frameSize = options.frameSize || 512;
+  const outputBitwidth = 16;
   var bufferSize = frameSize * channels * outputBitwidth / 8;
   var debug = options.debug || false;
   var format, formatEndian, formatEncoding;
-  var audioProcess = null;
-  var infoStream = new PassThrough;
   var soundEmitter = options.soundEmitter;
-  var audioProcessOptions = {
-    stdio: ['ignore', 'pipe', 'ignore']
-  };
-
-  if(debug) {
-    audioProcessOptions.stdio[2] = 'pipe';
-  }
-
-  // Setup format variable for arecord call
-  if(outputEncoding === 'unsigned-integer') {
-    formatEncoding = 'U';
-  } else {
-    formatEncoding = 'S';
-  }
-  format = formatEncoding + outputBitwidth + '_' + osEndianness;
+  var audioInput = null;
 
   that.start = function start() {
-    if(audioProcess === null) {
-      if(isWindows){
-        var params = [
-          // Parameters for input (-t wave audio)
-          // '-b', '16',
-          // '--endian', endian,
-          '-c', channels,
-          // '-r', '44100',
-          // '-e', 'signed-integer',
-          '-t' , 'waveaudio', 'default',
-
-          // Parameters for output (- means pipe it)
-          '-b', outputBitwidth,
-          '--endian', endian,
-          '-c', channels,
-          '-r', outputRate,
-          '-e', outputEncoding,
-          '--buffer', bufferSize/8,
-          '-t' , 'raw',
-          '-'
-        ];
-
-        audioProcess = spawn('sox', params, audioProcessOptions)
-
-        console.log(params.join(" "))
-      }
-      else if(isMac){
-        let params = ['-b', outputBitwidth, '--endian', endian,
-          '-c', channels, '-r', outputRate, '-e', outputEncoding,
-          '-t', fileType, '--buffer', bufferSize, '-'];
-
-        console.log("rec", params.join(' '))
-        audioProcess = spawn('rec', params , audioProcessOptions)
-      }
-      else {
-        // TODO: fix this branch, no idea about the args for this program.
-        let params = ['-c', channels, '-r', outputRate, '-f',
-          format, '-D', device, '-B', '100000'];
-
-        console.log("arecord", params.join(' '))
-        audioProcess = spawn('arecord', params, audioProcessOptions);
-      }
-
-      audioProcess.on('exit', function(code, sig) {
-        if(code != null && sig === null) {
-          soundEmitter.emit('audioProcessExitComplete');
-          if(debug) console.log("recording audioProcess has exited with code = %d", code);
-        }
+    if(audioInput === null) {
+      audioInput = new portAudio.AudioInput({
+        channelCount: channels,
+        sampleFormat: portAudio.SampleFormat16Bit,
+        sampleRate: 44100,
+        deviceId : -1 // Use -1 or omit the deviceId to select the default device
       });
-      audioProcess.stdout.on('readable', function() {
+
+      audioInput.on('end', () =>{
+        soundEmitter.emit('audioProcessExitComplete');
+      });
+      audioInput.on('readable', function() {
         let data;
         let bufferCount = 0;
         while (data = this.read(bufferSize)) {
@@ -102,21 +48,27 @@ var mic = function mic(options) {
         }
         // console.log('buffers accumulated:', bufferCount);
       });
-      if(debug) {
-        audioProcess.stderr.pipe(infoStream);
-      }
+      audioInput.on('error', error => {
+        console.error('audio input error:', error);
+      });
+      audioInput.start();
       soundEmitter.emit('startComplete');
     } else {
       if(debug) {
-        throw new Error("Duplicate calls to start(): Microphone already started!");
+        console.error("Duplicate calls to start(): Microphone already started!");
       }
     }
   };
 
   var offsetSamples = 0;
   that._processRawAudioBuffer = function(rawBuffer) {
-    var samples = new Float32Array(rawBuffer.buffer, rawBuffer.byteOffset,
+    const intBuffer = new Int16Array(rawBuffer.buffer, rawBuffer.byteOffset,
       rawBuffer.length / 4);
+    const samples = new Float32Array(intBuffer.length);
+    for (var i = 0; i < samples.length; i++) {
+      const s = intBuffer[i];
+      samples[i] = s < 0? s / 0x8000 : s / 0x7FFF;
+    }
 
     // TODO: deinterleave channels for stereo support.
     const channels = [{
@@ -139,17 +91,18 @@ var mic = function mic(options) {
   };
 
   that.stop = function stop() {
-    if(audioProcess != null) {
-      audioProcess.kill('SIGTERM');
-      audioProcess = null;
+    if(audioInput != null) {
+      audioInput.stop(() => {
+        if(debug) console.log("Microhphone stopped");
+      });
+      audioInput = null;
       soundEmitter.emit('stopComplete');
-      if(debug) console.log("Microhphone stopped");
     }
   };
 
   that.pause = function pause() {
-    if(audioProcess != null) {
-      audioProcess.kill('SIGSTOP');
+    if(audioInput != null) {
+      audioInput.pause();
       soundEmitter.pause();
       soundEmitter.emit('pauseComplete');
       if(debug) console.log("Microphone paused");
@@ -157,8 +110,8 @@ var mic = function mic(options) {
   };
 
   that.resume = function resume() {
-    if(audioProcess != null) {
-      audioProcess.kill('SIGCONT');
+    if(audioInput != null) {
+      audioInput.resume();
       soundEmitter.resume();
       soundEmitter.emit('resumeComplete');
       if(debug) console.log("Microphone resumed");
@@ -167,15 +120,6 @@ var mic = function mic(options) {
 
   that.getSoundEmitter = function getSoundEmitter() {
     return soundEmitter;
-  }
-
-  if(debug) {
-    infoStream.on('data', function(data) {
-      console.log("Received Info: " + data);
-    });
-    infoStream.on('error', function(error) {
-      console.log("Error in Info Stream: " + error);
-    });
   }
 
   return that;

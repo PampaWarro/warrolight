@@ -8,7 +8,8 @@ class MicrophoneViewer extends React.Component {
 
     this.state = {
       connected: false,
-      enabled: props.enabled
+      sendingMicData: props.config.sendingMicData,
+      metric: props.config.metric
     };
   }
 
@@ -19,10 +20,10 @@ class MicrophoneViewer extends React.Component {
   }
 
   toggleMic() {
-    if (this.props.enabled) {
-      socket.emit('stopSendingMicData');
+    if (this.props.config.sendingMicData) {
+      socket.emit('setMicDataConfig', { sendingMicData: false });
     } else {
-      socket.emit('startSendingMicData');
+      socket.emit('setMicDataConfig', { sendingMicData: true });
     }
   }
 
@@ -133,21 +134,40 @@ class MicrophoneViewer extends React.Component {
     return false;
   }
 
+  toggleMetric() {
+    if (this.props.config.metric === 'Rms') {
+      socket.emit('setMicDataConfig', { metric: 'PeakDecay' });
+    } else {
+      socket.emit('setMicDataConfig', { metric: 'Rms' });
+    }
+    return false;
+  }
+
   render() {
     return React.createElement(
       'div',
       { className: 'mic-client' },
       React.createElement(
-        'a',
-        { className: 'perdband-btn', href: 'javascript:void(0)', onClick: e => this.toggleperBandMode(e) },
-        this.state.perBand ? 'Global RMS' : 'Per band RMS'
+        'div',
+        { className: 'perdband-btn' },
+        React.createElement(
+          'a',
+          { href: 'javascript:void(0)', onClick: () => this.toggleMetric() },
+          this.props.config.metric
+        ),
+        React.createElement('br', null),
+        React.createElement(
+          'a',
+          { href: 'javascript:void(0)', onClick: e => this.toggleperBandMode(e) },
+          this.state.perBand ? 'Global' : 'Per band'
+        )
       ),
       React.createElement(
         'canvas',
-        { id: 'music', width: '800', onClick: this.toggleMic.bind(this), height: '200', style: { opacity: this.props.enabled ? '1' : '0.5' } },
+        { id: 'music', width: '800', onClick: this.toggleMic.bind(this), height: '200', style: { opacity: this.props.config.sendingMicData ? '1' : '0.5' } },
         'a'
       ),
-      this.props.enabled ? null : React.createElement(
+      this.props.config.sendingMicData ? null : React.createElement(
         'div',
         { className: 'preview-btn' },
         'Click to TURN ON / OFF server Mic input viz'

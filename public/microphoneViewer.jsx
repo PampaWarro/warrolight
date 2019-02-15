@@ -8,7 +8,8 @@ class MicrophoneViewer extends React.Component {
 
     this.state = {
       connected: false,
-      enabled: props.enabled
+      sendingMicData: props.config.sendingMicData,
+      metric: props.config.metric
     }
   }
 
@@ -19,10 +20,10 @@ class MicrophoneViewer extends React.Component {
   }
 
   toggleMic() {
-    if(this.props.enabled) {
-      socket.emit('stopSendingMicData');
+    if(this.props.config.sendingMicData) {
+      socket.emit('setMicDataConfig', {sendingMicData: false});
     } else {
-      socket.emit('startSendingMicData');
+      socket.emit('setMicDataConfig', {sendingMicData: true});
     }
   }
 
@@ -135,13 +136,26 @@ class MicrophoneViewer extends React.Component {
     return false;
   }
 
+  toggleMetric() {
+    if(this.props.config.metric === 'Rms') {
+      socket.emit('setMicDataConfig', {metric: 'PeakDecay'});
+    } else {
+      socket.emit('setMicDataConfig', {metric: 'Rms'});
+    }
+    return false;
+  }
+
   render() {
     return <div className="mic-client" >
-      <a className={'perdband-btn'} href={'javascript:void(0)'} onClick={(e) => this.toggleperBandMode(e)}>{ this.state.perBand ? 'Global RMS' : 'Per band RMS' }</a>
+      <div className={'perdband-btn'} >
+        <a href={'javascript:void(0)'} onClick={() => this.toggleMetric()}>{ this.props.config.metric }</a>
+      <br/>
+        <a href={'javascript:void(0)'} onClick={(e) => this.toggleperBandMode(e)}>{ this.state.perBand ? 'Global' : 'Per band' }</a>
+      </div>
 
-      <canvas id="music" width="800" onClick={this.toggleMic.bind(this)} height="200" style={{opacity: this.props.enabled ? '1' : '0.5'}}>a</canvas>
+      <canvas id="music" width="800" onClick={this.toggleMic.bind(this)} height="200" style={{opacity: this.props.config.sendingMicData ? '1' : '0.5'}}>a</canvas>
 
-      { this.props.enabled ? null : <div className={'preview-btn'}>Click to TURN ON / OFF server Mic input viz</div> }
+      { this.props.config.sendingMicData ? null : <div className={'preview-btn'}>Click to TURN ON / OFF server Mic input viz</div> }
     </div>
   }
 }

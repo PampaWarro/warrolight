@@ -15,7 +15,8 @@ class Simulator extends React.Component {
 
     this.state = {
       selected: null,
-      programs: []
+      programs: [],
+      micConfig: {}
     }
 
     this.leds = []
@@ -36,7 +37,7 @@ class Simulator extends React.Component {
       programs: _.keyBy(state.programs, 'name'),
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
-      sendingMicData: state.sendingMicData
+      micConfig: state.micConfig
     })
     console.log(state)
   }
@@ -45,11 +46,11 @@ class Simulator extends React.Component {
     this.setState({
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
-      sendingMicData: state.sendingMicData,
+      micConfig: state.micConfig,
       remoteChange: true
     })
 
-    console.log(state.currentProgramName, state.currentConfig)
+    console.log(state.currentProgramName, state)
   }
 
   componentDidMount() {
@@ -161,7 +162,7 @@ class Simulator extends React.Component {
             </div>
           </div>
 
-          <MicrophoneViewer enabled={this.state.sendingMicData}/>
+          <MicrophoneViewer config={this.state.micConfig}/>
         </div>
       </div>)
     }

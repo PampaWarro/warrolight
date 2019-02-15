@@ -18,11 +18,13 @@ module.exports = class TimeTickedFunction {
   start(config, draw, done) {
     this.config = config;
     this.timeInMs = 0;
+    this.frameNumber = 0;
     this.startTime = new Date();
 
     const frame =() => {
       let start = new Date();
       this.timeInMs = new Date() - this.startTime;
+      this.frameNumber++
       this.drawFrame(colorsArray => draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness))), done);
 
       let drawingTimeMs = new Date() - start

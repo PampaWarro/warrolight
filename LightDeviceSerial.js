@@ -40,6 +40,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
     this.devicePort = port;
     this.encoding = ENCODING_RGB
 
+    this.protocolRetries = 0;
 
     this.freshData = false;
     this.waitingResponse = true;
@@ -74,10 +75,19 @@ module.exports = class LightDeviceSerial extends LightDevice {
         this.logInfo("Reconnected")
         this.updateState(this.STATE_RUNNING);
       } else if (data === 'OK') {
-        //this.logInfo(`ACK`)
+        this.logInfo(`ACK`)
+      } else if (data === 'ARDUINOSTART') {
+        this.logInfo("ARDUINOSTART")
+        return;
+      } else if (data === 'FAILED_RF_WRITE') {
+        console.log(`Hardware failure. Restart serial port.`)
+        clearTimeout(this.reconnectTimeout);
+        this.restartSerialConnection();
+        return;
       } else {
         this.logInfo(`UNEXPECTED MSG'${data}'`)
         console.log(`UNEXPECTED MSG'${data}'`)
+        return;
       }
     } else {
       this.logInfo(`No data received`)
@@ -150,9 +160,23 @@ module.exports = class LightDeviceSerial extends LightDevice {
       clearTimeout(this.reconnectTimeout);
 
       this.reconnectTimeout = setTimeout(() => {
-        this.sendInitialKick()
+        // console.log("No initial connection. Retrying")
+        if(this.protocolRetries > 2) {
+          this.restartSerialConnection();
+          this.protocolRetries = 0;
+        } else {
+          this.sendInitialKick()
+        }
       }, reconnectTime)
     }
+  }
+
+  restartSerialConnection() {
+    console.log("Restarting serial connection to restart arduino.")
+    if(this.port) {
+      this.port.close();
+    }
+    setTimeout(() => this.setupCommunication(), 1500);
   }
 
   setupCommunication() {
@@ -168,7 +192,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         this.port.on('open', () => {
           this.updateState(this.STATE_CONNECTING);
           this.logInfo('Port open. Data rate: ' + this.port.settings.baudRate);
-          setTimeout(this.sendInitialKick.bind(this), 100)
+          setTimeout(this.sendInitialKick.bind(this), 2000)
         })
         const parser = this.port.pipe(new SerialPort.parsers.Readline({ delimiter: '\n' }));
         this.port.on('error', this.handleError.bind(this))

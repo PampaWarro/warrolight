@@ -6,11 +6,12 @@ class Summarize {
   summarizeFilteredBand(band, prefix) {
     const slowMax = band.movingStats.rms.slow.max;
     const fastMax = band.movingStats.rms.fast.max;
+    const fastAvg = band.movingStats.rms.fast.avg;
     const normalizedRms = band.movingStats.rms.slow.normalizedValue;
     return {
       [`${prefix}Max`]: slowMax,
       [`${prefix}Rms`]: normalizedRms,
-      [`${prefix}PeakDecay`]: fastMax/slowMax,
+      [`${prefix}PeakDecay`]: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
     };
   }
   summarizeSpectralBand(band) {
@@ -19,6 +20,7 @@ class Summarize {
   summarizeChannel(channel) {
     const slowMax = channel.movingStats.rms.slow.max;
     const fastMax = channel.movingStats.rms.fast.max;
+    const fastAvg = channel.movingStats.rms.fast.avg;
     const normalizedRms = channel.movingStats.rms.slow.normalizedValue;
     const highRmsNoBass = Math.max(0,
       channel.summary.highRms - channel.summary.bassRms);
@@ -35,7 +37,7 @@ class Summarize {
       midRmsNoBass: midRmsNoBass,
       max: slowMax,
       rms: normalizedRms,
-      peakDecay: fastMax/slowMax,
+      peakDecay: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
     };
   }
   run(frame, emitter) {

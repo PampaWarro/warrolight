@@ -63,7 +63,7 @@ var mic = function mic(options) {
   var offsetSamples = 0;
   that._processRawAudioBuffer = function(rawBuffer) {
     const intBuffer = new Int16Array(rawBuffer.buffer, rawBuffer.byteOffset,
-      rawBuffer.length / 4);
+      rawBuffer.length / 2);
     const samples = new Float32Array(intBuffer.length);
     for (var i = 0; i < samples.length; i++) {
       const s = intBuffer[i];

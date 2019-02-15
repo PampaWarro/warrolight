@@ -153,7 +153,7 @@ class PolarDrawable extends XYDrawable {
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
     const angle = Math.acos(dX/radius);
-    return this.colorAtPolar(radius, angle);
+    return this.colorAtPolar(radius, mod(angle + this.angleOffset, Math.PI));
   }
 }
 
@@ -166,8 +166,7 @@ class PolarColors extends PolarDrawable {
     this.value  = options.value || 1;
   }
   colorAtPolar(radius, angle) {
-    const h = mod(
-      (this.angleOffset + angle) * this.cycleCount / Math.PI, 1);
+    const h = mod(angle * this.cycleCount / Math.PI, 1);
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }

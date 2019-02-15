@@ -17,6 +17,9 @@ class Summarize {
     return {};
   }
   summarizeChannel(channel) {
+    const slowMax = channel.movingStats.rms.slow.max;
+    const fastMax = channel.movingStats.rms.fast.max;
+    const normalizedRms = channel.movingStats.rms.slow.normalizedValue;
     const highRmsNoBass = Math.max(0,
       channel.summary.highRms - channel.summary.bassRms);
     const midRmsNoBass = Math.max(0,
@@ -30,6 +33,9 @@ class Summarize {
       midPeakDecayNoBass: midPeakDecayNoBass,
       highRmsNoBass: highRmsNoBass,
       midRmsNoBass: midRmsNoBass,
+      max: slowMax,
+      rms: normalizedRms,
+      peakDecay: fastMax/slowMax,
     };
   }
   run(frame, emitter) {

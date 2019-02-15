@@ -85,7 +85,9 @@ class CompositeLayer extends Layer {
   colorAtIndex(index, geometry) {
     let color = [0, 0, 0, 0];
     this.layers.forEach(layer => {
-      color = layer.applyAtIndex(index, geometry, color);
+      if (layer.alpha > 0) {
+        color = layer.applyAtIndex(index, geometry, color);
+      }
     });
     return color;
   }

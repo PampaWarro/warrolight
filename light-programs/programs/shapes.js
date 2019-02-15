@@ -5,14 +5,14 @@ const {
   Circle,
   InfiniteCircles,
   RandomPixels,
+  PolarColors,
 } = require('../utils/drawables');
 
 module.exports = class Func extends LayerBasedFunction {
   getDrawables() {
     return {
-      backgroundXYHue: new XYHue({
-        xFactor: 0.01,
-        yFactor: 0.01,
+      backgroundColors: new PolarColors({
+        center: [this.xBounds.center, this.yBounds.max],
         value: .7,
       }),
       bassLine: new Line({
@@ -47,7 +47,7 @@ module.exports = class Func extends LayerBasedFunction {
         {
           layers: [
             {
-              drawable: drawables.backgroundXYHue,
+              drawable: drawables.backgroundColors,
             },
             {
               layers: [
@@ -101,12 +101,6 @@ module.exports = class Func extends LayerBasedFunction {
     this.layers.highPixels.alpha = this.config.highLayerAlpha;
     this.layers.rotor.alpha = this.config.rotorAlpha;
     this.layers.rainDots.alpha = this.config.rainDotsAlpha;
-    this.drawables.backgroundXYHue.xOffset = .01 * this.xBounds.scale * Math.cos(
-      Math.PI * this.timeInMs / 5000
-    );
-    this.drawables.backgroundXYHue.yOffset = .01 * this.yBounds.scale * Math.cos(
-      Math.PI * this.timeInMs / 3000
-    );
     this.drawables.bassLine.center[1] = this.yBounds.center + Math.cos(
       Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
     this.drawables.rotor.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
@@ -114,6 +108,7 @@ module.exports = class Func extends LayerBasedFunction {
     this.drawables.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
     this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
+    this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
 
     // Audio dependent stuff.
     if (!this.audioReady) {

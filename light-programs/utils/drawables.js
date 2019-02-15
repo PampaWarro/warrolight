@@ -1,5 +1,10 @@
 const ColorUtils = require("./ColorUtils");
 
+// Modulo that handles negative numbers better.
+function mod(x, m) {
+  return ((x % m) + m) % m;
+}
+
 class Drawable {
   colorAtIndex(index, geometry) {
   }
@@ -7,7 +12,7 @@ class Drawable {
 
 class SolidColor extends Drawable {
   constructor(options) {
-    super();
+    super(options);
     this.color = options.color || [255, 255, 255, 1];
   }
   colorAtIndex(index, geometry) {
@@ -18,7 +23,7 @@ class SolidColor extends Drawable {
 class RandomPixels extends Drawable {
   constructor(options) {
     options = options || {};
-    super();
+    super(options);
     this.color = options.color || [255, 255, 255, 1];
     this.threshold = (options.threshold === undefined)? 0 : options.threshold;
     this.randomAlpha = (
@@ -57,9 +62,9 @@ class XYHue extends XYDrawable {
     this.value  = options.value || 1;
   }
   colorAtXY(x, y) {
-    const h = Math.abs(
+    const h = mod(Math.abs(
       this.xOffset + this.xFactor * x +
-      this.yOffset + this.yFactor * y) % 360;
+      this.yOffset + this.yFactor * y), 1);
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }
@@ -67,7 +72,7 @@ class XYHue extends XYDrawable {
 class Line extends XYDrawable {
   constructor(options) {
     options = options || {};
-    super();
+    super(options);
     this.center = options.center || [0, 0];
     this.color = options.color || [255, 255, 255, 1];
     this.backgroundColor = options.backgroundColor || [0, 0, 0, 0];
@@ -91,7 +96,7 @@ class Line extends XYDrawable {
 class Circle extends XYDrawable {
   constructor(options) {
     options = options || {};
-    super();
+    super(options);
     this.center = options.center || [0, 0];
     this.borderColor = options.borderColor || [255, 255, 255, 1];
     this.fillColor = options.fillColor || [255, 255, 255, 1];
@@ -115,7 +120,7 @@ class Circle extends XYDrawable {
 class InfiniteCircles extends XYDrawable {
   constructor(options) {
     options = options || {};
-    super();
+    super(options);
     this.center = options.center || [0, 0];
     this.borderColor = options.borderColor || [255, 255, 255, 1];
     this.backgroundColor = options.backgroundColor || [0, 0, 0, 0];
@@ -128,7 +133,7 @@ class InfiniteCircles extends XYDrawable {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-    const d = Math.abs(this.offset + this.radiusWarp(radius)) % this.period;
+    const d = mod(this.offset + this.radiusWarp(radius), this.period);
     if (Math.abs(d - this.period) < this.width) {
       return this.borderColor;
     }
@@ -136,13 +141,44 @@ class InfiniteCircles extends XYDrawable {
   }
 }
 
+class PolarDrawable extends XYDrawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.center = options.center || [0, 0];
+    this.angleOffset = options.angleOffset || 0;
+  }
+  colorAtXY(x, y) {
+    const [centerX, centerY] = this.center;
+    const [dX, dY] = [x - centerX, y - centerY];
+    const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    const angle = Math.acos(dX/radius);
+    return this.colorAtPolar(radius, angle);
+  }
+}
+
+class PolarColors extends PolarDrawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.cycleCount = options.cycleCount || 1;
+    this.saturation  = options.saturation || 1;
+    this.value  = options.value || 1;
+  }
+  colorAtPolar(radius, angle) {
+    const h = mod(
+      (this.angleOffset + angle) * this.cycleCount / Math.PI, 1);
+    return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
+  }
+}
+
 module.exports = {
   Drawable,
   SolidColor,
   RandomPixels,
-  XYDrawable,
   XYHue,
   Line,
   Circle,
   InfiniteCircles,
+  PolarColors,
 };

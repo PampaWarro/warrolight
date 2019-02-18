@@ -22,7 +22,7 @@ module.exports =  class Func extends SoundBasedFunction {
           if(this.val < this.intensity){
             this.val += 0.05
           }
-          let vol = self.averageRelativeVolumeSmoothed;
+          let vol = self.averageVolume;
           let volDiff = (vol - self.lastVolume);
           this.pos = this.pos + this.speed * (vol*vol) * 100 * self.config.musicWeight * volDiff + (self.config.doble ? this.direction : 1) * self.config.speedWeight * this.speed
 
@@ -68,7 +68,7 @@ module.exports =  class Func extends SoundBasedFunction {
       this.stars[roundPosNext] = [ru, gu, bu];
     })
 
-    this.lastVolume = this.averageRelativeVolumeSmoothed
+    this.lastVolume = this.averageVolume
     draw(this.stars.map(([r,g,b]) => ColorUtils.dim([r, g, b], this.config.brillo)));
   }
 

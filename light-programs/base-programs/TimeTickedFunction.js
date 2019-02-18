@@ -38,7 +38,8 @@ module.exports = class TimeTickedFunction {
       this.nextTickTimeout = setTimeout(frame, Math.max(10, remainingTime));
     }
 
-    this.nextTickTimeout = setTimeout(frame, (1000 / this.config.fps));
+    setTimeout(frame, 1);
+    // setInterval(frame, 1000 / this.config.fps - 10);
 
     done()
   }

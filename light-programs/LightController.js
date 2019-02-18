@@ -1,3 +1,4 @@
+const moment = require("moment");
 const Geometry = require('./Geometry')
 const _ = require('lodash');
 
@@ -149,6 +150,14 @@ module.exports = class LightController {
   updateLeds(rgbaLeds) {
     const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
     lightsSampleEmitter.emit('lights', rgbLeds)
+
     this.setLightsCbk(rgbLeds)
+    let lastUpdateLatency = (new Date() - this.lastLightsUpdate);
+    this.lastLightsUpdate = new Date();
+    if(lastUpdateLatency > 34) {
+      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.red);
+    } else if(lastUpdateLatency > 25) {
+      // console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
+    }
   }
 }

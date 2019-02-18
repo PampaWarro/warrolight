@@ -21,14 +21,14 @@ module.exports = class SoundWaves extends SoundBasedFunction {
         intensity: relativeVolume,
         distance: self.config.initialDistance,
         color: relativeVolume,
-        saturation: 0.95,
-        update: function () {
-          this.distance += (self.config.haciaAfuera ? 1 : -1) * this.speed * self.config.speed
-          this.intensity = this.intensity * (3 + Math.sqrt(relativeVolume)) / 4
-        }
+        saturation: 0.95
       }
     }
+  }
 
+  updateWave(wave) {
+    wave.distance += (this.config.haciaAfuera ? 1 : -1) * wave.speed * this.config.speed
+    wave.intensity = wave.intensity * (3 + Math.sqrt(wave.intensity)) / 4
   }
 
   drawFrame(draw, done) {
@@ -67,7 +67,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
       colors[i] = ColorUtils.dim([r, g, b], this.config.brilloWave)
     }
 
-    _.each(this.dots, dot => dot.update());
+    _.each(this.dots, dot => this.updateWave(dot));
 
     draw(colors)
   }

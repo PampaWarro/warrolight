@@ -63,7 +63,7 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   soundBroadcast.on('processedaudioframe', (frame) => {
     let timeSinceLastFrame = new Date() - last;
     if(timeSinceLastFrame > 50) {
-      console.log(`SOUND DROPPING FRAMES: Last processedaudioframe frame: ${timeSinceLastFrame}ms ago`.red)
+      // console.log(`SOUND DROPPING FRAMES: Last processedaudioframe frame: ${timeSinceLastFrame}ms ago`.red)
     }
     last = new Date()
 
@@ -146,9 +146,6 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
     console.log("[ON] Remote control connnected".green)
     lightProgram.onLights(lightsCbk)
 
-    // socket.on('reconnect', function () {
-    // });
-
     deviceMultiplexer.onDeviceStatus(devicesStatus => socket.emit('devicesStatus', devicesStatus))
 
     socket.on('updateConfigParam', (config) => {
@@ -165,11 +162,6 @@ exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
         console.log("[OFF] Remote control DISCONNNECTED".gray)
         lightProgram.removeOnLights(lightsCbk)
     });
-
-    // socket.on('SV', (value) => {
-    //   // it is sent as integer 0-10000 to reduce size
-    //   soundEmitter.emit('sound', value/10000)
-    // })
 
     socket.on('setPreset', (presetName) => {
       let presets = lightProgram.getCurrentPresets();

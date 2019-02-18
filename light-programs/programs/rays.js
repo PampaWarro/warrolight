@@ -17,6 +17,15 @@ module.exports = class Rays extends SoundBasedFunction {
         this.rays = _.map(_.range(0,this.config.numberOfParticles), () => this.createRay())
     }
 
+    updateRay(ray) {
+        if(this.config.useSoundSpeed) {
+            let vol = Math.max(0.1, this.averageRelativeVolume - 0.2);
+            ray.pos = (ray.pos + vol * 2 * ray.speed * this.config.globalSpeed * ray.direction)
+        } else {
+            ray.pos = (ray.pos + ray.speed * this.config.globalSpeed * ray.direction)
+        }
+    }
+
     createRay() {
         let self = this
         return {
@@ -24,16 +33,7 @@ module.exports = class Rays extends SoundBasedFunction {
             speed: (Math.random() * 2 + 0.2),
             color: Math.random(),
             saturation: Math.random(),
-            direction: this.config.singleDirection ? 1 : Math.sign(Math.random() - 0.5),
-            update: function () {
-                // let vol = self.averageRelativeVolumeSmoothed || 0.1;
-              if(self.config.useSoundSpeed) {
-                let vol = Math.max(0.1, self.averageRelativeVolume - 0.2);
-                this.pos = (this.pos + vol * 2 * this.speed * self.config.globalSpeed * this.direction)
-              } else {
-                this.pos = (this.pos + this.speed * self.config.globalSpeed * this.direction)
-              }
-            }
+            direction: this.config.singleDirection ? 1 : Math.sign(Math.random() - 0.5)
         }
     }
 
@@ -56,7 +56,7 @@ module.exports = class Rays extends SoundBasedFunction {
 
         _.each(this.rays, ray => {
             let from = ray.pos
-            ray.update();
+            this.updateRay(ray);
             let to = ray.pos
 
             if(to < from){

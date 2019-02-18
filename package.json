@@ -4,7 +4,7 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": "node run-lights.js",
+    "start": " node --max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping run-lights.js",
     "loggc": "node --expose-gc --trace-gc run-lights.js",
     "server": "node server.js"
   },
@@ -19,6 +19,7 @@
     "express": "^4.16.4",
     "fft.js": "^4.0.3",
     "fili": "^2.0.3",
+    "gc-profiler": "^1.4.0",
     "leapjs": "^0.6.4",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",

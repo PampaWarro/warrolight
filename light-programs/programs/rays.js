@@ -93,14 +93,16 @@ module.exports = class Rays extends SoundBasedFunction {
     static presets() {
         return {
             normal: {},
+            normalSound: {globalSpeed: 3, useSoundSpeed: true, singleDirection: true},
             rainbowSmoke: {decay: 0.9, globalSpeed: 2,  colorSaturationRange: 0, numberOfParticles: 15, colorHueAmplitude: 1},
-            colorSmoke: {brillo: 0.4, decay: 0.9, globalSpeed: 5,  colorSaturationRange: 0.3, numberOfParticles: 30, colorHueAmplitude: 1},
+            colorSmoke: {brillo: 0.5, decay: 0.9, globalSpeed: 5,  colorSaturationRange: 0.3, numberOfParticles: 30, colorHueAmplitude: 1},
             crazyDots: {decay: 0.2, brillo: 1, globalSpeed: 4,  colorSaturationRange: 0, numberOfParticles: 40, colorHueAmplitude: 1},
             longTraces: {decay: 0.99, brillo: 0.4, globalSpeed: 8,  colorSaturationRange: 0.4, numberOfParticles: 10, colorHueAmplitude: 1},
-            slowBlue: {decay: 0.99, brillo: 0.15, globalSpeed: 1,  colorSaturationRange: 0.4, numberOfParticles: 15, colorHueAmplitude: 0.10, colorHueOffset: 0.57},
-            fireFast: {brillo: 0.4, decay: 0.8, globalSpeed: 3,  colorSaturationRange: 0.07, numberOfParticles: 90, colorHueAmplitude: 0.12, colorHueOffset: 0.98, singleDirection: true},
+            slowBlue: {decay: 0.92, brillo: 0.4, globalSpeed: 1,  colorSaturationRange: 0.4, numberOfParticles: 15, colorHueAmplitude: 0.10, colorHueOffset: 0.57},
+            fireFast: {brillo: 0.5, decay: 0.8, globalSpeed: 3,  colorSaturationRange: 0.07, numberOfParticles: 90, colorHueAmplitude: 0.12, colorHueOffset: 0.98, singleDirection: true},
             fireFastSound: {brillo: 0.6, decay: 0.8, globalSpeed: 3,  colorSaturationRange: 0.07, numberOfParticles: 90, colorHueAmplitude: 0.12, colorHueOffset: 0.98, singleDirection: true, useSoundSpeed: true},
-            fireSlow: {brillo: 0.1, decay: 0.95, globalSpeed: 0.25,  colorSaturationRange: 0.07, numberOfParticles: 50, colorHueAmplitude: 0.12, colorHueOffset: 0.98}
+            fireSlow: {brillo: 0.1, decay: 0.95, globalSpeed: 0.25,  colorSaturationRange: 0.07, numberOfParticles: 50, colorHueAmplitude: 0.12, colorHueOffset: 0.98},
+            fireSlowSingle: {brillo: 0.1, decay: 0.95, globalSpeed: 0.25,  colorSaturationRange: 0.07, numberOfParticles: 50, colorHueAmplitude: 0.12, colorHueOffset: 0.98, singleDirection: true}
         }
     }
 
@@ -108,7 +110,7 @@ module.exports = class Rays extends SoundBasedFunction {
         let config = super.configSchema();
         config.decay = {type: Number, min: 0, max: 1, step: 0.005, default: 0.8}
         config.globalSpeed = {type: Number, min: 0, max: 7, step: 0.005, default: 1}
-        config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 0.4}
+        config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
         config.numberOfParticles = {type: Number, min: 1, max: 150, step: 1, default: 15}
         config.colorHueAmplitude = {type: Number, min: 0, max: 1, step: 0.01, default: 1}
         config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0.05}

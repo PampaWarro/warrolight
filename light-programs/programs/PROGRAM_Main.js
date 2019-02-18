@@ -19,6 +19,7 @@ const AliveDots = require("./aliveDots");
 const SoundWaves = require("./../../light-programs/programs/sound-waves");
 const WaterFlood = require("./water-flood");
 const Rays = require("./rays");
+const Lineal = require("./lineal");
 const AliveDotsSpeed = require("./aliveDotsSpeed");
 
 const baseTime = 0.1*0.5*1000;
@@ -63,8 +64,10 @@ const schedule = [
   {duration: 30 * baseTime, program: programsByShape({Warro: MusicFlow})},
   {duration: 30 * baseTime, program: programsByShape({Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]})},
 
+  ... getAllPresets(Lineal, 30, 'allOfIt'),
 
   ... getAllPresets(SoundWaves, 60, 'allOfIt'),
+
   {
     duration: 60 * baseTime,
     program: programsByShape({

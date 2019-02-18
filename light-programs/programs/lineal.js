@@ -23,6 +23,14 @@ module.exports = class Lineal extends TimeTickedFunction{
     draw(colors)
   }
 
+  static presets() {
+    return {
+      large: {velocidad: 7, escala: 13},
+      smallSlow: {velocidad: -7, escala: 2},
+      smallFast: {velocidad: 14, escala: 2},
+    }
+  }
+
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();

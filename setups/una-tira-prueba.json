@@ -1,0 +1,25 @@
+{
+  "tira-prueba": {
+    "geometryModule": "geometry-wchica",
+    "shapeMappingModule": "shape-mapping-wchica",
+    "lights": 150,
+    "outputDevices": {
+      "serial": {
+        "type": "LightDeviceSerial",
+        "params": {
+          "numberOfLights": 150,
+          "devicePortWindows": "COM27",
+          "devicePortUnix": "/dev/ttyACM0"
+        }
+      }
+    },
+    "lightsToDevicesMapping": [
+      {
+        "from": 0,
+        "to": 150,
+        "baseIndex": 0,
+        "deviceName": "serial"
+      }
+    ]
+  }
+}

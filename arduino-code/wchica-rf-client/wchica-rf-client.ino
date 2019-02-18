@@ -76,8 +76,8 @@ void setup() {
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
 
   // Max power 1000 mah
-  radio.setChannel(92);
-  //radio.setChannel(103);
+   radio.setChannel(92);
+  // radio.setChannel(103);
 
   // Max power 700 mah
   //radio.setChannel(81);
@@ -139,9 +139,12 @@ void writeLedsHSB(int pos, byte h, byte s, byte  b) {
 int stripSize = NUM_LEDS;
 
 int waitingCounter = 0;
+int partsCount = 0;
+int lastFrame = 0;
+boolean painted = false;
 
 byte data[PAYLOAD_SIZE];
-unsigned long lastFrame = millis();
+unsigned long lastFrameMs = millis();
 
 void loop() {
   int ledSize = 3;   
@@ -152,9 +155,28 @@ void loop() {
     while (radio.available()) {                     // While there is data ready
       radio.read( &data, sizeof(data));             // Get the payload
     }
-    int pos = data[0];                 
+    int pos = data[0];
+    byte frame = data[1];                 
     //Serial.print("Received ");
     //Serial.println(pos);
+
+    if(frame != lastFrame) {
+      if(painted) {
+        painted = false;
+      } else {
+        painted = true;
+        partsCount = 0;
+        /*for (int i = 0; i < 75; i+=1) {  
+          writeLeds(i, 255,0,0);
+        }*/        
+        // Show whatever is in the buffer, clearly the last frame was lost
+        // Mark second led with purple dot
+        writeLeds(1, 200,0,255);
+        FastLED.show();
+      }
+    }
+    lastFrame = frame;
+    partsCount++;
 
     int offset = data[0];
     for (int i = 2; i+2 < PAYLOAD_SIZE; i+=ledSize) {      
@@ -164,15 +186,40 @@ void loop() {
         writeLedsRgb565(offset+i/ledSize, data[i], data[i+1]);      
       }
     }
-    if(offset+30/ledSize> 145){
+    
+    if((offset+30/ledSize) > 145){
+      /*
+      // For debugging lost packets in the frame
+      if(partsCount != 15) {      
+        for (int i = 0; i < 20; i+=1) {  
+          writeLeds(i, 255,255,0);
+        }
+      }
+      */
+      partsCount = 0;
+      FastLED.show();        FastLED.show();
+      painted = true;
+    }         
+    lastFrameMs = nowMs;  
+  } else {
+    long timeSinceLastSignal = (nowMs - lastFrameMs);
+    if(timeSinceLastSignal > 3000) {
+      // Indicate no signal in more than 3 seconds
+      byte ledToTurnOn = 0;
+      if(timeSinceLastSignal % 300 > 150) {
+        ledToTurnOn = 1; 
+      }
+      
+      writeLeds(ledToTurnOn,255,0,0);
+      writeLeds((ledToTurnOn+1)%2,0,0,0);     
+      writeLeds(2,0,0,0);
+      writeLeds(3,0,0,0);
       FastLED.show();
     }
-    lastFrame = nowMs;  
-  } else {
-    if((nowMs - lastFrame) > 1000) {
+    /*if((nowMs - lastFrame) > 1000) {
       arduinoProgram();
       FastLED.show();
-    } 
+    } */
   }
 }
 

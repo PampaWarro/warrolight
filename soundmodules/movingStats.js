@@ -84,7 +84,8 @@ class StatsExtractor {
 
 const statsExtractorOptions = {
   slow: {alpha: 0.0001},
-  fast: {alpha: 0.02},
+  mid: {alpha: 0.02},
+  fast: {alpha: 0.1},
 };
 
 // Calculate running average, max and min for audio features.
@@ -131,6 +132,7 @@ class MovingStats {
       _.forOwn(that.channelExtractors, (extractor, name) => {
         channel.movingStats[name] = {
           slow: extractor.slow.extract(frame, channel),
+          mid: extractor.mid.extract(frame, channel),
           fast: extractor.fast.extract(frame, channel),
         };
       });
@@ -140,6 +142,7 @@ class MovingStats {
         _.forOwn(that.filteredBandExtractors, (extractors, name) => {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
+            mid: extractors[bandName].mid.extract(frame, band),
             fast: extractors[bandName].fast.extract(frame, band),
           };
         });
@@ -150,6 +153,7 @@ class MovingStats {
         _.forOwn(that.spectralBandExtractors, (extractors, name) => {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
+            mid: extractors[bandName].mid.extract(frame, band),
             fast: extractors[bandName].fast.extract(frame, band),
           };
         });

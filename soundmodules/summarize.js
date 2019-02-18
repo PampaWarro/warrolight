@@ -5,13 +5,16 @@ const _ = require('lodash');
 class Summarize {
   summarizeFilteredBand(band, prefix) {
     const slowMax = band.movingStats.rms.slow.max;
+    const midMax = band.movingStats.rms.mid.max;
+    const midAvg = band.movingStats.rms.mid.avg;
     const fastMax = band.movingStats.rms.fast.max;
     const fastAvg = band.movingStats.rms.fast.avg;
     const normalizedRms = band.movingStats.rms.slow.normalizedValue;
     return {
       [`${prefix}Max`]: slowMax,
       [`${prefix}Rms`]: normalizedRms,
-      [`${prefix}PeakDecay`]: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
+      [`${prefix}PeakDecay`]: (midMax - midAvg)/(slowMax - midAvg) || 0,
+      [`${prefix}FastPeakDecay`]: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
     };
   }
   summarizeSpectralBand(band) {
@@ -19,6 +22,8 @@ class Summarize {
   }
   summarizeChannel(channel) {
     const slowMax = channel.movingStats.rms.slow.max;
+    const midMax = channel.movingStats.rms.mid.max;
+    const midAvg = channel.movingStats.rms.mid.avg;
     const fastMax = channel.movingStats.rms.fast.max;
     const fastAvg = channel.movingStats.rms.fast.avg;
     const normalizedRms = channel.movingStats.rms.slow.normalizedValue;
@@ -37,7 +42,8 @@ class Summarize {
       midRmsNoBass: midRmsNoBass,
       max: slowMax,
       rms: normalizedRms,
-      peakDecay: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
+      peakDecay: (midMax - midAvg)/(slowMax - midAvg) || 0,
+      fastPeakDecay: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
     };
   }
   run(frame, emitter) {

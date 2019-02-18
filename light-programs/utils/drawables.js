@@ -10,6 +10,19 @@ class Drawable {
   }
 }
 
+class SingleLed extends Drawable {
+  constructor(options) {
+    super(options);
+    this.color = options.color || [255, 255, 255, 1];
+    this.ledIndex = options.ledIndex || 0;
+  }
+  colorAtIndex(index, geometry) {
+    if (index == mod(this.ledIndex, geometry.leds)) {
+      return this.color;
+    }
+  }
+}
+
 class SolidColor extends Drawable {
   constructor(options) {
     super(options);
@@ -171,8 +184,26 @@ class PolarColors extends PolarDrawable {
   }
 }
 
+class RadiusCosineBrightness extends PolarDrawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.color = options.color || [255, 255, 255, 1];
+    this.radiusOffset = options.radiusOffset || 0;
+    this.scale = options.scale || 1;
+    this.radiusWarp  = options.radiusWarp || (x => x);
+  }
+  colorAtPolar(radius, angle) {
+    radius = this.radiusWarp(this.scale * (radius + this.radiusOffset));
+    const v = .5 + .5 * Math.cos(radius / Math.PI);
+    return ColorUtils.clamp(
+      v * this.color[0], v * this.color[1], v * this.color[2]);
+  }
+}
+
 module.exports = {
   Drawable,
+  SingleLed,
   SolidColor,
   RandomPixels,
   XYHue,
@@ -180,4 +211,5 @@ module.exports = {
   Circle,
   InfiniteCircles,
   PolarColors,
+  RadiusCosineBrightness,
 };

@@ -6,6 +6,8 @@ const {
   InfiniteCircles,
   RandomPixels,
   PolarColors,
+  RadiusCosineBrightness,
+  SingleLed,
 } = require('../utils/drawables');
 
 module.exports = class Func extends LayerBasedFunction {
@@ -14,6 +16,11 @@ module.exports = class Func extends LayerBasedFunction {
       backgroundColors: new PolarColors({
         center: [this.xBounds.center, this.yBounds.max],
         value: .7,
+      }),
+      backgroundMask: new RadiusCosineBrightness({
+        center: [this.xBounds.center, this.yBounds.max],
+        saturation: 0,
+        scale: 1,
       }),
       bassLine: new Line({
         center: [this.xBounds.center, this.yBounds.center],
@@ -38,6 +45,8 @@ module.exports = class Func extends LayerBasedFunction {
         fillColor: [0, 0, 0, 0],
         width: 100,
       }),
+      singleLed: new SingleLed({
+      }),
     }
   }
 
@@ -48,6 +57,11 @@ module.exports = class Func extends LayerBasedFunction {
           layers: [
             {
               drawable: drawables.backgroundColors,
+            },
+            {
+              name: 'backgroundMask',
+              drawable: drawables.backgroundMask,
+              blendMode: 'multiply',
             },
             {
               layers: [
@@ -89,6 +103,12 @@ module.exports = class Func extends LayerBasedFunction {
           blendMode: 'normal',
           alpha: 0.1,
         },
+        {
+          name: 'singleLed',
+          drawable: drawables.singleLed,
+          blendMode: 'normal',
+          alpha: .5,
+        },
       ],
     };
   }
@@ -109,6 +129,19 @@ module.exports = class Func extends LayerBasedFunction {
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
     this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
     this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
+    this.drawables.singleLed.ledIndex = Math.round(this.timeInMs / 10);
+    this.drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 100);
+    this.drawables.backgroundMask.center = [
+      this.xBounds.center + .35 * this.xBounds.scale * Math.cos(
+        Math.PI * this.timeInMs / 7000
+      ),
+      this.yBounds.center + .35 * this.yBounds.scale * Math.cos(
+        Math.PI * this.timeInMs / 8000
+      ),
+    ];
+    this.drawables.backgroundMask.scale = 
+      1 + .2 * Math.cos(Math.PI * this.timeInMs / 3330);
+
 
     // Audio dependent stuff.
     if (!this.audioReady) {
@@ -136,9 +169,9 @@ module.exports = class Func extends LayerBasedFunction {
     res.bassCircle = {type: Boolean, default: true}
     res.bassLine = {type: Boolean, default: true}
     res.fillCircle = {type: Boolean, default: false}
-    res.highLayerAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
-    res.rotorAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
-    res.rainDotsAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
+    res.highLayerAlpha = {type: Number, default: .2, min:0, max:1, step:0.01}
+    res.rotorAlpha = {type: Number, default: .1, min:0, max:1, step:0.01}
+    res.rainDotsAlpha = {type: Number, default: .1, min:0, max:1, step:0.01}
     return res;
   }
 }

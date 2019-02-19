@@ -12,12 +12,14 @@ class Drawable {
 
 class SingleLed extends Drawable {
   constructor(options) {
+    options = options || {};
     super(options);
     this.color = options.color || [255, 255, 255, 1];
     this.ledIndex = options.ledIndex || 0;
   }
   colorAtIndex(index, geometry) {
-    if (index == mod(this.ledIndex, geometry.leds)) {
+    const currentIndex = Math.round(mod(this.ledIndex, geometry.leds))
+    if (index == currentIndex) {
       return this.color;
     }
   }

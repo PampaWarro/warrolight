@@ -5,6 +5,7 @@ const _ = require('lodash');
 const programNames = [
   "shapes",
   "musicFrequencyDot",
+  "bandParticles",
   "frequencyActivation",
   "musicVolumeDot",
   // "PROGRAM_Transition",

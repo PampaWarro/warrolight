@@ -138,6 +138,8 @@ class MicrophoneViewer extends React.Component {
 
   toggleMetric() {
     if(this.props.config.metric === 'Rms') {
+      socket.emit('setMicDataConfig', {metric: 'FastPeakDecay'});
+    } else if(this.props.config.metric === 'FastPeakDecay'){
       socket.emit('setMicDataConfig', {metric: 'PeakDecay'});
     } else {
       socket.emit('setMicDataConfig', {metric: 'Rms'});

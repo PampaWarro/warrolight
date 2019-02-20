@@ -156,7 +156,8 @@ module.exports = class LightController {
     let lastUpdateLatency = (new Date() - this.lastLightsUpdate);
     this.lastLightsUpdate = new Date();
     if(lastUpdateLatency > 34) {
-      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.red);
+      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms  [+${Math.round((new Date() - this.lastDroppedFrame)/1000).toString()}s]`.red);
+      this.lastDroppedFrame = new Date();
     } else if(lastUpdateLatency > 25) {
       // console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
     }

@@ -4,7 +4,7 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": " node --max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping run-lights.js",
+    "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping run-lights.js",
     "loggc": "node --expose-gc --trace-gc run-lights.js",
     "server": "node server.js"
   },

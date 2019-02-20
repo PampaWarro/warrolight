@@ -85,7 +85,7 @@ class StatsExtractor {
 const statsExtractorOptions = {
   slow: {alpha: 0.0001},
   mid: {alpha: 0.02},
-  fast: {alpha: 0.1},
+  fast: {alpha: 0.06},
 };
 
 // Calculate running average, max and min for audio features.

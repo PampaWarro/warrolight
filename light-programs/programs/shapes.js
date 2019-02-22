@@ -25,7 +25,7 @@ module.exports = class Func extends LayerBasedFunction {
       }),
       rotor: new Line({
         center: [this.xBounds.center, this.yBounds.max],
-        width: 1,
+        width: 2,
       }),
       bassCircle: new Circle({
         center: [this.xBounds.center, this.yBounds.max],
@@ -41,7 +41,7 @@ module.exports = class Func extends LayerBasedFunction {
       fillCircle: new Circle({
         center: [this.xBounds.center, this.yBounds.center],
         fillColor: [0, 0, 0, 0],
-        width: 100,
+        width: 80,
       }),
     }
   }
@@ -73,7 +73,7 @@ module.exports = class Func extends LayerBasedFunction {
                 },
               ],
               blendMode: 'multiply',
-              alpha: 0.99,
+              alpha: 1,
             },
           ],
         },
@@ -91,7 +91,6 @@ module.exports = class Func extends LayerBasedFunction {
           name: 'rainDots',
           drawable: drawables.rainDots,
           blendMode: 'normal',
-          alpha: 0.3,
         },
         {
           name: 'fillCircle',
@@ -117,7 +116,7 @@ module.exports = class Func extends LayerBasedFunction {
     this.drawables.rainDots.offset = -this.timeInMs/50;
     this.drawables.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
-    this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
+    this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%5000))/5000;
     this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
     this.drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 100);
     this.drawables.backgroundMask.center = [
@@ -140,15 +139,65 @@ module.exports = class Func extends LayerBasedFunction {
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;
-    this.drawables.bassCircle.radius = 10 + 50 * Math.pow(normalizedBass, 2);
-    this.drawables.bassLine.width = 2 * normalizedBass;
+    this.drawables.bassCircle.radius =
+      10 + this.config.bassCircleSensitivity * Math.pow(normalizedBass, 2);
+    this.drawables.bassLine.width =
+      this.config.bassLineSensitivity * normalizedBass;
     this.drawables.highPixels.threshold = 1 - .1*highNoBass;
   }
 
   static presets() {
     return {
-      "default": {velocidad: 0.4, whiteBorder: true},
-      "gold": {velocidad: 0.1, whiteBorder: false, escala: 0.5, color: 0.42}
+      "default": {
+        bassCircle: true,
+        bassCircleSensitivity: 50,
+        bassLine: false,
+        bassLineSensitivity: 0,
+        fillCircle: false,
+        highLayerAlpha: .2,
+        rotorAlpha: 0,
+        rainDotsAlpha: 0,
+      },
+      "bassLine": {
+        bassCircle: true,
+        bassCircleSensitivity: 50,
+        bassLine: true,
+        bassLineSensitivity: 15,
+        fillCircle: false,
+        highLayerAlpha: .2,
+        rotorAlpha: 0,
+        rainDotsAlpha: 0,
+      },
+      "rotor": {
+        bassCircle: true,
+        bassCircleSensitivity: 42,
+        bassLine: false,
+        bassLineSensitivity: 0,
+        fillCircle: false,
+        highLayerAlpha: .1,
+        rotorAlpha: .5,
+        rainDotsAlpha: 0,
+      },
+      "rain": {
+        bassCircle: true,
+        bassCircleSensitivity: 42,
+        bassLine: false,
+        bassLineSensitivity: 0,
+        fillCircle: false,
+        highLayerAlpha: .1,
+        rotorAlpha: 0,
+        rainDotsAlpha: .3,
+      },
+      "todo": {
+        bassCircle: true,
+        bassCircleSensitivity: 50,
+        bassLine: true,
+        bassLineSensitivity: 15,
+        fillCircle: true,
+        highLayerAlpha: .25,
+        rotorAlpha: .17,
+        rainDotsAlpha: .3,
+      },
     }
   }
 
@@ -156,11 +205,14 @@ module.exports = class Func extends LayerBasedFunction {
   static configSchema() {
     let res = super.configSchema();
     res.bassCircle = {type: Boolean, default: true}
-    res.bassLine = {type: Boolean, default: true}
+    res.bassCircleSensitivity = {
+      type: Number, default: 50, min:0, max:100, step:.1}
+    res.bassLine = {type: Boolean, default: false}
+    res.bassLineSensitivity = {type: Number, default: 0, min:0, max:20, step:.1}
     res.fillCircle = {type: Boolean, default: false}
     res.highLayerAlpha = {type: Number, default: .2, min:0, max:1, step:0.01}
-    res.rotorAlpha = {type: Number, default: .1, min:0, max:1, step:0.01}
-    res.rainDotsAlpha = {type: Number, default: .1, min:0, max:1, step:0.01}
+    res.rotorAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
+    res.rainDotsAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
     return res;
   }
 }

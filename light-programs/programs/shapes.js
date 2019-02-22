@@ -1,13 +1,11 @@
 const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const {
-  XYHue,
   Line,
   Circle,
   InfiniteCircles,
   RandomPixels,
   PolarColors,
   RadiusCosineBrightness,
-  SingleLed,
 } = require('../utils/drawables');
 
 module.exports = class Func extends LayerBasedFunction {
@@ -44,8 +42,6 @@ module.exports = class Func extends LayerBasedFunction {
         center: [this.xBounds.center, this.yBounds.center],
         fillColor: [0, 0, 0, 0],
         width: 100,
-      }),
-      singleLed: new SingleLed({
       }),
     }
   }
@@ -103,12 +99,6 @@ module.exports = class Func extends LayerBasedFunction {
           blendMode: 'normal',
           alpha: 0.1,
         },
-        {
-          name: 'singleLed',
-          drawable: drawables.singleLed,
-          blendMode: 'normal',
-          alpha: .5,
-        },
       ],
     };
   }
@@ -129,7 +119,6 @@ module.exports = class Func extends LayerBasedFunction {
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
     this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%3000))/3000;
     this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
-    this.drawables.singleLed.ledIndex = Math.round(this.timeInMs / 10);
     this.drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 100);
     this.drawables.backgroundMask.center = [
       this.xBounds.center + .35 * this.xBounds.scale * Math.cos(

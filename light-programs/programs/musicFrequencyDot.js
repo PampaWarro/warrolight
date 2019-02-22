@@ -19,7 +19,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
 
   // Override parent method
   drawFrame(draw, done){
-    if(this.lastFrame.filteredBands) {
+    if(this.lastFrame && this.lastFrame.filteredBands) {
       let {bassRms, bassPeakDecay, bassMax, midRms, midPeakDecay, midMax, highRms, highPeakDecay, highMax} = this.lastFrame.summary;
       //let total = bassMax+midMax+highMax;
 

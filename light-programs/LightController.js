@@ -15,6 +15,7 @@ const programNames = [
   "stripe-patterns",
   "sound-waves",
   "radial",
+  "radialWarp",
   "lineal",
   "aliveDots",
   "aliveDotsSpeed",

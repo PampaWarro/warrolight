@@ -17,6 +17,11 @@ module.exports = class Func extends LayerBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.particles = {};
+    this.offsets = {
+      bass: 0,
+      mid: 1/3,
+      high: 2/3,
+    };
   }
 
   getDrawables(config) {
@@ -56,7 +61,6 @@ module.exports = class Func extends LayerBasedFunction {
         _.remove(that.layers.particles.layers, particle.layer);
       }
     });
-    //console.log(that.particles);
   }
 
   updateState() {
@@ -72,21 +76,27 @@ module.exports = class Func extends LayerBasedFunction {
     const audioSummary = centerChannel.summary;
     _.forOwn(this.particles, (particles, bandName) => {
       const energy = audioSummary[`${bandName}PeakDecay`];
+      const hue = ColorUtils.mod(
+        that.offsets[bandName] +
+        that.config.hueSpeed * that.timeInMs / 1000, 1);
+      const saturation = ColorUtils.mod(
+        that.offsets[bandName] +
+        that.config.saturationSpeed * that.timeInMs / 1000, 1);
       particles.forEach(particle => {
-        particle.layer.alpha = .3 + .7*energy;
+        particle.layer.alpha = .4 + .6*energy;
         particle.drawable.ledIndex += particle.state.speed;
         particle.drawable.color = ColorUtils.HSVtoRGB(
-          that.config[`${bandName}Hue`], 
-          that.config[`${bandName}Saturation`], 
+          hue, 
+          saturation, 
           1,
         );
 
         var sign = Math.sign(particle.state.speed) ||
           Math.sign(Math.random() - .5);
-        if (Math.random() < Math.pow(energy, 8)) {
+        if (Math.random() < Math.pow(energy, 10)) {
           sign *= -1;
         }
-        particle.state.speed = sign * Math.pow(energy, 4) * 10;
+        particle.state.speed = sign * Math.pow(energy, 2) * 4;
       });
     });
   }
@@ -101,13 +111,9 @@ module.exports = class Func extends LayerBasedFunction {
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-    res.particlesPerBand = {type: Number, default: 5, min:1, max:35, step:1}
-    res.bassHue = {type: Number, default: 0, min:0, max:1, step:.01}
-    res.bassSaturation = {type: Number, default: .8, min:0, max:1, step:.01}
-    res.midHue = {type: Number, default: .333, min:0, max:1, step:.01}
-    res.midSaturation = {type: Number, default: .8, min:0, max:1, step:.01}
-    res.highHue = {type: Number, default: .667, min:0, max:1, step:.01}
-    res.highSaturation = {type: Number, default: .8, min:0, max:1, step:.01}
+    res.particlesPerBand = {type: Number, default: 15, min:1, max:35, step:1}
+    res.hueSpeed = {type: Number, default: .2, min:0, max:5, step:.01}
+    res.saturationSpeed = {type: Number, default: .3, min:0, max:5, step:.01}
     return res;
   }
 }

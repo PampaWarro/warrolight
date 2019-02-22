@@ -1,10 +1,5 @@
 const ColorUtils = require("./ColorUtils");
 
-// Modulo that handles negative numbers better.
-function mod(x, m) {
-  return ((x % m) + m) % m;
-}
-
 class Drawable {
   colorAtIndex(index, geometry) {
   }
@@ -18,7 +13,7 @@ class SingleLed extends Drawable {
     this.ledIndex = options.ledIndex || 0;
   }
   colorAtIndex(index, geometry) {
-    const currentIndex = Math.round(mod(this.ledIndex, geometry.leds))
+    const currentIndex = Math.round(ColorUtils.mod(this.ledIndex, geometry.leds))
     if (index == currentIndex) {
       return this.color;
     }
@@ -77,7 +72,7 @@ class XYHue extends XYDrawable {
     this.value  = options.value || 1;
   }
   colorAtXY(x, y) {
-    const h = mod(Math.abs(
+    const h = ColorUtils.mod(Math.abs(
       this.xOffset + this.xFactor * x +
       this.yOffset + this.yFactor * y), 1);
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
@@ -148,7 +143,7 @@ class InfiniteCircles extends XYDrawable {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-    const d = mod(this.offset + this.radiusWarp(radius), this.period);
+    const d = ColorUtils.mod(this.offset + this.radiusWarp(radius), this.period);
     if (Math.abs(d - this.period) < this.width) {
       return this.borderColor;
     }
@@ -168,7 +163,7 @@ class PolarDrawable extends XYDrawable {
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
     const angle = Math.acos(dX/radius);
-    return this.colorAtPolar(radius, mod(angle + this.angleOffset, Math.PI));
+    return this.colorAtPolar(radius, ColorUtils.mod(angle + this.angleOffset, Math.PI));
   }
 }
 
@@ -181,7 +176,7 @@ class PolarColors extends PolarDrawable {
     this.value  = options.value || 1;
   }
   colorAtPolar(radius, angle) {
-    const h = mod(angle * this.cycleCount / Math.PI, 1);
+    const h = ColorUtils.mod(angle * this.cycleCount / Math.PI, 1);
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }

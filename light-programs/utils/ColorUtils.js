@@ -112,4 +112,9 @@ module.exports = class ColorUtils {
     a = (a === undefined)? 1 : a;
     return [r, g, b, a];
   }
+
+  // Modulo that handles negative numbers better.
+  static mod(x, m) {
+    return ((x % m) + m) % m;
+  }
 }

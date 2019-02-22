@@ -4,6 +4,7 @@ const _ = require('lodash');
 // make sense in a visual context.
 class Summarize {
   summarizeFilteredBand(band, prefix) {
+    const slowAvg = band.movingStats.rms.slow.avg;
     const slowMax = band.movingStats.rms.slow.max;
     const midMax = band.movingStats.rms.mid.max;
     const midAvg = band.movingStats.rms.mid.avg;
@@ -12,6 +13,7 @@ class Summarize {
     const normalizedRms = band.movingStats.rms.slow.normalizedValue;
     return {
       [`${prefix}Max`]: slowMax,
+      [`${prefix}Avg`]: slowAvg,
       [`${prefix}Rms`]: normalizedRms,
       [`${prefix}PeakDecay`]: (midMax - midAvg)/(slowMax - midAvg) || 0,
       [`${prefix}FastPeakDecay`]: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,

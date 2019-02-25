@@ -28,6 +28,7 @@ module.exports = class Lineal extends TimeTickedFunction{
   static presets() {
     return {
       large: {velocidad: 7, escala: 13},
+      largeUp: {velocidad: -7, escala: 13},
       smallSlow: {velocidad: -7, escala: 2},
       smallFast: {velocidad: 14, escala: 2},
       horizontal: {velocidad: -10, escala: 18, horizontal: true},

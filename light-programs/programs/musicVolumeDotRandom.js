@@ -2,7 +2,7 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require('lodash');
 
-module.exports = class MusicVolumeDot extends SoundBasedFunction{
+module.exports = class musicVolumeDotRandom extends SoundBasedFunction{
   constructor(config, leds) {
     super(config, leds);
   }
@@ -12,7 +12,17 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     this.time = 0;
     this.maxVolume = 0;
 
+    this.onLeds = new Array(this.numberOfLeds).fill(false);
+    this.assignLights();
     super.start(config, draw, done)
+  }
+
+  assignLights() {
+    let p = this.config.numberOfOnLeds / this.numberOfLeds;
+    for(let i=0;i<this.onLeds.length;i++) {
+      this.onLeds[i] = Math.random() < p;
+    }
+    this.needingReshuffle = false;
   }
 
   // Override parent method
@@ -24,14 +34,19 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){
       vol = 0;
+      this.needingReshuffle = true;
     } else {
+      if (this.needingReshuffle) {
+        this.assignLights();
+      }
+
       vol = (vol - this.config.cutThreshold) / (1-this.config.cutThreshold)
     }
 
     let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol*vol, 1));
 
     for(let i=0;i<this.numberOfLeds;i++) {
-      if(i % Math.round((this.numberOfLeds / this.config.numberOfOnLeds)) === 0){
+      if(this.onLeds[i]){
         this.lastVolume[i] = newVal;
       } else {
         this.lastVolume[i] = [0,0,0];

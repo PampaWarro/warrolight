@@ -9,6 +9,7 @@ const Radial = require("./radial");
 const RadialSun = require("./radialSun");
 const Stars = require("./stars")
 const VolumeDot = require("./musicVolumeDot");
+const VolumeDotRandom = require("./musicVolumeDotRandom");
 const VolumeBars = require("./musicVolumeBars");
 const MusicFlow = require("./musicFlow");
 // const Fire = require("./fire").Func;
@@ -220,10 +221,28 @@ const schedule = [
 
 // module.exports = createMultiProgram(schedule, false)
 
+let radialSunByBand = programsByShape({
+  totemsExt: [RadialSun, {soundMetric: 'highFastPeakDecay', saturation: 1, centerY: -2}],
+  totemsInt: [RadialSun, {soundMetric: 'midFastPeakDecay', saturation: 0.95, escala: 50, power: 3, centerY: -2}],
+  WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', saturation: 0.8, centerY: 11, power: 5}]
+});
+
+
+let volumeDotsRandomByBand = programsByShape({
+  totemsExt: [VolumeDotRandom, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: 10}],
+  totemsInt: [VolumeDotRandom, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: 10}],
+  WarroOnly: [VolumeDotRandom, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: 20}]
+});
+
+let volumeDotsByBand = count => programsByShape({
+  totemsExt: [VolumeDot, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: count}],
+  totemsInt: [VolumeDot, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: count}],
+  WarroOnly: [VolumeDot, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: count*2}]
+});
+
 module.exports = createMultiProgram([
-  {duration: 600 , program: programsByShape({
-      totemsExt: [RadialSun, {soundMetric: 'highFastPeakDecay', saturation: 1, centerY: -2}],
-      totemsInt: [RadialSun, {soundMetric: 'midFastPeakDecay', saturation: 0.95, escala: 50, power: 3, centerY: -2}],
-      WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', saturation: 0.8, centerY: 11, power: 5}]
-    })}
+  {duration: 60 * baseTime , program: volumeDotsByBand(3)},
+  {duration: 60 * baseTime , program: volumeDotsByBand(10)},
+  {duration: 600 * baseTime , program: volumeDotsRandomByBand},
+  {duration: 600 * baseTime, program: radialSunByBand}
 ], false)

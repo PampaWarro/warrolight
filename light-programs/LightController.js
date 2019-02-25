@@ -3,7 +3,8 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
-  "PROGRAM_Main_fuego2018",
+  "PROGRAM_Main_fuego2019",
+  "musicVolumeDotRandom",
   "radialSun",
   "warroBass",
   "shapes",

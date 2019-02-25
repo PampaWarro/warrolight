@@ -111,7 +111,10 @@ module.exports = class Bombs extends LayerBasedFunction {
         Math.PI * this.midSum / 133
       ),
     ];
+    this.layers.bass.alpha = bass*bass+0.05;
+    this.layers.mid.alpha = mid*mid+0.05;
     const high = centerChannel.summary.highPeakDecay;
+    this.layers.high.alpha = high*high+0.05;
     this.highSum += high;
     this.drawables.highFill.angleOffset =
       Math.cos(high + Math.PI * this.timeInMs/10000);

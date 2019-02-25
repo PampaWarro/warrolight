@@ -62,7 +62,8 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     return {
       "symetry8Move": {move: true, numberOfOnLeds: 8},
       "symetry8Slow": {move: false, numberOfOnLeds: 8},
-      "leds24": {move: false, numberOfOnLeds: 24}
+      "leds24": {move: false, numberOfOnLeds: 24},
+      "leds20HighPower": {move: true, numberOfOnLeds: 20, power: 6}
     }
   }
 

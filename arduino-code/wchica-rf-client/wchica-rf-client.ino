@@ -59,7 +59,7 @@ void setup() {
   // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 600);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -76,11 +76,11 @@ void setup() {
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
 
   // Max power 1000 mah
-   radio.setChannel(92);
+  // radio.setChannel(92);
   // radio.setChannel(103);
 
   // Max power 700 mah
-  //radio.setChannel(81);
+  radio.setChannel(81);
   //radio.setChannel(114);
   
   radio.setPALevel(RF24_PA_HIGH);  
@@ -169,9 +169,9 @@ void loop() {
         /*for (int i = 0; i < 75; i+=1) {  
           writeLeds(i, 255,0,0);
         }*/        
-        // Show whatever is in the buffer, clearly the last frame was lost
+        // Show whatever is in the buffer, clearly the end of last frame was lost
         // Mark second led with purple dot
-        writeLeds(1, 200,0,255);
+        //writeLeds(1, 200,0,255);
         FastLED.show();
       }
     }

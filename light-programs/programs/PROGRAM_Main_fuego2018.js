@@ -222,8 +222,8 @@ const schedule = [
 
 module.exports = createMultiProgram([
   {duration: 600 , program: programsByShape({
-      totemsExt: [RadialSun, {soundMetric: 'highRms', saturation: 0.9}],
-      totemsInt: [RadialSun, {soundMetric: 'midPeakDecay', saturation: 0.95, escala: 50, power: 3}],
-      WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', centerY: 11, power: 5}]
+      totemsExt: [RadialSun, {soundMetric: 'highFastPeakDecay', saturation: 1, centerY: -2}],
+      totemsInt: [RadialSun, {soundMetric: 'midFastPeakDecay', saturation: 0.95, escala: 50, power: 3, centerY: -2}],
+      WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', saturation: 0.8, centerY: 11, power: 5}]
     })}
 ], false)

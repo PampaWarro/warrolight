@@ -25,10 +25,18 @@ module.exports = class Radial extends SoundBasedFunction{
     draw(colors)
   }
 
+  static presets(){
+    return {
+      fromTop: {centerY: 70, soundMetric: 'bassPeakDecay', power: 2},
+      bassCenter: {centerY: 35.4, power: 10, soundMetric: 'bassFastPeakDecay'},
+    }
+  }
+
+
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();
-    res.escala =  {type: Number, min: 1, max: 100, step: 1, default: 100}
+    res.escala =  {type: Number, min: 1, max: 100, step: 1, default: 70}
     res.centerY =  {type: Number, min: -20, max: 40, step: 0.1, default: 0}
     res.centerX =  {type: Number, min: -50, max: 50, step: 0.1, default: 0}
     res.power =  {type: Number, min: 0, max: 10, step: 0.1, default: 3}

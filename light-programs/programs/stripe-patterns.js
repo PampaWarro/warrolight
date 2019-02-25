@@ -1,8 +1,8 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require('lodash');
 
-module.exports = class StripePattern extends TimeTickedFunction {
+module.exports = class StripePattern extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
 
@@ -24,11 +24,12 @@ module.exports = class StripePattern extends TimeTickedFunction {
     // this.pattern = _.map(this.pattern, color => ColorUtils.dim(color, 0.97));
 
     let pSize = this.pattern.length;
+    let mixRatio = this.config.mixRatio * 2 * (this.bassRms || 0);
     for (let i = 0; i < 6; i++) {
       let randomPosition = Math.floor(Math.random() * (pSize - blockSize));
       for (let j = 0; j < blockSize; j++) {
         let pos = (randomPosition + j) % pSize;
-        this.pattern[pos] = ColorUtils.mix(this.pattern[pos], this.randomColor, this.config.mixRatio);
+        this.pattern[pos] = ColorUtils.mix(this.pattern[pos], this.randomColor, mixRatio);
       }
     }
 
@@ -37,7 +38,7 @@ module.exports = class StripePattern extends TimeTickedFunction {
       let randomPosition = Math.floor(Math.random() * (pSize));
       for (let j = 0; j < blockSize; j++) {
         let pos = (randomPosition + j) % pSize;
-        this.pattern[pos] = ColorUtils.mix(this.pattern[pos], black, this.config.mixRatio * 4);
+        this.pattern[pos] = ColorUtils.mix(this.pattern[pos], black, mixRatio * 4);
       }
     }
   }

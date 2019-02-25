@@ -134,6 +134,8 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction{
       self.absolutefft = absolutefft;
       self.maxabsolutefft = maxabsolutefft;
 
+      _.each(_.get(currentAudioFrame, 'center.summary'), (val, key) => self[key] = val);
+
       self.processInterval = setTimeout(updateValues, 1000/self.config.fps);
     }, 1000/self.config.fps);
 

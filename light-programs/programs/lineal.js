@@ -12,8 +12,10 @@ module.exports = class Lineal extends TimeTickedFunction{
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.position || this.geometry;
 
-      // const d = geometry.x[i] - geometry.width/2 - this.config.centerX;
-      const d = geometry.y[i] - geometry.height  + this.config.centerY;
+      let d = geometry.y[i] - geometry.height  + this.config.centerY;
+      if(this.config.horizontal) {
+        d = geometry.x[i] - geometry.width/2 - this.config.centerX;
+      }
 
       const distance = Math.abs(d) * 255 / (300*this.config.escala);
 
@@ -28,6 +30,9 @@ module.exports = class Lineal extends TimeTickedFunction{
       large: {velocidad: 7, escala: 13},
       smallSlow: {velocidad: -7, escala: 2},
       smallFast: {velocidad: 14, escala: 2},
+      horizontal: {velocidad: -10, escala: 18, horizontal: true},
+      horizontal2: {velocidad: -16, escala: 8, horizontal: true},
+
     }
   }
 
@@ -39,6 +44,7 @@ module.exports = class Lineal extends TimeTickedFunction{
     res.centerY =  {type: Number, min: -20, max: 40, step: 0.1, default: 0}
     res.centerX =  {type: Number, min: -80, max: 80, step: 0.1, default: -80}
     res.power =  {type: Number, min: 0, max: 30, step: 0.1, default: 10}
+    res.horizontal =  {type: Boolean, default: false}
     return res;
   }
 }

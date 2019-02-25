@@ -68,7 +68,7 @@ module.exports =  class Func extends SoundBasedFunction {
       this.stars[roundPosNext] = [ru, gu, bu];
     })
 
-    this.lastVolume = this.averageVolume
+    this.lastVolume = this.bassRms || 0
     draw(this.stars.map(([r,g,b]) => ColorUtils.dim([r, g, b], this.config.brillo)));
   }
 

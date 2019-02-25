@@ -16,11 +16,11 @@ module.exports = class Func extends SoundBasedFunction {
     const colors = new Array(this.numberOfLeds)
     const geometry = this.position || this.geometry;
 
-    let vol = this.averageRelativeVolumeSmoothed;
+    let vol = this.bassPeakDecay;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let posY = 1 - (geometry.y[i] / geometry.height);
-      let volumeHeight = Math.max(0, (vol+0.1)*(vol+0.1));
+      let volumeHeight = Math.max(0, (vol)*(vol));
       let whiteBorderWidth = 0.95
 
       if (this.config.whiteBorder && (posY < volumeHeight) && (posY > (volumeHeight*whiteBorderWidth))) {

@@ -41,7 +41,11 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
         let rms = this.lastFrame.summary.bassPeakDecay;
         let explosionLength = Math.ceil(Math.pow(rms , power) * width / 3)
 
-        let offsettedPosition = (i+this.frameNumber)%this.lastVolume.length;
+        let offsettedPosition = i%this.lastVolume.length;
+        if(this.config.move) {
+          offsettedPosition  = (i+this.frameNumber)%this.lastVolume.length;
+        }
+
         if (Math.abs(((i) % width - width/2)) < explosionLength) {
           this.lastVolume[offsettedPosition] = [r, g, b];
         } else {
@@ -56,14 +60,18 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
 
   static presets(){
     return {
+      "symetry8Move": {move: true, numberOfOnLeds: 8},
+      "symetry8Slow": {move: false, numberOfOnLeds: 8},
+      "leds24": {move: false, numberOfOnLeds: 24}
     }
   }
 
   // Override and extend config Schema
   static configSchema(){
     let res = super.configSchema();
-    res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 0.6};
-    res.power = {type: Number, min: 1, max: 20, step: 1, default: 7};
+    res.multiplier = {type: Number, min: 0, max: 2, step: 0.01, default: 1};
+    res.move = {type: Boolean, default: false};
+    res.power = {type: Number, min: 1, max: 20, step: 1, default: 3};
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     return res;

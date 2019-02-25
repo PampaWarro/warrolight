@@ -21,7 +21,8 @@ module.exports =  class Func extends SoundBasedFunction{
     this.time += this.config.speed;
 
     let vol = this.averageRelativeVolume*this.config.multiplier*1.5;
-    this.volPromedio = (vol+2*this.volPromedio)/3
+    // this.volPromedio = (vol+2*this.volPromedio)/3
+    this.volPromedio = this.peakDecay;
 
 
     for(let i=0;i<this.numberOfLeds;i++) {

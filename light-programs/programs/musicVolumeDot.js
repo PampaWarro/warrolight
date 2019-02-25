@@ -19,8 +19,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
   drawFrame(draw, done){
     this.time += this.config.speed;
 
-    // let vol = this.averageRelativeVolume*this.config.multiplier;
-    let vol = _.get(this.currentAudioFrame, 'center.summary.bassFastPeakDecay', 0)*this.config.multiplier;
+    let vol = (this.bassFastPeakDecay || 0)*this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){

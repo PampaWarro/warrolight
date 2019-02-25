@@ -20,7 +20,7 @@ module.exports = class MusicFlow extends SoundBasedFunction{
     this.time += this.config.speed;
     this.realTime += 1;
 
-    let vol = this.averageRelativeVolume*this.config.multiplier;
+    let vol = this.rms*this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if(vol < this.config.cutThreshold){
@@ -29,7 +29,10 @@ module.exports = class MusicFlow extends SoundBasedFunction{
       vol = (vol - this.config.cutThreshold) * (1/(1 - this.config.cutThreshold))
     }
 
-    let newVal = ColorUtils.HSVtoRGB((vol+this.realTime/2000)%1, 1, Math.min(vol*vol/3, 1));
+    let {bassRms, bassPeakDecay, bassMax, midRms, midPeakDecay, midMax, highRms, highPeakDecay, highMax} = this;
+    let [hueVol,] = ColorUtils.RGBtoHSV(this.midFastPeakDecay, this.highFastPeakDecay, this.bassFastPeakDecay);
+    let newVal = ColorUtils.HSVtoRGB((hueVol+this.realTime/2000)%1, 1, Math.min(vol*vol/3, 1));
+    // let newVal = ColorUtils.HSVtoRGB((hueVol)%1, 1, Math.min(vol*vol/3, 1));
 
     for(let i=0;i<this.config.speed;i++) {
       if(this.config.doble){

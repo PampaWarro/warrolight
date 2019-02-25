@@ -30,7 +30,7 @@ module.exports = class TimeTickedFunction {
       let drawingTimeMs = new Date() - start
       let remainingTime = (1000 / this.config.fps) - drawingTimeMs
 
-      if(drawingTimeMs > 100) {
+      if(drawingTimeMs > 20) {
         console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`)
       }
       // Schedule next frame for the remaing time considering how long it took to do the drawing

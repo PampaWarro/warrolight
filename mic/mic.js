@@ -29,12 +29,18 @@ var mic = function mic(options) {
 
   that.start = function start() {
     if(audioInput === null) {
-      audioInput = new portAudio.AudioInput({
-        channelCount: channels,
-        sampleFormat: portAudio.SampleFormat16Bit,
-        sampleRate: 44100,
-        deviceId : -1 // Use -1 or omit the deviceId to select the default device
-      });
+      try {
+        audioInput = new portAudio.AudioInput({
+          channelCount: channels,
+          sampleFormat: portAudio.SampleFormat16Bit,
+          sampleRate: 44100,
+          deviceId: -1 // Use -1 or omit the deviceId to select the default device
+        });
+      } catch(err) {
+        console.log("Error opening audio. Check device id.")
+        console.log(portAudio.getDevices())
+        throw err;
+      }
 
       audioInput.on('end', () =>{
         soundEmitter.emit('audioProcessExitComplete');

@@ -6,6 +6,7 @@ const programsByShape = require("../base-programs/Transformations");
 
 const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");
+const RadialSun = require("./radialSun");
 const Stars = require("./stars")
 const VolumeDot = require("./musicVolumeDot");
 const VolumeBars = require("./musicVolumeBars");
@@ -36,6 +37,13 @@ function sineScale(s) {
 let flowDefault = [MusicFlow, MusicFlow.presets().default]
 
 const schedule = [
+  {duration: 600 , program: programsByShape({
+      totemL1: [RadialSun, {soundMetric: 1}],
+      totemL2: [RadialSun, {soundMetric: 2}],
+      totemR1: [RadialSun, {soundMetric: 3}],
+      totemR2: [RadialSun, {soundMetric: 0}],
+  })},
+
   {duration: 60 * baseTime, program: createMultiProgram([
     {duration: 500 , program: programsByShape({totems: [Rainbow, Rainbow.presets().purpleDots]})},
     {duration: 500 , program: programsByShape({wings: [Rainbow, Rainbow.presets().purpleDots]})},
@@ -210,4 +218,12 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-module.exports = createMultiProgram(schedule, false)
+// module.exports = createMultiProgram(schedule, false)
+
+module.exports = createMultiProgram([
+  {duration: 600 , program: programsByShape({
+      totemsExt: [RadialSun, {soundMetric: 'highRms', saturation: 0.9}],
+      totemsInt: [RadialSun, {soundMetric: 'midPeakDecay', saturation: 0.95, escala: 50, power: 3}],
+      WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', centerY: 11, power: 5}]
+    })}
+], false)

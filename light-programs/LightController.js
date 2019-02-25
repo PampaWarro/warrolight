@@ -3,15 +3,16 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
+  "PROGRAM_Main_fuego2018",
+  "radialSun",
   "warroBass",
   "shapes",
   "musicFrequencyDot",
   "bandParticles",
-  "frequencyActivation",
-  "musicVolumeDot",
   // "PROGRAM_Transition",
   // "PROGRAM_Triangulo",
-  "PROGRAM_Main",
+  "frequencyActivation",
+  "musicVolumeDot",
   "rays",
   "stripe-patterns",
   "sound-waves",
@@ -34,6 +35,13 @@ const programNames = [
 
 const Emitter = require('events')
 let lightsSampleEmitter = new Emitter()
+
+var profiler = require('gc-profiler');
+profiler.on('gc', function ({type, duration, forced}) {
+  if(type == 'MarkSweepCompact') {
+    console.log(`GC: ${type} of ${duration} forced?${forced}`.blue);
+  }
+});
 
 module.exports = class LightController {
   constructor(setLightsCbk, geometryDefinition, geometryMapping) {

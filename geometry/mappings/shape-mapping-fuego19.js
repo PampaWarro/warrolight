@@ -55,6 +55,9 @@ module.exports = function getShapes(mapping) {
 
   const totems = _.flatten([totemL1, totemL2, totemR1, totemR2])
 
+  const totemsExt = _.flatten([totemL1, totemR2])
+  const totemsInt = _.flatten([totemL2, totemR1])
+
   // La W warra
   const Warro = _.flatten([inv(pataLeft), _.range(comienzoTira2,300), inv(_.range(comienzoTira3, 450)), pataRight, totems])
   const WarroOnly = _.flatten([inv(pataLeft), _.range(comienzoTira2,300), inv(_.range(comienzoTira3, 450)), pataRight])
@@ -107,7 +110,8 @@ module.exports = function getShapes(mapping) {
     shuffle, shuffleSegments10, shuffleSegments20, shuffleSegments5, trianguloBottomShuffle,
     char_1, char_2, char_3, char_a, char_o, char_r, char_w,
     mini_w, allOfIt, totemL1, totemL2, totemR1, totemR2, X,
-    totems, wings, wingsRight, wingsLeft, wingsX
+    totems, wings, wingsRight, wingsLeft, wingsX,
+    totemsExt, totemsInt
   };
 }
 

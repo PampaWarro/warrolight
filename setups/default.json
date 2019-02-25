@@ -47,7 +47,7 @@
         "type": "LightDeviceSerial",
         "params": {
           "numberOfLights": 300,
-          "devicePortWindows": "COM27",
+          "devicePortWindows": "COM28",
           "devicePortUnix": "/dev/ttyACM0"
         }
       },

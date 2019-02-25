@@ -125,6 +125,9 @@ class Simulator extends React.Component {
         if (_.isBoolean(currentProgram.config[paramName].default)) {
           configOptions.push(React.createElement(BooleanParam, { key: paramName, configDefinition: currentProgram.config[paramName],
             configRef: this.state.currentConfig, val: val, field: paramName }));
+        } else if (_.isString(currentProgram.config[paramName].default)) {
+          configOptions.push(React.createElement(StringParam, { key: paramName, configDefinition: currentProgram.config[paramName],
+            configRef: this.state.currentConfig, val: val, field: paramName }));
         } else {
           configOptions.push(React.createElement(NumberParam, { key: paramName, configDefinition: currentProgram.config[paramName],
             configRef: this.state.currentConfig, val: val, field: paramName }));
@@ -324,6 +327,66 @@ class BooleanParam extends React.Component {
           '\xA0'
         ),
         React.createElement('input', { type: 'checkbox', name: this.name, checked: this.state.value, onChange: this.handleChange })
+      )
+    );
+  }
+}
+
+class StringParam extends React.Component {
+  constructor(props) {
+    super(props);
+    this.field = props.field;
+    this.state = { value: props.val, configRef: props.configRef };
+    this.values = (props.configDefinition || {}).values || "MAL DEFINIDO";
+    this.handleChange = this.handleChange.bind(this);
+    this.name = "" + Math.random();
+  }
+
+  handleChange(val) {
+    this.setVal(val);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
+  }
+
+  setVal(val) {
+    let value = val;
+    this.state.configRef[this.field] = value;
+    this.setState({ value: value });
+    console.log("STRING PARAM CHANGE", this.state.configRef);
+    socket.emit('updateConfigParam', this.state.configRef);
+  }
+
+  render() {
+    return React.createElement(
+      'div',
+      { className: 'config-item' },
+      React.createElement(
+        'span',
+        null,
+        this.field,
+        ':\xA0'
+      ),
+      React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'strong',
+          null,
+          this.state.value,
+          '\xA0'
+        ),
+        React.createElement('br', null),
+        React.createElement(
+          'div',
+          { style: { zoom: '0.8' } },
+          _.map(this.values, v => React.createElement(
+            'button',
+            { key: v, className: this.state.value === v ? 'selected' : '', onClick: () => this.handleChange(v) },
+            v
+          ))
+        )
       )
     );
   }

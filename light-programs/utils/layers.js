@@ -26,6 +26,16 @@ const blendFunctions = {
     base[2] * blend[2] / 255,
     base[3] + blend[3],
   ),
+  hue: (base, blend) => {
+    const baseHSV = ColorUtils.RGBtoHSV(...base);
+    const blendHSV = ColorUtils.RGBtoHSV(...blend);
+    return ColorUtils.HSVtoRGB(
+      blendHSV[0],
+      baseHSV[1],
+      baseHSV[2],
+      base[3] + blend[3],
+    );
+  }
 }
 
 class Layer {

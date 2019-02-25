@@ -7,6 +7,7 @@ const programNames = [
   "radialSun",
   "warroBass",
   "shapes",
+  "bombs",
   "musicFrequencyDot",
   "bandParticles",
   // "PROGRAM_Transition",

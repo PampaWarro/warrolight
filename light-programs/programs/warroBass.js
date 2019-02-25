@@ -10,7 +10,7 @@ function audioFill(options) {
     getDrawables() {
       return {
         fill: new PolarColors({
-          value: .7,
+          value: 1,
         }),
       }
     }
@@ -54,7 +54,7 @@ const MidFill = audioFill({
   cycleMs: 11000,
 });
 const HighFill = audioFill({
-  getAudioEnergy: c => Math.pow(c.summary.highPeakDecay, 8),
+  getAudioEnergy: c => Math.pow(c.summary.highPeakDecay, 6),
   cycleMs: 9000,
 });
 

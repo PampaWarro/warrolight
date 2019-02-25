@@ -83,7 +83,7 @@ module.exports = class Func extends LayerBasedFunction {
         that.offsets[bandName] +
         that.config.saturationSpeed * that.timeInMs / 1000, 1);
       particles.forEach(particle => {
-        particle.layer.alpha = .4 + .6*energy;
+        particle.layer.alpha = energy;
         particle.drawable.ledIndex += particle.state.speed;
         particle.drawable.color = ColorUtils.HSVtoRGB(
           hue, 

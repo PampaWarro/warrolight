@@ -2,7 +2,9 @@ const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const {
   InfiniteCircles,
   PolarColors,
+  SolidColor,
 } = require('../utils/drawables');
+const ColorUtils = require("../utils/ColorUtils");
 
 module.exports = class Func extends LayerBasedFunction {
   getDrawables() {
@@ -10,6 +12,8 @@ module.exports = class Func extends LayerBasedFunction {
       backgroundColors: new PolarColors({
         center: [this.xBounds.center, this.yBounds.center],
         value: .7,
+      }),
+      colorMask: new SolidColor({
       }),
       infiniteCircles: new InfiniteCircles({
         center: [this.xBounds.center, this.yBounds.min],
@@ -25,6 +29,10 @@ module.exports = class Func extends LayerBasedFunction {
       layers: [
         {
           drawable: drawables.backgroundColors,
+        },
+        {
+          drawable: drawables.colorMask,
+          blendMode: 'hue',
         },
         {
           name: 'infiniteCircles',
@@ -44,6 +52,11 @@ module.exports = class Func extends LayerBasedFunction {
       Math.PI * this.timeInMs / 10000) * this.yBounds.scale / 3,
     ];
     this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
+    this.drawables.colorMask.color = ColorUtils.HSVtoRGB(
+      .5 + .5*Math.cos(Math.PI * this.timeInMs / 11000),
+      .5 + .5*Math.cos(Math.PI * this.timeInMs / 15000),
+      1
+    );
     this.drawables.infiniteCircles.offset = -this.timeInMs/50;
     this.drawables.infiniteCircles.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;

@@ -3,6 +3,7 @@ const Geometry = require('./Geometry')
 const _ = require('lodash');
 
 const programNames = [
+  "warroBass",
   "shapes",
   "musicFrequencyDot",
   "bandParticles",

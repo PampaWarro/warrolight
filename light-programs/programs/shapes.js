@@ -110,15 +110,14 @@ module.exports = class Func extends LayerBasedFunction {
     this.layers.highPixels.alpha = this.config.highLayerAlpha;
     this.layers.rotor.alpha = this.config.rotorAlpha;
     this.layers.rainDots.alpha = this.config.rainDotsAlpha;
-    this.drawables.bassLine.center[1] = this.yBounds.center + Math.cos(
-      Math.PI * this.timeInMs / 5000) * this.yBounds.scale  / 2;
+    this.drawables.bassLine.angle = -Math.PI * this.timeInMs/7000;
     this.drawables.rotor.angle = Math.cos(Math.PI * this.timeInMs/5000) * ((Math.PI * this.timeInMs / 500) % Math.PI);
     this.drawables.rainDots.offset = -this.timeInMs/50;
     this.drawables.rainDots.center[0] = this.xBounds.center + Math.cos(
       Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
     this.drawables.fillCircle.radius = 300 * (3000 - (this.timeInMs%5000))/5000;
     this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
-    this.drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 100);
+    this.drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 1000);
     this.drawables.backgroundMask.center = [
       this.xBounds.center + .35 * this.xBounds.scale * Math.cos(
         Math.PI * this.timeInMs / 7000
@@ -128,7 +127,7 @@ module.exports = class Func extends LayerBasedFunction {
       ),
     ];
     this.drawables.backgroundMask.scale = 
-      1 + .2 * Math.cos(Math.PI * this.timeInMs / 3330);
+      1 + .2 * Math.cos(Math.PI * this.timeInMs / 10000);
 
 
     // Audio dependent stuff.
@@ -159,10 +158,10 @@ module.exports = class Func extends LayerBasedFunction {
         rainDotsAlpha: 0,
       },
       "bassLine": {
-        bassCircle: true,
+        bassCircle: false,
         bassCircleSensitivity: 50,
         bassLine: true,
-        bassLineSensitivity: 15,
+        bassLineSensitivity: 50,
         fillCircle: false,
         highLayerAlpha: .2,
         rotorAlpha: 0,
@@ -208,7 +207,7 @@ module.exports = class Func extends LayerBasedFunction {
     res.bassCircleSensitivity = {
       type: Number, default: 50, min:0, max:100, step:.1}
     res.bassLine = {type: Boolean, default: false}
-    res.bassLineSensitivity = {type: Number, default: 0, min:0, max:20, step:.1}
+    res.bassLineSensitivity = {type: Number, default: 0, min:0, max:50, step:.1}
     res.fillCircle = {type: Boolean, default: false}
     res.highLayerAlpha = {type: Number, default: .2, min:0, max:1, step:0.01}
     res.rotorAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}

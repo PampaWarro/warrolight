@@ -4,6 +4,7 @@ const _ = require('lodash');
 
 const programNames = [
   "PROGRAM_Main_fuego2019",
+  "bassWarpGrid",
   "musicVolumeDotRandom",
   "radialSun",
   "warroBass",

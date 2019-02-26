@@ -2,6 +2,7 @@ const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const {
   PolarColors,
   Circle,
+  RandomPixels,
 } = require('../utils/drawables');
 
 module.exports = class Bombs extends LayerBasedFunction {
@@ -28,6 +29,7 @@ module.exports = class Bombs extends LayerBasedFunction {
       bassCircle: new Circle({}),
       midCircle: new Circle({}),
       highCircle: new Circle({}),
+      highNoise: new RandomPixels({randomAlpha: true}),
     }
   }
   getLayers(drawables) {
@@ -75,17 +77,29 @@ module.exports = class Bombs extends LayerBasedFunction {
           ],
           blendMode: 'add',
         },
+        {
+          name: 'highNoise',
+          drawable: drawables.highNoise,
+          blendMode: 'add',
+        },
       ],
     }
   }
   updateState() {
     // Audio independent stuff.
+    this.layers.bass.alpha = this.config.bassAlpha;
+    this.layers.mid.alpha = this.config.midAlpha;
+    this.layers.high.alpha = this.config.highAlpha;
+    this.layers.highNoise.alpha = this.config.highNoiseAlpha;
     // Audio dependent stuff.
     if (!this.audioReady) {
       return;
     }
     const centerChannel = this.currentAudioFrame.center;
-    const bass = centerChannel.summary.bassPeakDecay;
+    const audioSummary = centerChannel.summary;
+    const bass = audioSummary.bassPeakDecay;
+    const highNoBass = audioSummary.highRmsNoBass;
+    this.drawables.highNoise.threshold = 1 - .1*highNoBass;
     this.bassSum += bass;
     this.drawables.bassFill.angleOffset =
       Math.cos(bass + Math.PI * this.timeInMs/30000);
@@ -127,5 +141,30 @@ module.exports = class Bombs extends LayerBasedFunction {
         Math.PI * this.highSum / 133
       ),
     ];
+  }
+  static presets() {
+    return {
+      "default": {
+        bassAlpha: 1,
+        midAlpha: 1,
+        highAlpha: 1,
+        highNoiseAlpha: 0,
+      },
+      "highNoise": {
+        bassAlpha: 1,
+        midAlpha: 1,
+        highAlpha: 1,
+        highNoiseAlpha: .5,
+      },
+    };
+  }
+
+  static configSchema() {
+    let res = super.configSchema();
+    res.bassAlpha = {type: Number, default: 1, min:0, max:1, step:0.01}
+    res.midAlpha = {type: Number, default: 1, min:0, max:1, step:0.01}
+    res.highAlpha = {type: Number, default: 1, min:0, max:1, step:0.01}
+    res.highNoiseAlpha = {type: Number, default: 0, min:0, max:1, step:0.01}
+    return res;
   }
 }

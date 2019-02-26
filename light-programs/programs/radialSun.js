@@ -10,6 +10,10 @@ module.exports = class Radial extends SoundBasedFunction{
 
     const vol = this[this.config.soundMetric];
     this.extraTime = (this.extraTime || 0) + vol*5;
+    var power = this.config.power;
+    if (this.config.animatePower) {
+      power = 3 + 3 * Math.cos(Math.PI * elapsed / 10);
+    }
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.position || this.geometry;
@@ -20,15 +24,17 @@ module.exports = class Radial extends SoundBasedFunction{
       const distance = Math.max(0, 1 - Math.sqrt(dx*dx + dy*dy) / (this.config.escala*vol));
 
       const v = distance;
-      colors[i] = ColorUtils.HSVtoRGB((this.extraTime/1000) % 1, this.config.saturation, Math.pow(v, this.config.power))
+      colors[i] = ColorUtils.HSVtoRGB((this.extraTime/1000) % 1, this.config.saturation, Math.pow(v, power))
     }
     draw(colors)
   }
 
   static presets(){
     return {
+      fromBottom: {centerY: -20, soundMetric: 'bassPeakDecay', power: 2},
       fromTop: {centerY: 70, soundMetric: 'bassPeakDecay', power: 2},
       bassCenter: {centerY: 35.4, power: 10, soundMetric: 'bassFastPeakDecay'},
+      fromBottomAnimatedPower: {centerY: -20, soundMetric: 'bassPeakDecay', power: 2, animatePower: true},
     }
   }
 
@@ -42,6 +48,7 @@ module.exports = class Radial extends SoundBasedFunction{
     res.power =  {type: Number, min: 0, max: 10, step: 0.1, default: 3}
     res.saturation =  {type: Number, min: 0, max: 1, step: 0.01, default: 1}
     res.soundMetric =  {type: String, values: ['fastPeakDecay', 'bassFastPeakDecay', 'midFastPeakDecay', 'highFastPeakDecay'], default: 'fastPeakDecay'}
+    res.animatePower =  {type: Boolean, default: false}
     return res;
   }
 }

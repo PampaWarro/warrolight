@@ -151,6 +151,32 @@ class InfiniteCircles extends XYDrawable {
   }
 }
 
+class Grid extends XYDrawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.color = options.borderColor || [255, 255, 255, 1];
+    this.backgroundColor = options.backgroundColor || [0, 0, 0, 0];
+    this.width = options.width || 1;
+    this.xyPeriod = options.period || [10, 10];
+    this.xyOffset = options.xyOffset || [0, 0];
+    this.xyWarp = options.xyWarp || ((x, y) => [x, y]);
+  }
+  colorAtXY(x, y) {
+    [x, y] = this.xyWarp(x, y);
+    x += this.xyOffset[0];
+    y += this.xyOffset[1];
+    [x, y] = [
+      ColorUtils.mod(x, this.xyPeriod[0]),
+      ColorUtils.mod(y, this.xyPeriod[1])]
+    if (Math.abs(ColorUtils.mod(x, this.xyPeriod[0])) < this.width ||
+        Math.abs(ColorUtils.mod(y, this.xyPeriod[1])) < this.width) {
+      return this.color;
+    }
+    return this.backgroundColor;
+  }
+}
+
 class PolarDrawable extends XYDrawable {
   constructor(options) {
     options = options || {};
@@ -209,4 +235,5 @@ module.exports = {
   InfiniteCircles,
   PolarColors,
   RadiusCosineBrightness,
+  Grid,
 };

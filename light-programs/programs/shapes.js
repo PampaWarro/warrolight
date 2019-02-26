@@ -197,6 +197,16 @@ module.exports = class Func extends LayerBasedFunction {
         rotorAlpha: .17,
         rainDotsAlpha: .3,
       },
+      "randomPlusFill": {
+        bassCircle: false,
+        bassCircleSensitivity: 50,
+        bassLine: false,
+        bassLineSensitivity: 15,
+        fillCircle: true,
+        highLayerAlpha: .5,
+        rotorAlpha: 0,
+        rainDotsAlpha: 0,
+      },
     }
   }
 

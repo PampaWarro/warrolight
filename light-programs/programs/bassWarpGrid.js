@@ -31,13 +31,10 @@ module.exports = class Bombs extends LayerBasedFunction {
       y - this.bassWarpCenter[1]];
     const d = Math.sqrt(dx*dx + dy*dy);
 
-    const centerChannel = this.currentAudioFrame.center;
-    const audioSummary = centerChannel.summary;
-    const bass = audioSummary.bassPeakDecay;
-
     const warp = this.warpK / (Math.pow(d, this.warpPow) || 1);
     return [x + warp*dx, y + warp*dy];
   }
+
   updateState() {
     // Audio independent stuff.
     this.bassWarpCenter = [
@@ -61,9 +58,15 @@ module.exports = class Bombs extends LayerBasedFunction {
     }
     const centerChannel = this.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
-    const bass = audioSummary.bassPeakDecay;
+    const bass = audioSummary.bassRms;
     this.warpK = bass * 100 * Math.cos(Math.PI * this.timeInMs / 10000);
     this.warpPow = 1.5 + .5 * Math.cos(Math.PI * this.timeInMs / 4000);
     this.layers.grid.alpha = .3 + .7 * bass*bass;
+  }
+
+  static presets() {
+    return {
+      "default": {}
+    }
   }
 }

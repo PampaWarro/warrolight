@@ -14,8 +14,8 @@ module.exports = class SoundWaves extends SoundBasedFunction {
       let relativeVolume = self.averageRelativeVolume
       //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
       return {
-        centerX: this.config.centerX,
-        centerY: this.config.centerY,
+        waveCenterX: this.config.waveCenterX,
+        waveCenterY: this.config.waveCenterY,
         speed: relativeVolume * relativeVolume + 0.05,
         // speed: 0.1,
         intensity: relativeVolume,
@@ -27,7 +27,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
   }
 
   updateWave(wave) {
-    wave.distance += (this.config.haciaAfuera ? 1 : -1) * wave.speed * this.config.speed
+    wave.distance += (this.config.haciaAfuera ? 1 : -1) * wave.speed * this.config.waveSpeed
     wave.intensity = wave.intensity * (3 + Math.sqrt(wave.intensity)) / 4
   }
 
@@ -51,14 +51,14 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0]
       _.each(this.dots, dot => {
-        let y = geometry.y[i] - (geometry.height - 18) / 2 + dot.centerY;
-        let x = geometry.x[i] - geometry.width / 2 - dot.centerX;
+        let y = geometry.y[i] - (geometry.height - 18) / 2 + dot.waveCenterY;
+        let x = geometry.x[i] - geometry.width / 2 - dot.waveCenterX;
         let d = Math.sqrt(x * x + y * y)
 
         let distance = Math.abs(dot.distance - d);
         let maxDis = this.config.waveWidth;
         if (distance < maxDis) {
-          let [r2, g2, b2] = ColorUtils.HSVtoRGB(dot.color, dot.saturation, 1*Math.pow(1 - distance / maxDis, this.config.power) * dot.intensity * 1)
+          let [r2, g2, b2] = ColorUtils.HSVtoRGB(dot.color, dot.saturation, 1*Math.pow(1 - distance / maxDis, this.config.wavePower) * dot.intensity * 1)
           r = r + r2;
           g = g + g2;
           b = b + b2;
@@ -74,17 +74,17 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
   static presets() {
     return {
-      "hexagono": {initialDistance: 69, haciaAfuera: false, speed: 1, waveWidth: 2},
-      "default": {},
-      "deLasPuntas": {speed: 1, waveWidth: 2, initialDistance: 40, haciaAfuera: false, brilloWave: 0.5},
-      "centroLento": {speed: 0.1},
-      "centroLentoDark": {speed: 0.1, brilloWave: 0.25},
-      "centroFast": {speed: 3},
-      "centroDots": {speed: 2, waveWidth: 0.5},
-      "centroBrightFast": {speed: 0.7, brilloWave: 2, waveWidth: 1, centerY: -17.3},
-      "abajoFast": {centerY: -17.3, speed: 3, waveWidth: 3},
+      "hexagono": {initialDistance: 69, haciaAfuera: false, waveSpeed: 1, waveWidth: 2},
+      "default": {waveCenterY: 0},
+      "deLasPuntas": {waveSpeed: 1, waveWidth: 2, initialDistance: 40, haciaAfuera: false, brilloWave: 0.5},
+      "centroLento": {waveSpeed: 0.1},
+      "centroLentoDark": {waveSpeed: 0.1, brilloWave: 0.25},
+      "centroFast": {waveSpeed: 3},
+      "centroDots": {waveSpeed: 2, waveWidth: 0.5},
+      "centroBrightFast": {waveSpeed: 0.7, brilloWave: 2, waveWidth: 1, waveCenterY: -17.3},
+      "abajoFast": {waveCenterY: -17.3, waveSpeed: 3, waveWidth: 3},
       "xInvertida": {initialDistance: 15, haciaAfuera: false},
-      "deArribaAbajo": {initialDistance: 67, centerY: -40, haciaAfuera: false, speed: 2}
+      "deArribaAbajo": {initialDistance: 67, waveCenterY: -40, haciaAfuera: false, waveSpeed: 2}
     }
   }
 
@@ -93,12 +93,12 @@ module.exports = class SoundWaves extends SoundBasedFunction {
 
     config.brilloWave = {type: Number, min: 0, max: 3, step: 0.01, default: 0.5}
     config.initialDistance = {type: Number, min: 0, max: 100, step: 0.1, default: 0}
-    config.centerY =  {type: Number, min: -40, max: 40, step: 1, default: 0}
-    config.centerX =  {type: Number, min: -60, max: 60, step: 1, default: 0}
+    config.waveCenterY =  {type: Number, min: -40, max: 40, step: 1, default: 0}
+    config.waveCenterX =  {type: Number, min: -60, max: 60, step: 1, default: 0}
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5}
-    config.speed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}
+    config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1}
     config.haciaAfuera = {type: Boolean, default: true}
-    config.power =  {type: Number, min: 0.5, max: 10, step: 0.5, default: 1}
+    config.wavePower =  {type: Number, min: 0.5, max: 10, step: 0.5, default: 1.2}
     // config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
 
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}

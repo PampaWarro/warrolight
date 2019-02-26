@@ -41,6 +41,12 @@ function audioFill(options) {
       const energy = getAudioEnergy(centerChannel);
       this.layers.fill.alpha = energy;
     }
+
+    static presets() {
+      return {
+        "default": {}
+      }
+    }
   }
   return AudioFill;
 }

@@ -57,6 +57,7 @@ module.exports = function createMultiProgram(programSchedule, random = false, cr
         nextProgram.lastFrame = colors
         this.drawSubprogram()
       }, () => {})
+
       this.nextTimeout = setTimeout(() => this.playNextProgram(config), this.current.duration);
 
       if(random){
@@ -65,6 +66,21 @@ module.exports = function createMultiProgram(programSchedule, random = false, cr
         this.nextPosition = (this.nextPosition + 1) % this.programSchedule.length;
       }
     }
+
+    // getConfig(programClass, globalConfig) {
+    //   let config = _.clone(this.defaultConfig);
+    //
+    //   if(!configSchema) {
+    //     configSchema = this.programs[this.currentProgramName].configSchema;
+    //   }
+    //
+    //   for (let paramName in configSchema) {
+    //     if (config[paramName] === undefined && configSchema[paramName].default !== undefined) {
+    //       config[paramName] = configSchema[paramName].default;
+    //     }
+    //   }
+    //   return config
+    // }
 
     updateConfig(key, value) {
       let program = this.current.programInstance;

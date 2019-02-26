@@ -35,7 +35,7 @@ module.exports =  class Func extends SoundBasedFunction{
         if((i/this.numberOfLeds) > 0.7){
           tone = 0;
         }
-        newColor = ColorUtils.HSVtoRGB(tone, 1, Math.min(1, vol*vol));
+        newColor = ColorUtils.HSVtoRGB(tone, 1, Math.min(1, this.peakDecay*this.peakDecay));
       }
       this.lastVolume[i] = newColor;
     }

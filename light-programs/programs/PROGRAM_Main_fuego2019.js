@@ -3,9 +3,11 @@ const _ = require('lodash')
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/Transformations");
+const mixPrograms = require("../base-programs/MixProgram");
 
 const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");
+const Lineal = require("./lineal");
 const RadialSun = require("./radialSun");
 const Stars = require("./stars")
 const VolumeDot = require("./musicVolumeDot");
@@ -15,14 +17,24 @@ const MusicFlow = require("./musicFlow");
 // const Fire = require("./fire").Func;
 const SpeedingSpear = require("./speeding-spear");
 const ColorSpear = require("./color-spear");
-// const Hourglass = require("./rainbow-hourglass").Func;
 const AliveDots = require("./aliveDots");
 const SoundWaves = require("./../../light-programs/programs/sound-waves");
 const WaterFlood = require("./water-flood");
 const Rays = require("./rays");
 const AliveDotsSpeed = require("./aliveDotsSpeed");
+const BassWarpGrid = require("./bassWarpGrid");
+const Bombs = require("./bombs");
+const Shapes = require("./shapes");
+const WarroBass = require("./warroBass");
 
-const baseTime = 1*0.5*1000;
+const MusicFrequencyDot = require("./musicFrequencyDot");
+const BandParticles = require("./bandParticles");
+const StripePatterns = require("./stripe-patterns");
+const FrequencyActivation = require("./frequencyActivation");
+const RadialWarp = require("./radialWarp");
+const Circles = require("./circles");
+
+const baseTime = 1*1000;
 
 function getAllPresets(funcClass, time, shape = 'Warro'){
   return _.map(funcClass.presets(), preset => {
@@ -30,35 +42,94 @@ function getAllPresets(funcClass, time, shape = 'Warro'){
   })
 }
 
-
 function sineScale(s) {
   return (Math.sin(this.timeInMs / 1000) + 1) * 8 + 0.5;
 }
 
 let flowDefault = [MusicFlow, MusicFlow.presets().default]
 
-const schedule = [
-  {duration: 600 , program: programsByShape({
-      totemL1: [RadialSun, {soundMetric: 1}],
-      totemL2: [RadialSun, {soundMetric: 2}],
-      totemR1: [RadialSun, {soundMetric: 3}],
-      totemR2: [RadialSun, {soundMetric: 0}],
-  })},
+let radialSunByBand = programsByShape({
+  totemsExt: [RadialSun, {soundMetric: 'highFastPeakDecay', saturation: 1, centerY: -2}],
+  totemsInt: [RadialSun, {soundMetric: 'midFastPeakDecay', saturation: 0.95, escala: 50, power: 3, centerY: -2}],
+  WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', saturation: 0.8, centerY: 11, power: 5}]
+});
 
-  {duration: 60 * baseTime, program: createMultiProgram([
-    {duration: 500 , program: programsByShape({totems: [Rainbow, Rainbow.presets().purpleDots]})},
-    {duration: 500 , program: programsByShape({wings: [Rainbow, Rainbow.presets().purpleDots]})},
-    {duration: 500 , program: programsByShape({wingsLeft: [Rainbow, Rainbow.presets().purpleDots]})},
-    {duration: 500 , program: programsByShape({wingsRight: [Rainbow, Rainbow.presets().purpleDots]})},
-    {duration: 500 , program: programsByShape({wingsX: [Rainbow, Rainbow.presets().purpleDots]})},
-  ], true, 0)},
+
+let volumeDotsRandomByBand = count => programsByShape({
+  totemsExt: [VolumeDotRandom, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: count}],
+  totemsInt: [VolumeDotRandom, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: count}],
+  WarroOnly: [VolumeDotRandom, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: count*2}]
+});
+
+let volumeDotByBand = count => programsByShape({
+  totemsExt: [VolumeDot, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: count}],
+  totemsInt: [VolumeDot, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: count}],
+  WarroOnly: [VolumeDot, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: count*2}]
+});
+
+
+let rainbowIteratingShapes = createMultiProgram([
+  {duration: 500 , program: programsByShape({totems: [Rainbow, Rainbow.presets().purpleDots]})},
+  {duration: 500 , program: programsByShape({wings: [Rainbow, Rainbow.presets().purpleDots]})},
+  {duration: 500 , program: programsByShape({wingsLeft: [Rainbow, Rainbow.presets().purpleDots]})},
+  {duration: 500 , program: programsByShape({wingsRight: [Rainbow, Rainbow.presets().purpleDots]})},
+  {duration: 500 , program: programsByShape({wingsX: [Rainbow, Rainbow.presets().purpleDots]})},
+], true, 0);
+
+
+let radialSunArribaAbajo = mixPrograms(
+  [RadialSun, { ... RadialSun.presets().fromBottom, soundMetric: 'bassPeakDecay', power: 2, escala: 50}],
+  [RadialSun, { ... RadialSun.presets().fromTop, soundMetric: 'highPeakDecay', power: 2, escala: 70}],
+);
+
+let starsSunrise = mixPrograms(
+  [Stars, Stars.presets().pocasSlow],
+  [RadialSun, { ... RadialSun.presets().fromBottom, soundMetric: 'bassPeakDecay', power: 2, escala: 80, saturation: 0.5}],
+);
+
+
+const schedule = [
+  ... getAllPresets(Circles, 30, 'allOfIt'),
+
+  ... getAllPresets(StripePatterns, 30, 'allOfIt'),
+
+  ... getAllPresets(MusicFrequencyDot, 30, 'allOfIt'),
+
+  {duration: 60 * baseTime, program: FrequencyActivation},
+
+  {duration: 60 * baseTime, program: BandParticles},
+  {duration: 60 * baseTime, program: BandParticles},
+  {duration: 60 * baseTime, program: BandParticles},
+
+
+  {duration: 30 * baseTime, program: starsSunrise},
+
+  {duration: 30 * baseTime, program: radialSunArribaAbajo},
+
+  ... getAllPresets(Shapes, 60, 'allOfIt'),
+
+  {duration: 30 * baseTime, program: WarroBass},
+  {duration: 30 * baseTime, program: WarroBass},// Es muy buenoo!!! más
+  {duration: 60 * baseTime, program: WarroBass},// Es muy buenoo!!! más
+
+  ... getAllPresets(Bombs, 60, 'allOfIt'),
+
+  ... getAllPresets(BassWarpGrid, 60, 'allOfIt'),
+
+  ... getAllPresets(RadialSun, 30, 'allOfIt'),
+  {duration: 60 * baseTime, program: radialSunByBand},
+
+  {duration: 60 * baseTime , program: volumeDotsRandomByBand(3)},
+  {duration: 60 * baseTime , program: volumeDotsRandomByBand(10)},
+
+
+  {duration: 60 * baseTime, program: rainbowIteratingShapes},
 
   {duration: 60 * baseTime, program: programsByShape({totemL1: flowDefault, totemL2: flowDefault, totemR1: flowDefault, totemR2: flowDefault, V1L: flowDefault, V2R: flowDefault})},
-
   {
     duration: 30 * baseTime, program: createMultiProgram([
     {duration: 10000, program: programsByShape({"shuffleSegments10": [MusicFlow, MusicFlow.presets().mediumDoble]})},
-    {duration: 10000, program: programsByShape({"shuffleSegments20": [MusicFlow, MusicFlow.presets().mediumDoble]})}
+    {duration: 10000, program: programsByShape({"shuffleSegments20": [MusicFlow, MusicFlow.presets().fastDobleDesdeCentro]})}
   ], true)},
   {
     duration: 90 * baseTime, program: createMultiProgram([
@@ -81,15 +152,15 @@ const schedule = [
   {duration: 30 * baseTime, program: programsByShape({V1: MusicFlow, V2: [MusicFlow, {haciaAfuera: false}]})},
   {duration: 30 * baseTime, program: programsByShape({V1: MusicFlow, V2: MusicFlow})},
   {duration: 30 * baseTime, program: programsByShape({Warro: MusicFlow})},
+
+
   {duration: 30 * baseTime, program: programsByShape({Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]})},
-
-
   ... getAllPresets(SoundWaves, 60, 'allOfIt'),
   {
     duration: 60 * baseTime,
     program: programsByShape({
       allOfIt: [animateParamProgram(SoundWaves, 'centerX', 120, x => -x), {
-        centerX: -20,
+        waveCenterX: -20,
         speed: 0.5
       }]
     })
@@ -127,10 +198,9 @@ const schedule = [
   },
   ... getAllPresets(Rays, 60),
 
+  ... getAllPresets(Lineal, 30),
 
-
-  ... getAllPresets(WaterFlood, 60, 'allOfIt'),
-
+  ... getAllPresets(WaterFlood, 40, 'allOfIt'),
 
   ... getAllPresets(AliveDots, 30),
   {
@@ -160,7 +230,8 @@ const schedule = [
   },
 
 
-
+  {duration: 60 * baseTime , program: volumeDotByBand(3)},
+  {duration: 60 * baseTime , program: volumeDotByBand(10)},
   {
     duration: 30 * baseTime,
     program: programsByShape({
@@ -219,30 +290,4 @@ const schedule = [
 // las formas que se pueden usar están definidas en Transformation
 
 
-// module.exports = createMultiProgram(schedule, false)
-
-let radialSunByBand = programsByShape({
-  totemsExt: [RadialSun, {soundMetric: 'highFastPeakDecay', saturation: 1, centerY: -2}],
-  totemsInt: [RadialSun, {soundMetric: 'midFastPeakDecay', saturation: 0.95, escala: 50, power: 3, centerY: -2}],
-  WarroOnly: [RadialSun, {soundMetric: 'bassFastPeakDecay', saturation: 0.8, centerY: 11, power: 5}]
-});
-
-
-let volumeDotsRandomByBand = programsByShape({
-  totemsExt: [VolumeDotRandom, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: 10}],
-  totemsInt: [VolumeDotRandom, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: 10}],
-  WarroOnly: [VolumeDotRandom, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: 20}]
-});
-
-let volumeDotsByBand = count => programsByShape({
-  totemsExt: [VolumeDot, {soundMetric: 'highFastPeakDecay', numberOfOnLeds: count}],
-  totemsInt: [VolumeDot, {soundMetric: 'midFastPeakDecay', numberOfOnLeds: count}],
-  WarroOnly: [VolumeDot, {soundMetric: 'bassFastPeakDecay', numberOfOnLeds: count*2}]
-});
-
-module.exports = createMultiProgram([
-  {duration: 60 * baseTime , program: volumeDotsByBand(3)},
-  {duration: 60 * baseTime , program: volumeDotsByBand(10)},
-  {duration: 600 * baseTime , program: volumeDotsRandomByBand},
-  {duration: 600 * baseTime, program: radialSunByBand}
-], false)
+module.exports = createMultiProgram(schedule, true)

@@ -66,6 +66,7 @@ module.exports = class StripePattern extends SoundBasedFunction {
 
   static presets() {
     return {
+      default: {speed: 0.25, brillo: 0.4},
       slowMarks: {speed: 3, sameColorLeds: 5},
     }
   }

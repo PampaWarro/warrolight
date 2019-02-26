@@ -11,8 +11,7 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
     this.time = 0;
     this.maxVolume = 0;
 
-    this.maxCentroid = 140;
-    this.minCentroid = 139;
+    this.hueOffset = Math.random();
 
     super.start(config, draw, done)
   }
@@ -33,6 +32,9 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
       let high = Math.pow(highPeakDecay, power)//*(highMax/total);
       let b = Math.round(255 * high * this.config.multiplier);
 
+      let [h,s,br] = ColorUtils.RGBtoHSV(r,g,b);
+      h = (h+this.hueOffset) % 1;
+      [r,g,b] = ColorUtils.HSVtoRGB(h,Math.sqrt(s),br);
 
       let width = Math.round((this.numberOfLeds / this.config.numberOfOnLeds));
 
@@ -60,10 +62,11 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction{
 
   static presets(){
     return {
-      "symetry8Move": {move: true, numberOfOnLeds: 8},
-      "symetry8Slow": {move: false, numberOfOnLeds: 8},
+      "symetry8Move": {move: true, numberOfOnLeds: 8, power: 2, multiplier: 1},
+      "symetry8Slow": {move: false, numberOfOnLeds: 8, power: 2, multiplier: 1},
+      "symetry8SlowRed": {move: false, numberOfOnLeds: 16, power: 3},
       "leds24": {move: false, numberOfOnLeds: 24},
-      "leds20HighPower": {move: true, numberOfOnLeds: 20, power: 6}
+      "leds20HighPower": {move: true, numberOfOnLeds: 20, power: 4}
     }
   }
 

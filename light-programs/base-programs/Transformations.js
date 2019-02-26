@@ -36,12 +36,23 @@ module.exports = function programsByShape(mapping) {
         let specificConfig = config;
         if(_.isArray(Program)){
           [Program, specificConfig] = Program;
-          specificConfig = _.extend({}, config, specificConfig)
+          let defaultConfig = this.extractDefault(Program.configSchema ?  Program.configSchema() : {} );
+          specificConfig = _.extend({}, config, defaultConfig, specificConfig)
         }
         this.instances[shapeName] = new Program(specificConfig, localLeds)
         this.instances[shapeName].specificConfig = specificConfig;
       })
       this.state = [... Array(leds.numberOfLeds)].map(()=> [0,0,0]);
+    }
+
+    extractDefault(configSchema) {
+      let config = {};
+      for (let paramName in configSchema) {
+        if (configSchema[paramName].default !== undefined) {
+          config[paramName] = configSchema[paramName].default;
+        }
+      }
+      return config;
     }
 
     start(config, draw, done) {

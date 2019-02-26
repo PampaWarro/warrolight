@@ -103,8 +103,7 @@ module.exports = class Func extends LayerBasedFunction {
 
   static presets() {
     return {
-      "default": {velocidad: 0.4, whiteBorder: true},
-      "gold": {velocidad: 0.1, whiteBorder: false, escala: 0.5, color: 0.42}
+      "default": {},
     }
   }
 

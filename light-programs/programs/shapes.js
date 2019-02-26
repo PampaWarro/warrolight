@@ -167,6 +167,16 @@ module.exports = class Func extends LayerBasedFunction {
         rotorAlpha: 0,
         rainDotsAlpha: 0,
       },
+      "bassCircle": {
+        bassCircle: true,
+        bassCircleSensitivity: 85,
+        bassLine: false,
+        bassLineSensitivity: 50,
+        fillCircle: false,
+        highLayerAlpha: 0,
+        rotorAlpha: 0,
+        rainDotsAlpha: 0,
+      },
       "rotor": {
         bassCircle: true,
         bassCircleSensitivity: 42,

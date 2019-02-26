@@ -75,10 +75,10 @@ module.exports =  class Func extends SoundBasedFunction {
   static presets(){
     return {
       "constanteLento": {musicWeight: 0, speedWeight: 0.1, numberOfParticles: 15, toneColor: 0.5},
-      "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 15, toneColor: 0.55, doble: false},
+      // "constanteLentoUnidirecional": {musicWeight: 0, speedWeight: 0.3, numberOfParticles: 15, toneColor: 0.55, doble: false},
       "constanteRapidoPocas": {musicWeight: 0, speedWeight: 1, numberOfParticles: 10, toneColor: 0.3},
       "musicModerado": {musicWeight: 1, speedWeight: 0, numberOfParticles: 15, toneColor: 0.5},
-      "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 15, toneColor: 0.5, doble: false, brillo: 1},
+      // "musicMediaSlow": {musicWeight: 2, speedWeight: 0.05, numberOfParticles: 15, toneColor: 0.5, doble: false, brillo: 1},
       "musicQuilombo": {musicWeight: 1, speedWeight: 0.5, numberOfParticles: 15, toneColor: 0.7}
     }
   }

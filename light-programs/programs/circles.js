@@ -37,7 +37,7 @@ module.exports = class Func extends SoundBasedFunction {
 
     const centerChannel = this.currentAudioFrame.center;
     if (!centerChannel) {
-      done();
+      return done();
     }
     const vol = centerChannel.movingStats.rms.slow.normalizedValue;
     const normalizedBass = centerChannel.filteredBands.bass.movingStats.rms.slow.normalizedValue;
@@ -80,8 +80,8 @@ module.exports = class Func extends SoundBasedFunction {
 
   static presets() {
     return {
-      "default": {velocidad: 0.4, whiteBorder: true},
-      "gold": {velocidad: 0.1, whiteBorder: false, escala: 0.5, color: 0.42}
+      "default": {velocidad: 0.6, escala: 1},
+      "slow": {velocidad: 0.1, escala: 1},
     }
   }
 
@@ -89,9 +89,7 @@ module.exports = class Func extends SoundBasedFunction {
   static configSchema() {
     let res = super.configSchema();
     res.escala = {type: Number, min: 0.01, max: 5, step: 0.01, default: 1}
-    res.color = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
-    res.velocidad = {type: Number, min: -3, max: 3, step: 0.01, default: 0.6}
-    res.whiteBorder = {type: Boolean, default: false}
+    res.velocidad = {type: Number, min: 0, max: 3, step: 0.01, default: 0.6}
     return res;
   }
 }

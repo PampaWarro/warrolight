@@ -60,9 +60,9 @@ module.exports = class MusicFlow extends SoundBasedFunction{
     return {
       slowDoble: {multiplier: 1, speed: 1, doble: true},
       mediumDoble: {multiplier: 1.3, cutThreshold: 0.6, speed: 3, doble: true},
-      fastSimple: {speed: 5, doble: false},
+      fastSimple: {speed: 7, doble: false},
       default: {doble: false, haciaAfuera: false, speed: 3},
-      fastDobleDesdePuntas: {speed: 5, doble: true, haciaAfuera: false},
+      fastDobleDesdePuntas: {speed: 7, doble: true, haciaAfuera: false},
       fastDobleDesdeCentro: {speed: 5, doble: true, haciaAfuera: true},
     }
   }

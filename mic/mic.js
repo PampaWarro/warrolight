@@ -30,11 +30,13 @@ var mic = function mic(options) {
   that.start = function start() {
     if(audioInput === null) {
       try {
-        audioInput = new portAudio.AudioInput({
-          channelCount: channels,
-          sampleFormat: portAudio.SampleFormat16Bit,
-          sampleRate: 44100,
-          deviceId: -1 // Use -1 or omit the deviceId to select the default device
+        audioInput = new portAudio.AudioIO({
+          inOptions: {
+            channelCount: channels,
+            sampleFormat: portAudio.SampleFormat16Bit,
+            sampleRate: 44100,
+            deviceId: -1 // Use -1 or omit the deviceId to select the default device
+          }
         });
       } catch(err) {
         console.log("Error opening audio. Check device id.")

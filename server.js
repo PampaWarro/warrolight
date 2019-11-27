@@ -18,21 +18,10 @@ const lightsToByteString = (ledsColorArray) => {
 exports.createRemoteControl = function(lightProgram, deviceMultiplexer) {
   app.use(express.static('public'))
 
-  app.get('/', function (req, res) {
-    res.send("DALE NENE")
-  })
-
-  // httpServer.listen(8080);
-  // httpsServer.listen(8443);
-
   http.listen(3001, '0.0.0.0', function () {
     console.log("Warro lights server running on port 3001")
-    console.log("Remote control in: http://localhost:3001/warro.html")
+    console.log("Remote control in: http://localhost:3001/")
   })
-
-  // httpsServer.listen(3443, '0.0.0.0', function () {
-  //   console.log("Warro lights HTTPS server running on port 3443")
-  // })
 
   const io = require('socket.io').listen(http);
 

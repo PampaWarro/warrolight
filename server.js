@@ -10,12 +10,6 @@ const app = express();
 
 const http = require('http').createServer(app);
 
-// // HTTPS
-// const privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-// const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-// const credentials = {key: privateKey, cert: certificate};
-// const httpsServer = require('https').createServer(credentials, app);
-
 const lightsToByteString = (ledsColorArray) => {
   let bytes = _.flatten(ledsColorArray);
   return Buffer.from(bytes).toString('base64');

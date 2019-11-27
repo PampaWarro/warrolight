@@ -2,7 +2,6 @@ var spawn = require('child_process').spawn;
 var isMac = require('os').type() == 'Darwin';
 var isWindows = require('os').type().indexOf('Windows') > -1;
 var osEndianness = require('os').endianness();
-var MeasureVolume = require('./volumeTransform.js');
 var PassThrough = require('stream').PassThrough;
 var portAudio = require('naudiodon');
 

@@ -1,0 +1,245 @@
+body, html, div {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+  padding-bottom: 200px;
+}
+
+.lights-sim {
+  overflow: hidden;
+}
+
+canvas {
+  border: solid 1px gray;
+  max-width: 100%;
+}
+
+h1, h2, h3 {
+  margin-top: 0.2em;
+  text-align: center;
+  margin-bottom: 0.2em;
+}
+
+.mic-client {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  border: solid 1px white;
+  background-color: black;
+}
+
+.mic-client .buttons {
+  padding: 5px;
+}
+
+.perdband-btn{
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+  text-align: right;
+}
+
+.preview-area {
+  position: relative;
+}
+
+.preview-btn {
+  text-align: center;
+  color: white;
+  position: absolute;
+  top: 48%;
+  width: 100%;
+}
+
+#music {
+  background-color: #333;
+  /*width: 400px;*/
+}
+
+.state {
+  padding: 5px;
+  text-align: center;
+}
+
+.state-danger {
+  background-color: darkred;
+}
+
+.state-ok {
+  background-color: green;
+}
+
+.state-warning {
+  background-color: darkgoldenrod;
+}
+
+.lights-sim {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+
+.configuration {
+  padding: 10px;
+  overflow: auto;
+}
+
+.controls {
+  width: 100%;
+}
+.simControls{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menuItems {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: stretch;
+}
+
+.menuItems a {
+  text-align: center;
+  text-decoration: none;
+  margin: 1px;
+  padding: 5px 5px;
+  background-color: #333;
+  word-break: break-all;
+  flex-grow: 1;
+  border-radius: 2px;
+}
+
+.menuItems a:hover {
+  box-shadow: inset 0px 0px 6px white;
+}
+
+.menuItems .selected, .menuItems a:active {
+  background-color: green;
+  color: white;
+  box-shadow: inset 0px 0px 6px #23ff02;
+  text-shadow: 0px 0px 2px white;
+}
+
+.config-item {
+  text-align: center;
+  /*justify-content: space-between;*/
+  padding: 5px 0px;
+}
+
+.config-item span {
+  font-size: 12px;
+  text-align: right;
+  word-break: break-all;
+  display: inline-block;
+  width: 110px;
+}
+
+.config-item > div{
+  vertical-align: middle;
+  margin-left: 10px;
+  display: inline-block;
+  /*text-align: right;*/
+}
+
+.config-item > div > strong {
+  width: 45px;
+  display: inline-block;
+  text-align: right;
+}
+
+.presets {
+  max-width: 350px;
+}
+
+.preset {
+  display: inline-block;
+  margin: 5px;
+}
+
+a, a:hover, a:active {
+  color: #a7b4ff
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 10px 0px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  /*width: 150px;*/
+  height: 3px;
+  background: #999;
+  border: none;
+  border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #a7b4ff;
+  margin-top: -8px;
+}
+
+input[type=range]:hover::-webkit-slider-thumb, input[type=range]:active, input[type=range]:focus::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb:hover, input[type=range]:active::-webkit-slider-thumb {
+  outline: none;
+  background: #ffdf10;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+
+.devices  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #222;
+  margin-bottom: 2px;
+}
+
+.device {
+  background-color: gray;
+  padding: 4px;
+  margin: 4px;
+  text-align: center;
+  border-radius: 2px;
+}
+.device-running, .status-success {
+  background-color: green;
+  box-shadow: inset 0px 0px 6px #23ff02;
+}
+.device-error, .status-danger {
+  background-color: #960000;
+  box-shadow: inset 0px 0px 6px red;
+}
+.device-connecting, .status-warning {
+  background-color: darkgoldenrod;
+  box-shadow: inset 0px 0px 6px yellow;
+}
+
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 10px;
+  background: #222;
+}
+
+.cnx-status {
+  padding: 5px;
+  display: inline-block;
+  border-radius: 5px;
+}

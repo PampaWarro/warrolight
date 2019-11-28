@@ -1,1 +1,0 @@
-{"version":3,"sources":["root.jsx"],"names":[],"mappings":"AAAA,SAAS,MAAT,CACE,oBAAC,SAAD,OADF,EAEE,SAAS,cAAT,CAAwB,KAAxB,CAFF","file":"root.js","sourcesContent":["ReactDOM.render(\n  <Simulator />,\n  document.getElementById('app')\n);"]}

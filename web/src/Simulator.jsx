@@ -53,10 +53,6 @@ export class Simulator extends React.Component {
     socket.on("stateChange", this._stateChange.bind(this));
   }
 
-  componentWillUnmount() {
-    //this.stopCurrent()
-  }
-
   UNSAFE_componentWillUpdate(newProps, newState) {
     if (
       this.state.currentConfig !== newState.currentConfig &&

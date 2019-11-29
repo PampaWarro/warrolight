@@ -24,7 +24,8 @@
     "performance-now": "^2.0.0",
     "serialport": "^8.0.5",
     "sndpeek": "^1.0.2",
-    "terminal-kit": "^1.26.10"
+    "terminal-kit": "^1.26.10",
+    "ws": "^7.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0"

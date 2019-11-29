@@ -19,14 +19,7 @@ export class LightsSimulator extends React.Component {
     }
 
     turnOnSimulation() {
-        socket.emit('startSamplingLights', (layout) => {
-            this.geometryX = layout.geometry.x
-            this.geometryY = layout.geometry.y
-            this.minX = _.min(this.geometryX)
-            this.minY = _.min(this.geometryY)
-            this.maxX = _.max(this.geometryX)
-            this.maxY = _.max(this.geometryY)
-        });
+        socket.emit('startSamplingLights');
     }
 
     turnOffSimulation() {
@@ -66,6 +59,15 @@ export class LightsSimulator extends React.Component {
           console.log("Lights data")
             this.drawCanvas(lights)
         });
+
+        socket.on('layout', (layout) => {
+          this.geometryX = layout.geometry.x
+          this.geometryY = layout.geometry.y
+          this.minX = _.min(this.geometryX)
+          this.minY = _.min(this.geometryY)
+          this.maxX = _.max(this.geometryX)
+          this.maxY = _.max(this.geometryY)
+        })
 
         document.addEventListener('visibilitychange', this.onVisibilityChange);
         document.onblur = this.onFocusChange;

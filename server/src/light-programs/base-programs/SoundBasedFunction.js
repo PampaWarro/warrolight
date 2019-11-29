@@ -1,7 +1,7 @@
 const ColorUtils = require("./../utils/ColorUtils");
 const TimeTickedFunction = require("./TimeTickedFunction");
 const _ = require('lodash');
-const soundEmitter = require("../../sound-broadcast")
+const soundEmitter = require("../../soundEmitter")
 
 // Fake sound wave with random
 let lastRandom = 0;

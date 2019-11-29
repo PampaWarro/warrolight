@@ -1,17 +1,8 @@
+const _ = require('lodash');
 const mic = require('./mic/mic');
-const soundEmitter = require("./sound-broadcast")
+const soundEmitter = require("./soundEmitter")
 
-// const fs = require('fs');
-// var outputFileStream = fs.WriteStream('output.raw');
-// micInputStream.pipe(outputFileStream);
-
-// micInputStream.pipe(process.stdout);
-
-// micInputStream.on('data', function(data) {
-//   // console.log(new Date() - start, "Recieved Input Stream: " + data.length, data.slice(0,10));
-// });
-
-function startMic(){
+function startMic() {
   let frameSize = 512;
   let micInstance = mic({
     rate: 44100,
@@ -51,4 +42,4 @@ function startMic(){
   micInstance.start();
 }
 
-startMic();
+exports.startMic = startMic

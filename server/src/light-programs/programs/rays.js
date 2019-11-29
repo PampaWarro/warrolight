@@ -1,4 +1,3 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");

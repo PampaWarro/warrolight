@@ -1,40 +1,40 @@
 /*global socket*/
-import React from 'react';
-import { CnxStatus } from './CnxStatus';
-import { DevicesStatus } from './DevicesStatus';
-import { LightsSimulator } from './LightsSimulator';
-import { MicrophoneViewer } from './MicrophoneViewer';
-import _ from 'lodash';
+import React from "react";
+import { CnxStatus } from "./CnxStatus";
+import { DevicesStatus } from "./DevicesStatus";
+import { LightsSimulator } from "./LightsSimulator";
+import { MicrophoneViewer } from "./MicrophoneViewer";
+import _ from "lodash";
 
 export class Simulator extends React.Component {
   constructor() {
-    super(...arguments)
+    super(...arguments);
 
     this.config = {
       frequencyInHertz: 60
-    }
+    };
 
-    this.programs = []
+    this.programs = [];
 
     this.state = {
       selected: null,
       programs: [],
       micConfig: {}
-    }
+    };
 
-    this.leds = []
+    this.leds = [];
 
-    this.getLeds = (index) => this.leds[index]
+    this.getLeds = index => this.leds[index];
   }
 
   _initializeState(state) {
     this.setState({
-      programs: _.keyBy(state.programs, 'name'),
+      programs: _.keyBy(state.programs, "name"),
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
       micConfig: state.micConfig
-    })
-    console.log(state)
+    });
+    console.log(state);
   }
 
   _stateChange(state) {
@@ -43,14 +43,14 @@ export class Simulator extends React.Component {
       currentConfig: state.currentConfig,
       micConfig: state.micConfig,
       remoteChange: true
-    })
+    });
 
-    console.log(state.currentProgramName, state)
+    console.log(state.currentProgramName, state);
   }
 
   componentDidMount() {
-    socket.on('completeState', this._initializeState.bind(this));
-    socket.on('stateChange', this._stateChange.bind(this));
+    socket.on("completeState", this._initializeState.bind(this));
+    socket.on("stateChange", this._stateChange.bind(this));
   }
 
   componentWillUnmount() {
@@ -58,50 +58,60 @@ export class Simulator extends React.Component {
   }
 
   UNSAFE_componentWillUpdate(newProps, newState) {
-    if (this.state.currentConfig !== newState.currentConfig && !newState.remoteChange) {
-      console.log("ENTIRE CHANGING TO", newState.currentConfig)
-      socket.emit("updateConfigParam", newState.currentConfig)
+    if (
+      this.state.currentConfig !== newState.currentConfig &&
+      !newState.remoteChange
+    ) {
+      console.log("ENTIRE CHANGING TO", newState.currentConfig);
+      socket.emit("updateConfigParam", newState.currentConfig);
     }
   }
 
   handleProgramClick(key, ev) {
-    ev.preventDefault()
-    this.setCurrentProgram(key)
+    ev.preventDefault();
+    this.setCurrentProgram(key);
   }
 
   setCurrentProgram(name) {
-    socket.emit("setCurrentProgram", name)
+    socket.emit("setCurrentProgram", name);
   }
 
   updateLeds(leds) {
-    this.props.send(leds)
+    this.props.send(leds);
     this.leds = leds;
     this.refs.simulator.getNextFrame();
   }
 
   selectPreset(preset) {
-    socket.emit("setPreset", preset)
+    socket.emit("setPreset", preset);
   }
 
   restartProgram(e) {
-    e.preventDefault()
-    socket.emit("restartProgram")
+    e.preventDefault();
+    socket.emit("restartProgram");
   }
 
   render() {
     let menuItems = [];
     for (let key in this.state.programs) {
       if (key === this.state.selected) {
-        menuItems.push(<Item key={key} className="selected">{this.state.programs[key].name}</Item>)
+        menuItems.push(
+          <Item key={key} className="selected">
+            {this.state.programs[key].name}
+          </Item>
+        );
       } else {
-        menuItems.push(<Item key={key}
-                             onClick={e => this.handleProgramClick(key, e)}>{this.state.programs[key].name}</Item>)
+        menuItems.push(
+          <Item key={key} onClick={e => this.handleProgramClick(key, e)}>
+            {this.state.programs[key].name}
+          </Item>
+        );
       }
     }
 
     let configOptions = [];
     let presets = [];
-    let currentProgram = {name: "NO SELECTED PROGRAM"}
+    let currentProgram = { name: "NO SELECTED PROGRAM" };
 
     if (this.state.selected) {
       currentProgram = this.state.programs[this.state.selected];
@@ -109,62 +119,99 @@ export class Simulator extends React.Component {
       for (let paramName in currentProgram.config) {
         let val = this.state.currentConfig[paramName];
         if (_.isBoolean(currentProgram.config[paramName].default)) {
-          configOptions.push(<BooleanParam key={paramName} configDefinition={currentProgram.config[paramName]}
-                                           configRef={this.state.currentConfig} val={val} field={paramName}/>);
-        } else if(_.isString(currentProgram.config[paramName].default)){
-          configOptions.push(<StringParam key={paramName} configDefinition={currentProgram.config[paramName]}
-                                           configRef={this.state.currentConfig} val={val} field={paramName}/>);
+          configOptions.push(
+            <BooleanParam
+              key={paramName}
+              configDefinition={currentProgram.config[paramName]}
+              configRef={this.state.currentConfig}
+              val={val}
+              field={paramName}
+            />
+          );
+        } else if (_.isString(currentProgram.config[paramName].default)) {
+          configOptions.push(
+            <StringParam
+              key={paramName}
+              configDefinition={currentProgram.config[paramName]}
+              configRef={this.state.currentConfig}
+              val={val}
+              field={paramName}
+            />
+          );
         } else {
-          configOptions.push(<NumberParam key={paramName} configDefinition={currentProgram.config[paramName]}
-                                          configRef={this.state.currentConfig} val={val} field={paramName}/>);
+          configOptions.push(
+            <NumberParam
+              key={paramName}
+              configDefinition={currentProgram.config[paramName]}
+              configRef={this.state.currentConfig}
+              val={val}
+              field={paramName}
+            />
+          );
         }
       }
 
       for (let preset of currentProgram.presets) {
-        presets.push(<a className="preset" href="#" key={preset} onClick={e => this.selectPreset(preset)}>{preset} </a>)
+        presets.push(
+          <a
+            className="preset"
+            href="#"
+            key={preset}
+            onClick={e => this.selectPreset(preset)}
+          >
+            {preset}{" "}
+          </a>
+        );
       }
     }
 
     {
-      return (<div>
-        <div className="contain">
+      return (
+        <div>
+          <div className="contain">
+            <div className={"top-header"}>
+              <div>Setup</div>
 
-          <div className={'top-header'}>
-            <div>Setup</div>
-
-            <div><CnxStatus/>&nbsp;&nbsp; <strong>Warro Lights</strong></div>
-          </div>
-
-          <DevicesStatus/>
-
-          <div className="controls">
-            <div className="menuItems">{menuItems}</div>
-            <div className="simControls">
-              <div className="configuration">
-                <h3>{this.state.selected} &nbsp;
-                  <a href="#" onClick={e => this.restartProgram(e)}>restart</a>
-                </h3>
-                <div className="config-items">
-                  {configOptions}
-                </div>
-                <div className={'presets'}>
-                {presets}
-                </div>
+              <div>
+                <CnxStatus />
+                &nbsp;&nbsp; <strong>Warro Lights</strong>
               </div>
-              <LightsSimulator height="400" width="600"></LightsSimulator>
             </div>
-          </div>
 
-          <MicrophoneViewer config={this.state.micConfig}/>
+            <DevicesStatus />
+
+            <div className="controls">
+              <div className="menuItems">{menuItems}</div>
+              <div className="simControls">
+                <div className="configuration">
+                  <h3>
+                    {this.state.selected} &nbsp;
+                    <a href="#" onClick={e => this.restartProgram(e)}>
+                      restart
+                    </a>
+                  </h3>
+                  <div className="config-items">{configOptions}</div>
+                  <div className={"presets"}>{presets}</div>
+                </div>
+                <LightsSimulator height="400" width="600"></LightsSimulator>
+              </div>
+            </div>
+
+            <MicrophoneViewer config={this.state.micConfig} />
+          </div>
         </div>
-      </div>)
+      );
     }
   }
 }
 
 class Item extends React.Component {
   render() {
-    return <a href="#" className={this.props.className} onClick={this.props.onClick}>{this.props.children}</a>
+    return (
+      <a href="#" className={this.props.className} onClick={this.props.onClick}>
+        {this.props.children}
+      </a>
+    );
   }
 }
 
@@ -175,7 +222,7 @@ class NumberParam extends React.Component {
     this.min = (props.configDefinition || {}).min || 0;
     this.max = (props.configDefinition || {}).max || 100;
     this.step = (props.configDefinition || {}).step || 1;
-    this.state = {value: props.val, configRef: props.configRef}
+    this.state = { value: props.val, configRef: props.configRef };
     this.handleChange = this.handleChange.bind(this);
     this.name = "" + Math.random();
   }
@@ -185,15 +232,15 @@ class NumberParam extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.val, configRef: nextProps.configRef})
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
   }
 
   setVal(val) {
     let value = parseFloat(val);
-    this.setState({value: value, configRef: this.state.configRef});
+    this.setState({ value: value, configRef: this.state.configRef });
     this.state.configRef[this.field] = value;
-    console.log("PARAM CHANGE", this.state.configRef)
-    socket.emit('updateConfigParam', this.state.configRef)
+    console.log("PARAM CHANGE", this.state.configRef);
+    socket.emit("updateConfigParam", this.state.configRef);
   }
 
   render() {
@@ -202,20 +249,26 @@ class NumberParam extends React.Component {
         <span>{this.field}:&nbsp;</span>
         <div>
           <strong>{this.state.value}&nbsp;</strong>
-          <input type="range" name={this.name} min={this.min} step={this.step} max={this.max} value={this.state.value}
-                 onChange={this.handleChange}/>
+          <input
+            type="range"
+            name={this.name}
+            min={this.min}
+            step={this.step}
+            max={this.max}
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
         </div>
       </div>
     );
   }
 }
 
-
 class BooleanParam extends React.Component {
   constructor(props) {
     super(props);
     this.field = props.field;
-    this.state = {value: props.val, configRef: props.configRef}
+    this.state = { value: props.val, configRef: props.configRef };
     this.handleChange = this.handleChange.bind(this);
     this.name = "" + Math.random();
   }
@@ -225,16 +278,16 @@ class BooleanParam extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.val, configRef: nextProps.configRef})
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
   }
 
   setVal(value) {
-    this.setState((state) => {
-      state.configRef[this.field] = value
-      return { configRef: state.configRef, value }
-    })
-    console.log("BOOL PARAM CHANGE", this.state.configRef)
-    socket.emit('updateConfigParam', this.state.configRef)
+    this.setState(state => {
+      state.configRef[this.field] = value;
+      return { configRef: state.configRef, value };
+    });
+    console.log("BOOL PARAM CHANGE", this.state.configRef);
+    socket.emit("updateConfigParam", this.state.configRef);
   }
 
   render() {
@@ -243,19 +296,23 @@ class BooleanParam extends React.Component {
         <span>{this.field}:&nbsp;</span>
         <div>
           <strong>{this.state.value}&nbsp;</strong>
-          <input type="checkbox" name={this.name} checked={this.state.value} onChange={this.handleChange}/>
+          <input
+            type="checkbox"
+            name={this.name}
+            checked={this.state.value}
+            onChange={this.handleChange}
+          />
         </div>
       </div>
     );
   }
 }
 
-
 class StringParam extends React.Component {
   constructor(props) {
     super(props);
     this.field = props.field;
-    this.state = {value: props.val, configRef: props.configRef}
+    this.state = { value: props.val, configRef: props.configRef };
     this.values = (props.configDefinition || {}).values || "MAL DEFINIDO";
     this.handleChange = this.handleChange.bind(this);
     this.name = "" + Math.random();
@@ -266,15 +323,15 @@ class StringParam extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.val, configRef: nextProps.configRef})
+    this.setState({ value: nextProps.val, configRef: nextProps.configRef });
   }
 
   setVal(val) {
     let value = val;
     this.state.configRef[this.field] = value;
-    this.setState({value: value});
-    console.log("STRING PARAM CHANGE", this.state.configRef)
-    socket.emit('updateConfigParam', this.state.configRef)
+    this.setState({ value: value });
+    console.log("STRING PARAM CHANGE", this.state.configRef);
+    socket.emit("updateConfigParam", this.state.configRef);
   }
 
   render() {
@@ -283,11 +340,17 @@ class StringParam extends React.Component {
         <span>{this.field}:&nbsp;</span>
         <div>
           <strong>{this.state.value}&nbsp;</strong>
-          <br/>
-          <div style={{zoom: '0.8'}}>
-          {
-            _.map(this.values, v => <button key={v} className={this.state.value === v ? 'selected' : ''} onClick={() => this.handleChange(v)}>{v}</button>)
-          }
+          <br />
+          <div style={{ zoom: "0.8" }}>
+            {_.map(this.values, v => (
+              <button
+                key={v}
+                className={this.state.value === v ? "selected" : ""}
+                onClick={() => this.handleChange(v)}
+              >
+                {v}
+              </button>
+            ))}
           </div>
         </div>
       </div>

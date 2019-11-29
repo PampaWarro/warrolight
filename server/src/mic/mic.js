@@ -20,7 +20,6 @@ const mic = function mic(options) {
     throw Error("Only 1 channel supported.");
   }
   const deviceId = options.deviceId || -1;
-  const exitOnSilence = options.exitOnSilence || 0;
   const frameSize = options.frameSize || 512;
   const outputBitwidth = 16;
   const bufferSize = (frameSize * channels * outputBitwidth) / 8;
@@ -35,8 +34,8 @@ const mic = function mic(options) {
           inOptions: {
             channelCount: channels,
             sampleFormat: portAudio.SampleFormat16Bit,
-            sampleRate: 44100,
-            deviceId: -1 // Use -1 or omit the deviceId to select the default device
+            sampleRate: outputRate,
+            deviceId: deviceId
           }
         });
       } catch (err) {

@@ -1,3 +1,4 @@
+/*global socket */
 import React from "react";
 import _ from "lodash";
 import { StringParam } from "./StringParam";
@@ -11,6 +12,14 @@ export class ProgramConfig extends React.Component {
     this.props.onRestartProgram();
   }
 
+  handleParamChange = (e, field, value) => {
+    const config = this.props.config;
+    config[field] = value;
+
+    console.log("PARAM CHANGE", config);
+    socket.emit("updateConfigParam", config);
+  }
+
   render() {
     const currentProgram = this.props.program;
 
@@ -22,35 +31,38 @@ export class ProgramConfig extends React.Component {
     let presets = [];
 
     for (let paramName in currentProgram.config) {
-      let val = this.props.config[paramName];
-      if (_.isBoolean(currentProgram.config[paramName].default)) {
+      let configDef = currentProgram.config[paramName];
+      let value = this.props.config[paramName];
+
+      if (_.isBoolean(configDef.default)) {
         configOptions.push(
           <BooleanParam
             key={paramName}
-            configDefinition={currentProgram.config[paramName]}
-            configRef={this.props.config}
-            val={val}
-            field={paramName}
+            name={paramName}
+            value={value}
+            onChange={this.handleParamChange}
           />
         );
-      } else if (_.isString(currentProgram.config[paramName].default)) {
+      } else if (_.isString(configDef.default)) {
         configOptions.push(
           <StringParam
             key={paramName}
-            configDefinition={currentProgram.config[paramName]}
-            configRef={this.props.config}
-            val={val}
-            field={paramName}
+            name={paramName}
+            value={value}
+            options={configDef.values}
+            onChange={this.handleParamChange}
           />
         );
       } else {
         configOptions.push(
           <NumberParam
             key={paramName}
-            configDefinition={currentProgram.config[paramName]}
-            configRef={this.props.config}
-            val={val}
-            field={paramName}
+            name={paramName}
+            value={value}
+            step={configDef.step}
+            min={configDef.min}
+            max={configDef.max}
+            onChange={this.handleParamChange}
           />
         );
       }

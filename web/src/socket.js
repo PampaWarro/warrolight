@@ -42,6 +42,10 @@ export default class Socket {
     }
 
     emit(event, data) {
+        if (this.ws.readyState != 1 /* OPEN */) {
+            console.warn("websocket not ready when attempting to send message")
+            return
+        }
         const e = { type: event, payload: data }
         this.ws.send(JSON.stringify(e))
     }

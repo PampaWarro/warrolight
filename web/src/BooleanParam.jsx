@@ -2,41 +2,21 @@
 import React from "react";
 
 export class BooleanParam extends React.Component {
-    constructor(props) {
-      super(props);
-      this.field = props.field;
-      this.state = { value: props.val, configRef: props.configRef };
-      this.handleChange = this.handleChange.bind(this);
-      this.name = "" + Math.random();
-    }
   
-    handleChange(event) {
-      this.setVal(event.target.checked);
-    }
-  
-    componentWillReceiveProps(nextProps) {
-      this.setState({ value: nextProps.val, configRef: nextProps.configRef });
-    }
-  
-    setVal(value) {
-      this.setState(state => {
-        state.configRef[this.field] = value;
-        return { configRef: state.configRef, value };
-      });
-      console.log("BOOL PARAM CHANGE", this.state.configRef);
-      socket.emit("updateConfigParam", this.state.configRef);
+    handleChange = (event) => {
+      this.props.onChange(event, this.props.name, event.target.checked)
     }
   
     render() {
       return (
         <div className="config-item my-3">
             <div className="overflow-auto">
-                <div className="float-left">{this.field}&nbsp;</div>
+                <div className="float-left">{this.props.name}</div>
                 <input
                     className="float-right"
                     type="checkbox"
-                    name={this.name}
-                    checked={this.state.value}
+                    name={this.props.name}
+                    checked={this.props.value}
                     onChange={this.handleChange}
                 />
             </div>

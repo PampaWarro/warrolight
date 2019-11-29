@@ -64,7 +64,7 @@ hr {
   text-align: center;
   color: white;
   position: absolute;
-  top: 48%;
+  top: 38%;
   width: 100%;
 }
 
@@ -75,10 +75,14 @@ hr {
   text-align: right;
 }
 
+.lights-simulator {
+  background-color: black;
+  margin-top: 86px;
+}
+
 .preview-area {
   border: 1px solid #1a1b1d;
   text-align: center;
-  position: relative;
 }
 
 input[type=range] {

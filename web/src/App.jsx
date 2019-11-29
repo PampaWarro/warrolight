@@ -116,9 +116,11 @@ export class App extends React.Component {
                 onRestartProgram={this.restartProgram.bind(this)}
               />
             </div>
-            <div className="col-md-7">
-              <LightsSimulator height="400" width="600" />
-              <MicrophoneViewer config={this.state.micConfig} />
+            <div className="offset-5 fixed-top">
+              <div className="m-3">
+                <LightsSimulator height="400" width="600" />
+                <MicrophoneViewer config={this.state.micConfig} />
+              </div>
             </div>
           </div>
         </div>

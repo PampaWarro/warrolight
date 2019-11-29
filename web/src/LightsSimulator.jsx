@@ -93,8 +93,8 @@ export class LightsSimulator extends React.Component {
 
   render() {
     return (
-      <div className="lights-sim">
-        <div className="preview-area mb-3 pt-3">
+      <div className="lights-simulator mb-3">
+        <div className="preview-area py-4">
           <canvas
             onClick={this.toggleRenderPreview.bind(this)}
             ref="canvas"

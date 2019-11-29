@@ -1,25 +1,51 @@
-/*global socket*/
 import React from "react";
 import _ from "lodash";
+import Socket from "./socket";
 
-export class MicrophoneViewer extends React.Component {
-  constructor(props) {
+// TODO: fix
+type MicConfig = any
+
+interface MicSample {
+  bass: number
+  mid: number
+  high: number
+  all: number
+}
+
+interface Props {
+  socket: Socket
+  config: MicConfig
+}
+
+interface State {
+  connected: boolean
+  sendingMicData: boolean
+  metric: string
+  perBand: boolean
+}
+
+export class MicrophoneViewer extends React.Component<Props, State> {
+  // TODO: remove this from instance variable
+  canvasCtx!: CanvasRenderingContext2D
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       connected: false,
       sendingMicData: props.config.sendingMicData,
-      metric: props.config.metric
+      metric: props.config.metric,
+      perBand: false
     };
   }
 
-  _initializeState(state) {
-    this.setState({
-      connected: true
-    });
+  _initializeState() {
+    this.setState({ connected: true });
   }
 
   toggleMic() {
+    const socket = this.props.socket;
+
     if (this.props.config.sendingMicData) {
       socket.emit("setMicDataConfig", { sendingMicData: false });
     } else {
@@ -28,10 +54,11 @@ export class MicrophoneViewer extends React.Component {
   }
 
   componentDidMount() {
+    const socket = this.props.socket;
+
     socket.on("micViewerReady", this._initializeState.bind(this));
 
-    socket.on("micSample", samples => {
-      // _.each(samples, ({level, max}) => this.plotEnergyHistogram(level, max))
+    socket.on("micSample", (samples: MicSample[]) => {
       _.each(samples, sample => this.plotPerBandHistogram(sample));
     });
 
@@ -39,64 +66,17 @@ export class MicrophoneViewer extends React.Component {
   }
 
   createHistogramCanvas() {
-    let c = document.getElementById("music");
-    this.canvasCtx = c.getContext("2d");
+    let c = document.getElementById("music") as HTMLCanvasElement;
+    this.canvasCtx = c.getContext("2d")!;
     this.canvasCtx.clearRect(
       0,
       0,
       this.canvasCtx.canvas.width,
       this.canvasCtx.canvas.height
     );
-    this.frame = 0;
   }
 
-  plotEnergyHistogram(level, max) {
-    level = level / 100;
-    let HEIGHT = this.canvasCtx.canvas.height;
-    let h = Math.round(level * HEIGHT);
-    this.canvasCtx.fillStyle = `hsl(${Math.round(
-      (1 - ((h / 50) % 1) + 0) * 255
-    )}, ${50}%, ${50}%)`;
-    // this.canvasCtx.fillStyle = `#ff5500`;
-    this.canvasCtx.fillRect(this.canvasCtx.canvas.width - 100, 50 - h, 2, h);
-    // Move all left
-    let imageData = this.canvasCtx.getImageData(
-      2,
-      0,
-      this.canvasCtx.canvas.width - 1,
-      this.canvasCtx.canvas.height
-    );
-    this.canvasCtx.putImageData(imageData, 0, 0);
-    // now clear the right-most pixels:
-    this.canvasCtx.clearRect(
-      this.canvasCtx.canvas.width - 2,
-      0,
-      2,
-      this.canvasCtx.canvas.height
-    );
-
-    this.canvasCtx.fillStyle = "white";
-    this.canvasCtx.font = "12px monospace";
-    this.canvasCtx.clearRect(
-      this.canvasCtx.canvas.width - 100,
-      0,
-      100,
-      this.canvasCtx.canvas.height
-    );
-    this.canvasCtx.fillText(
-      `MAX Vol: ${Math.round(max * 100)}`,
-      this.canvasCtx.canvas.width - 90,
-      15
-    );
-    // this.canvasCtx.fillText(`    Vol: ${Math.round(this.averageVolume*100)}`, 310, 30);
-    this.canvasCtx.fillText(
-      `REL Vol: ${Math.round(level)}`,
-      this.canvasCtx.canvas.width - 90,
-      45
-    );
-  }
-
-  plotPerBandHistogram({ bass, mid, high, all }) {
+  plotPerBandHistogram({ bass, mid, high, all }: MicSample) {
     let r = Math.round(bass * 255);
     let g = Math.round(mid * 255);
     let b = Math.round(high * 255);
@@ -189,15 +169,17 @@ export class MicrophoneViewer extends React.Component {
     );
   }
 
-  togglePerBandMode(e) {
+  togglePerBandMode(e: React.SyntheticEvent) {
     e.preventDefault();
 
     this.setState({ perBand: !this.state.perBand });
     return false;
   }
 
-  toggleMetric(e) {
+  toggleMetric(e: React.SyntheticEvent) {
     e.preventDefault();
+
+    const socket = this.props.socket;
 
     if (this.props.config.metric === "Rms") {
       socket.emit("setMicDataConfig", { metric: "FastPeakDecay" });

@@ -2,21 +2,21 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import { EventEmitter } from 'events';
 
 export default class Socket {
-    constructor(url, protocol) {
-        this.emitter = new EventEmitter();
+    emitter: EventEmitter
+    ws: ReconnectingWebSocket
+
+    constructor(url: string, protocol: string) {
+        const emitter = new EventEmitter();
+        this.emitter = emitter;
+
         // TODO: fix listener leaks instead of incrementing this
-        this.emitter.setMaxListeners(100);
-
-        this.connect(url, protocol)
-    }
-
-    connect(url, protocol) {
-        const emitter = this.emitter;
-
-        emitter.emit('connecting');
+        emitter.setMaxListeners(100);
 
         const ws = new ReconnectingWebSocket(url, protocol);
         this.ws = ws;
+
+        emitter.emit('connecting');
+
 
         ws.addEventListener('open', () => {
             emitter.emit('connected')
@@ -36,12 +36,12 @@ export default class Socket {
         })
     }
 
-    on(event, listener) {
+    on(event: string, listener: (...args: any[]) => void) {
         this.emitter.on(event, listener)
     }
 
-    emit(event, data) {
-        if (this.ws.readyState != 1 /* OPEN */) {
+    emit(event: string, data?: object | string | number) {
+        if (this.ws.readyState !== 1 /* OPEN */) {
             console.warn("websocket not ready when attempting to send message")
             return
         }

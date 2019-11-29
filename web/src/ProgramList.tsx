@@ -1,6 +1,15 @@
 import React from "react";
 
-export class ProgramList extends React.Component {
+// TODO: fix
+type Program = any
+
+interface Props {
+  programs: { [name: string]: Program }
+  selected: string | null
+  onProgramChange(name: string): void
+}
+
+export class ProgramList extends React.Component<Props> {
     render() {
       return (
         <ul className="nav flex-column">

@@ -1,9 +1,19 @@
 import React from "react";
 
-export class NumberParam extends React.Component {
+interface Props {
+  name: string
+  value: number
+  min: number
+  step: number
+  max: number
+  onChange(e: React.SyntheticEvent, name: string, value: number): void
+}
+
+export class NumberParam extends React.Component<Props> {
   
-    handleChange = (event) => {
-      this.props.onChange(event, this.props.name, event.target.valueAsNumber);
+    handleChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
+      let value = (event.target as any).valueAsNumber
+      this.props.onChange(event, this.props.name, value);
     }
   
     render() {

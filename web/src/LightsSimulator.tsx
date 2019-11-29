@@ -1,10 +1,40 @@
-/*global socket*/
 import React from "react";
 import _ from "lodash";
+import Socket from "./socket";
 
-export class LightsSimulator extends React.Component {
-  constructor(props) {
+// TODO: fill complete layout object, also decide if we need to use all of it
+interface RemoteLayout {
+  geometry: { x: number[], y: number[] }
+}
+
+interface Layout {
+  geometryX: number[]
+  geometryY: number[]
+  minX: number
+  minY: number
+  maxX: number
+  maxY: number
+}
+
+type Light = [number, number, number]
+
+interface Props {
+  socket: Socket
+  width: number
+  height: number
+}
+
+interface State {
+  layout: Layout | null
+}
+
+export class LightsSimulator extends React.Component<Props, State> {
+  lightsRenderer: LightsRenderer
+
+  constructor(props: Props) {
     super(props);
+
+    this.state = { layout: null }
 
     this.lightsRenderer = new LightsRenderer()
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
@@ -12,14 +42,14 @@ export class LightsSimulator extends React.Component {
   }
 
   turnOnSimulation() {
-    socket.emit("startSamplingLights");
+    this.props.socket.emit("startSamplingLights");
   }
 
   turnOffSimulation() {
-    socket.emit("stopSamplingLights", layout => {});
+    this.props.socket.emit("stopSamplingLights");
   }
 
-  decodeLedsColorsFromString(encodedLights) {
+  decodeLedsColorsFromString(encodedLights: string) {
     let bytes = Uint8Array.from(atob(encodedLights), c => c.charCodeAt(0));
 
     let byLed = new Array(bytes.length / 3);
@@ -46,20 +76,23 @@ export class LightsSimulator extends React.Component {
   }
 
   componentDidMount() {
-    socket.on("lightsSample", encodedLights => {
+    const socket = this.props.socket;
+
+    socket.on("lightsSample", (encodedLights: string) => {
       const lights = this.decodeLedsColorsFromString(encodedLights);
       this.drawCanvas(lights);
     });
 
-    socket.on("layout", layout => {
+    socket.on("layout", (layout: RemoteLayout) => {
       let geometryX = layout.geometry.x;
       let geometryY = layout.geometry.y;
-      let minX = _.min(this.geometryX);
-      let minY = _.min(this.geometryY);
-      let maxX = _.max(this.geometryX);
-      let maxY = _.max(this.geometryY);
+      let minX = _.min(geometryX)!;
+      let minY = _.min(geometryY)!;
+      let maxX = _.max(geometryX)!;
+      let maxY = _.max(geometryY)!;
 
       const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY }
+
       this.setState({ layout: layoutObj })
     });
 
@@ -72,10 +105,10 @@ export class LightsSimulator extends React.Component {
     document.removeEventListener("visibilitychange", this.onVisibilityChange);
   }
 
-  drawCanvas(lights) {
+  drawCanvas(lights: Light[]) {
     this.lightsRenderer.draw(
-      this.refs.canvas,
-      this.state.layout,
+      this.refs.canvas as HTMLCanvasElement,
+      this.state.layout!,
       lights
     )
   }
@@ -112,6 +145,10 @@ export class LightsSimulator extends React.Component {
 }
 
 class LightsRenderer {
+  enabled: boolean
+  lastFrameTime: number
+  lastFPS: number
+  frameCount: number
   
   constructor() {
     this.enabled = false;
@@ -120,11 +157,11 @@ class LightsRenderer {
     this.frameCount = 0;
   }
 
-  draw(canvas, layout, lights, enabled) {
+  draw(canvas: HTMLCanvasElement, layout: Layout, lights: Light[]) {
     const drawStartTime = performance.now();
 
     const leds = layout.geometryX.length;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d")!;
 
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
@@ -154,6 +191,7 @@ class LightsRenderer {
         } else if (power < 50) {
           m = 16;
         }
+        
         let [or, og, ob] = [r * m, g * m, b * m];
         if (or > 255) or = 255;
         if (og > 255) og = 255;
@@ -165,7 +203,7 @@ class LightsRenderer {
 
         ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
 
-        ctx.arc(x, y, lightRadius, Math.PI * 2, false);
+        ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
         ctx.fill();
       }
 

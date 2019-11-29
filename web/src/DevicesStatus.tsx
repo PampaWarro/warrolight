@@ -1,8 +1,22 @@
-/*global socket*/
 import React from "react";
+import Socket from "./socket";
 
-export class DevicesStatus extends React.Component {
-  constructor(props) {
+interface Props {
+  socket: Socket
+}
+
+interface Device {
+  deviceId: string
+  state: string
+  lastFps: number
+}
+
+interface State {
+  devices: Device[]
+}
+
+export class DevicesStatus extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -11,13 +25,16 @@ export class DevicesStatus extends React.Component {
   }
 
   componentDidMount() {
-    socket.on("devicesStatus", devices => {
+    const socket = this.props.socket;
+
+    socket.on("devicesStatus", (devices: Device[]) => {
       this.setState({ devices });
     });
   }
 
   render() {
-    function className(state) {
+    // TODO: add type for device states
+    function className(state: string) {
       switch (state) {
         case 'running':
           return 'success';
@@ -27,6 +44,7 @@ export class DevicesStatus extends React.Component {
           return 'danger'
       }
     }
+
     let devices = this.state.devices.map(d => (
       <span className={"mr-2 btn btn-sm btn-" + className(d.state)} key={d.deviceId}>
         {d.deviceId} ({d.state.toUpperCase()}) {d.lastFps}

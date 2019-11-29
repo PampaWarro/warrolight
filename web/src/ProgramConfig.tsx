@@ -1,29 +1,48 @@
-/*global socket */
 import React from "react";
 import _ from "lodash";
+import Socket from "./socket";
 import { StringParam } from "./StringParam";
 import { BooleanParam } from "./BooleanParam";
 import { NumberParam } from "./NumberParam";
 
-export class ProgramConfig extends React.Component {
+// TODO: fix
+type Program = any
 
-  handleRestartProgram(e) {
+type ConfigValue = string | number | boolean
+
+interface Props {
+  socket: Socket
+  program: Program | null
+  selected: string | null
+  config: { [param: string]: ConfigValue } | null
+  onSelectPreset(name: string): void
+  onRestartProgram(): void
+}
+
+export class ProgramConfig extends React.Component<Props> {
+
+  handleRestartProgram(e: React.SyntheticEvent) {
     e.preventDefault();
     this.props.onRestartProgram();
   }
 
-  handleParamChange = (e, field, value) => {
+  handleParamChange = (e: React.SyntheticEvent, field: string, value: ConfigValue) => {
     const config = this.props.config;
+    if (!config) {
+      throw new Error('attempting to update null config');
+    }
+
     config[field] = value;
 
     console.log("PARAM CHANGE", config);
-    socket.emit("updateConfigParam", config);
+    this.props.socket.emit("updateConfigParam", config);
   }
 
   render() {
     const currentProgram = this.props.program;
+    const currentConfig = this.props.config;
 
-    if (!currentProgram) {
+    if (!currentProgram || !currentConfig) {
       return null;
     }
 
@@ -32,14 +51,14 @@ export class ProgramConfig extends React.Component {
 
     for (let paramName in currentProgram.config) {
       let configDef = currentProgram.config[paramName];
-      let value = this.props.config[paramName];
+      let value = currentConfig[paramName];
 
       if (_.isBoolean(configDef.default)) {
         configOptions.push(
           <BooleanParam
             key={paramName}
             name={paramName}
-            value={value}
+            value={value as boolean}
             onChange={this.handleParamChange}
           />
         );
@@ -48,7 +67,7 @@ export class ProgramConfig extends React.Component {
           <StringParam
             key={paramName}
             name={paramName}
-            value={value}
+            value={value as string}
             options={configDef.values}
             onChange={this.handleParamChange}
           />
@@ -58,7 +77,7 @@ export class ProgramConfig extends React.Component {
           <NumberParam
             key={paramName}
             name={paramName}
-            value={value}
+            value={value as number}
             step={configDef.step}
             min={configDef.min}
             max={configDef.max}

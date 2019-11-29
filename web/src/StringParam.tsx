@@ -1,9 +1,16 @@
 import React from "react";
 import _ from "lodash";
 
-export class StringParam extends React.Component {
+interface Props {
+  name: string
+  value: string
+  options: string[]
+  onChange(e: React.SyntheticEvent, name: string, value: string): void
+}
+
+export class StringParam extends React.Component<Props> {
   
-    handleChange = (event, value) => {
+    handleChange = (event: React.SyntheticEvent, value: string) => {
       event.preventDefault()
       this.props.onChange(event, this.props.name, value)
     }

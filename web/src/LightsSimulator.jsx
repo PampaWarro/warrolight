@@ -6,14 +6,7 @@ export class LightsSimulator extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      renderingEnabled: false
-    };
-
-    this.lastFrameTime = performance.now();
-    this.lastFPS = 0;
-    this.frameCount = 0;
-
+    this.lightsRenderer = new LightsRenderer()
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
   }
@@ -37,18 +30,18 @@ export class LightsSimulator extends React.Component {
   }
 
   onVisibilityChange() {
-    if (document.hidden && this.state.renderingEnabled) {
+    if (document.hidden && this.lightsRenderer.enabled) {
       this.turnOffSimulation();
-    } else if (!document.hidden && this.state.renderingEnabled) {
+    } else if (!document.hidden && this.lightsRenderer.enabled) {
       this.turnOnSimulation();
     }
   }
 
   onFocusChange() {
     debugger;
-    if (!document.hasFocus() && this.state.renderingEnabled) {
+    if (!document.hasFocus() && this.lightsRenderer.enabled) {
       this.turnOffSimulation();
-    } else if (document.hasFocus() && this.state.renderingEnabled) {
+    } else if (document.hasFocus() && this.lightsRenderer.enabled) {
       this.turnOnSimulation();
     }
   }
@@ -56,17 +49,19 @@ export class LightsSimulator extends React.Component {
   componentDidMount() {
     socket.on("lightsSample", encodedLights => {
       const lights = this.decodeLedsColorsFromString(encodedLights);
-      console.log("Lights data");
       this.drawCanvas(lights);
     });
 
     socket.on("layout", layout => {
-      this.geometryX = layout.geometry.x;
-      this.geometryY = layout.geometry.y;
-      this.minX = _.min(this.geometryX);
-      this.minY = _.min(this.geometryY);
-      this.maxX = _.max(this.geometryX);
-      this.maxY = _.max(this.geometryY);
+      let geometryX = layout.geometry.x;
+      let geometryY = layout.geometry.y;
+      let minX = _.min(this.geometryX);
+      let minY = _.min(this.geometryY);
+      let maxX = _.max(this.geometryX);
+      let maxY = _.max(this.geometryY);
+
+      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY }
+      this.setState({ layout: layoutObj })
     });
 
     document.addEventListener("visibilitychange", this.onVisibilityChange);
@@ -76,24 +71,79 @@ export class LightsSimulator extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener("visibilitychange", this.onVisibilityChange);
-    // document.removeEventListener('blur', this.onFocusChange);
   }
 
   drawCanvas(lights) {
+    this.lightsRenderer.draw(
+      this.refs.canvas,
+      this.state.layout,
+      lights
+    )
+  }
+
+  toggleRenderPreview() {
+    if (this.lightsRenderer.enabled) {
+      this.turnOffSimulation();
+    } else {
+      this.turnOnSimulation();
+    }
+    this.lightsRenderer.enabled = !this.lightsRenderer.enabled;
+  }
+
+  render() {
+    return (
+      <div className="lights-sim">
+        <div>
+          <input
+            type="checkbox"
+            data-id={"renderToggle"}
+            checked={this.lightsRenderer.enabled}
+            onChange={this.toggleRenderPreview.bind(this)}
+          />
+          <label>Preview light output from server</label>
+        </div>
+        <div className={"preview-area"}>
+          <canvas
+            onClick={this.toggleRenderPreview.bind(this)}
+            ref="canvas"
+            width={this.props.width}
+            height={this.props.height}
+          />
+          {this.lightsRenderer.enabled ? null : (
+            <div className={"preview-btn"}>
+              Click to START / PAUSE preview of lights
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+
+class LightsRenderer {
+  
+  constructor() {
+    this.enabled = false;
+    this.lastFrameTime = performance.now();
+    this.lastFPS = 0;
+    this.frameCount = 0;
+  }
+
+  draw(canvas, layout, lights, enabled) {
     const drawStartTime = performance.now();
 
-    const leds = this.geometryX.length;
-    const ctx = this.refs.canvas.getContext("2d");
+    const leds = layout.geometryX.length;
+    const ctx = canvas.getContext("2d");
 
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, this.props.width, this.props.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.globalCompositeOperation = "lighter";
 
-    if (this.state.renderingEnabled) {
-      const X = this.geometryX;
-      const Y = this.geometryY;
+    if (this.enabled) {
+      const X = layout.geometryX;
+      const Y = layout.geometryY;
 
       for (let i = 0; i < leds; i++) {
         const [r, g, b] = lights[i];
@@ -149,42 +199,6 @@ export class LightsSimulator extends React.Component {
       ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
     }
   }
-
-  toggleRenderPreview() {
-    if (this.state.renderingEnabled) {
-      this.turnOffSimulation();
-    } else {
-      this.turnOnSimulation();
-    }
-    this.setState({ renderingEnabled: !this.state.renderingEnabled });
-  }
-
-  render() {
-    return (
-      <div className="lights-sim">
-        <div>
-          <input
-            type="checkbox"
-            data-id={"renderToggle"}
-            checked={this.state.renderingEnabled}
-            onChange={this.toggleRenderPreview.bind(this)}
-          />
-          <label>Preview light output from server</label>
-        </div>
-        <div className={"preview-area"}>
-          <canvas
-            onClick={this.toggleRenderPreview.bind(this)}
-            ref="canvas"
-            width={this.props.width}
-            height={this.props.height}
-          />
-          {this.state.renderingEnabled ? null : (
-            <div className={"preview-btn"}>
-              Click to START / PAUSE preview of lights
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 }
+
+

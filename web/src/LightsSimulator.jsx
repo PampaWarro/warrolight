@@ -38,7 +38,6 @@ export class LightsSimulator extends React.Component {
   }
 
   onFocusChange() {
-    debugger;
     if (!document.hasFocus() && this.lightsRenderer.enabled) {
       this.turnOffSimulation();
     } else if (document.hasFocus() && this.lightsRenderer.enabled) {

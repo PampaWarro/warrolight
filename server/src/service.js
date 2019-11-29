@@ -35,7 +35,7 @@ exports.SoundSource = class SoundSource {
         let lastVolumes = [];
         let lastRawVolumes = [];
 
-        let flushVolume = _.throttle(() => {
+        const flushVolume = _.throttle(() => {
             if (micConfig.isSendingMicData()) {
                 cb(lastVolumes)
             }
@@ -85,7 +85,7 @@ exports.Service = class Service {
         this.simulating = false;
     }
 
-    onConnect() {
+    connect() {
         console.log("[ON] Remote control connnected".green)
 
         const lightProgram = this.lightProgram;
@@ -119,7 +119,7 @@ exports.Service = class Service {
         })
       }
 
-    onSetMicDataConfig(newMicConfig) {
+    setMicDataConfig(newMicConfig) {
         if (newMicConfig.sendingMicData === true) {
           console.log('[ON] Web client receiving MIC data'.green)
         } else if (newMicConfig.sendingMicData === false) {
@@ -131,7 +131,7 @@ exports.Service = class Service {
         this.broadcastStateChange();
       }
 
-    onSetPreset(presetName) {
+    setPreset(presetName) {
         const lightProgram = this.lightProgram;
         const presets = lightProgram.getCurrentPresets();
 
@@ -143,12 +143,12 @@ exports.Service = class Service {
         }
       }
   
-    onSetCurrentProgram(programKey) {
+    setCurrentProgram(programKey) {
       this.lightProgram.setCurrentProgram(programKey)
       this.broadcastStateChange();
     }
 
-    onUpdateConfigParam(config) {
+    updateConfigParam(config) {
         const lightProgram = this.lightProgram
         lightProgram.currentProgram.config = config;
   
@@ -159,22 +159,22 @@ exports.Service = class Service {
         })
       }
 
-    onStartSamplingLights() {
+    startSamplingLights() {
       console.log('[ON] Web client sampling lights data'.green)
       this.simulating = true;
       this.emit('layout', this.lightProgram.layout)
     }
 
-    onStopSamplingLights() {
+    stopSamplingLights() {
       console.log('[OFF] Web client stopped sampling lights'.gray)
       this.simulating = false;
     }
 
-    onRestartProgram() {
+    restartProgram() {
       this.lightProgram.restart();
     }
 
-    onDisconnect() {
+    disconnect() {
         console.log("[OFF] Remote control DISCONNNECTED".gray)
         this.lightProgram.removeOnLights(this.lightsCallback)
     }

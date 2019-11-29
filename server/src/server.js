@@ -1,6 +1,4 @@
-const _ = require('lodash');
 const WebSocket = require('ws');
-const EventEmitter = require('events');
 const { startMic } = require('./mic');
 const soundEmitter = require('./soundEmitter');
 const { Service, MicConfig, SoundSource } = require('./service')
@@ -34,32 +32,32 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
 
       switch (type) {
         case 'setMicDataConfig':
-          service.onSetMicDataConfig(payload)
+          service.setMicDataConfig(payload)
           return
         case 'startSamplingLights':
-          service.onStartSamplingLights(payload)
+          service.startSamplingLights(payload)
           return
         case 'stopSamplingLights':
-          service.onStopSamplingLights(payload)
+          service.stopSamplingLights(payload)
           return
         case 'restartProgram':
-          service.onRestartProgram(payload)
+          service.restartProgram(payload)
           return
         case 'updateConfigParam':
-          service.onUpdateConfigParam(payload)
+          service.updateConfigParam(payload)
           return
         case 'setPreset':
-          service.onSetPreset(payload)
+          service.setPreset(payload)
           return
         case 'setCurrentProgram':
-          service.onSetCurrentProgram(payload)
+          service.setCurrentProgram(payload)
           return
       }
     });
 
-    service.onConnect()
+    service.connect()
 
-    ws.on('disconnect', () => service.onDisconnect());
+    ws.on('disconnect', () => service.disconnect());
 
   });
 }

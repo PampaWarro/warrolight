@@ -40,7 +40,6 @@ export class ConnectionStatus extends React.Component<Props, State> {
           status: evtName,
           level: STATUS_WARN
         });
-        console.warn(evtName + " fired", extra);
       });
     });
 

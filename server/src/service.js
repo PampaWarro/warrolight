@@ -99,6 +99,8 @@ exports.Service = class Service {
     
         lightProgram.onLights(this.lightsCallback)
     
+        // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
+        // or rework it to support multiple listeners
         this.deviceMultiplexer.onDeviceStatus(devicesStatus =>
             this.emit('devicesStatus', devicesStatus))
     }

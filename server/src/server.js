@@ -23,6 +23,7 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
 
     const service = new Service(lightProgram, deviceMultiplexer, micConfig, emit);
 
+    // TODO: should only process sample once for all listeners
     sound.listen((lastVolumes) => {
       emit('micSample', lastVolumes)
     })

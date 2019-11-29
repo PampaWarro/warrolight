@@ -3,9 +3,8 @@ const dgram = require("dgram");
 const PORT = 6666;
 const HOST = "192.168.0.5";
 
-// var message = new Buffer('My KungFu is Good!');
+// const message = new Buffer('My KungFu is Good!');
 
-//
 const server = dgram.createSocket("udp4");
 
 server.on("listening", function() {

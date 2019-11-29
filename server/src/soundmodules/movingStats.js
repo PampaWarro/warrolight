@@ -37,9 +37,9 @@ class StatsExtractor {
   }
   extract(frame, object) {
     const value = this.getter(object);
-    var avg = this.avg;
-    var min = this.min;
-    var max = this.max;
+    let avg = this.avg;
+    let min = this.min;
+    let max = this.max;
     if (this.avg == null) {
       avg = value;
     } else {
@@ -62,8 +62,8 @@ class StatsExtractor {
     if (max < min) {
       max = min;
     }
-    var normalizedValue = 0;
-    var normalizedAvg = 0;
+    let normalizedValue = 0;
+    let normalizedAvg = 0;
     if (max - min > 0) {
       normalizedValue = (value - min) / (max - min);
       normalizedAvg = (avg - min) / (max - min);

@@ -1,7 +1,7 @@
 const mic = require("./mic");
 const fs = require("fs");
 
-// var outputFileStream = fs.WriteStream('output.raw');
+// const outputFileStream = fs.WriteStream('output.raw');
 // micInputStream.pipe(outputFileStream);
 
 // micInputStream.pipe(process.stdout);

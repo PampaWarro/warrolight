@@ -9,7 +9,7 @@ module.exports = class ColorUtils {
 
   static rgbToHex(r, g, b, a) {
     function componentToHex(c) {
-      var hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
+      const hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
       return hex.length == 1 ? "0" + hex : hex;
     }
 

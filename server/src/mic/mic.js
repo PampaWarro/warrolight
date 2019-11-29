@@ -1,33 +1,32 @@
-var spawn = require("child_process").spawn;
-var isMac = require("os").type() == "Darwin";
-var isWindows =
+const spawn = require("child_process").spawn;
+const isMac = require("os").type() == "Darwin";
+const isWindows =
   require("os")
     .type()
     .indexOf("Windows") > -1;
-var osEndianness = require("os").endianness();
-var PassThrough = require("stream").PassThrough;
-var portAudio = require("naudiodon");
+const osEndianness = require("os").endianness();
+const PassThrough = require("stream").PassThrough;
+const portAudio = require("naudiodon");
 
 // console.log(portAudio.getDevices());
 
-var mic = function mic(options) {
+const mic = function mic(options) {
   options = options || {};
-  var that = {};
-  var outputRate = (that._sampleRate = options.rate || 44100);
-  var channels = (that._channels = options.channels || 1);
+  const that = {};
+  const outputRate = (that._sampleRate = options.rate || 44100);
+  const channels = (that._channels = options.channels || 1);
   if (channels != 1) {
     // TODO: stereo support.
     throw Error("Only 1 channel supported.");
   }
-  var deviceId = options.deviceId || -1;
-  var exitOnSilence = options.exitOnSilence || 0;
-  var frameSize = options.frameSize || 512;
+  const deviceId = options.deviceId || -1;
+  const exitOnSilence = options.exitOnSilence || 0;
+  const frameSize = options.frameSize || 512;
   const outputBitwidth = 16;
-  var bufferSize = (frameSize * channels * outputBitwidth) / 8;
-  var debug = options.debug || false;
-  var format, formatEndian, formatEncoding;
-  var soundEmitter = options.soundEmitter;
-  var audioInput = null;
+  const bufferSize = (frameSize * channels * outputBitwidth) / 8;
+  const debug = options.debug || false;
+  const soundEmitter = options.soundEmitter;
+  let audioInput = null;
 
   that.start = function start() {
     if (audioInput === null) {
@@ -72,7 +71,7 @@ var mic = function mic(options) {
     }
   };
 
-  var offsetSamples = 0;
+  let offsetSamples = 0;
   that._processRawAudioBuffer = function(rawBuffer) {
     const intBuffer = new Int16Array(
       rawBuffer.buffer,
@@ -80,7 +79,7 @@ var mic = function mic(options) {
       rawBuffer.length / 2
     );
     const samples = new Float32Array(intBuffer.length);
-    for (var i = 0; i < samples.length; i++) {
+    for (let i = 0; i < samples.length; i++) {
       const s = intBuffer[i];
       samples[i] = s < 0 ? s / 0x8000 : s / 0x7fff;
     }

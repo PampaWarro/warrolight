@@ -17,18 +17,18 @@ class PeakTempo {
       return [];
     }
     const that = this;
-    var histogram = new Float32Array(this._maxTempo - this._minTempo + 1);
-    for (var j = 1; j < peakWindow.length; j++) {
+    const histogram = new Float32Array(this._maxTempo - this._minTempo + 1);
+    for (let j = 1; j < peakWindow.length; j++) {
       const peakB = peakWindow[j];
-      for (var i = 0; i < j; i++) {
+      for (let i = 0; i < j; i++) {
         const peakA = peakWindow[i];
         const dt = peakB.offsetSeconds - peakA.offsetSeconds;
         if (dt < this._minDt) {
           continue;
         }
         const energy = peakA.energy * peakB.energy;
-        var t2 = 60 / dt;
-        var t2c = 0;
+        let t2 = 60 / dt;
+        let t2c = 0;
         while (t2 < this._maxTempo) {
           t2 *= 2;
           t2c += 1;
@@ -124,8 +124,8 @@ class PeakTempo {
     estimates.forEach(estimate => {
       sum[estimate.bpm] = (sum[estimate.bpm] || 0) + estimate.value;
     });
-    var best;
-    var max = 0;
+    let best;
+    let max = 0;
     _.forOwn(sum, (value, bpm) => {
       if (value >= max) {
         max = value;

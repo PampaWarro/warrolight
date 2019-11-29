@@ -10,7 +10,7 @@ module.exports = class Radial extends SoundBasedFunction {
 
     const vol = this[this.config.soundMetric] || 0;
     this.extraTime = (this.extraTime || 0) + vol * 5;
-    var power = this.config.power;
+    let power = this.config.power;
     if (this.config.animatePower) {
       power = 3 + 3 * Math.cos((Math.PI * elapsed) / 10);
     }

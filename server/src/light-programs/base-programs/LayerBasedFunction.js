@@ -37,7 +37,7 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
   buildLayer(layerSpec, layersByName) {
     const that = this;
     const name = layerSpec.name;
-    var layer = null;
+    let layer = null;
     if (layerSpec.drawable) {
       layer = new DrawableLayer(layerSpec);
     } else if (layerSpec.layers) {

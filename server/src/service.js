@@ -16,7 +16,7 @@ exports.MicConfig = class MicConfig {
     }
 
     isSendingMicData() {
-      return this.config.isSendingMicData;
+      return this.config.sendingMicData;
     }
 
     getMetric() {

@@ -1,4 +1,3 @@
-// import {Func} from "./rainbow";
 const _ = require("lodash");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");

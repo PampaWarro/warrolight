@@ -1,4 +1,3 @@
-// import {Func} from "./rainbow";
 const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 

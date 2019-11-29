@@ -1,32 +1,38 @@
-const _ = require('lodash');
-const Fili = require('fili');
+const _ = require("lodash");
+const Fili = require("fili");
 
-// Configure a 
+// Configure a
 class FilteredBands {
   constructor(config) {
     const iirCalculator = Fili.CalcCascades();
     this._filters = {
-      bass: new Fili.IirFilter(iirCalculator.lowpass({
-        order: 3,
-        characteristic: 'butterworth',
-        Fs: config.sampleRate,
-        Fc: config.frequencyBands.bassMidCrossover,
-      })),
-      mid: new Fili.IirFilter(iirCalculator.bandpass({
-        order: 3,
-        characteristic: 'butterworth',
-        Fs: config.sampleRate,
-        Fc: (
-          config.frequencyBands.midHighCrossover
-          - config.frequencyBands.bassMidCrossover),
-      })),
-      high: new Fili.IirFilter(iirCalculator.highpass({
-        order: 3,
-        characteristic: 'butterworth',
-        Fs: config.sampleRate,
-        Fc: config.frequencyBands.midHighCrossover,
-      })),
-    }
+      bass: new Fili.IirFilter(
+        iirCalculator.lowpass({
+          order: 3,
+          characteristic: "butterworth",
+          Fs: config.sampleRate,
+          Fc: config.frequencyBands.bassMidCrossover
+        })
+      ),
+      mid: new Fili.IirFilter(
+        iirCalculator.bandpass({
+          order: 3,
+          characteristic: "butterworth",
+          Fs: config.sampleRate,
+          Fc:
+            config.frequencyBands.midHighCrossover -
+            config.frequencyBands.bassMidCrossover
+        })
+      ),
+      high: new Fili.IirFilter(
+        iirCalculator.highpass({
+          order: 3,
+          characteristic: "butterworth",
+          Fs: config.sampleRate,
+          Fc: config.frequencyBands.midHighCrossover
+        })
+      )
+    };
   }
   run(frame, emitter) {
     const that = this;
@@ -35,7 +41,7 @@ class FilteredBands {
       _.forOwn(that._filters, (filter, bandName) => {
         const filteredSamples = filter.multiStep(channel.samples);
         channel.filteredBands[bandName] = {
-          samples: filteredSamples,
+          samples: filteredSamples
         };
       });
     });
@@ -44,4 +50,4 @@ class FilteredBands {
 
 module.exports = {
   init: config => new FilteredBands(config)
-}
+};

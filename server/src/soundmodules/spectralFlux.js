@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 function rectifiedNorm(a, b) {
   let sum = 0;
@@ -15,11 +15,10 @@ function rectifiedNorm(a, b) {
 // changing, calculated by comparing the power spectrum for one frame against
 // the power spectrum from the previous frame.
 class SpectralFlux {
-  constructor(config) {
-  }
+  constructor(config) {}
   run(frame, emitter) {
     if (!emitter.previousFrame) {
-      return;  // Need a previous frame to compare with.
+      return; // Need a previous frame to compare with.
     }
     const that = this;
     frame.allChannels.forEach((channel, i) => {
@@ -29,8 +28,8 @@ class SpectralFlux {
       const spectralFlux = rectifiedNorm(previousSpectrum, spectrum);
       channel.spectralFlux = spectralFlux;
       _.forOwn(channel.spectralBands, (band, bandName) => {
-        const previousSpectrum = previousChannel.spectralBands[
-          bandName].subspectrum;
+        const previousSpectrum =
+          previousChannel.spectralBands[bandName].subspectrum;
         const spectrum = band.subspectrum;
         const spectralFlux = rectifiedNorm(previousSpectrum, spectrum);
         band.spectralFlux = spectralFlux;
@@ -40,6 +39,6 @@ class SpectralFlux {
 }
 
 module.exports = {
-  deps: ['absolutefft', 'spectralBands'],
-  init: config => new SpectralFlux(config),
-}
+  deps: ["absolutefft", "spectralBands"],
+  init: config => new SpectralFlux(config)
+};

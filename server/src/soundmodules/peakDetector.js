@@ -1,5 +1,5 @@
-const _ = require('lodash');
-const Throttler = require('./util/exponentialThrottler.js');
+const _ = require("lodash");
+const Throttler = require("./util/exponentialThrottler.js");
 
 // Dynamic range compressor-inspired peak detector. Lambda acts as a threshold
 // that reacts quickly during attack and slowly during release.
@@ -11,48 +11,48 @@ class PeakDetector {
     // TODO: make taua and taur config args.
     this._taua = 500e-6;
     this._taur = 100e-2;
-    this._aa = 1 - Math.exp(-1/(this._taua*config.sampleRate));
-    this._ar = 1 - Math.exp(-1/(this._taur*config.sampleRate));
+    this._aa = 1 - Math.exp(-1 / (this._taua * config.sampleRate));
+    this._ar = 1 - Math.exp(-1 / (this._taur * config.sampleRate));
     this._perChannelState = [];
     for (let i = 0; i <= config.channels; i++) {
       this._perChannelState.push({});
     }
     const throttlers = [
       new Throttler({
-        filter: event => event.bandName == 'global',
-        eventName: 'throttledpeak',
+        filter: event => event.bandName == "global",
+        eventName: "throttledpeak",
         emitter: config.emitter,
         halfLife: 1,
-        minDt: .1,
-        getValue: event => event.energy,
+        minDt: 0.1,
+        getValue: event => event.energy
       }),
       new Throttler({
-        filter: event => event.bandName == 'bass',
-        eventName: 'throttledpeak',
+        filter: event => event.bandName == "bass",
+        eventName: "throttledpeak",
         emitter: config.emitter,
         halfLife: 1,
-        minDt: .1,
-        getValue: event => event.energy,
+        minDt: 0.1,
+        getValue: event => event.energy
       }),
       new Throttler({
-        filter: event => event.bandName == 'mid',
-        eventName: 'throttledpeak',
+        filter: event => event.bandName == "mid",
+        eventName: "throttledpeak",
         emitter: config.emitter,
         halfLife: 1,
-        minDt: .1,
-        getValue: event => event.energy,
+        minDt: 0.1,
+        getValue: event => event.energy
       }),
       new Throttler({
-        filter: event => event.bandName == 'high',
-        eventName: 'throttledpeak',
+        filter: event => event.bandName == "high",
+        eventName: "throttledpeak",
         emitter: config.emitter,
         halfLife: 1,
-        minDt: .1,
-        getValue: event => event.energy,
-      }),
-    ]
+        minDt: 0.1,
+        getValue: event => event.energy
+      })
+    ];
     throttlers.forEach(throttler => {
-      config.emitter.on('peak', event => throttler.onEvent(event));
+      config.emitter.on("peak", event => throttler.onEvent(event));
     });
   }
   detectPeaks(frame, samples, state) {
@@ -69,12 +69,12 @@ class PeakDetector {
       } else {
         if (inAttack) {
           const offsetSamples = frame.offsetSamples + i - 1;
-          const offsetSeconds = frame.offsetSeconds + (
-            (i - 1) / frame.sampleRate);
+          const offsetSeconds =
+            frame.offsetSeconds + (i - 1) / frame.sampleRate;
           peaks.push({
             energy: lambda,
             offsetSamples: offsetSamples,
-            offsetSeconds: offsetSeconds,
+            offsetSeconds: offsetSeconds
           });
         }
         inAttack = false;
@@ -85,9 +85,9 @@ class PeakDetector {
       peaks: peaks,
       state: {
         lambda: lambda,
-        inAttack: inAttack,
-      },
-    }
+        inAttack: inAttack
+      }
+    };
   }
   run(frame, emitter) {
     const that = this;
@@ -97,9 +97,9 @@ class PeakDetector {
         global: channel.samples,
         bass: channel.filteredBands.bass.samples,
         mid: channel.filteredBands.mid.samples,
-        high: channel.filteredBands.high.samples,
-      }
-      const perBandPeaks = {}
+        high: channel.filteredBands.high.samples
+      };
+      const perBandPeaks = {};
       _.forOwn(perBandSamples, (samples, bandName) => {
         const state = channelState[bandName];
         const result = that.detectPeaks(frame, samples, state);
@@ -108,9 +108,15 @@ class PeakDetector {
         perBandPeaks[bandName] = peaks;
         if (peaks.length > 0) {
           peaks.forEach(peak => {
-            emitter.emitDeferred('peak', Object.assign({
-              bandName: bandName,
-            }, peak));
+            emitter.emitDeferred(
+              "peak",
+              Object.assign(
+                {
+                  bandName: bandName
+                },
+                peak
+              )
+            );
           });
         }
       });
@@ -123,6 +129,6 @@ class PeakDetector {
 }
 
 module.exports = {
-  deps: ['filteredBands'],
+  deps: ["filteredBands"],
   init: options => new PeakDetector(options)
-}
+};

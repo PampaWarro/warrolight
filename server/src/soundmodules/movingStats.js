@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 const channelFeatures = {
   rms: {
@@ -7,14 +7,14 @@ const channelFeatures = {
   fftPeak: {
     forceZeroMin: true,
     getter: channel => Math.max(...channel.absolutefft)
-  },
-}
+  }
+};
 
 const filteredBandFeatures = {
   rms: {
     getter: band => band.rms
-  },
-}
+  }
+};
 
 const spectralBandFeatures = {
   energy: {
@@ -23,8 +23,8 @@ const spectralBandFeatures = {
   fftPeak: {
     forceZeroMin: true,
     getter: band => Math.max(...band.subspectrum)
-  },
-}
+  }
+};
 
 class StatsExtractor {
   constructor(options) {
@@ -33,7 +33,7 @@ class StatsExtractor {
     this.avg = null;
     this.max = null;
     this.min = null;
-    this.alpha = (options.alpha === undefined)? 0.001 : options.alpha;
+    this.alpha = options.alpha === undefined ? 0.001 : options.alpha;
   }
   extract(frame, object) {
     const value = this.getter(object);
@@ -77,28 +77,29 @@ class StatsExtractor {
       normalizedAvg: normalizedAvg,
       avg: this.avg,
       min: this.min,
-      max: this.max,
-    }
+      max: this.max
+    };
   }
 }
 
 const statsExtractorOptions = {
-  slow: {alpha: 0.0001},
-  mid: {alpha: 0.02},
-  fast: {alpha: 0.06},
+  slow: { alpha: 0.0001 },
+  mid: { alpha: 0.02 },
+  fast: { alpha: 0.06 }
 };
 
 // Calculate running average, max and min for audio features.
 class MovingStats {
-  constructor(options)  {
-    const bandNames = options.bandNames || ['bass', 'mid', 'high'];
+  constructor(options) {
+    const bandNames = options.bandNames || ["bass", "mid", "high"];
     const that = this;
     this.channelExtractors = {};
     _.forOwn(channelFeatures, (baseOptions, featureName) => {
       that.channelExtractors[featureName] = {};
       _.forOwn(statsExtractorOptions, (options, name) => {
         that.channelExtractors[featureName][name] = new StatsExtractor(
-          Object.assign({}, options, baseOptions));
+          Object.assign({}, options, baseOptions)
+        );
       });
     });
     this.filteredBandExtractors = {};
@@ -108,7 +109,8 @@ class MovingStats {
         that.filteredBandExtractors[featureName][bandName] = {};
         _.forOwn(statsExtractorOptions, (options, name) => {
           that.filteredBandExtractors[featureName][bandName][
-            name] = new StatsExtractor(Object.assign({}, options, baseOptions));
+            name
+          ] = new StatsExtractor(Object.assign({}, options, baseOptions));
         });
       });
     });
@@ -119,7 +121,8 @@ class MovingStats {
         that.spectralBandExtractors[featureName][bandName] = {};
         _.forOwn(statsExtractorOptions, (options, name) => {
           that.spectralBandExtractors[featureName][bandName][
-            name] = new StatsExtractor(Object.assign({}, options, baseOptions));
+            name
+          ] = new StatsExtractor(Object.assign({}, options, baseOptions));
         });
       });
     });
@@ -133,7 +136,7 @@ class MovingStats {
         channel.movingStats[name] = {
           slow: extractor.slow.extract(frame, channel),
           mid: extractor.mid.extract(frame, channel),
-          fast: extractor.fast.extract(frame, channel),
+          fast: extractor.fast.extract(frame, channel)
         };
       });
 
@@ -143,7 +146,7 @@ class MovingStats {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
             mid: extractors[bandName].mid.extract(frame, band),
-            fast: extractors[bandName].fast.extract(frame, band),
+            fast: extractors[bandName].fast.extract(frame, band)
           };
         });
       });
@@ -154,7 +157,7 @@ class MovingStats {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
             mid: extractors[bandName].mid.extract(frame, band),
-            fast: extractors[bandName].fast.extract(frame, band),
+            fast: extractors[bandName].fast.extract(frame, band)
           };
         });
       });
@@ -163,6 +166,6 @@ class MovingStats {
 }
 
 module.exports = {
-  deps: ['rms', 'absolutefft'],
+  deps: ["rms", "absolutefft"],
   init: options => new MovingStats(options)
-}
+};

@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 // Read output of other sound modules and provide easy to use variables that
 // make sense in a visual context.
@@ -15,8 +15,8 @@ class Summarize {
       [`${prefix}Max`]: slowMax,
       [`${prefix}Avg`]: slowAvg,
       [`${prefix}Rms`]: normalizedRms,
-      [`${prefix}PeakDecay`]: (midMax - midAvg)/(slowMax - midAvg) || 0,
-      [`${prefix}FastPeakDecay`]: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
+      [`${prefix}PeakDecay`]: (midMax - midAvg) / (slowMax - midAvg) || 0,
+      [`${prefix}FastPeakDecay`]: (fastMax - fastAvg) / (slowMax - fastAvg) || 0
     };
   }
   summarizeSpectralBand(band) {
@@ -29,14 +29,22 @@ class Summarize {
     const fastMax = channel.movingStats.rms.fast.max;
     const fastAvg = channel.movingStats.rms.fast.avg;
     const normalizedRms = channel.movingStats.rms.slow.normalizedValue;
-    const highRmsNoBass = Math.max(0,
-      channel.summary.highRms - channel.summary.bassRms);
-    const midRmsNoBass = Math.max(0,
-      channel.summary.midRms - channel.summary.bassRms);
-    const highPeakDecayNoBass = Math.max(0,
-      channel.summary.highPeakDecay - channel.summary.bassPeakDecay);
-    const midPeakDecayNoBass = Math.max(0,
-      channel.summary.midPeakDecay - channel.summary.bassPeakDecay);
+    const highRmsNoBass = Math.max(
+      0,
+      channel.summary.highRms - channel.summary.bassRms
+    );
+    const midRmsNoBass = Math.max(
+      0,
+      channel.summary.midRms - channel.summary.bassRms
+    );
+    const highPeakDecayNoBass = Math.max(
+      0,
+      channel.summary.highPeakDecay - channel.summary.bassPeakDecay
+    );
+    const midPeakDecayNoBass = Math.max(
+      0,
+      channel.summary.midPeakDecay - channel.summary.bassPeakDecay
+    );
     return {
       highPeakDecayNoBass: highPeakDecayNoBass,
       midPeakDecayNoBass: midPeakDecayNoBass,
@@ -44,14 +52,14 @@ class Summarize {
       midRmsNoBass: midRmsNoBass,
       max: slowMax,
       rms: normalizedRms,
-      peakDecay: (midMax - midAvg)/(slowMax - midAvg) || 0,
-      fastPeakDecay: (fastMax - fastAvg)/(slowMax - fastAvg) || 0,
+      peakDecay: (midMax - midAvg) / (slowMax - midAvg) || 0,
+      fastPeakDecay: (fastMax - fastAvg) / (slowMax - fastAvg) || 0
     };
   }
   run(frame, emitter) {
     const that = this;
     frame.allChannels.forEach(channel => {
-      const summary = channel.summary = {}
+      const summary = (channel.summary = {});
       _.forOwn(channel.filteredBands, (band, bandName) => {
         Object.assign(summary, that.summarizeFilteredBand(band, bandName));
       });
@@ -64,6 +72,6 @@ class Summarize {
 }
 
 module.exports = {
-  deps: ['movingStats'],
+  deps: ["movingStats"],
   init: options => new Summarize(options)
-}
+};

@@ -1,6 +1,6 @@
 const moment = require("moment");
-const Geometry = require('./Geometry')
-const _ = require('lodash');
+const Geometry = require("./Geometry");
+const _ = require("lodash");
 
 const programNames = [
   "PROGRAM_Triangulo",
@@ -33,41 +33,45 @@ const programNames = [
   "stars",
   "stripe-patterns",
   "warroBass",
-  "water-flood",
-]
+  "water-flood"
+];
 
-const Emitter = require('events')
-let lightsSampleEmitter = new Emitter()
+const Emitter = require("events");
+let lightsSampleEmitter = new Emitter();
 
 module.exports = class LightController {
   constructor(setLightsCbk, geometryDefinition, geometryMapping) {
-    this.setLightsCbk = setLightsCbk
+    this.setLightsCbk = setLightsCbk;
 
-    const geometry = new Geometry(geometryDefinition)
+    const geometry = new Geometry(geometryDefinition);
 
     this.defaultConfig = {
       frequencyInHertz: 60
-    }
+    };
 
     this.mapping = geometryMapping;
 
     this.layout = {
       numberOfLeds: geometry.leds,
       geometry: geometry
-    }
+    };
 
-    this.leds = []
+    this.leds = [];
 
-    this.getLeds = (index) => this.leds[index]
+    this.getLeds = index => this.leds[index];
 
-    this.programs = _.keyBy(_.map(programNames, this.loadProgram), 'name')
-    this.setCurrentProgram(programNames[0])
+    this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
+    this.setCurrentProgram(programNames[0]);
   }
 
   getProgramsSchema() {
     return _.map(this.programs, p => {
-      return {name: p.name, config: p.configSchema, presets: p.generator.presets ? _.keys(p.generator.presets()) : [] }
-    })
+      return {
+        name: p.name,
+        config: p.configSchema,
+        presets: p.generator.presets ? _.keys(p.generator.presets()) : []
+      };
+    });
   }
 
   getCurrentConfig() {
@@ -75,7 +79,10 @@ module.exports = class LightController {
   }
 
   getCurrentPresets() {
-    if(this.currentProgram && this.programs[this.currentProgramName].generator.presets){
+    if (
+      this.currentProgram &&
+      this.programs[this.currentProgramName].generator.presets
+    ) {
       return this.programs[this.currentProgramName].generator.presets();
     } else {
       return [];
@@ -86,16 +93,20 @@ module.exports = class LightController {
     if (this.currentProgram) {
       this.currentProgram.start(
         this.getConfig(this.programs[this.currentProgramName].configSchema),
-        (leds) => this.updateLeds(leds),
+        leds => this.updateLeds(leds),
         () => ({})
-      )
+      );
       this.running = true;
     }
   }
 
-  restart(){
-    this.currentProgram.stop()
-    this.currentProgram.start(this.currentProgram.config,(leds) => this.updateLeds(leds),() => ({}))
+  restart() {
+    this.currentProgram.stop();
+    this.currentProgram.start(
+      this.currentProgram.config,
+      leds => this.updateLeds(leds),
+      () => ({})
+    );
   }
 
   stop() {
@@ -108,16 +119,19 @@ module.exports = class LightController {
   getConfig(configSchema) {
     let config = _.clone(this.defaultConfig);
 
-    if(!configSchema) {
+    if (!configSchema) {
       configSchema = this.programs[this.currentProgramName].configSchema;
     }
 
     for (let paramName in configSchema) {
-      if (config[paramName] === undefined && configSchema[paramName].default !== undefined) {
+      if (
+        config[paramName] === undefined &&
+        configSchema[paramName].default !== undefined
+      ) {
         config[paramName] = configSchema[paramName].default;
       }
     }
-    return config
+    return config;
   }
 
   setCurrentProgram(name) {
@@ -126,10 +140,14 @@ module.exports = class LightController {
       if (this.running && this.currentProgram) {
         this.currentProgram.stop();
       }
-      this.currentProgramName = name
+      this.currentProgramName = name;
       let program = this.programs[name];
       let config = this.getConfig(program.configSchema);
-      this.currentProgram = new (program.generator)(config, this.layout, this.mapping)
+      this.currentProgram = new program.generator(
+        config,
+        this.layout,
+        this.mapping
+      );
       if (this.running) {
         this.start();
       }
@@ -137,34 +155,40 @@ module.exports = class LightController {
   }
 
   onLights(cbk) {
-    lightsSampleEmitter.on('lights', cbk)
+    lightsSampleEmitter.on("lights", cbk);
   }
 
   removeOnLights(cbk) {
-    lightsSampleEmitter.removeListener('lights', cbk)
+    lightsSampleEmitter.removeListener("lights", cbk);
   }
 
   loadProgram(name) {
-    const FunctionClass = require('./programs/' + name);
+    const FunctionClass = require("./programs/" + name);
     return {
       name: name,
       configSchema: FunctionClass.configSchema(),
       generator: FunctionClass
-    }
+    };
   }
 
   updateLeds(rgbaLeds) {
     const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
-    lightsSampleEmitter.emit('lights', rgbLeds)
+    lightsSampleEmitter.emit("lights", rgbLeds);
 
-    this.setLightsCbk(rgbLeds)
-    let lastUpdateLatency = (new Date() - this.lastLightsUpdate);
+    this.setLightsCbk(rgbLeds);
+    let lastUpdateLatency = new Date() - this.lastLightsUpdate;
     this.lastLightsUpdate = new Date();
-    if(lastUpdateLatency > 34) {
-      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms  [+${Math.round((new Date() - this.lastDroppedFrame)/1000).toString()}s]`.red);
+    if (lastUpdateLatency > 34) {
+      console.warn(
+        `[${moment().format(
+          "HH:mm:ss"
+        )}] Dropped frames: Last light update took ${lastUpdateLatency}ms  [+${Math.round(
+          (new Date() - this.lastDroppedFrame) / 1000
+        ).toString()}s]`.red
+      );
       this.lastDroppedFrame = new Date();
-    } else if(lastUpdateLatency > 25) {
+    } else if (lastUpdateLatency > 25) {
       // console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
     }
   }
-}
+};

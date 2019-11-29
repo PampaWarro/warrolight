@@ -2,30 +2,34 @@ const ColorUtils = require("./ColorUtils");
 
 const blendFunctions = {
   normal: (base, blend) => blend,
-  add: (base, blend) => ColorUtils.clamp(
-    base[0] + blend[0],
-    base[1] + blend[1],
-    base[2] + blend[2],
-    base[3] + blend[3],
-  ),
-  difference: (base, blend) => ColorUtils.clamp(
-    Math.abs(base[0] - blend[0]),
-    Math.abs(base[1] - blend[1]),
-    Math.abs(base[2] - blend[2]),
-    base[3] + blend[3],
-  ),
-  subtract: (base, blend) => ColorUtils.clamp(
-    base[0] - blend[0],
-    base[1] - blend[1],
-    base[2] - blend[2],
-    base[3] + blend[3],
-  ),
-  multiply: (base, blend) => ColorUtils.clamp(
-    base[0] * blend[0] / 255,
-    base[1] * blend[1] / 255,
-    base[2] * blend[2] / 255,
-    base[3] + blend[3],
-  ),
+  add: (base, blend) =>
+    ColorUtils.clamp(
+      base[0] + blend[0],
+      base[1] + blend[1],
+      base[2] + blend[2],
+      base[3] + blend[3]
+    ),
+  difference: (base, blend) =>
+    ColorUtils.clamp(
+      Math.abs(base[0] - blend[0]),
+      Math.abs(base[1] - blend[1]),
+      Math.abs(base[2] - blend[2]),
+      base[3] + blend[3]
+    ),
+  subtract: (base, blend) =>
+    ColorUtils.clamp(
+      base[0] - blend[0],
+      base[1] - blend[1],
+      base[2] - blend[2],
+      base[3] + blend[3]
+    ),
+  multiply: (base, blend) =>
+    ColorUtils.clamp(
+      (base[0] * blend[0]) / 255,
+      (base[1] * blend[1]) / 255,
+      (base[2] * blend[2]) / 255,
+      base[3] + blend[3]
+    ),
   hue: (base, blend) => {
     const baseHSV = ColorUtils.RGBtoHSV(...base);
     const blendHSV = ColorUtils.RGBtoHSV(...blend);
@@ -33,19 +37,19 @@ const blendFunctions = {
       blendHSV[0],
       baseHSV[1],
       baseHSV[2],
-      base[3] + blend[3],
+      base[3] + blend[3]
     );
   }
-}
+};
 
 class Layer {
   constructor(options) {
     options = options || {};
-    this.name = options.name || '';
-    this.alpha = (options.alpha === undefined)? 1 : options.alpha;
-    this.blendMode = options.blendMode || 'normal';
+    this.name = options.name || "";
+    this.alpha = options.alpha === undefined ? 1 : options.alpha;
+    this.blendMode = options.blendMode || "normal";
     this.debug = !!options.debug;
-    this.enabled = (options.enabled === undefined)? true : options.enabled;
+    this.enabled = options.enabled === undefined ? true : options.enabled;
   }
   set blendMode(blendMode) {
     this.blendFunction = blendFunctions[blendMode];
@@ -65,7 +69,7 @@ class Layer {
     const alpha = this.alpha * blendResult[3];
     const mix = ColorUtils.mix(base, blendResult, alpha);
     if (this.debug) {
-      console.log('blend', base, blend, blendResult, alpha, mix);
+      console.log("blend", base, blend, blendResult, alpha, mix);
     }
     return mix;
   }
@@ -105,5 +109,5 @@ class CompositeLayer extends Layer {
 module.exports = {
   Layer,
   DrawableLayer,
-  CompositeLayer,
+  CompositeLayer
 };

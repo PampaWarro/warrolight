@@ -2,15 +2,15 @@ function cosineSumWindow(a0, N) {
   // https://en.wikipedia.org/wiki/Window_function#Hann_and_Hamming_windows
   const w = new Float32Array(N);
   for (let i = 0; i < N; i++) {
-    w[i] = a0 - (1 - a0) * Math.cos(2 * Math.PI * i / (N - 1));
+    w[i] = a0 - (1 - a0) * Math.cos((2 * Math.PI * i) / (N - 1));
   }
   return w;
 }
 
 const WINDOW_BUILDERS = {
   // a0=25/46 == Hamming window.
-  hamming: config => cosineSumWindow(25/46, config.frameSize),
-}
+  hamming: config => cosineSumWindow(25 / 46, config.frameSize)
+};
 
 // Applies a window function to the raw audio in the "samples" buffer and puts
 // the result in the new "windowedSamples" property. It's recommended to run the
@@ -34,5 +34,5 @@ class Window {
 
 module.exports = {
   deps: [],
-  init: config => new Window(config),
-}
+  init: config => new Window(config)
+};

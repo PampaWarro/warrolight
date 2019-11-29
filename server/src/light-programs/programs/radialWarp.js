@@ -2,8 +2,8 @@ const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const {
   InfiniteCircles,
   PolarColors,
-  SolidColor,
-} = require('../utils/drawables');
+  SolidColor
+} = require("../utils/drawables");
 const ColorUtils = require("../utils/ColorUtils");
 
 module.exports = class Func extends LayerBasedFunction {
@@ -11,56 +11,56 @@ module.exports = class Func extends LayerBasedFunction {
     return {
       backgroundColors: new PolarColors({
         center: [this.xBounds.center, this.yBounds.center],
-        value: .7,
+        value: 0.7
       }),
-      colorMask: new SolidColor({
-      }),
+      colorMask: new SolidColor({}),
       infiniteCircles: new InfiniteCircles({
         center: [this.xBounds.center, this.yBounds.min],
         width: 3,
         period: 20,
-        radiusWarp: radius => .01 * Math.pow(radius, 2),
-      }),
-    }
+        radiusWarp: radius => 0.01 * Math.pow(radius, 2)
+      })
+    };
   }
 
   getLayers(drawables) {
     return {
       layers: [
         {
-          drawable: drawables.backgroundColors,
+          drawable: drawables.backgroundColors
         },
         {
           drawable: drawables.colorMask,
-          blendMode: 'hue',
+          blendMode: "hue"
         },
         {
-          name: 'infiniteCircles',
+          name: "infiniteCircles",
           drawable: drawables.infiniteCircles,
-          blendMode: 'multiply',
-        },
-      ],
+          blendMode: "multiply"
+        }
+      ]
     };
   }
 
   updateState() {
     // Audio independent stuff.
     this.drawables.backgroundColors.center = [
-      this.xBounds.center + Math.cos(
-      Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3,
-      this.yBounds.center + Math.cos(
-      Math.PI * this.timeInMs / 10000) * this.yBounds.scale / 3,
+      this.xBounds.center +
+        (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3,
+      this.yBounds.center +
+        (Math.cos((Math.PI * this.timeInMs) / 10000) * this.yBounds.scale) / 3
     ];
-    this.drawables.backgroundColors.angleOffset = Math.PI * this.timeInMs / 5000;
+    this.drawables.backgroundColors.angleOffset =
+      (Math.PI * this.timeInMs) / 5000;
     this.drawables.colorMask.color = ColorUtils.HSVtoRGB(
-      .5 + .5*Math.cos(Math.PI * this.timeInMs / 11000),
-      .5 + .5*Math.cos(Math.PI * this.timeInMs / 15000),
+      0.5 + 0.5 * Math.cos((Math.PI * this.timeInMs) / 11000),
+      0.5 + 0.5 * Math.cos((Math.PI * this.timeInMs) / 15000),
       1
     );
-    this.drawables.infiniteCircles.offset = -this.timeInMs/50;
-    this.drawables.infiniteCircles.center[0] = this.xBounds.center + Math.cos(
-      Math.PI * this.timeInMs / 7000) * this.xBounds.scale / 3;
-
+    this.drawables.infiniteCircles.offset = -this.timeInMs / 50;
+    this.drawables.infiniteCircles.center[0] =
+      this.xBounds.center +
+      (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3;
 
     // Audio dependent stuff.
     if (!this.audioReady) {
@@ -70,12 +70,12 @@ module.exports = class Func extends LayerBasedFunction {
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;
-    this.drawables.infiniteCircles.width = .5 + 8 * Math.pow(normalizedBass, 2);
+    this.drawables.infiniteCircles.width =
+      0.5 + 8 * Math.pow(normalizedBass, 2);
   }
 
   static presets() {
-    return {
-    }
+    return {};
   }
 
   // Override and extend config Schema
@@ -83,4 +83,4 @@ module.exports = class Func extends LayerBasedFunction {
     let res = super.configSchema();
     return res;
   }
-}
+};

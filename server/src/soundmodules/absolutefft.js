@@ -4,8 +4,7 @@
 // and can afford to ignore the phase information should use "absolutefft"
 // instead of "fft".
 class AbsoluteFFT {
-  constructor(config) {
-  }
+  constructor(config) {}
   run(frame, emitter) {
     const that = this;
     frame.allChannels.forEach(channel => {
@@ -14,7 +13,8 @@ class AbsoluteFFT {
         // Magnitude = sqrt(real^2 + imaginary^2)
         absolutefft[bin] = Math.sqrt(
           Math.pow(channel.fft[bin * 2], 2) +
-          Math.pow(channel.fft[bin * 2 + 1], 2));
+            Math.pow(channel.fft[bin * 2 + 1], 2)
+        );
       }
       channel.absolutefft = absolutefft;
     });
@@ -22,6 +22,6 @@ class AbsoluteFFT {
 }
 
 module.exports = {
-  deps: ['fft'],
+  deps: ["fft"],
   init: config => new AbsoluteFFT(config)
-}
+};

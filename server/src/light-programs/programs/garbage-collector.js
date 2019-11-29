@@ -1,6 +1,6 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
-const _ = require('lodash');
+const _ = require("lodash");
 
 module.exports = class Func extends SoundBasedFunction {
   start(config, draw, done) {
@@ -16,9 +16,9 @@ module.exports = class Func extends SoundBasedFunction {
   }
 
   drawFrame(draw, done) {
-    const colors = _.map(new Array(this.numberOfLeds), c => [0,0,10])
+    const colors = _.map(new Array(this.numberOfLeds), c => [0, 0, 10]);
 
-    draw(colors)
+    draw(colors);
     done();
   }
-}
+};

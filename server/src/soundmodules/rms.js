@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 // Easy measure of overall sound energy level. Basically, the area under the
 // curve of the waveform, also equal to the level of the DC signal that would
@@ -6,7 +6,7 @@ const _ = require('lodash');
 class RMS {
   rms(samples) {
     // sqrt(sum(sample^2)).
-    return Math.sqrt(samples.reduce((a, x) => a + x*x, 0)/samples.length);
+    return Math.sqrt(samples.reduce((a, x) => a + x * x, 0) / samples.length);
   }
   run(frame, emitter) {
     const that = this;
@@ -20,6 +20,6 @@ class RMS {
 }
 
 module.exports = {
-  deps: ['filteredBands'],
+  deps: ["filteredBands"],
   init: options => new RMS(options)
-}
+};

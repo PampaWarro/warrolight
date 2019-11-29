@@ -1,4 +1,4 @@
-const FFT = require('fft.js');
+const FFT = require("fft.js");
 
 // Computes the discrete Fourier transform (DFT) of the windowedSamples in each
 // channel. The output is a complex array with interleaved real and imaginary
@@ -20,6 +20,6 @@ class FFTModule {
 }
 
 module.exports = {
-  deps: ['window'],
+  deps: ["window"],
   init: config => new FFTModule(config)
-}
+};

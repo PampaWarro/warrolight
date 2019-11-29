@@ -1,6 +1,6 @@
-const _ = require('lodash')
+const _ = require("lodash");
 
-const getShapes = require('../../geometry/mappings/shape-mapping-wchica')
+const getShapes = require("../../geometry/mappings/shape-mapping-wchica");
 // const getShapes = require('./shape-mapping-fuego18')
 // const getShapes = require('./shape-mapping-wmediana')
 
@@ -10,39 +10,43 @@ module.exports = function programsByShape(mapping) {
       this.instances = {};
       this.config = config;
 
-      this.knownMappings = geometryMapping()
+      this.knownMappings = geometryMapping();
 
       _.each(mapping, (Program, shapeName) => {
-        let map = this.knownMappings[shapeName]
+        let map = this.knownMappings[shapeName];
 
-        if(!map){
-          console.warn(`Shape mapping '${shapeName}' not found. Using shape 'allOfIt'`)
+        if (!map) {
+          console.warn(
+            `Shape mapping '${shapeName}' not found. Using shape 'allOfIt'`
+          );
           map = this.knownMappings.allOfIt;
         }
 
-        let localLeds = _.extend({}, leds, {numberOfLeds: map.length})
+        let localLeds = _.extend({}, leds, { numberOfLeds: map.length });
         // Map new geometry
         localLeds.position = {
-          x: [... Array(map.length)],
-          y: [... Array(map.length)],
+          x: [...Array(map.length)],
+          y: [...Array(map.length)],
           height: leds.geometry.height,
           width: leds.geometry.width
-        }
-        for (let i =  0; i < map.length; i++) {
-          localLeds.position.x[i] = leds.geometry.x[map[i]]
-          localLeds.position.y[i] = leds.geometry.y[map[i]]
+        };
+        for (let i = 0; i < map.length; i++) {
+          localLeds.position.x[i] = leds.geometry.x[map[i]];
+          localLeds.position.y[i] = leds.geometry.y[map[i]];
         }
         // Support specific configs
         let specificConfig = config;
-        if(_.isArray(Program)){
+        if (_.isArray(Program)) {
           [Program, specificConfig] = Program;
-          let defaultConfig = this.extractDefault(Program.configSchema ?  Program.configSchema() : {} );
-          specificConfig = _.extend({}, config, defaultConfig, specificConfig)
+          let defaultConfig = this.extractDefault(
+            Program.configSchema ? Program.configSchema() : {}
+          );
+          specificConfig = _.extend({}, config, defaultConfig, specificConfig);
         }
-        this.instances[shapeName] = new Program(specificConfig, localLeds)
+        this.instances[shapeName] = new Program(specificConfig, localLeds);
         this.instances[shapeName].specificConfig = specificConfig;
-      })
-      this.state = [... Array(leds.numberOfLeds)].map(()=> [0,0,0]);
+      });
+      this.state = [...Array(leds.numberOfLeds)].map(() => [0, 0, 0]);
     }
 
     extractDefault(configSchema) {
@@ -61,44 +65,53 @@ module.exports = function programsByShape(mapping) {
       const debouncedDraw = _.debounce(draw, 5);
 
       _.each(this.instances, (program, mapName) => {
-        const map = this.knownMappings[mapName]
+        const map = this.knownMappings[mapName];
 
-        if(!map) {
-          console.warn(`NO MAPPING FOUND WITH KEY ${mapName}. Defaulting to all`);
-          return this.knownMappings['all'];
+        if (!map) {
+          console.warn(
+            `NO MAPPING FOUND WITH KEY ${mapName}. Defaulting to all`
+          );
+          return this.knownMappings["all"];
         }
 
-        program.start(program.specificConfig, (colors) => {
-          _.each(colors, (col, index) => this.state[map[index]] = col);
-          debouncedDraw(this.state);
-        }, done)
-      })
+        program.start(
+          program.specificConfig,
+          colors => {
+            _.each(colors, (col, index) => (this.state[map[index]] = col));
+            debouncedDraw(this.state);
+          },
+          done
+        );
+      });
 
-      done()
+      done();
     }
 
     updateConfig(key, value) {
       _.each(this.instances, (program, mapName) => {
-        if (program.specificConfig[key] && program.specificConfig[key] !== value) {
-          program.specificConfig[key] = value
-          program.config[key] = value
+        if (
+          program.specificConfig[key] &&
+          program.specificConfig[key] !== value
+        ) {
+          program.specificConfig[key] = value;
+          program.config[key] = value;
         }
-      })
+      });
     }
 
     stop() {
-      _.each(this.instances, (program, mapName) => program.stop())
+      _.each(this.instances, (program, mapName) => program.stop());
     }
 
     static configSchema() {
       let schema = {};
       _.each(mapping, (Program, mapName) => {
-        if(_.isArray(Program)){
-          [Program,] = Program
+        if (_.isArray(Program)) {
+          [Program] = Program;
         }
-        schema = _.extend(schema, Program.configSchema())
+        schema = _.extend(schema, Program.configSchema());
       });
       return schema;
     }
-  }
-}
+  };
+};

@@ -1,5 +1,5 @@
-SoundBasedFunction = require('./SoundBasedFunction.js');
-const {DrawableLayer, CompositeLayer} = require('../utils/layers');
+SoundBasedFunction = require("./SoundBasedFunction.js");
+const { DrawableLayer, CompositeLayer } = require("../utils/layers");
 
 function findBounds(values) {
   let min = null;
@@ -9,15 +9,15 @@ function findBounds(values) {
       min = value;
     }
     if (max == null || value > max) {
-      max = value
+      max = value;
     }
   });
   return {
     min: min,
     max: max,
     center: Math.round(min + max / 2),
-    scale: max - min,
-  }
+    scale: max - min
+  };
 }
 
 module.exports = class LayerBasedFunction extends SoundBasedFunction {
@@ -29,7 +29,9 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
     this.drawables = this.getDrawables(config);
     this.layers = {};
     this.rootLayer = this.buildLayer(
-      this.getLayers(this.drawables), this.layers);
+      this.getLayers(this.drawables),
+      this.layers
+    );
   }
 
   buildLayer(layerSpec, layersByName) {
@@ -40,8 +42,9 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
       layer = new DrawableLayer(layerSpec);
     } else if (layerSpec.layers) {
       const subLayers = layerSpec.layers;
-      layerSpec.layers = subLayers.map(
-        subLayer => that.buildLayer(subLayer, layersByName));
+      layerSpec.layers = subLayers.map(subLayer =>
+        that.buildLayer(subLayer, layersByName)
+      );
       layer = new CompositeLayer(layerSpec);
     } else {
       console.error(`Unable to build layer from spec ${layerSpec}`);
@@ -53,17 +56,17 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
   }
 
   getDrawables() {
-    console.warn('Unimplemented getDrawables()');
+    console.warn("Unimplemented getDrawables()");
     return {};
   }
 
   getLayers() {
-    console.warn('Unimplemented getLayers()');
+    console.warn("Unimplemented getLayers()");
     return {};
   }
 
   updateState() {
-    console.warn('Unimplemented updateState()');
+    console.warn("Unimplemented updateState()");
   }
 
   drawFrame(draw, done) {
@@ -72,13 +75,13 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
     const colors = new Array(this.numberOfLeds);
     colors.fill([0, 0, 0, 1]);
     if (!this.rootLayer) {
-      console.error('Missing rootLayer.');
+      console.error("Missing rootLayer.");
     }
     colors.forEach((baseColor, i) => {
       const color = this.rootLayer.applyAtIndex(i, that.geometry, baseColor);
       colors[i] = color.splice(0, 3);
     });
-    draw(colors)
+    draw(colors);
     done();
   }
-}
+};

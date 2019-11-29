@@ -1,8 +1,7 @@
 const ColorUtils = require("./ColorUtils");
 
 class Drawable {
-  colorAtIndex(index, geometry) {
-  }
+  colorAtIndex(index, geometry) {}
 }
 
 class SingleLed extends Drawable {
@@ -13,7 +12,9 @@ class SingleLed extends Drawable {
     this.ledIndex = options.ledIndex || 0;
   }
   colorAtIndex(index, geometry) {
-    const currentIndex = Math.round(ColorUtils.mod(this.ledIndex, geometry.leds))
+    const currentIndex = Math.round(
+      ColorUtils.mod(this.ledIndex, geometry.leds)
+    );
     if (index == currentIndex) {
       return this.color;
     }
@@ -35,9 +36,9 @@ class RandomPixels extends Drawable {
     options = options || {};
     super(options);
     this.color = options.color || [255, 255, 255, 1];
-    this.threshold = (options.threshold === undefined)? 0 : options.threshold;
-    this.randomAlpha = (
-      options.randomAlpha === undefined)? false : options.randomAlpha;
+    this.threshold = options.threshold === undefined ? 0 : options.threshold;
+    this.randomAlpha =
+      options.randomAlpha === undefined ? false : options.randomAlpha;
   }
   colorAtIndex(index, geometry) {
     if (Math.random() > this.threshold) {
@@ -68,13 +69,16 @@ class XYHue extends XYDrawable {
     this.xOffset = options.xOffset || 0;
     this.yFactor = options.yFactor || 1;
     this.yOffset = options.yOffset || 0;
-    this.saturation  = options.saturation || 1;
-    this.value  = options.value || 1;
+    this.saturation = options.saturation || 1;
+    this.value = options.value || 1;
   }
   colorAtXY(x, y) {
-    const h = ColorUtils.mod(Math.abs(
-      this.xOffset + this.xFactor * x +
-      this.yOffset + this.yFactor * y), 1);
+    const h = ColorUtils.mod(
+      Math.abs(
+        this.xOffset + this.xFactor * x + this.yOffset + this.yFactor * y
+      ),
+      1
+    );
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }
@@ -143,7 +147,10 @@ class InfiniteCircles extends XYDrawable {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-    const d = ColorUtils.mod(this.offset + this.radiusWarp(radius), this.period);
+    const d = ColorUtils.mod(
+      this.offset + this.radiusWarp(radius),
+      this.period
+    );
     if (Math.abs(d - this.period) < this.width) {
       return this.borderColor;
     }
@@ -168,9 +175,12 @@ class Grid extends XYDrawable {
     y += this.xyOffset[1];
     [x, y] = [
       ColorUtils.mod(x, this.xyPeriod[0]),
-      ColorUtils.mod(y, this.xyPeriod[1])]
-    if (Math.abs(ColorUtils.mod(x, this.xyPeriod[0])) < this.width ||
-        Math.abs(ColorUtils.mod(y, this.xyPeriod[1])) < this.width) {
+      ColorUtils.mod(y, this.xyPeriod[1])
+    ];
+    if (
+      Math.abs(ColorUtils.mod(x, this.xyPeriod[0])) < this.width ||
+      Math.abs(ColorUtils.mod(y, this.xyPeriod[1])) < this.width
+    ) {
       return this.color;
     }
     return this.backgroundColor;
@@ -188,8 +198,11 @@ class PolarDrawable extends XYDrawable {
     const [centerX, centerY] = this.center;
     const [dX, dY] = [x - centerX, y - centerY];
     const radius = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-    const angle = Math.acos(dX/radius);
-    return this.colorAtPolar(radius, ColorUtils.mod(angle + this.angleOffset, Math.PI));
+    const angle = Math.acos(dX / radius);
+    return this.colorAtPolar(
+      radius,
+      ColorUtils.mod(angle + this.angleOffset, Math.PI)
+    );
   }
 }
 
@@ -198,11 +211,11 @@ class PolarColors extends PolarDrawable {
     options = options || {};
     super(options);
     this.cycleCount = options.cycleCount || 1;
-    this.saturation  = options.saturation || 1;
-    this.value  = options.value || 1;
+    this.saturation = options.saturation || 1;
+    this.value = options.value || 1;
   }
   colorAtPolar(radius, angle) {
-    const h = ColorUtils.mod(angle * this.cycleCount / Math.PI, 1);
+    const h = ColorUtils.mod((angle * this.cycleCount) / Math.PI, 1);
     return ColorUtils.HSVtoRGB(h, this.saturation, this.value);
   }
 }
@@ -214,13 +227,16 @@ class RadiusCosineBrightness extends PolarDrawable {
     this.color = options.color || [255, 255, 255, 1];
     this.radiusOffset = options.radiusOffset || 0;
     this.scale = options.scale || 1;
-    this.radiusWarp  = options.radiusWarp || (x => x);
+    this.radiusWarp = options.radiusWarp || (x => x);
   }
   colorAtPolar(radius, angle) {
     radius = this.radiusWarp(this.scale * (radius + this.radiusOffset));
-    const v = .5 + .5 * Math.cos(radius / Math.PI);
+    const v = 0.5 + 0.5 * Math.cos(radius / Math.PI);
     return ColorUtils.clamp(
-      v * this.color[0], v * this.color[1], v * this.color[2]);
+      v * this.color[0],
+      v * this.color[1],
+      v * this.color[2]
+    );
   }
 }
 
@@ -235,5 +251,5 @@ module.exports = {
   InfiniteCircles,
   PolarColors,
   RadiusCosineBrightness,
-  Grid,
+  Grid
 };

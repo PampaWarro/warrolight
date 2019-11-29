@@ -21,7 +21,7 @@ class ExponentialThrottler {
         this._lastEvent.x = Math.max(x0, x1);
         return;
       }
-      const decayFactor = Math.pow(2, -dt/this._halfLife);
+      const decayFactor = Math.pow(2, -dt / this._halfLife);
       if (x1 < x0 * decayFactor) {
         return;
       }
@@ -30,8 +30,8 @@ class ExponentialThrottler {
     this._lastEvent = {
       t: t1,
       x: x1
-    }
+    };
   }
 }
 
-module.exports = ExponentialThrottler
+module.exports = ExponentialThrottler;

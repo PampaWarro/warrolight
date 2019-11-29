@@ -1,6 +1,6 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
-//  
+//
 class PeakTempo {
   constructor(config) {
     this._windowSize = config.windowSize || 3;
@@ -38,7 +38,7 @@ class PeakTempo {
             const rt2 = Math.round(t2);
             const binWidthFactor = Math.sqrt(rt2 / this._maxTempo);
             histogram[rt2 - this._minTempo] +=
-              binWidthFactor * energy / Math.pow(1.2,  Math.abs(t2c));
+              (binWidthFactor * energy) / Math.pow(1.2, Math.abs(t2c));
           }
           t2 /= 2;
           t2c -= 1;
@@ -50,13 +50,13 @@ class PeakTempo {
       const tempo = index + that._minTempo;
       const range = histogram.slice(
         Math.max(index - 10, 0),
-        Math.min(index + 10, histogram.length),
+        Math.min(index + 10, histogram.length)
       );
-      const avg = range.reduce((a, b) => a+b, 0) / range.length;
+      const avg = range.reduce((a, b) => a + b, 0) / range.length;
       if (avg == 0) {
         return;
       }
-      const ratio = energy/avg;
+      const ratio = energy / avg;
       const max = Math.max(...range);
       if (energy == max) {
         estimates.push({
@@ -67,26 +67,30 @@ class PeakTempo {
     });
     estimates.sort((a, b) => b.value - a.value);
     estimates.forEach((estimate, index) => {
-      estimate.value = estimates[0].value
+      estimate.value = estimates[0].value;
     });
     return estimates.slice(0, 3);
   }
   updateTempoEstimate(frame, peaks, state) {
-    peaks = peaks.slice();  // make copy to reorder by offsetSeconds.
-    peaks.sort((a,b) => a.offsetSeconds - b.offsetSeconds);
-    const currentTime = (peaks.length > 0)?
-      peaks[peaks.length-1].offsetSeconds : frame.offsetSeconds;
-    const peakWindow = state.peakWindow = state.peakWindow || [];
-    while (peakWindow.length > 0 &&
-        currentTime - peakWindow[0].offsetSeconds > this._windowSize) {
+    peaks = peaks.slice(); // make copy to reorder by offsetSeconds.
+    peaks.sort((a, b) => a.offsetSeconds - b.offsetSeconds);
+    const currentTime =
+      peaks.length > 0
+        ? peaks[peaks.length - 1].offsetSeconds
+        : frame.offsetSeconds;
+    const peakWindow = (state.peakWindow = state.peakWindow || []);
+    while (
+      peakWindow.length > 0 &&
+      currentTime - peakWindow[0].offsetSeconds > this._windowSize
+    ) {
       peakWindow.shift();
     }
     peakWindow.push(...peaks);
     const estimates = this.estimateTempo(peakWindow);
     return {
       state: state,
-      estimates: estimates,
-    }
+      estimates: estimates
+    };
   }
   // TODO: remove _ to re-enable when it stops being a CPU hog.
   _run(frame, emitter) {
@@ -97,10 +101,10 @@ class PeakTempo {
         global: channel.peaks,
         bass: channel.filteredBands.bass.peaks,
         mid: channel.filteredBands.mid.peaks,
-        high: channel.filteredBands.high.peaks,
-      }
+        high: channel.filteredBands.high.peaks
+      };
       const allEstimates = [];
-      const perBandPeakTempo = {}
+      const perBandPeakTempo = {};
       _.forOwn(perBandPeaks, (peaks, bandName) => {
         const state = channelState[bandName] || {};
         const result = that.updateTempoEstimate(frame, peaks, state);
@@ -133,6 +137,6 @@ class PeakTempo {
 }
 
 module.exports = {
-  deps: ['peakDetector'],
+  deps: ["peakDetector"],
   init: options => new PeakTempo(options)
-}
+};

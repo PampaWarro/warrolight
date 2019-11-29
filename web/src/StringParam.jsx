@@ -12,7 +12,8 @@ export class StringParam extends React.Component {
       this.name = "" + Math.random();
     }
   
-    handleChange(val) {
+    handleChange(e, val) {
+      e.preventDefault()
       this.setVal(val);
     }
   
@@ -31,19 +32,22 @@ export class StringParam extends React.Component {
     render() {
       return (
         <div className="config-item">
-          <span>{this.field}:&nbsp;</span>
+          <div className="overflow-auto">
+              <div className="float-left">{this.field}&nbsp;</div>
+              <div className="float-right font-weight-bold">{this.state.value}</div>
+          </div>
           <div>
-            <strong>{this.state.value}&nbsp;</strong>
             <br />
-            <div style={{ zoom: "0.8" }}>
+            <div className="list-group">
               {_.map(this.values, v => (
-                <button
+                <a
+                  href="#"
                   key={v}
-                  className={this.state.value === v ? "selected" : ""}
-                  onClick={() => this.handleChange(v)}
+                  className={"list-group-item list-group-item-action " + (this.state.value === v ? "active" : "")}
+                  onClick={(e) => this.handleChange(e, v)}
                 >
                   {v}
-                </button>
+                </a>
               ))}
             </div>
           </div>

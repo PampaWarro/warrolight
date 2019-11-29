@@ -17,12 +17,7 @@ export class ConnectionStatus extends React.Component {
       "connect",
       "connecting",
       "disconnect",
-      "connect_failed",
       "error",
-      "message",
-      "anything",
-      "reconnect_failed",
-      "reconnect"
     ];
 
     events.forEach(evtName => {
@@ -66,9 +61,9 @@ export class ConnectionStatus extends React.Component {
 
   render() {
     return (
-      <span className={"cnx-status status-" + this.state.level}>
+      <button className={"btn btn-sm btn-" + this.state.level}>
         {this.state.status}
-      </span>
+      </button>
     );
   }
 }

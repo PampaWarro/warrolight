@@ -29,17 +29,17 @@ export class BooleanParam extends React.Component {
   
     render() {
       return (
-        <div className="config-item">
-          <span>{this.field}:&nbsp;</span>
-          <div>
-            <strong>{this.state.value}&nbsp;</strong>
-            <input
-              type="checkbox"
-              name={this.name}
-              checked={this.state.value}
-              onChange={this.handleChange}
-            />
-          </div>
+        <div className="config-item my-3">
+            <div className="overflow-auto">
+                <div className="float-left">{this.field}&nbsp;</div>
+                <input
+                    className="float-right"
+                    type="checkbox"
+                    name={this.name}
+                    checked={this.state.value}
+                    onChange={this.handleChange}
+                />
+            </div>
         </div>
       );
     }

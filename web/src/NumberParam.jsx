@@ -31,10 +31,12 @@ export class NumberParam extends React.Component {
   
     render() {
       return (
-        <div className="config-item">
-          <span>{this.field}:&nbsp;</span>
+        <div className="config-item my-3">
+          <div className="overflow-auto">
+            <div className="float-left">{this.field}</div>
+            <div className="float-right font-weight-bold">{this.state.value}</div>
+          </div>
           <div>
-            <strong>{this.state.value}&nbsp;</strong>
             <input
               type="range"
               name={this.name}

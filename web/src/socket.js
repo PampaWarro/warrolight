@@ -23,13 +23,11 @@ export default class Socket {
         }
 
         ws.onclose = function (e) {
-            console.log(e)
             emitter.emit('disconnect')
             setTimeout(socket.connect.bind(socket, url, protocol), 2000)
         }
 
         ws.onerror = function (e) {
-            console.log(e)
             emitter.emit('error', e)
         }
 

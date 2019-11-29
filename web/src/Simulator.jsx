@@ -1,13 +1,12 @@
 /*global socket*/
 import React from "react";
+import _ from "lodash";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
-import { StringParam } from "./StringParam";
-import { BooleanParam } from "./BooleanParam";
-import { NumberParam } from "./NumberParam";
-import _ from "lodash";
+import { ProgramList } from "./ProgramList";
+import { ProgramConfig } from "./ProgramConfig";
 
 export class Simulator extends React.Component {
   constructor(props) {
@@ -66,9 +65,15 @@ export class Simulator extends React.Component {
     }
   }
 
-  handleProgramClick(key, ev) {
-    ev.preventDefault();
+  handleProgramChange(key) {
     this.setCurrentProgram(key);
+  }
+
+  getCurrentProgram() {
+    if (this.state.selected) {
+      return this.state.programs[this.state.selected];
+    }
+    return { name: "NO SELECTED PROGRAM" };
   }
 
   setCurrentProgram(name) {
@@ -86,131 +91,44 @@ export class Simulator extends React.Component {
   }
 
   restartProgram(e) {
-    e.preventDefault();
     socket.emit("restartProgram");
   }
 
   render() {
-    let menuItems = [];
-    for (let key in this.state.programs) {
-      if (key === this.state.selected) {
-        menuItems.push(
-          <Item key={key} className="selected">
-            {this.state.programs[key].name}
-          </Item>
-        );
-      } else {
-        menuItems.push(
-          <Item key={key} onClick={e => this.handleProgramClick(key, e)}>
-            {this.state.programs[key].name}
-          </Item>
-        );
-      }
-    }
+    let currentProgram = this.getCurrentProgram()
 
-    let configOptions = [];
-    let presets = [];
-    let currentProgram = { name: "NO SELECTED PROGRAM" };
-
-    if (this.state.selected) {
-      currentProgram = this.state.programs[this.state.selected];
-
-      for (let paramName in currentProgram.config) {
-        let val = this.state.currentConfig[paramName];
-        if (_.isBoolean(currentProgram.config[paramName].default)) {
-          configOptions.push(
-            <BooleanParam
-              key={paramName}
-              configDefinition={currentProgram.config[paramName]}
-              configRef={this.state.currentConfig}
-              val={val}
-              field={paramName}
-            />
-          );
-        } else if (_.isString(currentProgram.config[paramName].default)) {
-          configOptions.push(
-            <StringParam
-              key={paramName}
-              configDefinition={currentProgram.config[paramName]}
-              configRef={this.state.currentConfig}
-              val={val}
-              field={paramName}
-            />
-          );
-        } else {
-          configOptions.push(
-            <NumberParam
-              key={paramName}
-              configDefinition={currentProgram.config[paramName]}
-              configRef={this.state.currentConfig}
-              val={val}
-              field={paramName}
-            />
-          );
-        }
-      }
-
-      for (let preset of currentProgram.presets) {
-        presets.push(
-          <a
-            className="preset"
-            href="#"
-            key={preset}
-            onClick={e => this.selectPreset(preset)}
-          >
-            {preset}{" "}
-          </a>
-        );
-      }
-    }
-
-    {
-      return (
-        <div>
-          <div className="contain">
-            <div className={"top-header"}>
-              <div>Setup</div>
-
-              <div>
-                <ConnectionStatus />
-                &nbsp;&nbsp; <strong>Warro Lights</strong>
-              </div>
+    return (
+      <div>
+        <nav className="navbar fixed-top navbar-dark bg-dark">
+          <span className="navbar-brand">WarroLight</span>
+          <DevicesStatus />
+          <ConnectionStatus />
+        </nav>
+        <div className="container-fluid">
+          <div className="row">
+            <nav className="sidebar">
+              <ProgramList
+                programs={this.state.programs}
+                selected={this.state.selected}
+                onProgramChange={this.handleProgramChange.bind(this)}
+              />
+            </nav>
+            <div className="col-md-3 offset-2 sidebar-2 p-4">
+              <ProgramConfig
+                program={currentProgram}
+                selected={this.state.selected}
+                config={this.state.currentConfig}
+                onSelectPreset={this.selectPreset.bind(this)}
+                onRestartProgram={this.restartProgram.bind(this)}
+              />
             </div>
-
-            <DevicesStatus />
-
-            <div className="controls">
-              <div className="menuItems">{menuItems}</div>
-              <div className="simControls">
-                <div className="configuration">
-                  <h3>
-                    {this.state.selected} &nbsp;
-                    <a href="#" onClick={e => this.restartProgram(e)}>
-                      restart
-                    </a>
-                  </h3>
-                  <div className="config-items">{configOptions}</div>
-                  <div className={"presets"}>{presets}</div>
-                </div>
-                <LightsSimulator height="400" width="600"></LightsSimulator>
-              </div>
+            <div className="col-md-7">
+              <LightsSimulator height="400" width="600"></LightsSimulator>
+              <MicrophoneViewer config={this.state.micConfig} />
             </div>
-
-            <MicrophoneViewer config={this.state.micConfig} />
           </div>
         </div>
-      );
-    }
-  }
-}
-
-class Item extends React.Component {
-  render() {
-    return (
-      <a href="#" className={this.props.className} onClick={this.props.onClick}>
-        {this.props.children}
-      </a>
+      </div>
     );
   }
 }
-

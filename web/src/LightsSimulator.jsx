@@ -88,21 +88,13 @@ export class LightsSimulator extends React.Component {
       this.turnOnSimulation();
     }
     this.lightsRenderer.enabled = !this.lightsRenderer.enabled;
+    this.forceUpdate()
   }
 
   render() {
     return (
       <div className="lights-sim">
-        <div>
-          <input
-            type="checkbox"
-            data-id={"renderToggle"}
-            checked={this.lightsRenderer.enabled}
-            onChange={this.toggleRenderPreview.bind(this)}
-          />
-          <label>Preview light output from server</label>
-        </div>
-        <div className={"preview-area"}>
+        <div className="preview-area mb-3 pt-3">
           <canvas
             onClick={this.toggleRenderPreview.bind(this)}
             ref="canvas"
@@ -110,7 +102,7 @@ export class LightsSimulator extends React.Component {
             height={this.props.height}
           />
           {this.lightsRenderer.enabled ? null : (
-            <div className={"preview-btn"}>
+            <div className="preview-btn">
               Click to START / PAUSE preview of lights
             </div>
           )}

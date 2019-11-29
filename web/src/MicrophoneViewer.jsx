@@ -105,14 +105,14 @@ export class MicrophoneViewer extends React.Component {
     let level = Math.min(1, (r + g + b) / (3 * 255));
 
     //
-    let MIN = 30;
+    let MIN = 50;
     let w = 2;
     let HEIGHT = this.canvasCtx.canvas.height / 3;
     let h;
     if (this.state.perBand) {
       this.canvasCtx.globalCompositeOperation = "screen";
 
-      this.canvasCtx.fillStyle = `rgba(${Math.max(MIN, r)}, ${0}, ${0})`;
+      this.canvasCtx.fillStyle = `rgba(${Math.max(MIN, r)}, 0, 0)`;
       h = Math.round((r / 255) * HEIGHT);
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
@@ -122,7 +122,7 @@ export class MicrophoneViewer extends React.Component {
       );
 
       h = Math.round((g / 255) * HEIGHT);
-      this.canvasCtx.fillStyle = `rgba(${0}, ${Math.max(MIN, g)}, ${0})`;
+      this.canvasCtx.fillStyle = `rgba(0, ${Math.max(MIN, g)}, 0)`;
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
         HEIGHT - h + HEIGHT,
@@ -131,7 +131,7 @@ export class MicrophoneViewer extends React.Component {
       );
 
       h = Math.round((b / 255) * HEIGHT);
-      this.canvasCtx.fillStyle = `rgba(${0}, ${0}, ${Math.max(MIN, b)})`;
+      this.canvasCtx.fillStyle = `rgba(0, 0, ${Math.max(MIN, b)})`;
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
         HEIGHT - h + HEIGHT * 2,
@@ -141,7 +141,7 @@ export class MicrophoneViewer extends React.Component {
 
       this.canvasCtx.globalCompositeOperation = "source-over";
     } else {
-      this.canvasCtx.fillStyle = `rgba(200,200,200)`;
+      this.canvasCtx.fillStyle = `rgba(100,100,100)`;
       h = Math.round((rms / 255) * HEIGHT * 3);
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
@@ -212,7 +212,7 @@ export class MicrophoneViewer extends React.Component {
   render() {
     return (
       <div className="mic-client">
-        <div className={"perdband-btn"}>
+        <div className="perdband-btn">
           <a href="#" onClick={e => this.toggleMetric(e)}>
             {this.props.config.metric}
           </a>

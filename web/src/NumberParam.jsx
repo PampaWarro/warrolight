@@ -1,4 +1,3 @@
-/*global socket*/
 import React from "react";
 
 export class NumberParam extends React.Component {

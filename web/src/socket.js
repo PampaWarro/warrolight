@@ -1,3 +1,4 @@
+import ReconnectingWebSocket from 'reconnecting-websocket';
 import { EventEmitter } from 'events';
 
 export default class Socket {
@@ -11,30 +12,28 @@ export default class Socket {
 
     connect(url, protocol) {
         const emitter = this.emitter;
-        const socket = this;
 
         emitter.emit('connecting');
 
-        const ws = new WebSocket(url, protocol);
+        const ws = new ReconnectingWebSocket(url, protocol);
         this.ws = ws;
 
-        ws.onopen = function () {
+        ws.addEventListener('open', () => {
             emitter.emit('connected')
-        }
+        })
 
-        ws.onclose = function (e) {
+        ws.addEventListener('close', () => {
             emitter.emit('disconnect')
-            setTimeout(socket.connect.bind(socket, url, protocol), 2000)
-        }
+        })
 
-        ws.onerror = function (e) {
+        ws.addEventListener('error', (e) => {
             emitter.emit('error', e)
-        }
+        })
 
-        ws.onmessage = function (e) {
+        ws.addEventListener('message', (e) => {
             const data = JSON.parse(e.data)
             emitter.emit(data.type, data.payload)
-        }
+        })
     }
 
     on(event, listener) {

@@ -1,4 +1,3 @@
-/*global socket*/
 import React from "react";
 import _ from "lodash";
 

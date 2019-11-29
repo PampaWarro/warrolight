@@ -140,7 +140,7 @@ soundEmitter.on('throttledpeak', peak => {
   // function replaceAt(s, i, c) {
   //   return s.substr(0, i) + c + s.substr(i+1);
   // }
-  // var msg = new Array(30).join(' ');
+  // let msg = new Array(30).join(' ');
   // if (peak.bandName == 'bass') {
   //   msg = replaceAt(msg, 0, '*');
   // }

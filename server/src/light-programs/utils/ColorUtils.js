@@ -54,7 +54,7 @@ module.exports = class ColorUtils {
   }
 
   static HSVtoRGB(h, s, v, a) {
-    var r, g, b, i, f, p, q, t;
+    let r, g, b, i, f, p, q, t;
     if (arguments.length === 1) {
       (s = h.s), (v = h.v), (h = h.h);
     }

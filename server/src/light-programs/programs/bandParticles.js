@@ -91,7 +91,7 @@ module.exports = class Func extends LayerBasedFunction {
         particle.drawable.ledIndex += particle.state.speed;
         particle.drawable.color = ColorUtils.HSVtoRGB(hue, saturation, 1);
 
-        var sign =
+        let sign =
           Math.sign(particle.state.speed) || Math.sign(Math.random() - 0.5);
         if (Math.random() < Math.pow(energy, 10)) {
           sign *= -1;

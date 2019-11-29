@@ -4,7 +4,7 @@ import React from "react";
 const STATUS_OK = "success";
 const STATUS_WARN = "warning";
 
-export class CnxStatus extends React.Component {
+export class ConnectionStatus extends React.Component {
   constructor() {
     super(...arguments);
 

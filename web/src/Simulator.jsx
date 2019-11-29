@@ -1,6 +1,6 @@
 /*global socket*/
 import React from "react";
-import { CnxStatus } from "./CnxStatus";
+import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
@@ -173,7 +173,7 @@ export class Simulator extends React.Component {
               <div>Setup</div>
 
               <div>
-                <CnxStatus />
+                <ConnectionStatus />
                 &nbsp;&nbsp; <strong>Warro Lights</strong>
               </div>
             </div>

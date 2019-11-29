@@ -189,7 +189,7 @@ export class MicrophoneViewer extends React.Component {
     );
   }
 
-  toggleperBandMode(e) {
+  togglePerBandMode(e) {
     e.preventDefault();
 
     this.setState({ perBand: !this.state.perBand });
@@ -217,7 +217,7 @@ export class MicrophoneViewer extends React.Component {
             {this.props.config.metric}
           </a>
           <br />
-          <a href="#" onClick={e => this.toggleperBandMode(e)}>
+          <a href="#" onClick={e => this.togglePerBandMode(e)}>
             {this.state.perBand ? "Global" : "Per band"}
           </a>
         </div>
@@ -228,9 +228,7 @@ export class MicrophoneViewer extends React.Component {
           onClick={this.toggleMic.bind(this)}
           height="200"
           style={{ opacity: this.props.config.sendingMicData ? "1" : "0.5" }}
-        >
-          a
-        </canvas>
+        />
 
         {this.props.config.sendingMicData ? null : (
           <div className={"preview-btn"}>

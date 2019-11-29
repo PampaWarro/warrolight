@@ -6,8 +6,8 @@ import _ from "lodash";
 var noSleep = new NoSleep();
 
 export class MicrophoneClient extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.state = {
       micOn: true,

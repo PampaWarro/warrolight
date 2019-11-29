@@ -3,8 +3,8 @@ import React from "react";
 import _ from "lodash";
 
 export class LightsSimulator extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.state = {
       renderingEnabled: false

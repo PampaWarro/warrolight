@@ -1,8 +1,8 @@
 import React from "react";
 
 export class LightsCanvas extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.getColor = this.props.getColor;
     this.geometryX = this.props.geometryX;

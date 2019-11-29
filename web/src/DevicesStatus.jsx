@@ -2,8 +2,8 @@
 import React from "react";
 
 export class DevicesStatus extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.state = {
       devices: []

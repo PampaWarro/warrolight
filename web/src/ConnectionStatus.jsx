@@ -5,8 +5,8 @@ const STATUS_OK = "success";
 const STATUS_WARN = "warning";
 
 export class ConnectionStatus extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.state = {
       status: "Connecting",

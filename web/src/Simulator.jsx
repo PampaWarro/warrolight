@@ -7,8 +7,8 @@ import { MicrophoneViewer } from "./MicrophoneViewer";
 import _ from "lodash";
 
 export class Simulator extends React.Component {
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
 
     this.config = {
       frequencyInHertz: 60

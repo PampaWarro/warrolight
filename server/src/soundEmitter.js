@@ -132,25 +132,4 @@ class SoundEmitter extends EventEmitter {
 
 const soundEmitter = new SoundEmitter();
 
-soundEmitter.on('processedaudioframe', frame => {
-  // console.log(frame.center.spectralBands.bass.energy);
-});
-
-soundEmitter.on('throttledpeak', peak => {
-  // function replaceAt(s, i, c) {
-  //   return s.substr(0, i) + c + s.substr(i+1);
-  // }
-  // let msg = new Array(30).join(' ');
-  // if (peak.bandName == 'bass') {
-  //   msg = replaceAt(msg, 0, '*');
-  // }
-  // if (peak.bandName == 'mid') {
-  //   msg = replaceAt(msg, msg.length/2, '*');
-  // }
-  // if (peak.bandName == 'high') {
-  //   msg = replaceAt(msg, msg.length-1, '*');
-  // }
-  // console.log(msg);
-});
-
 module.exports = soundEmitter;

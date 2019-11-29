@@ -1,7 +1,8 @@
 const WebSocket = require('ws');
 const { startMic } = require('./mic');
 const soundEmitter = require('./soundEmitter');
-const { Service, MicConfig, SoundSource } = require('./service')
+const { MicConfig, startSoundListener } = require('./sound');
+const { Service } = require('./service')
 
 startMic()
 
@@ -13,7 +14,7 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
     metric: "Rms"
   });
 
-  const sound = new SoundSource(soundEmitter, micConfig);
+  const sound = startSoundListener(soundEmitter, micConfig);
 
   wss.on('connection', function connection(ws) {
 
@@ -23,10 +24,7 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
 
     const service = new Service(lightProgram, deviceMultiplexer, micConfig, emit);
 
-    // TODO: should only process sample once for all listeners
-    sound.listen((lastVolumes) => {
-      emit('micSample', lastVolumes)
-    })
+    sound.setListener((lastVolumes) => emit('micSample', lastVolumes))
 
     ws.on('message', function incoming(message) {
       const { type, payload } = JSON.parse(message)
@@ -56,9 +54,12 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
       }
     });
 
-    service.connect()
+    service.connect();
 
-    ws.on('disconnect', () => service.disconnect());
+    ws.on('disconnect', () => {
+      sound.clearListener();
+      service.disconnect();
+    });
 
   });
 }

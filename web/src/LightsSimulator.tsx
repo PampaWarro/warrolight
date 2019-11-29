@@ -42,11 +42,15 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 
   turnOnSimulation() {
+    this.lightsRenderer.enabled = true;
     this.props.socket.emit("startSamplingLights");
+    this.forceUpdate()
   }
 
   turnOffSimulation() {
+    this.lightsRenderer.enabled = false;
     this.props.socket.emit("stopSamplingLights");
+    this.forceUpdate()
   }
 
   decodeLedsColorsFromString(encodedLights: string) {
@@ -99,6 +103,8 @@ export class LightsSimulator extends React.Component<Props, State> {
     document.addEventListener("visibilitychange", this.onVisibilityChange);
     document.onblur = this.onFocusChange;
     document.onfocus = this.onFocusChange;
+
+    setTimeout(() => this.turnOnSimulation(), 500);
   }
 
   componentWillUnmount() {
@@ -119,8 +125,6 @@ export class LightsSimulator extends React.Component<Props, State> {
     } else {
       this.turnOnSimulation();
     }
-    this.lightsRenderer.enabled = !this.lightsRenderer.enabled;
-    this.forceUpdate()
   }
 
   render() {

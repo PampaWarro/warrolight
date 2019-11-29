@@ -8,7 +8,7 @@ import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
 
-export class Simulator extends React.Component {
+export class App extends React.Component {
   constructor(props) {
     super(props);
 

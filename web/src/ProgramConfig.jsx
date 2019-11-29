@@ -14,6 +14,10 @@ export class ProgramConfig extends React.Component {
   render() {
     const currentProgram = this.props.program;
 
+    if (!currentProgram) {
+      return null;
+    }
+
     let configOptions = [];
     let presets = [];
 
@@ -70,7 +74,7 @@ export class ProgramConfig extends React.Component {
     return (
       <div>
         <h4 className="pt-2">
-          {this.props.selected} &nbsp;
+          {currentProgram.name} &nbsp;
           <a href="#" className="btn btn-sm btn-outline-secondary" onClick={this.handleRestartProgram.bind(this)}>
             Restart
           </a>

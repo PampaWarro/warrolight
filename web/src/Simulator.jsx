@@ -73,7 +73,7 @@ export class Simulator extends React.Component {
     if (this.state.selected) {
       return this.state.programs[this.state.selected];
     }
-    return { name: "NO SELECTED PROGRAM" };
+    return null
   }
 
   setCurrentProgram(name) {

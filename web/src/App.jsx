@@ -80,12 +80,6 @@ export class App extends React.Component {
     socket.emit("setCurrentProgram", name);
   }
 
-  updateLeds(leds) {
-    this.props.send(leds);
-    this.leds = leds;
-    this.refs.simulator.getNextFrame();
-  }
-
   selectPreset(preset) {
     socket.emit("setPreset", preset);
   }

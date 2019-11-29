@@ -2,15 +2,23 @@ const _ = require('lodash');
 const mic = require('./mic/mic');
 const soundEmitter = require("./soundEmitter")
 
+let micInstance = null;
+
 function startMic() {
+  if (micInstance) {
+    throw new Error('mic already started!')
+  }
+
   let frameSize = 512;
-  let micInstance = mic({
+
+  micInstance = mic({
     rate: 44100,
     channels: 1,
     bitwidth: 16,
     frameSize: frameSize,
     soundEmitter: soundEmitter
   });
+
   soundEmitter.init({
     channels: 1,
     sampleRate: 44100,

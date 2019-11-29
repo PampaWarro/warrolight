@@ -123,7 +123,7 @@ export class App extends React.Component {
               />
             </div>
             <div className="col-md-7">
-              <LightsSimulator height="400" width="600"></LightsSimulator>
+              <LightsSimulator height="400" width="600" />
               <MicrophoneViewer config={this.state.micConfig} />
             </div>
           </div>

@@ -1,11 +1,4 @@
 import React from "react";
-import _ from "lodash";
-import Socket from "./socket";
-
-// TODO: fill complete layout object, also decide if we need to use all of it
-interface RemoteLayout {
-  geometry: { x: number[], y: number[] }
-}
 
 interface Layout {
   geometryX: number[]
@@ -19,9 +12,10 @@ interface Layout {
 type Light = [number, number, number]
 
 interface Props {
-  socket: Socket
   width: number
   height: number
+  onStart(): void
+  onStop(): void
 }
 
 interface State {
@@ -43,24 +37,14 @@ export class LightsSimulator extends React.Component<Props, State> {
 
   turnOnSimulation() {
     this.lightsRenderer.enabled = true;
-    this.props.socket.emit("startSamplingLights");
-    this.forceUpdate()
+    this.props.onStart();
+    this.forceUpdate();
   }
 
   turnOffSimulation() {
     this.lightsRenderer.enabled = false;
-    this.props.socket.emit("stopSamplingLights");
-    this.forceUpdate()
-  }
-
-  decodeLedsColorsFromString(encodedLights: string) {
-    let bytes = Uint8Array.from(atob(encodedLights), c => c.charCodeAt(0));
-
-    let byLed = new Array(bytes.length / 3);
-    for (let i = 0; i < bytes.length / 3; i += 1) {
-      byLed[i] = [bytes[i * 3], bytes[i * 3 + 1], bytes[i * 3 + 2]];
-    }
-    return byLed;
+    this.props.onStop();
+    this.forceUpdate();
   }
 
   onVisibilityChange() {
@@ -80,26 +64,6 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const socket = this.props.socket;
-
-    socket.on("lightsSample", (encodedLights: string) => {
-      const lights = this.decodeLedsColorsFromString(encodedLights);
-      this.drawCanvas(lights);
-    });
-
-    socket.on("layout", (layout: RemoteLayout) => {
-      let geometryX = layout.geometry.x;
-      let geometryY = layout.geometry.y;
-      let minX = _.min(geometryX)!;
-      let minY = _.min(geometryY)!;
-      let maxX = _.max(geometryX)!;
-      let maxY = _.max(geometryY)!;
-
-      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY }
-
-      this.setState({ layout: layoutObj })
-    });
-
     document.addEventListener("visibilitychange", this.onVisibilityChange);
     document.onblur = this.onFocusChange;
     document.onfocus = this.onFocusChange;
@@ -117,6 +81,10 @@ export class LightsSimulator extends React.Component<Props, State> {
       this.state.layout!,
       lights
     )
+  }
+
+  updateLayout(layout: Layout) {
+    this.setState({ layout })
   }
 
   toggleRenderPreview() {

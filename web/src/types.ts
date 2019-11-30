@@ -35,3 +35,8 @@ export interface RemoteState {
   currentConfig: { [name: string]: ConfigValue }
   micConfig: MicConfig
 }
+
+// TODO: fill complete layout object, also decide if we need to use all of it
+export interface RemoteLayout {
+  geometry: { x: number[], y: number[] }
+}

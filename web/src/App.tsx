@@ -7,7 +7,7 @@ import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
-import { Program, ConfigValue, MicConfig, MicSample, RemoteState } from "./types";
+import { Program, ConfigValue, MicConfig, MicSample, RemoteState, RemoteLayout } from "./types";
 
 interface Props {}
 
@@ -21,6 +21,8 @@ interface State {
 
 export class App extends React.Component<Props, State> {
   socket: Socket
+
+  lightsSim: React.RefObject<LightsSimulator>
   micViewer: React.RefObject<MicrophoneViewer>
 
   constructor(props: Props) {
@@ -38,6 +40,8 @@ export class App extends React.Component<Props, State> {
     };
 
     this.socket = new Socket("ws://localhost:8080/", "warro");
+
+    this.lightsSim = React.createRef();
     this.micViewer = React.createRef();
   }
 
@@ -63,11 +67,31 @@ export class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.socket.on("completeState", this._initializeState.bind(this));
-    this.socket.on("stateChange", this._stateChange.bind(this));
-    this.socket.on("micSample", (samples: MicSample[]) =>
+    const socket = this.socket;
+
+    socket.on("completeState", this._initializeState.bind(this));
+    socket.on("stateChange", this._stateChange.bind(this));
+    socket.on("micSample", (samples: MicSample[]) =>
       this.micViewer.current!.update(samples)
     );
+
+    socket.on("lightsSample", (encodedLights: string) => {
+      const lights = decodeLedsColorsFromString(encodedLights);
+      this.lightsSim.current!.drawCanvas(lights);
+    });
+
+    socket.on("layout", (layout: RemoteLayout) => {
+      let geometryX = layout.geometry.x;
+      let geometryY = layout.geometry.y;
+      let minX = _.min(geometryX)!;
+      let minY = _.min(geometryY)!;
+      let maxX = _.max(geometryX)!;
+      let maxY = _.max(geometryY)!;
+
+      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY }
+
+      this.lightsSim.current!.updateLayout(layoutObj)
+    });
   }
 
   UNSAFE_componentWillUpdate(newProps: Props, newState: State) {
@@ -106,8 +130,16 @@ export class App extends React.Component<Props, State> {
     this.socket.emit("restartProgram");
   }
 
-  handleSetMicConfig(config: Partial<MicConfig>) {
+  handleSetMicConfig = (config: Partial<MicConfig>) => {
     this.socket.emit("setMicDataConfig", config);
+  }
+
+  handleStartLights = () => {
+    this.socket.emit("startSamplingLights");
+  }
+
+  handleStopLights = () => {
+    this.socket.emit("stopSamplingLights");
   }
 
   render() {
@@ -141,7 +173,13 @@ export class App extends React.Component<Props, State> {
             </div>
             <div className="offset-5 fixed-top">
               <div className="m-3">
-                <LightsSimulator socket={this.socket} height={400} width={600} />
+                <LightsSimulator
+                  ref={this.lightsSim}
+                  height={400}
+                  width={600}
+                  onStart={this.handleStartLights}
+                  onStop={this.handleStopLights}
+                />
                 <MicrophoneViewer
                   ref={this.micViewer}
                   config={this.state.micConfig}
@@ -154,4 +192,14 @@ export class App extends React.Component<Props, State> {
       </div>
     );
   }
+}
+
+function decodeLedsColorsFromString(encodedLights: string): [number, number, number][] {
+  const bytes = Uint8Array.from(atob(encodedLights), c => c.charCodeAt(0));
+
+  const byLed = new Array(bytes.length / 3);
+  for (let i = 0; i < bytes.length / 3; i += 1) {
+    byLed[i] = [bytes[i * 3], bytes[i * 3 + 1], bytes[i * 3 + 2]];
+  }
+  return byLed;
 }

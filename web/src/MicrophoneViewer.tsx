@@ -1,23 +1,12 @@
 import React from "react";
-import _ from "lodash";
-import Socket from "./socket";
-import { MicConfig } from "./types";
-
-interface MicSample {
-  bass: number
-  mid: number
-  high: number
-  all: number
-}
+import { MicConfig, MicSample } from "./types";
 
 interface Props {
-  socket: Socket
   config: MicConfig
+  onSetConfig(config: Partial<MicConfig>): void
 }
 
 interface State {
-  sendingMicData: boolean
-  metric: string
   perBand: boolean
 }
 
@@ -27,37 +16,32 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      sendingMicData: props.config.sendingMicData,
-      metric: props.config.metric,
-      perBand: false
-    };
+    this.state = { perBand: false };
   }
 
   toggleMic() {
-    const socket = this.props.socket;
+    const { onSetConfig } = this.props;
 
     if (this.props.config.sendingMicData) {
-      socket.emit("setMicDataConfig", { sendingMicData: false });
+      onSetConfig({ sendingMicData: false })
     } else {
-      socket.emit("setMicDataConfig", { sendingMicData: true });
+      onSetConfig({ sendingMicData: true })
     }
   }
 
   componentDidMount() {
-    const socket = this.props.socket;
-
-    socket.on("micSample", (samples: MicSample[]) => {
-      _.each(samples, sample => this.plotPerBandHistogram(sample));
-    });
-
     this.createHistogramCanvas();
   }
 
+  update(samples: MicSample[]) {
+    for (let sample of samples) {
+      this.plotPerBandHistogram(sample);
+    }
+  }
+
   createHistogramCanvas() {
-    let c = document.getElementById("music") as HTMLCanvasElement;
-    this.canvasCtx = c.getContext("2d")!;
+    const canvas = document.getElementById("music") as HTMLCanvasElement;
+    this.canvasCtx = canvas.getContext("2d")!;
     this.canvasCtx.clearRect(
       0,
       0,
@@ -169,16 +153,20 @@ export class MicrophoneViewer extends React.Component<Props, State> {
   toggleMetric(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    const socket = this.props.socket;
+    const { onSetConfig } = this.props
+    let current = this.props.config.metric;
 
-    if (this.props.config.metric === "Rms") {
-      socket.emit("setMicDataConfig", { metric: "FastPeakDecay" });
-    } else if (this.props.config.metric === "FastPeakDecay") {
-      socket.emit("setMicDataConfig", { metric: "PeakDecay" });
-    } else {
-      socket.emit("setMicDataConfig", { metric: "Rms" });
+    switch (current) {
+      case "Rms":
+        onSetConfig({ metric: "FastPeakDecay" })
+        return;
+      case "FastPeakDecay":
+        onSetConfig({ metric: "PeakDecay" })
+        return;
+      case "PeakDecay":
+        onSetConfig({ metric: "Rms" })
+        return;
     }
-    return false;
   }
 
   render() {

@@ -7,7 +7,7 @@ import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
-import { Program, ConfigValue, MicConfig, RemoteState } from "./types";
+import { Program, ConfigValue, MicConfig, MicSample, RemoteState } from "./types";
 
 interface Props {}
 
@@ -21,6 +21,7 @@ interface State {
 
 export class App extends React.Component<Props, State> {
   socket: Socket
+  micViewer: React.RefObject<MicrophoneViewer>
 
   constructor(props: Props) {
     super(props);
@@ -37,6 +38,7 @@ export class App extends React.Component<Props, State> {
     };
 
     this.socket = new Socket("ws://localhost:8080/", "warro");
+    this.micViewer = React.createRef();
   }
 
   _initializeState(state: RemoteState) {
@@ -63,6 +65,9 @@ export class App extends React.Component<Props, State> {
   componentDidMount() {
     this.socket.on("completeState", this._initializeState.bind(this));
     this.socket.on("stateChange", this._stateChange.bind(this));
+    this.socket.on("micSample", (samples: MicSample[]) =>
+      this.micViewer.current!.update(samples)
+    );
   }
 
   UNSAFE_componentWillUpdate(newProps: Props, newState: State) {
@@ -101,6 +106,10 @@ export class App extends React.Component<Props, State> {
     this.socket.emit("restartProgram");
   }
 
+  handleSetMicConfig(config: Partial<MicConfig>) {
+    this.socket.emit("setMicDataConfig", config);
+  }
+
   render() {
     let currentProgram = this.getCurrentProgram()
 
@@ -133,7 +142,11 @@ export class App extends React.Component<Props, State> {
             <div className="offset-5 fixed-top">
               <div className="m-3">
                 <LightsSimulator socket={this.socket} height={400} width={600} />
-                <MicrophoneViewer socket={this.socket} config={this.state.micConfig} />
+                <MicrophoneViewer
+                  ref={this.micViewer}
+                  config={this.state.micConfig}
+                  onSetConfig={this.handleSetMicConfig}
+                />
               </div>
             </div>
           </div>

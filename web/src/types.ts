@@ -22,6 +22,13 @@ export interface MicConfig {
   metric: string
 }
 
+export interface MicSample {
+  bass: number
+  mid: number
+  high: number
+  all: number
+}
+
 export interface RemoteState {
   programs: Program[]
   currentProgramName: string

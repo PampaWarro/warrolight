@@ -16,7 +16,6 @@ interface Props {
 }
 
 interface State {
-  connected: boolean
   sendingMicData: boolean
   metric: string
   perBand: boolean
@@ -30,15 +29,10 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      connected: false,
       sendingMicData: props.config.sendingMicData,
       metric: props.config.metric,
       perBand: false
     };
-  }
-
-  _initializeState() {
-    this.setState({ connected: true });
   }
 
   toggleMic() {
@@ -53,8 +47,6 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
   componentDidMount() {
     const socket = this.props.socket;
-
-    socket.on("micViewerReady", this._initializeState.bind(this));
 
     socket.on("micSample", (samples: MicSample[]) => {
       _.each(samples, sample => this.plotPerBandHistogram(sample));

@@ -1,32 +1,27 @@
 import React from "react";
 
 interface Props {
-  status: string
+  status: string;
 }
 
 export class ConnectionStatus extends React.Component<Props> {
-
   render() {
-    let type, label
+    let type, label;
 
     switch (this.props.status) {
-      case 'connecting':
-        [type, label] = ['warning', 'Connecting']
+      case "connecting":
+        [type, label] = ["warning", "Connecting"];
         break;
-      case 'connected':
-        [type, label] = ['success', 'Connected']
+      case "connected":
+        [type, label] = ["success", "Connected"];
         break;
-      case 'disconnected':
-        [type, label] = ['danger', 'Disconnected']
+      case "disconnected":
+        [type, label] = ["danger", "Disconnected"];
         break;
-      case 'error':
-        [type, label] = ['danger', 'Error']
+      case "error":
+        [type, label] = ["danger", "Error"];
         break;
     }
-    return (
-      <button className={"btn btn-sm btn-" + type}>
-        {label}
-      </button>
-    );
+    return <button className={"btn btn-sm btn-" + type}>{label}</button>;
   }
 }

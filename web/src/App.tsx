@@ -7,27 +7,32 @@ import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
 import {
-  Program, ConfigValue, MicConfig, MicSample,
-  RemoteState, RemoteLayout, Device
+  Program,
+  ConfigValue,
+  MicConfig,
+  MicSample,
+  RemoteState,
+  RemoteLayout,
+  Device
 } from "./types";
 import { API } from "./api";
 
 interface Props {}
 
 interface State {
-  selected: string | null
-  programs: { [name: string]: Program }
-  currentConfig: { [param: string]: ConfigValue } | null
-  micConfig: MicConfig
-  remoteChange: boolean
-  devices: Device[]
-  connection: string
+  selected: string | null;
+  programs: { [name: string]: Program };
+  currentConfig: { [param: string]: ConfigValue } | null;
+  micConfig: MicConfig;
+  remoteChange: boolean;
+  devices: Device[];
+  connection: string;
 }
 
 export class App extends React.Component<Props, State> {
-  api!: API
-  lightsSim: React.RefObject<LightsSimulator>
-  micViewer: React.RefObject<MicrophoneViewer>
+  api!: API;
+  lightsSim: React.RefObject<LightsSimulator>;
+  micViewer: React.RefObject<MicrophoneViewer>;
 
   constructor(props: Props) {
     super(props);
@@ -42,7 +47,7 @@ export class App extends React.Component<Props, State> {
       },
       remoteChange: false,
       devices: [],
-      connection: 'connecting'
+      connection: "connecting"
     };
 
     this.lightsSim = React.createRef();
@@ -74,13 +79,13 @@ export class App extends React.Component<Props, State> {
     const api = new API();
     this.api = api;
 
-    api.on("connecting", () => this.setState({ connection: 'connecting' }))
+    api.on("connecting", () => this.setState({ connection: "connecting" }));
     api.on("connect", () => {
-      this.setState({ connection: 'connected' })
-      setTimeout(() => api.startSamplingLights(), 500)
+      this.setState({ connection: "connected" });
+      setTimeout(() => api.startSamplingLights(), 500);
     });
-    api.on("disconnect", () => this.setState({ connection: 'disconnected' }))
-    api.on("error", () => this.setState({ connection: 'error' }))
+    api.on("disconnect", () => this.setState({ connection: "disconnected" }));
+    api.on("error", () => this.setState({ connection: "error" }));
 
     api.on("completeState", this._initializeState.bind(this));
     api.on("stateChange", this._stateChange.bind(this));
@@ -101,9 +106,9 @@ export class App extends React.Component<Props, State> {
       let maxX = _.max(geometryX)!;
       let maxY = _.max(geometryY)!;
 
-      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY }
+      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY };
 
-      this.lightsSim.current!.updateLayout(layoutObj)
+      this.lightsSim.current!.updateLayout(layoutObj);
     });
 
     api.on("devicesStatus", (devices: Device[]) => {
@@ -128,43 +133,43 @@ export class App extends React.Component<Props, State> {
     if (this.state.selected) {
       return this.state.programs[this.state.selected];
     }
-    return null
+    return null;
   }
 
   handleProgramChange = (key: string) => {
     this.setCurrentProgram(key);
-  }
+  };
 
   setCurrentProgram = (name: string) => {
     this.api.setCurrentProgram(name);
-  }
+  };
 
   selectPreset = (preset: string) => {
     this.api.setPreset(preset);
-  }
+  };
 
   restartProgram = () => {
     this.api.restartProgram();
-  }
+  };
 
   handleSetMicConfig = (config: Partial<MicConfig>) => {
     this.api.setMicDataConfig(config);
-  }
+  };
 
   handleChangeProgramConfig = (config: { [name: string]: ConfigValue }) => {
     this.api.updateConfigParam(config);
-  }
+  };
 
   handleStartLights = () => {
     this.api.startSamplingLights();
-  }
+  };
 
   handleStopLights = () => {
     this.api.stopSamplingLights();
-  }
+  };
 
   render() {
-    let currentProgram = this.getCurrentProgram()
+    let currentProgram = this.getCurrentProgram();
 
     return (
       <div>
@@ -215,7 +220,9 @@ export class App extends React.Component<Props, State> {
   }
 }
 
-function decodeLedsColorsFromString(encodedLights: string): [number, number, number][] {
+function decodeLedsColorsFromString(
+  encodedLights: string
+): [number, number, number][] {
   const bytes = Uint8Array.from(atob(encodedLights), c => c.charCodeAt(0));
 
   const byLed = new Array(bytes.length / 3);

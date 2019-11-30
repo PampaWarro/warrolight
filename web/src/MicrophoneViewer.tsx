@@ -2,17 +2,17 @@ import React from "react";
 import { MicConfig, MicSample } from "./types";
 
 interface Props {
-  config: MicConfig
-  onSetConfig(config: Partial<MicConfig>): void
+  config: MicConfig;
+  onSetConfig(config: Partial<MicConfig>): void;
 }
 
 interface State {
-  perBand: boolean
+  perBand: boolean;
 }
 
 export class MicrophoneViewer extends React.Component<Props, State> {
   // TODO: remove this from instance variable
-  canvasCtx!: CanvasRenderingContext2D
+  canvasCtx!: CanvasRenderingContext2D;
 
   constructor(props: Props) {
     super(props);
@@ -23,9 +23,9 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     const { onSetConfig } = this.props;
 
     if (this.props.config.sendingMicData) {
-      onSetConfig({ sendingMicData: false })
+      onSetConfig({ sendingMicData: false });
     } else {
-      onSetConfig({ sendingMicData: true })
+      onSetConfig({ sendingMicData: true });
     }
   }
 
@@ -153,18 +153,18 @@ export class MicrophoneViewer extends React.Component<Props, State> {
   toggleMetric(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    const { onSetConfig } = this.props
+    const { onSetConfig } = this.props;
     let current = this.props.config.metric;
 
     switch (current) {
       case "Rms":
-        onSetConfig({ metric: "FastPeakDecay" })
+        onSetConfig({ metric: "FastPeakDecay" });
         return;
       case "FastPeakDecay":
-        onSetConfig({ metric: "PeakDecay" })
+        onSetConfig({ metric: "PeakDecay" });
         return;
       case "PeakDecay":
-        onSetConfig({ metric: "Rms" })
+        onSetConfig({ metric: "Rms" });
         return;
     }
   }

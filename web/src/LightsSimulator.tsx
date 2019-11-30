@@ -1,36 +1,36 @@
 import React from "react";
 
 interface Layout {
-  geometryX: number[]
-  geometryY: number[]
-  minX: number
-  minY: number
-  maxX: number
-  maxY: number
+  geometryX: number[];
+  geometryY: number[];
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
 }
 
-type Light = [number, number, number]
+type Light = [number, number, number];
 
 interface Props {
-  width: number
-  height: number
-  onStart(): void
-  onStop(): void
+  width: number;
+  height: number;
+  onStart(): void;
+  onStop(): void;
 }
 
 interface State {
-  layout: Layout | null
+  layout: Layout | null;
 }
 
 export class LightsSimulator extends React.Component<Props, State> {
-  lightsRenderer: LightsRenderer
+  lightsRenderer: LightsRenderer;
 
   constructor(props: Props) {
     super(props);
 
-    this.state = { layout: null }
+    this.state = { layout: null };
 
-    this.lightsRenderer = new LightsRenderer()
+    this.lightsRenderer = new LightsRenderer();
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
   }
@@ -78,11 +78,11 @@ export class LightsSimulator extends React.Component<Props, State> {
       this.refs.canvas as HTMLCanvasElement,
       this.state.layout!,
       lights
-    )
+    );
   }
 
   updateLayout(layout: Layout) {
-    this.setState({ layout })
+    this.setState({ layout });
   }
 
   toggleRenderPreview() {
@@ -115,11 +115,11 @@ export class LightsSimulator extends React.Component<Props, State> {
 }
 
 class LightsRenderer {
-  enabled: boolean
-  lastFrameTime: number
-  lastFPS: number
-  frameCount: number
-  
+  enabled: boolean;
+  lastFrameTime: number;
+  lastFPS: number;
+  frameCount: number;
+
   constructor() {
     this.enabled = true;
     this.lastFrameTime = performance.now();
@@ -161,7 +161,7 @@ class LightsRenderer {
         } else if (power < 50) {
           m = 16;
         }
-        
+
         let [or, og, ob] = [r * m, g * m, b * m];
         if (or > 255) or = 255;
         if (og > 255) og = 255;
@@ -201,5 +201,3 @@ class LightsRenderer {
     }
   }
 }
-
-

@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const { startMic } = require('./mic');
 const soundEmitter = require('./soundEmitter');
 const { MicConfig, startSoundListener } = require('./sound');
-const { Service } = require('./service')
+const LightsService = require('./LightsService');
 
 startMic()
 
@@ -22,7 +22,7 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
       ws.send(JSON.stringify({ type, payload }))
     }
 
-    const service = new Service(lightProgram, deviceMultiplexer, micConfig, emit);
+    const service = new LightsService(lightProgram, deviceMultiplexer, micConfig, emit);
 
     sound.setListener((lastVolumes) => emit('micSample', lastVolumes))
 

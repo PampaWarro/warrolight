@@ -6,7 +6,7 @@ function lightsToByteString(ledsColorArray) {
     return Buffer.from(bytes).toString('base64');
 }
 
-exports.Service = class Service {
+module.exports = class LightsService {
 
     constructor(lightProgram, deviceMultiplexer, micConfig, emit) {
         this.lightProgram = lightProgram;

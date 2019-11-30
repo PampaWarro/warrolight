@@ -1,9 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import Socket from "./socket";
-
-// TODO: fix
-type MicConfig = any
+import { MicConfig } from "./types";
 
 interface MicSample {
   bass: number

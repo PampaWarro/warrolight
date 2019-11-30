@@ -1,7 +1,9 @@
 import React from "react";
 
 // TODO: fix
-type Program = any
+interface Program {
+  name: string
+}
 
 interface Props {
   programs: { [name: string]: Program }

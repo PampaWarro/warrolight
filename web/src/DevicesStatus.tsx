@@ -1,14 +1,9 @@
 import React from "react";
 import Socket from "./socket";
+import { Device } from "./types";
 
 interface Props {
   socket: Socket
-}
-
-interface Device {
-  deviceId: string
-  state: string
-  lastFps: number
 }
 
 interface State {

@@ -1,14 +1,9 @@
 import React from "react";
-import _ from "lodash";
 import Socket from "./socket";
 import { StringParam } from "./StringParam";
 import { BooleanParam } from "./BooleanParam";
 import { NumberParam } from "./NumberParam";
-
-// TODO: fix
-type Program = any
-
-type ConfigValue = string | number | boolean
+import { Program, ConfigValue } from "./types";
 
 interface Props {
   socket: Socket
@@ -47,13 +42,12 @@ export class ProgramConfig extends React.Component<Props> {
     }
 
     let configOptions = [];
-    let presets = [];
 
     for (let paramName in currentProgram.config) {
-      let configDef = currentProgram.config[paramName];
+      let configDef = currentProgram.config[paramName] as any;
       let value = currentConfig[paramName];
 
-      if (_.isBoolean(configDef.default)) {
+      if (typeof configDef.default === 'boolean') {
         configOptions.push(
           <BooleanParam
             key={paramName}
@@ -62,7 +56,7 @@ export class ProgramConfig extends React.Component<Props> {
             onChange={this.handleParamChange}
           />
         );
-      } else if (_.isString(configDef.default)) {
+      } else if (typeof configDef.default === 'string') {
         configOptions.push(
           <StringParam
             key={paramName}
@@ -87,20 +81,7 @@ export class ProgramConfig extends React.Component<Props> {
       }
     }
 
-    const programPresets = currentProgram.presets ? currentProgram.presets : []
-
-    for (let preset of programPresets) {
-      presets.push(
-        <a
-          className="btn btn-sm btn-outline-success mr-1 mb-1"
-          href="#"
-          key={preset}
-          onClick={e => this.props.onSelectPreset(preset)}
-        >
-          {preset}
-        </a>
-      );
-    }
+    const presets = currentProgram.presets || [];
 
     return (
       <div>
@@ -110,12 +91,37 @@ export class ProgramConfig extends React.Component<Props> {
             Restart
           </a>
         </h4>
-        {presets.length > 0 ? <hr /> : null}
-        <div>{presets}</div>
+        <Presets presets={presets} onSelect={this.props.onSelectPreset} />
         <hr/>
         <div>{configOptions}</div>
       </div>
     )
-
   }
+}
+
+interface PresetsProps {
+  presets: string[]
+  onSelect(preset: string): void
+}
+
+const Presets: React.FC<PresetsProps> = ({ presets, onSelect }) => {
+  if (presets.length === 0) {
+    return null
+  }
+
+  return (
+    <div>
+      <hr />
+      {presets.map(preset =>
+        <a
+          className="btn btn-sm btn-outline-success mr-1 mb-1"
+          href="#"
+          key={preset}
+          onClick={e => onSelect(preset)}
+        >
+          {preset}
+        </a>
+      )}
+    </div>
+  )
 }

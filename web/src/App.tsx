@@ -7,17 +7,9 @@ import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
-
-// TODO: fix
-type Program = any
-
-type MicConfig = any
-
-type RemoteState = any
+import { Program, ConfigValue, MicConfig, RemoteState } from "./types";
 
 interface Props {}
-
-type ConfigValue = string | number | boolean
 
 interface State {
   selected: string | null
@@ -35,9 +27,12 @@ export class App extends React.Component<Props, State> {
 
     this.state = {
       selected: null,
-      programs: [],
+      programs: {},
       currentConfig: null,
-      micConfig: {},
+      micConfig: {
+        sendingMicData: false,
+        metric: ""
+      },
       remoteChange: false
     };
 
@@ -87,7 +82,7 @@ export class App extends React.Component<Props, State> {
     this.setCurrentProgram(key);
   }
 
-  getCurrentProgram(): Program {
+  getCurrentProgram() {
     if (this.state.selected) {
       return this.state.programs[this.state.selected];
     }

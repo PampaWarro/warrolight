@@ -72,6 +72,7 @@ export class App extends React.Component<Props, State> {
 
   componentDidMount() {
     const api = new API();
+    this.api = api;
 
     api.on("connecting", () => this.setState({ connection: 'connecting' }))
     api.on("connect", () => {
@@ -108,8 +109,6 @@ export class App extends React.Component<Props, State> {
     api.on("devicesStatus", (devices: Device[]) => {
       this.setState({ devices });
     });
-
-    this.api = api;
   }
 
   UNSAFE_componentWillUpdate(newProps: Props, newState: State) {
@@ -152,7 +151,7 @@ export class App extends React.Component<Props, State> {
     this.api.setMicDataConfig(config);
   }
 
-  handleChangeProgramConfig(config: { [name: string]: ConfigValue }) {
+  handleChangeProgramConfig = (config: { [name: string]: ConfigValue }) => {
     this.api.updateConfigParam(config);
   }
 

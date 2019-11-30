@@ -1,17 +1,16 @@
 import React from "react";
-import Socket from "./socket";
 import { StringParam } from "./StringParam";
 import { BooleanParam } from "./BooleanParam";
 import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue } from "./types";
 
 interface Props {
-  socket: Socket
   program: Program | null
   selected: string | null
   config: { [param: string]: ConfigValue } | null
   onSelectPreset(name: string): void
   onRestartProgram(): void
+  onChangeProgramConfig(config: { [name: string]: ConfigValue }): void
 }
 
 export class ProgramConfig extends React.Component<Props> {
@@ -22,15 +21,14 @@ export class ProgramConfig extends React.Component<Props> {
   }
 
   handleParamChange = (e: React.SyntheticEvent, field: string, value: ConfigValue) => {
-    const config = this.props.config;
+    let config = this.props.config;
+
     if (!config) {
       throw new Error('attempting to update null config');
     }
 
-    config[field] = value;
-
-    console.log("PARAM CHANGE", config);
-    this.props.socket.emit("updateConfigParam", config);
+    config = Object.assign({}, config, { [field]: value });
+    this.props.onChangeProgramConfig(config)
   }
 
   render() {

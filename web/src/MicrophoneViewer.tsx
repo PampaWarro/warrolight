@@ -123,7 +123,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     );
 
     this.canvasCtx.fillStyle = "white";
-    this.canvasCtx.font = "12px monospace";
+    this.canvasCtx.font = "12px sans-serif";
     this.canvasCtx.clearRect(
       this.canvasCtx.canvas.width - 100,
       0,
@@ -132,14 +132,14 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     );
     this.canvasCtx.fillText(
       `MAX Vol: ${Math.round(max * 100)}`,
-      this.canvasCtx.canvas.width - 90,
-      15
+      this.canvasCtx.canvas.width - 80,
+      30
     );
     // this.canvasCtx.fillText(`    Vol: ${Math.round(this.averageVolume*100)}`, 310, 30);
     this.canvasCtx.fillText(
       `REL Vol: ${Math.round(level * 100)}`,
-      this.canvasCtx.canvas.width - 90,
-      45
+      this.canvasCtx.canvas.width - 80,
+      50
     );
   }
 

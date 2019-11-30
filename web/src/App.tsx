@@ -1,13 +1,16 @@
 import React from "react";
 import _ from "lodash";
-import Socket from "./socket";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
 import { ProgramConfig } from "./ProgramConfig";
-import { Program, ConfigValue, MicConfig, MicSample, RemoteState, RemoteLayout } from "./types";
+import {
+  Program, ConfigValue, MicConfig, MicSample,
+  RemoteState, RemoteLayout, Device
+} from "./types";
+import { API } from "./api";
 
 interface Props {}
 
@@ -17,11 +20,12 @@ interface State {
   currentConfig: { [param: string]: ConfigValue } | null
   micConfig: MicConfig
   remoteChange: boolean
+  devices: Device[]
+  connection: string
 }
 
 export class App extends React.Component<Props, State> {
-  socket: Socket
-
+  api!: API
   lightsSim: React.RefObject<LightsSimulator>
   micViewer: React.RefObject<MicrophoneViewer>
 
@@ -36,10 +40,10 @@ export class App extends React.Component<Props, State> {
         sendingMicData: false,
         metric: ""
       },
-      remoteChange: false
+      remoteChange: false,
+      devices: [],
+      connection: 'connecting'
     };
-
-    this.socket = new Socket("ws://localhost:8080/", "warro");
 
     this.lightsSim = React.createRef();
     this.micViewer = React.createRef();
@@ -67,20 +71,28 @@ export class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const socket = this.socket;
+    const api = new API();
 
-    socket.on("completeState", this._initializeState.bind(this));
-    socket.on("stateChange", this._stateChange.bind(this));
-    socket.on("micSample", (samples: MicSample[]) =>
+    api.on("connecting", () => this.setState({ connection: 'connecting' }))
+    api.on("connect", () => {
+      this.setState({ connection: 'connected' })
+      setTimeout(() => api.startSamplingLights(), 500)
+    });
+    api.on("disconnect", () => this.setState({ connection: 'disconnected' }))
+    api.on("error", () => this.setState({ connection: 'error' }))
+
+    api.on("completeState", this._initializeState.bind(this));
+    api.on("stateChange", this._stateChange.bind(this));
+    api.on("micSample", (samples: MicSample[]) =>
       this.micViewer.current!.update(samples)
     );
 
-    socket.on("lightsSample", (encodedLights: string) => {
+    api.on("lightsSample", (encodedLights: string) => {
       const lights = decodeLedsColorsFromString(encodedLights);
       this.lightsSim.current!.drawCanvas(lights);
     });
 
-    socket.on("layout", (layout: RemoteLayout) => {
+    api.on("layout", (layout: RemoteLayout) => {
       let geometryX = layout.geometry.x;
       let geometryY = layout.geometry.y;
       let minX = _.min(geometryX)!;
@@ -92,6 +104,12 @@ export class App extends React.Component<Props, State> {
 
       this.lightsSim.current!.updateLayout(layoutObj)
     });
+
+    api.on("devicesStatus", (devices: Device[]) => {
+      this.setState({ devices });
+    });
+
+    this.api = api;
   }
 
   UNSAFE_componentWillUpdate(newProps: Props, newState: State) {
@@ -102,13 +120,9 @@ export class App extends React.Component<Props, State> {
       // TODO: added to typecheck, check if it's right
       if (newState.currentConfig) {
         console.log("ENTIRE CHANGING TO", newState.currentConfig);
-        this.socket.emit("updateConfigParam", newState.currentConfig);
+        this.api.updateConfigParam(newState.currentConfig);
       }
     }
-  }
-
-  handleProgramChange(key: string) {
-    this.setCurrentProgram(key);
   }
 
   getCurrentProgram() {
@@ -118,28 +132,36 @@ export class App extends React.Component<Props, State> {
     return null
   }
 
-  setCurrentProgram(name: string) {
-    this.socket.emit("setCurrentProgram", name);
+  handleProgramChange = (key: string) => {
+    this.setCurrentProgram(key);
   }
 
-  selectPreset(preset: string) {
-    this.socket.emit("setPreset", preset);
+  setCurrentProgram = (name: string) => {
+    this.api.setCurrentProgram(name);
   }
 
-  restartProgram() {
-    this.socket.emit("restartProgram");
+  selectPreset = (preset: string) => {
+    this.api.setPreset(preset);
+  }
+
+  restartProgram = () => {
+    this.api.restartProgram();
   }
 
   handleSetMicConfig = (config: Partial<MicConfig>) => {
-    this.socket.emit("setMicDataConfig", config);
+    this.api.setMicDataConfig(config);
+  }
+
+  handleChangeProgramConfig(config: { [name: string]: ConfigValue }) {
+    this.api.updateConfigParam(config);
   }
 
   handleStartLights = () => {
-    this.socket.emit("startSamplingLights");
+    this.api.startSamplingLights();
   }
 
   handleStopLights = () => {
-    this.socket.emit("stopSamplingLights");
+    this.api.stopSamplingLights();
   }
 
   render() {
@@ -149,8 +171,8 @@ export class App extends React.Component<Props, State> {
       <div>
         <nav className="navbar fixed-top navbar-dark bg-dark">
           <span className="navbar-brand">WarroLight</span>
-          <DevicesStatus socket={this.socket} />
-          <ConnectionStatus socket={this.socket} />
+          <DevicesStatus devices={this.state.devices} />
+          <ConnectionStatus status={this.state.connection} />
         </nav>
         <div className="container-fluid">
           <div className="row">
@@ -158,17 +180,17 @@ export class App extends React.Component<Props, State> {
               <ProgramList
                 programs={this.state.programs}
                 selected={this.state.selected}
-                onProgramChange={this.handleProgramChange.bind(this)}
+                onProgramChange={this.handleProgramChange}
               />
             </nav>
             <div className="col-md-3 offset-2 sidebar-2 p-4">
               <ProgramConfig
-                socket={this.socket}
                 program={currentProgram}
                 selected={this.state.selected}
                 config={this.state.currentConfig}
-                onSelectPreset={this.selectPreset.bind(this)}
-                onRestartProgram={this.restartProgram.bind(this)}
+                onSelectPreset={this.selectPreset}
+                onRestartProgram={this.restartProgram}
+                onChangeProgramConfig={this.handleChangeProgramConfig}
               />
             </div>
             <div className="offset-5 fixed-top">

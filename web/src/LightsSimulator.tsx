@@ -67,8 +67,6 @@ export class LightsSimulator extends React.Component<Props, State> {
     document.addEventListener("visibilitychange", this.onVisibilityChange);
     document.onblur = this.onFocusChange;
     document.onfocus = this.onFocusChange;
-
-    setTimeout(() => this.turnOnSimulation(), 500);
   }
 
   componentWillUnmount() {
@@ -123,7 +121,7 @@ class LightsRenderer {
   frameCount: number
   
   constructor() {
-    this.enabled = false;
+    this.enabled = true;
     this.lastFrameTime = performance.now();
     this.lastFPS = 0;
     this.frameCount = 0;
@@ -181,12 +179,14 @@ class LightsRenderer {
 
       this.frameCount++;
 
-      let drawMilliseconds = performance.now() - drawStartTime;
-      let timeSinceLastFPS = performance.now() - this.lastFrameTime;
+      let now = performance.now();
+
+      let drawMilliseconds = now - drawStartTime;
+      let timeSinceLastFPS = now - this.lastFrameTime;
       if (timeSinceLastFPS > 100) {
         this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
         this.frameCount = 0;
-        this.lastFrameTime = performance.now();
+        this.lastFrameTime = now;
       }
 
       ctx.fillStyle = "white";

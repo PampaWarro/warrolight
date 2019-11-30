@@ -18,13 +18,13 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
 
   wss.on('connection', function connection(ws) {
 
-    function emit(type, payload) {
+    function send(type, payload) {
       ws.send(JSON.stringify({ type, payload }))
     }
 
-    const service = new LightsService(lightProgram, deviceMultiplexer, micConfig, emit);
+    const service = new LightsService(lightProgram, deviceMultiplexer, micConfig, send);
 
-    sound.setListener((lastVolumes) => emit('micSample', lastVolumes))
+    sound.setListener((lastVolumes) => send('micSample', lastVolumes))
 
     ws.on('message', function incoming(message) {
       const { type, payload } = JSON.parse(message)

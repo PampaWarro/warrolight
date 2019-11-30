@@ -8,11 +8,11 @@ function lightsToByteString(ledsColorArray) {
 
 module.exports = class LightsService {
 
-    constructor(lightProgram, deviceMultiplexer, micConfig, emit) {
+    constructor(lightProgram, deviceMultiplexer, micConfig, send) {
         this.lightProgram = lightProgram;
         this.deviceMultiplexer = deviceMultiplexer;
         this.micConfig = micConfig;
-        this.emit = emit
+        this.send = send
         this.simulating = false;
     }
 
@@ -21,7 +21,7 @@ module.exports = class LightsService {
 
         const lightProgram = this.lightProgram;
 
-        this.emit('completeState', {
+        this.send('completeState', {
             programs: lightProgram.getProgramsSchema(),
             currentProgramName: lightProgram.currentProgramName,
             currentConfig: lightProgram.getCurrentConfig(),
@@ -33,19 +33,19 @@ module.exports = class LightsService {
         // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
         // or rework it to support multiple listeners
         this.deviceMultiplexer.onDeviceStatus(devicesStatus =>
-            this.emit('devicesStatus', devicesStatus))
+            this.send('devicesStatus', devicesStatus))
     }
 
     lightsCallback = (lights) => {
         if (this.simulating) {
           let encodedColors = lightsToByteString(lights);
-          this.emit('lightsSample', encodedColors)
+          this.send('lightsSample', encodedColors)
         }
     }
 
     broadcastStateChange() {
         const lightProgram = this.lightProgram;
-        this.emit('stateChange', {
+        this.send('stateChange', {
           currentProgramName: lightProgram.currentProgramName,
           currentConfig: lightProgram.getCurrentConfig(),
           micConfig: this.micConfig.config
@@ -85,7 +85,7 @@ module.exports = class LightsService {
         const lightProgram = this.lightProgram
         lightProgram.currentProgram.config = config;
   
-        this.emit('stateChange', {
+        this.send('stateChange', {
           currentProgramName: lightProgram.currentProgramName,
           currentConfig: lightProgram.getCurrentConfig(),
           micConfig: this.micConfig.config
@@ -95,7 +95,7 @@ module.exports = class LightsService {
     startSamplingLights() {
       console.log('[ON] Web client sampling lights data'.green)
       this.simulating = true;
-      this.emit('layout', this.lightProgram.layout)
+      this.send('layout', this.lightProgram.layout)
     }
 
     stopSamplingLights() {

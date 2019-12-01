@@ -51,23 +51,18 @@ export class MicrophoneViewer extends React.Component<Props, State> {
   }
 
   plotPerBandHistogram({ bass, mid, high, all }: MicSample) {
-    let r = Math.round(bass * 255);
-    let g = Math.round(mid * 255);
-    let b = Math.round(high * 255);
     let rms = Math.round(all * 255);
     let max = 0;
-    let level = Math.min(1, (r + g + b) / (3 * 255));
+    let level = Math.min(1, (bass + mid + high) / 3);
 
-    //
-    let MIN = 50;
     let w = 2;
     let HEIGHT = this.canvasCtx.canvas.height / 3;
     let h;
     if (this.state.perBand) {
       this.canvasCtx.globalCompositeOperation = "screen";
 
-      this.canvasCtx.fillStyle = `rgba(${Math.max(MIN, r)}, 0, 0)`;
-      h = Math.round((r / 255) * HEIGHT);
+      this.canvasCtx.fillStyle = "#FF4C4C";
+      h = Math.round(bass * HEIGHT);
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
         HEIGHT - h,
@@ -75,8 +70,8 @@ export class MicrophoneViewer extends React.Component<Props, State> {
         h
       );
 
-      h = Math.round((g / 255) * HEIGHT);
-      this.canvasCtx.fillStyle = `rgba(0, ${Math.max(MIN, g)}, 0)`;
+      h = Math.round(mid * HEIGHT);
+      this.canvasCtx.fillStyle = "#34BF49";
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
         HEIGHT - h + HEIGHT,
@@ -84,8 +79,8 @@ export class MicrophoneViewer extends React.Component<Props, State> {
         h
       );
 
-      h = Math.round((b / 255) * HEIGHT);
-      this.canvasCtx.fillStyle = `rgba(0, 0, ${Math.max(MIN, b)})`;
+      h = Math.round(high * HEIGHT);
+      this.canvasCtx.fillStyle = "#0099E5";
       this.canvasCtx.fillRect(
         this.canvasCtx.canvas.width - 100,
         HEIGHT - h + HEIGHT * 2,

@@ -1,46 +1,4 @@
 const _ = require('lodash')
-const term = require( 'terminal-kit' ).terminal ;
-const moment = require("moment")
-const Table = require('cli-table2');
-
-const colors = {
-  'connecting': 'yellow',
-  'error': 'red',
-  'running': 'green'
-}
-
-function logDevicesStatus(devices) {
-  let table = new Table({
-    head: ['Time', ... _.map(devices, 'deviceId')],
-    colWidths: [10, ... _.range(0,devices.length+0).map(() => Math.floor(120 / (devices.length+1)))],
-    style: {
-      head: []
-    },
-    wordWrap:true
-  });
-  let time = moment().format('HH:mm:ss')
-
-  table.push(
-    [time, ... _.map(devices, d => d.deviceState[colors[d.deviceState] || "gray"])],
-    ["", ... _.map(devices, d => (d.lastStateMsg || "")[colors[d.deviceState] || "gray"])],
-    // ["", ... _.map(devices, d => {
-    //   if(d.deviceState == d.STATE_RUNNING) {
-    //
-    //   }
-    // })]
-  );
-
-  let msgs = []
-  // devices.forEach(d => {
-  //   msgs.push(`${d.deviceId} - ${d.deviceState} ${d.deviceState === d.STATE_RUNNING ? d.lastFps : ''}`[colors[d.deviceState] || 'gray'])
-  // })
-  term.saveCursor();
-  term.eraseDisplayBelow();
-  term.nextLine(2)
-  term(table.toString())
-  term.restoreCursor();
-  term.column(0)
-}
 
 module.exports = class DeviceMultiplexer {
 

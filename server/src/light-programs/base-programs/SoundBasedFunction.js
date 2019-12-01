@@ -3,7 +3,6 @@ const _ = require("lodash");
 const soundEmitter = require("../../soundEmitter");
 
 // Fake sound wave with random
-let lastRandom = 0;
 let realSound = 0;
 
 let lastFrameData = {
@@ -95,25 +94,6 @@ soundEmitter.on("processedaudioframe", frame => {
   averageRelativeVolume = averageVolume / (maxVolume || 1);
   averageRelativeVolumeSmoothed = averageVolumeSmoothed / (maxVolume || 1);
 });
-
-//
-// const sndpeek = require('sndpeek');
-// sndpeek.startListening();
-// sndpeek.on('data', function({centroid, flux, rms, mffc, ...other}) {
-//   realSound = rms;
-//   clearTimeout(fakeSoundTimeout)
-//   clearInterval(fakingSoundInterval)
-//   fakeSoundTimeout = setTimeout(startFakeSound, 1000)
-// })
-
-let lastTime = new Date();
-let processInterval = setTimeout(function computeSoundStats() {
-  soundEmitter.emit("volume", { level: averageRelativeVolume, max: maxVolume });
-
-  // console.log("Last audio: " + (new Date() - lastTime) + "ms "+self.averageVolume)
-  processInterval = setTimeout(computeSoundStats, 1000 / 60);
-  lastTime = new Date();
-}, 1000 / 60);
 
 module.exports = class SoundBasedFunction extends TimeTickedFunction {
   constructor(config, leds) {

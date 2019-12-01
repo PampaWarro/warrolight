@@ -30,7 +30,6 @@ const MusicFrequencyDot = require("./musicFrequencyDot");
 const BandParticles = require("./bandParticles");
 const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
-const RadialWarp = require("./radialWarp");
 const Circles = require("./circles");
 
 const baseTime = 1 * 1000;

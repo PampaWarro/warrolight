@@ -7,7 +7,7 @@ module.exports = class ColorUtils {
   // static purple: '#FF00FF'
   // static black: '#000000'
 
-  static rgbToHex(r, g, b, a) {
+  static rgbToHex(r, g, b) {
     function componentToHex(c) {
       const hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
       return hex.length == 1 ? "0" + hex : hex;

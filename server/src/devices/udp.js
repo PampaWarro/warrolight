@@ -1,7 +1,7 @@
 const dgram = require("dgram");
 const now = require("performance-now");
 
-const { LightDevice } = require("./base");
+const { LightDevice, rgbToVga } = require("./base");
 
 let reconnectTime = 3000;
 

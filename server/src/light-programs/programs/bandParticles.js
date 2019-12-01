@@ -1,14 +1,5 @@
 const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
-const {
-  XYHue,
-  Line,
-  Circle,
-  InfiniteCircles,
-  RandomPixels,
-  PolarColors,
-  RadiusCosineBrightness,
-  SingleLed
-} = require("../utils/drawables");
+const { SingleLed } = require("../utils/drawables");
 const { DrawableLayer } = require("../utils/layers");
 const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");

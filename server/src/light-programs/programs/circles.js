@@ -1,6 +1,5 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
-const _ = require("lodash");
 
 function findBounds(values) {
   let min = null;

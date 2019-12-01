@@ -7,7 +7,6 @@ const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");
 const Stars = require("./stars");
 const VolumeDot = require("./musicVolumeDot");
-const VolumeBars = require("./musicVolumeBars");
 const MusicFlow = require("./musicFlow");
 // const Fire = require("./fire").Func;
 const SpeedingSpear = require("./speeding-spear");
@@ -41,10 +40,8 @@ function sineScale(s) {
   return (Math.sin(this.timeInMs / 1000) + 1) * 8 + 0.5;
 }
 
-let flowDefault = [MusicFlow, MusicFlow.presets().default];
-
 const schedule = [
-  ...getAllPresets(Rays, 60, (shape = "trianguloBottom"), {
+  ...getAllPresets(Rays, 60, "trianguloBottom", {
     numberOfParticles: 6
   }),
 

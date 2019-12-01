@@ -9,11 +9,9 @@ const { DEBUG, INFO, WARNING, ERROR } = {
   ERROR: 4
 };
 
-const rgbToVga = (r, g, b) => {
+exports.rgbToVga = function rgbToVga(r, g, b) {
   return (r & 0xe0) + ((g & 0xe0) >> 3) + ((b & 0xc0) >> 6);
 };
-
-let reconnectTime = 3000;
 
 exports.LightDevice = class LightDevice {
   constructor(numberOfLights, deviceId) {

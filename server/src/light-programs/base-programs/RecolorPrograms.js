@@ -1,4 +1,3 @@
-const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 
 function fadeColors([r, g, b]) {
@@ -7,7 +6,7 @@ function fadeColors([r, g, b]) {
   v = v * Math.pow(1 - Math.min(h, 1 - h), 3);
 
   return [r, Math.ceil(g / 10), Math.ceil(b / 10)];
-};
+}
 
 module.exports = function recolorProgram(Program) {
   return class RecolorProgram extends Program {

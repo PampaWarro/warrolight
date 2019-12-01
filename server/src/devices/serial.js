@@ -1,8 +1,6 @@
-const _ = require("lodash");
 const SerialPort = require("serialport");
-const now = require("performance-now");
 
-const { LightDevice } = require("./base");
+const { LightDevice, rgbToVga } = require("./base");
 
 let reconnectTime = 3000;
 

@@ -1,6 +1,5 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
-const _ = require("lodash");
 
 module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {
@@ -23,7 +22,7 @@ module.exports = class Func extends SoundBasedFunction {
   drawFrame(draw, done) {
     this.time += this.config.speed;
 
-    let vol = this.averageRelativeVolume * this.config.multiplier * 1.5;
+    // let vol = this.averageRelativeVolume * this.config.multiplier * 1.5;
     // this.volPromedio = (vol+2*this.volPromedio)/3
     this.volPromedio = this.peakDecay;
 

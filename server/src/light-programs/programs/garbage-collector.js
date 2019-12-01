@@ -15,7 +15,7 @@ module.exports = class Func extends SoundBasedFunction {
   }
 
   drawFrame(draw, done) {
-    const colors = _.map(new Array(this.numberOfLeds), c => [0, 0, 10]);
+    const colors = new Array(this.numberOfLeds).map(() => [0, 0, 10])
 
     draw(colors);
     done();

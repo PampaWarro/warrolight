@@ -178,7 +178,7 @@ class LightsRenderer {
       }
 
       this.frameCount++;
-      // this.debugInfo(ctx, drawStartTime)
+      this.debugInfo(ctx, drawStartTime)
     }
   }
 

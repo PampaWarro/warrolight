@@ -19,7 +19,6 @@
     "cli-table2": "^0.2.0",
     "colors": "^1.4.0",
     "dgram": "^1.0.1",
-    "express": "^4.17.1",
     "fft.js": "^4.0.3",
     "fili": "^2.0.3",
     "lodash": "^4.17.15",
@@ -27,8 +26,6 @@
     "naudiodon": "^2.1.0",
     "performance-now": "^2.1.0",
     "serialport": "^8.0.5",
-    "sndpeek": "^1.0.2",
-    "terminal-kit": "^1.31.7",
     "ws": "^7.2.0"
   },
   "devDependencies": {

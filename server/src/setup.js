@@ -82,11 +82,11 @@ exports.loadSetup = function loadSetup(setup) {
     setup.lightsToDevicesMapping
   );
 
-  const program = new LightController(
+  const controller = new LightController(
     colorArray => multiplexer.setState(colorArray),
     geometry,
     shapeMapping
   );
 
-  return { program, multiplexer };
+  return { controller, multiplexer };
 };

@@ -3,7 +3,7 @@ const { loadSetup } = require("./setup");
 
 const setup = require(`../setups/${process.argv[2]}`);
 
-const { program, multiplexer } = loadSetup(setup);
-program.start();
+const { controller, multiplexer } = loadSetup(setup);
+controller.start();
 
-startServer(program, multiplexer);
+startServer(controller, multiplexer);

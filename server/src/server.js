@@ -4,7 +4,7 @@ const soundEmitter = require("./soundEmitter");
 const { MicConfig, startSoundListener } = require("./sound");
 const LightsService = require("./LightsService");
 
-exports.startServer = function startServer(lightProgram, deviceMultiplexer) {
+exports.startServer = function startServer(controller, deviceMultiplexer) {
   startMic();
 
   const micConfig = new MicConfig({
@@ -22,7 +22,7 @@ exports.startServer = function startServer(lightProgram, deviceMultiplexer) {
     }
 
     const service = new LightsService(
-      lightProgram,
+      controller,
       deviceMultiplexer,
       micConfig,
       send

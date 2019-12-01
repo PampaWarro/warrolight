@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const mic = require('./mic/mic');
 const soundEmitter = require("./soundEmitter")
 

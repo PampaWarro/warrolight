@@ -1,9 +1,5 @@
 const _ = require("lodash");
 
-const getShapes = require("../../geometry/mappings/shape-mapping-wchica");
-// const getShapes = require('./shape-mapping-fuego18')
-// const getShapes = require('./shape-mapping-wmediana')
-
 module.exports = function programsByShape(mapping) {
   return class {
     constructor(config, leds, geometryMapping) {

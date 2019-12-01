@@ -5,7 +5,7 @@
     "lights": 150,
     "outputDevices": {
       "serial": {
-        "type": "LightDeviceSerial",
+        "type": "serial",
         "params": {
           "numberOfLights": 150,
           "devicePortWindows": "COM27",

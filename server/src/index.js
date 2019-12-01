@@ -1,27 +1,15 @@
 const _ = require('lodash');
-
-
-
 const DeviceMultiplexer = require('./DeviceMultiplexer')
 const LightController = require('./light-programs/LightController')
 
-// const device1 = new LightDeviceUDP(300, '192.168.1.2', 2222);
-// const device2 = new LightDeviceUDP(300, '192.168.1.4', 4444);
-// const deviceRF1 = new LightDeviceSerial(150, 'COM27', '/dev/ttyACM0');
-// const deviceRF2 = new LightDeviceSerial(150, 'COM25', '/dev/ttyACM0');
-// const device2 = new LightDeviceSerial(150, 'COM16', '/dev/ttyACM0');
-// const device3 = new LightDeviceUDP(300, '192.168.0.7', 7777);
-// const device4 = new LightDeviceUDP(300, '192.168.0.8', 8888);
-// const device3 = new LightDeviceSerial(300, 'COM18', '/dev/ttyACM1');
-
 let setup = require('./setups/default.json')
 
-function instantiateDevicesFromConfig(outputDevices) {
-  const  devicesTypes = {
-    'LightDeviceSerial': require('./devices/serial'),
-    'LightDeviceUDP': require('./devices/udp'),
-  }
+const devicesTypes = {
+  serial: require('./devices/serial'),
+  udp: require('./devices/udp'),
+}
 
+function instantiateDevicesFromConfig(outputDevices) {
   let devices = {};
   _.each(outputDevices, (deviceConfig, name) => {
     const {type, params} = deviceConfig;

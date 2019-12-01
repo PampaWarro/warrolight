@@ -5,7 +5,7 @@
     "lights": 150,
     "outputDevices": {
       "serial": {
-        "type": "LightDeviceSerial",
+        "type": "serial",
         "params": {
           "numberOfLights": 300,
           "devicePortWindows": "COM27",
@@ -28,7 +28,7 @@
     "lights": 1200,
     "outputDevices": {
       "ether1": {
-        "type": "LightDeviceUDP",
+        "type": "udp",
         "params": {
           "numberOfLights": 300,
           "ip": "192.168.1.2",
@@ -36,7 +36,7 @@
         }
       },
       "ether2": {
-        "type": "LightDeviceUDP",
+        "type": "udp",
         "params": {
           "numberOfLights": 300,
           "ip": "192.168.1.4",
@@ -44,7 +44,7 @@
         }
       },
       "rf1": {
-        "type": "LightDeviceSerial",
+        "type": "serial",
         "params": {
           "numberOfLights": 300,
           "devicePortWindows": "COM12",
@@ -52,7 +52,7 @@
         }
       },
       "rf2": {
-        "type": "LightDeviceSerial",
+        "type": "serial",
         "params": {
           "numberOfLights": 300,
           "devicePortWindows": "COM14",

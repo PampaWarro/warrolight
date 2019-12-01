@@ -31,35 +31,30 @@ module.exports = class Func extends LayerBasedFunction {
   }
 
   populatePerBandParticles() {
-    const that = this;
     _.forOwn(this.currentAudioFrame.center.filteredBands, (band, bandName) => {
-      const bandParticles = (that.particles[bandName] =
-        that.particles[bandName] || []);
-      while (bandParticles.length < that.config.particlesPerBand) {
+      const bandParticles = (this.particles[bandName] =
+        this.particles[bandName] || []);
+      while (bandParticles.length < this.config.particlesPerBand) {
         const drawable = new SingleLed({
           ledIndex: this.geometry.leds * Math.random()
         });
         const layer = new DrawableLayer({ drawable: drawable });
         const state = { speed: 0 };
-        that.layers.particles.layers.push(layer);
+        this.layers.particles.layers.push(layer);
         bandParticles.push({
           drawable: drawable,
           layer: layer,
           state: state
         });
       }
-      while (bandParticles.length > that.config.particlesPerBand) {
+      while (bandParticles.length > this.config.particlesPerBand) {
         const particle = bandParticles.pop();
-        _.remove(that.layers.particles.layers, particle.layer);
+        _.remove(this.layers.particles.layers, particle.layer);
       }
     });
   }
 
   updateState() {
-    const that = this;
-    // Audio independent stuff.
-
-    // Audio dependent stuff.
     if (!this.audioReady) {
       return;
     }
@@ -69,12 +64,12 @@ module.exports = class Func extends LayerBasedFunction {
     _.forOwn(this.particles, (particles, bandName) => {
       const energy = audioSummary[`${bandName}PeakDecay`];
       const hue = ColorUtils.mod(
-        that.offsets[bandName] + (that.config.hueSpeed * that.timeInMs) / 1000,
+        this.offsets[bandName] + (this.config.hueSpeed * this.timeInMs) / 1000,
         1
       );
       const saturation = ColorUtils.mod(
-        that.offsets[bandName] +
-          (that.config.saturationSpeed * that.timeInMs) / 1000,
+        this.offsets[bandName] +
+          (this.config.saturationSpeed * this.timeInMs) / 1000,
         1
       );
       particles.forEach(particle => {

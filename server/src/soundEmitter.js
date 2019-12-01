@@ -104,19 +104,17 @@ class SoundEmitter extends EventEmitter {
   }
 
   _flushDeferredEvents() {
-    const that = this;
     this._deferredEvents.forEach(e => {
-      that.emit(e[0], e[1]);
+      this.emit(e[0], e[1]);
     });
     this._deferredEvents = [];
   }
 
   _processAudioFrame(frame) {
-    const that = this;
     // Run all modules in order.
     this._modules.forEach(module => {
       if (module.instance.run) {
-        module.instance.run(frame, that);
+        module.instance.run(frame, this);
       }
     });
     // Update current frame.

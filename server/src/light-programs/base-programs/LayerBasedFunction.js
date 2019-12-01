@@ -35,7 +35,6 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
   }
 
   buildLayer(layerSpec, layersByName) {
-    const that = this;
     const name = layerSpec.name;
     let layer = null;
     if (layerSpec.drawable) {
@@ -43,7 +42,7 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
     } else if (layerSpec.layers) {
       const subLayers = layerSpec.layers;
       layerSpec.layers = subLayers.map(subLayer =>
-        that.buildLayer(subLayer, layersByName)
+        this.buildLayer(subLayer, layersByName)
       );
       layer = new CompositeLayer(layerSpec);
     } else {
@@ -70,7 +69,6 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
   }
 
   drawFrame(draw, done) {
-    const that = this;
     this.updateState();
     const colors = new Array(this.numberOfLeds);
     colors.fill([0, 0, 0, 1]);
@@ -78,7 +76,7 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
       console.error("Missing rootLayer.");
     }
     colors.forEach((baseColor, i) => {
-      const color = this.rootLayer.applyAtIndex(i, that.geometry, baseColor);
+      const color = this.rootLayer.applyAtIndex(i, this.geometry, baseColor);
       colors[i] = color.splice(0, 3);
     });
     draw(colors);

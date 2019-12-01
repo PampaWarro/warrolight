@@ -1,6 +1,6 @@
 {
-  "geometryModule": "geometry-wchica",
-  "shapeMappingModule": "shape-mapping-wchica",
+  "geometry": "geometry-wchica",
+  "shapeMapping": "shape-mapping-wchica",
   "lights": 150,
   "outputDevices": {
     "serial": {

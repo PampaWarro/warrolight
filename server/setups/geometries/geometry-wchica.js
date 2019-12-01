@@ -1,4 +1,4 @@
-const Stripe = require("./Stripe");
+const { Stripe } = require("../../src/geometry");
 
 /**
  * Geometry for the warro: 7 stripes

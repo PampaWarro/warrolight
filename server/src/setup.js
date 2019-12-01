@@ -60,18 +60,10 @@ function createLightsMultiplexer(totalLightsCount, devices, lightsToDevicesMappi
 }
 
 exports.loadSetup = function loadSetup(setup) {
-    const {
-        geometryModule,
-        shapeMappingModule,
-        lights,
-        outputDevices,
-        lightsToDevicesMapping
-    } = setup;
-
-    const devices = instantiateDevicesFromConfig(outputDevices);
-    const geometry = require(`./geometry/${geometryModule}`)
-    const shapeMapping = require(`./geometry/mappings/${shapeMappingModule}`)
-    const multiplexer = createLightsMultiplexer(lights, devices, lightsToDevicesMapping);
+    const devices = instantiateDevicesFromConfig(setup.outputDevices);
+    const geometry = require(`../setups/geometries/${setup.geometry}`)
+    const shapeMapping = require(`../setups/shapeMappings/${setup.shapeMapping}`)
+    const multiplexer = createLightsMultiplexer(setup.lights, devices, setup.lightsToDevicesMapping);
   
     const program = new LightController(
         colorArray => multiplexer.setState(colorArray),

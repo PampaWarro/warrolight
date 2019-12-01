@@ -4,9 +4,12 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js",
-    "server": "node src/server.js",
+    "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js $npm_package_warroLight_setup",
+    "server": "node src/server.js $npm_package_warroLight_setup",
     "prettier": "prettier --write src/**/*.js src/*/*/*.js test-scripts/**/*.js"
+  },
+  "warroLight": {
+    "setup": "una-tira-prueba"
   },
   "keywords": [],
   "author": "Pampa Warro",

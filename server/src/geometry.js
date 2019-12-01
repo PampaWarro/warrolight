@@ -1,4 +1,4 @@
-module.exports = class Stripe {
+exports.Stripe = class Stripe {
   constructor(x1, y1, x2, y2, numberOfLeds) {
     this.leds = numberOfLeds;
     this.x = [];

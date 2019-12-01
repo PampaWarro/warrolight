@@ -178,26 +178,29 @@ class LightsRenderer {
       }
 
       this.frameCount++;
-
-      let now = performance.now();
-
-      let drawMilliseconds = now - drawStartTime;
-      let timeSinceLastFPS = now - this.lastFrameTime;
-      if (timeSinceLastFPS > 100) {
-        this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
-        this.frameCount = 0;
-        this.lastFrameTime = now;
-      }
-
-      ctx.fillStyle = "white";
-      ctx.font = "12px sans-serif";
-
-      ctx.fillText(
-        `Sim overhead FPS: ${Math.floor(1000 / drawMilliseconds)}`,
-        10,
-        40
-      );
-      ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
+      // this.debugInfo(ctx, drawStartTime)
     }
+  }
+
+  debugInfo(ctx: CanvasRenderingContext2D, drawStartTime: number) {
+    let now = performance.now();
+
+    let drawMilliseconds = now - drawStartTime;
+    let timeSinceLastFPS = now - this.lastFrameTime;
+    if (timeSinceLastFPS > 100) {
+      this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
+      this.frameCount = 0;
+      this.lastFrameTime = now;
+    }
+
+    ctx.fillStyle = "white";
+    ctx.font = "12px sans-serif";
+
+    ctx.fillText(
+      `Sim overhead FPS: ${Math.floor(1000 / drawMilliseconds)}`,
+      10,
+      40
+    );
+    ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
   }
 }

@@ -1,5 +1,4 @@
 const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
-const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class AllOff extends TimeTickedFunction {
   // Override base class

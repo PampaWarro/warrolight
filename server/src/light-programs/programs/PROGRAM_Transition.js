@@ -1,8 +1,8 @@
 const _ = require("lodash");
 const createMultiProgram = require("../base-programs/MultiPrograms");
-const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/Transformations");
 const TimeTickedFunction = require("../base-programs/TimeTickedFunction");
+const ColorUtils = require("../utils/ColorUtils");
 
 const Rays = require("./rays");
 

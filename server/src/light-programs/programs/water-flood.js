@@ -1,6 +1,5 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
-const _ = require("lodash");
 
 module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {

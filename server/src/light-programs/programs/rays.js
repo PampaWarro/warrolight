@@ -34,7 +34,6 @@ module.exports = class Rays extends SoundBasedFunction {
   }
 
   createRay() {
-    let self = this;
     return {
       pos: Math.floor(Math.random() * this.numberOfLeds),
       speed: Math.random() * 2 + 0.2,

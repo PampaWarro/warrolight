@@ -7,7 +7,6 @@ const fftbins = require("./util/fftbins");
 class SpectralCentroid {
   constructor(config) {}
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       let weightedSum = 0,
         totalWeight = 0;

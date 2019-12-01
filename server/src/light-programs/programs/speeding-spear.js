@@ -1,5 +1,3 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
-const ColorUtils = require("./../utils/ColorUtils");
 const Spear = require("./color-spear");
 
 module.exports = class SpeedingSpear extends Spear {

@@ -1,6 +1,5 @@
 const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
-const _ = require("lodash");
 
 module.exports = class Radial extends TimeTickedFunction {
   drawFrame(draw, done) {

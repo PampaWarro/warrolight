@@ -1,11 +1,7 @@
-const _ = require("lodash");
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
-
 const programsByShape = require("../base-programs/Transformations");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 
 const AllWhite = require("./all-white");
-const AllOff = require("./all-off");
 
 let seg = 1000;
 

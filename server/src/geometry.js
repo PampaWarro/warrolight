@@ -58,4 +58,4 @@ function getFromStripe(stripes, func, defaultValue, propName) {
       )
     );
   }, defaultValue);
-};
+}

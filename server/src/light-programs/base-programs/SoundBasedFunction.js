@@ -1,4 +1,3 @@
-const ColorUtils = require("./../utils/ColorUtils");
 const TimeTickedFunction = require("./TimeTickedFunction");
 const _ = require("lodash");
 const soundEmitter = require("../../soundEmitter");

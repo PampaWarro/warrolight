@@ -1,4 +1,4 @@
-SoundBasedFunction = require("./SoundBasedFunction.js");
+const SoundBasedFunction = require("./SoundBasedFunction.js");
 const { DrawableLayer, CompositeLayer } = require("../utils/layers");
 
 function findBounds(values) {

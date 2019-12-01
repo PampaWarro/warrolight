@@ -6,7 +6,6 @@
 class AbsoluteFFT {
   constructor(config) {}
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       const absolutefft = new Float32Array(channel.fft.length / 2);
       for (let bin = 0; bin < absolutefft.length / 2; bin++) {

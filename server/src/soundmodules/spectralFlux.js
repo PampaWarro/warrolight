@@ -20,7 +20,6 @@ class SpectralFlux {
     if (!emitter.previousFrame) {
       return; // Need a previous frame to compare with.
     }
-    const that = this;
     frame.allChannels.forEach((channel, i) => {
       const previousChannel = emitter.previousFrame.allChannels[i];
       const previousSpectrum = previousChannel.absolutefft;

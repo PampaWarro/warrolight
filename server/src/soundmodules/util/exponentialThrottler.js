@@ -2,7 +2,7 @@ class ExponentialThrottler {
   constructor(options) {
     this._emitter = options.emitter;
     this._eventName = options.eventName;
-    this._filter = options.filter || (_ => true);
+    this._filter = options.filter || (() => true);
     this._getValue = options.getValue;
     this._minDt = options.minDt || 0;
     this._lastEvent = null;

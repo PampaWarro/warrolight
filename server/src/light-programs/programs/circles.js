@@ -25,7 +25,6 @@ module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
 
-    const self = this;
     const geometry = this.position || this.geometry;
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
@@ -39,7 +38,6 @@ module.exports = class Func extends SoundBasedFunction {
     if (!centerChannel) {
       return done();
     }
-    const vol = centerChannel.movingStats.rms.slow.normalizedValue;
     const normalizedBass =
       centerChannel.filteredBands.bass.movingStats.rms.slow.normalizedValue;
     const centerX =

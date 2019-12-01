@@ -1,34 +1,38 @@
 const portAudio = require("naudiodon");
 const soundEmitter = require("./soundEmitter")
 
-function mic(options) {
-  options = options || {};
-  const that = {};
-  const outputRate = (that._sampleRate = options.rate || 44100);
-  const channels = (that._channels = options.channels || 1);
-  if (channels != 1) {
-    // TODO: stereo support.
-    throw Error("Only 1 channel supported.");
-  }
-  const deviceId = options.deviceId || -1;
-  const frameSize = options.frameSize || 512;
-  const outputBitwidth = 16;
-  const bufferSize = (frameSize * channels * outputBitwidth) / 8;
-  const debug = options.debug || false;
-  const soundEmitter = options.soundEmitter;
-  let audioInput = null;
+class Mic {
 
-  that.start = function start() {
-    if (audioInput === null) {
+  constructor(options) {
+    this.sampleRate = options.rate || 44100;
+    this.channels = options.channels || 1;
+    if (this.channels != 1) {
+      // TODO: stereo support.
+      throw Error("Only 1 channel supported.");
+    }
+    this.deviceId = options.deviceId || -1;
+    this.frameSize = options.frameSize || 512;
+    const outputBitwidth = 16;
+    this.bufferSize = (this.frameSize * this.channels * outputBitwidth) / 8;
+    this.debug = options.debug || false;
+    this.soundEmitter = options.soundEmitter;
+    this.audioInput = null;
+    this.offsetSamples = 0;
+  }
+
+  start() {
+    let audioInput
+    if (this.audioInput === null) {
       try {
         audioInput = new portAudio.AudioIO({
           inOptions: {
-            channelCount: channels,
+            channelCount: this.channels,
             sampleFormat: portAudio.SampleFormat16Bit,
-            sampleRate: outputRate,
-            deviceId: deviceId
+            sampleRate: this.sampleRate,
+            deviceId: this.deviceId
           }
         });
+        this.audioInput = audioInput;
       } catch (err) {
         console.log("Error opening audio. Check device id.");
         console.log(portAudio.getDevices());
@@ -38,31 +42,29 @@ function mic(options) {
       audioInput.on("end", () => {
         soundEmitter.emit("audioProcessExitComplete");
       });
-      audioInput.on("readable", function() {
+
+      audioInput.on("readable", () => {
         let data;
-        let bufferCount = 0;
-        while ((data = this.read(bufferSize))) {
-          that._processRawAudioBuffer(data);
-          bufferCount++;
+        while ((data = audioInput.read(this.bufferSize))) {
+          this._processRawAudioBuffer(data);
         }
-        // console.log('buffers accumulated:', bufferCount);
       });
+
       audioInput.on("error", error => {
         console.error("audio input error:", error);
       });
       audioInput.start();
       soundEmitter.emit("startComplete");
     } else {
-      if (debug) {
+      if (this.debug) {
         console.error(
           "Duplicate calls to start(): Microphone already started!"
         );
       }
     }
-  };
+  }
 
-  let offsetSamples = 0;
-  that._processRawAudioBuffer = function(rawBuffer) {
+  _processRawAudioBuffer(rawBuffer) {
     const intBuffer = new Int16Array(
       rawBuffer.buffer,
       rawBuffer.byteOffset,
@@ -83,52 +85,46 @@ function mic(options) {
     const center = channels[0];
     const allChannels = [center].concat(channels);
 
-    soundEmitter.emit("audioframe", {
+    this.soundEmitter.emit("audioframe", {
       center: center,
       channels: channels,
       allChannels: allChannels,
-      sampleRate: this._sampleRate,
+      sampleRate: this.sampleRate,
       frameSize: samples.length,
-      offsetSamples: offsetSamples,
-      offsetSeconds: offsetSamples / this._sampleRate
+      offsetSamples: this.offsetSamples,
+      offsetSeconds: this.offsetSamples / this.sampleRate
     });
 
-    offsetSamples += samples.length;
-  };
+    this.offsetSamples += samples.length;
+  }
 
-  that.stop = function stop() {
-    if (audioInput != null) {
-      audioInput.stop(() => {
-        if (debug) console.log("Microhphone stopped");
+  stop() {
+    if (this.audioInput != null) {
+      this.audioInput.stop(() => {
+        if (this.debug) console.log("Microhphone stopped");
       });
-      audioInput = null;
-      soundEmitter.emit("stopComplete");
+      this.audioInput = null;
+      this.soundEmitter.emit("stopComplete");
     }
-  };
+  }
 
-  that.pause = function pause() {
-    if (audioInput != null) {
-      audioInput.pause();
-      soundEmitter.pause();
-      soundEmitter.emit("pauseComplete");
-      if (debug) console.log("Microphone paused");
+  pause() {
+    if (this.audioInput != null) {
+      this.audioInput.pause();
+      this.soundEmitter.pause();
+      this.soundEmitter.emit("pauseComplete");
+      if (this.debug) console.log("Microphone paused");
     }
-  };
+  }
 
-  that.resume = function resume() {
-    if (audioInput != null) {
-      audioInput.resume();
-      soundEmitter.resume();
-      soundEmitter.emit("resumeComplete");
-      if (debug) console.log("Microphone resumed");
+  resume() {
+    if (this.audioInput != null) {
+      this.audioInput.resume();
+      this.soundEmitter.resume();
+      this.soundEmitter.emit("resumeComplete");
+      if (this.debug) console.log("Microphone resumed");
     }
-  };
-
-  that.getSoundEmitter = function getSoundEmitter() {
-    return soundEmitter;
-  };
-
-  return that;
+  }
 };
 
 let micInstance = null;
@@ -140,7 +136,7 @@ function startMic() {
 
   let frameSize = 512;
 
-  micInstance = mic({
+  micInstance = new Mic({
     rate: 44100,
     channels: 1,
     bitwidth: 16,

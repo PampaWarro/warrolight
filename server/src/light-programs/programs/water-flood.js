@@ -11,7 +11,7 @@ module.exports = class Func extends SoundBasedFunction {
     this.waterLevel = 0.5;
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
@@ -48,7 +48,6 @@ module.exports = class Func extends SoundBasedFunction {
     }
 
     draw(colors);
-    done();
   }
 
   static presets() {

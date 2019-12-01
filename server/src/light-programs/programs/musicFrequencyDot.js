@@ -6,7 +6,7 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1)
       .join("0")
       .split("")
@@ -16,11 +16,11 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
 
     this.hueOffset = Math.random();
 
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   // Override parent method
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     if (this.lastFrame && this.lastFrame.filteredBands) {
       let {
         bassRms,
@@ -70,7 +70,6 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
     }
 
     draw(this.lastVolume);
-    done();
   }
 
   static presets() {

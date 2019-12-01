@@ -121,7 +121,7 @@ module.exports = function createMultiProgram(
       }
     }
 
-    start(config, draw, done) {
+    start(config, draw) {
       this.currentDrawFunc = draw;
       this.playNextProgram(config);
     }

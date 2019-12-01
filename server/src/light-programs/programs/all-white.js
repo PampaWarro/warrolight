@@ -3,7 +3,7 @@ const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class AllWhite extends TimeTickedFunction {
   // Override base class
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     // En HSV blanco es (0,0,1)
     let tonoDeBlanco = ColorUtils.HSVtoRGB(0, 0, this.config.brillo);
 

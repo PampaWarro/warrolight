@@ -10,12 +10,12 @@ function fadeColors([r, g, b]) {
 
 module.exports = function recolorProgram(Program) {
   return class RecolorProgram extends Program {
-    start(config, draw, done) {
+    start(config, draw) {
       let changedDraw = colors => {
         colors = colors.map(fadeColors);
         draw(colors);
       };
-      super.start(config, changedDraw, done);
+      super.start(config, changedDraw);
     }
   };
 };

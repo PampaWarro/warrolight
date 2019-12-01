@@ -7,17 +7,17 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1);
     _.fill(this.lastVolume, [0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
 
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   // Override parent method
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
 
     let vol = (this[this.config.soundMetric] || 0) * this.config.multiplier;
@@ -43,7 +43,6 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction {
     }
 
     draw(this.lastVolume);
-    done();
   }
 
   static presets() {

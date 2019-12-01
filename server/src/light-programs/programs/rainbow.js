@@ -19,7 +19,7 @@ module.exports = class Rainbow extends TimeTickedFunction {
     this.time = 0;
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
     const newColors = new Array(this.numberOfLeds);
 

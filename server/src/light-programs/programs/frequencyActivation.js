@@ -6,7 +6,7 @@ module.exports = class FrequencyActivation extends SoundBasedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1)
       .join("0")
       .split("")
@@ -14,11 +14,11 @@ module.exports = class FrequencyActivation extends SoundBasedFunction {
     this.time = 0;
     this.maxVolume = 0;
 
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   // Override parent method
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
 
     let size = this.config.zoom;
@@ -34,7 +34,6 @@ module.exports = class FrequencyActivation extends SoundBasedFunction {
     }
 
     draw(this.lastVolume);
-    done();
   }
 
   static presets() {

@@ -94,8 +94,7 @@ module.exports = class LightController {
     if (this.currentProgram) {
       this.currentProgram.start(
         this.getConfig(this.programs[this.currentProgramName].configSchema),
-        leds => this.updateLeds(leds),
-        () => ({})
+        leds => this.updateLeds(leds)
       );
       this.running = true;
     }
@@ -105,8 +104,7 @@ module.exports = class LightController {
     this.currentProgram.stop();
     this.currentProgram.start(
       this.currentProgram.config,
-      leds => this.updateLeds(leds),
-      () => ({})
+      leds => this.updateLeds(leds)
     );
   }
 

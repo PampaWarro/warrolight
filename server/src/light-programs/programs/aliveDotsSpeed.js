@@ -41,7 +41,7 @@ module.exports = class Func extends SoundBasedFunction {
     }
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     // let decay = this.config.decay;
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);

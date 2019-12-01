@@ -7,7 +7,7 @@ module.exports = class ColorSpear extends TimeTickedFunction {
     this.time = 0;
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
     const punta = this.time;
     const newColors = new Array(this.numberOfLeds);

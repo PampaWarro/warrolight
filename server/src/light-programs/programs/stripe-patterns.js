@@ -57,13 +57,13 @@ module.exports = class StripePattern extends SoundBasedFunction {
     }
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.pickRandomColor();
     this.rebuildPattern();
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
     const newColors = new Array(this.numberOfLeds);
 

@@ -6,7 +6,7 @@ module.exports = class MusicFlow extends SoundBasedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1)
       .join("0")
       .split("")
@@ -15,11 +15,11 @@ module.exports = class MusicFlow extends SoundBasedFunction {
     this.realTime = 0;
     this.maxVolume = 0;
 
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   // Override parent method
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
     this.realTime += 1;
 
@@ -75,7 +75,6 @@ module.exports = class MusicFlow extends SoundBasedFunction {
     }
 
     draw(this.lastVolume);
-    done();
   }
 
   static presets() {

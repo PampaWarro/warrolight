@@ -3,7 +3,7 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class Radial extends SoundBasedFunction {
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 

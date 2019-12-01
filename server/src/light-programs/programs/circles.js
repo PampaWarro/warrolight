@@ -29,13 +29,13 @@ module.exports = class Func extends SoundBasedFunction {
     this.yBounds = findBounds(geometry.y);
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
     const centerChannel = this.currentAudioFrame.center;
     if (!centerChannel) {
-      return done();
+      return;
     }
     const normalizedBass =
       centerChannel.filteredBands.bass.movingStats.rms.slow.normalizedValue;
@@ -73,7 +73,6 @@ module.exports = class Func extends SoundBasedFunction {
     }
 
     draw(colors);
-    done();
   }
 
   static presets() {

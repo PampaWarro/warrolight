@@ -100,7 +100,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.soundEmitter = soundEmitter;
     this.audioReady = audioReady;
     this.currentAudioFrame = currentAudioFrame;
@@ -140,7 +140,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
       self.processInterval = setTimeout(updateValues, 1000 / self.config.fps);
     }, 1000 / self.config.fps);
 
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   stop() {

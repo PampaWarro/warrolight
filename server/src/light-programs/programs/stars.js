@@ -8,7 +8,7 @@ module.exports = class Stars extends TimeTickedFunction {
     this.time = 0;
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     let decay = this.config.decay;
     this.time++;
 

@@ -5,12 +5,12 @@ module.exports = function animateParamProgram(
   change
 ) {
   return class Func extends Program {
-    drawFrame(draw, done) {
+    drawFrame(draw) {
       this.count = (this.count || 0) + 1;
       if (this.count % frequency == 0) {
         this.config[parameter] = change.apply(this, [this.config[parameter]]);
       }
-      super.drawFrame(draw, done);
+      super.drawFrame(draw);
     }
   };
 };

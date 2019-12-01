@@ -41,14 +41,14 @@ module.exports = class Func extends SoundBasedFunction {
     };
   }
 
-  start(config, draw, done) {
-    super.start(config, draw, done);
+  start(config, draw) {
+    super.start(config, draw);
     this.dots = _.map(_.range(this.config.numberOfParticles), i =>
       this.createDot()
     );
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     // let decay = this.config.decay;
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);

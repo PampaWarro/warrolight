@@ -11,11 +11,11 @@ module.exports = class TimeTickedFunction {
   }
 
   // Override in subclasses
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     throw new Error("Child classes should override drawFrame");
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.config = config;
     this.timeInMs = 0;
     this.frameNumber = 0;
@@ -32,7 +32,6 @@ module.exports = class TimeTickedFunction {
               ColorUtils.dim(col, this.config.globalBrightness)
             )
           ),
-        done
       );
 
       let drawingTimeMs = new Date() - start;
@@ -50,8 +49,6 @@ module.exports = class TimeTickedFunction {
 
     setTimeout(frame, 1);
     // setInterval(frame, 1000 / this.config.fps - 10);
-
-    done();
   }
 
   stop() {

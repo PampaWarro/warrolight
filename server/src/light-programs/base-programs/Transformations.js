@@ -55,7 +55,7 @@ module.exports = function programsByShape(mapping) {
       return config;
     }
 
-    start(config, draw, done) {
+    start(config, draw) {
       // Debounce draw para no enviar mil veces el estado cada vez que un subprograma cambia algo
 
       const debouncedDraw = _.debounce(draw, 5);
@@ -76,11 +76,8 @@ module.exports = function programsByShape(mapping) {
             _.each(colors, (col, index) => (this.state[map[index]] = col));
             debouncedDraw(this.state);
           },
-          done
         );
       });
-
-      done();
     }
 
     updateConfig(key, value) {

@@ -57,7 +57,7 @@ module.exports = function mixPrograms(...programs) {
       });
     }
 
-    start(config, draw, done) {
+    start(config, draw) {
       this.currentDrawFunc = draw;
 
       _.each(this.programs, (p, i) =>

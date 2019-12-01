@@ -6,7 +6,7 @@ module.exports = class musicVolumeDotRandom extends SoundBasedFunction {
     super(config, leds);
   }
 
-  start(config, draw, done) {
+  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1)
       .join("0")
       .split("")
@@ -16,7 +16,7 @@ module.exports = class musicVolumeDotRandom extends SoundBasedFunction {
 
     this.onLeds = new Array(this.numberOfLeds).fill(false);
     this.assignLights();
-    super.start(config, draw, done);
+    super.start(config, draw);
   }
 
   assignLights() {
@@ -28,7 +28,7 @@ module.exports = class musicVolumeDotRandom extends SoundBasedFunction {
   }
 
   // Override parent method
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     this.time += this.config.speed;
 
     let vol = (this[this.config.soundMetric] || 0) * this.config.multiplier;
@@ -56,7 +56,6 @@ module.exports = class musicVolumeDotRandom extends SoundBasedFunction {
     }
 
     draw(this.lastVolume);
-    done();
   }
 
   static presets() {

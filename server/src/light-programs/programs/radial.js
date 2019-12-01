@@ -2,7 +2,7 @@ const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class Radial extends TimeTickedFunction {
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 

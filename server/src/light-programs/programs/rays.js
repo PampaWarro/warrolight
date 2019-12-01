@@ -10,8 +10,8 @@ module.exports = class Rays extends SoundBasedFunction {
     this.stars = [];
   }
 
-  start(config, draw, done) {
-    super.start(config, draw, done);
+  start(config, draw) {
+    super.start(config, draw);
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
     this.rays = _.map(_.range(0, this.config.numberOfParticles), () =>
       this.createRay()
@@ -45,7 +45,7 @@ module.exports = class Rays extends SoundBasedFunction {
     };
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     // let decay = this.config.decay;
     this.time++;
     let decay = this.config.decay;

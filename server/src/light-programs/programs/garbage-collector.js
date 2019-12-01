@@ -2,8 +2,8 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const _ = require("lodash");
 
 module.exports = class Func extends SoundBasedFunction {
-  start(config, draw, done) {
-    super.start(config, draw, done);
+  start(config, draw) {
+    super.start(config, draw);
 
     try {
       if (global.gc) {
@@ -14,10 +14,9 @@ module.exports = class Func extends SoundBasedFunction {
     }
   }
 
-  drawFrame(draw, done) {
+  drawFrame(draw) {
     const colors = new Array(this.numberOfLeds).map(() => [0, 0, 10])
 
     draw(colors);
-    done();
   }
 };

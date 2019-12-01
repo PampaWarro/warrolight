@@ -1,11 +1,3 @@
-const spawn = require("child_process").spawn;
-const isMac = require("os").type() == "Darwin";
-const isWindows =
-  require("os")
-    .type()
-    .indexOf("Windows") > -1;
-const osEndianness = require("os").endianness();
-const PassThrough = require("stream").PassThrough;
 const portAudio = require("naudiodon");
 
 // console.log(portAudio.getDevices());

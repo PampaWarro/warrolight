@@ -59,8 +59,6 @@ module.exports = class LightController {
 
     this.leds = [];
 
-    this.getLeds = index => this.leds[index];
-
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
     this.setCurrentProgram(programNames[0]);
   }

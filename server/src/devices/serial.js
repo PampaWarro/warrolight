@@ -1,8 +1,8 @@
-const _ = require('lodash')
-const SerialPort = require('serialport')
-const now = require('performance-now')
+const _ = require("lodash");
+const SerialPort = require("serialport");
+const now = require("performance-now");
 
-const { LightDevice } = require('./base')
+const { LightDevice } = require("./base");
 
 let reconnectTime = 3000;
 
@@ -12,98 +12,98 @@ const ENCODING_VGA = 3;
 const ENCODING_RGB = 4;
 const ENCODING_RGB565 = 5;
 
-
 const rgbToRgb565 = (r, g, b) => {
   let b5 = (b >> 3) & 0x001f;
-  let g6 = ( (g >> 2) & 0x003f ) << 5;
-  let r5 = ( (r >> 3) & 0x001f ) << 11;
+  let g6 = ((g >> 2) & 0x003f) << 5;
+  let r5 = ((r >> 3) & 0x001f) << 11;
 
-  let bytes = (r5 | g6 | b5);
+  let bytes = r5 | g6 | b5;
   return [bytes >> 8, bytes & 0xff];
-}
+};
 
-const rgb565ToRgb = (rgb565) => {
-  let b = ((rgb565 & 0x001f)) << 3
-  let g = ((rgb565 & 0x7E0) >> 5) << 2
-  let r = ((rgb565) >> 11) << 3
+const rgb565ToRgb = rgb565 => {
+  let b = (rgb565 & 0x001f) << 3;
+  let g = ((rgb565 & 0x7e0) >> 5) << 2;
+  let r = (rgb565 >> 11) << 3;
 
-  return [r,g,b];
-}
-
+  return [r, g, b];
+};
 
 module.exports = class LightDeviceSerial extends LightDevice {
-  constructor({numberOfLights, devicePortWindows, devicePortUnix}) {
-    const port = /^win/.test(process.platform) ? devicePortWindows : devicePortUnix;
+  constructor({ numberOfLights, devicePortWindows, devicePortUnix }) {
+    const port = /^win/.test(process.platform)
+      ? devicePortWindows
+      : devicePortUnix;
 
     super(numberOfLights, port);
 
     this.devicePort = port;
-    this.encoding = ENCODING_RGB
+    this.encoding = ENCODING_RGB;
 
     this.protocolRetries = 0;
 
     this.freshData = false;
     this.waitingResponse = true;
-    this.dataBuffer = []
+    this.dataBuffer = [];
 
-    this.setupCommunication()
+    this.setupCommunication();
   }
 
   sendNextFrame() {
-    if(this.freshData && !this.waitingResponse) {
-      this.initEncoding()
+    if (this.freshData && !this.waitingResponse) {
+      this.initEncoding();
 
-      let dim = 1
+      let dim = 1;
       for (let i = 0; i < this.numberOfLights; i++) {
-        this.writePixel(i,
+        this.writePixel(
+          i,
           this.state[i][0] / dim,
           this.state[i][1] / dim,
           this.state[i][2] / dim
-        )
+        );
       }
       this.freshData = false;
       this.waitingResponse = true;
-      this.flush()
+      this.flush();
     }
   }
 
   handleArduinoData(data) {
-    if(data){
-      data = data.toString().replace(/[^\w]+/gi, "")
+    if (data) {
+      data = data.toString().replace(/[^\w]+/gi, "");
 
-      if(data === 'YEAH'){
-        this.logInfo("Reconnected")
+      if (data === "YEAH") {
+        this.logInfo("Reconnected");
         this.updateState(this.STATE_RUNNING);
-      } else if (data === 'OK') {
-        this.logInfo(`ACK`)
-      } else if (data === 'ARDUINOSTART') {
-        this.logInfo("ARDUINOSTART")
+      } else if (data === "OK") {
+        this.logInfo(`ACK`);
+      } else if (data === "ARDUINOSTART") {
+        this.logInfo("ARDUINOSTART");
         return;
-      } else if (data === 'FAILED_RF_WRITE') {
-        console.log(`Hardware failure. Restart serial port.`)
+      } else if (data === "FAILED_RF_WRITE") {
+        console.log(`Hardware failure. Restart serial port.`);
         clearTimeout(this.reconnectTimeout);
         this.restartSerialConnection();
         return;
       } else {
-        this.logInfo(`UNEXPECTED MSG'${data}'`)
-        console.log(`UNEXPECTED MSG'${data}'`)
+        this.logInfo(`UNEXPECTED MSG'${data}'`);
+        console.log(`UNEXPECTED MSG'${data}'`);
         return;
       }
     } else {
-      this.logInfo(`No data received`)
+      this.logInfo(`No data received`);
     }
 
     clearTimeout(this.reconnectTimeout);
 
     this.reconnectTimeout = setTimeout(() => {
-      this.sendInitialKick()
-    }, reconnectTime)
+      this.sendInitialKick();
+    }, reconnectTime);
 
-    this.framesCount++
+    this.framesCount++;
     this.waitingResponse = false;
-    this.sendNextFrame()
+    this.sendNextFrame();
   }
-
 
   initEncoding() {
     this.write([this.encoding]);
@@ -112,26 +112,27 @@ module.exports = class LightDeviceSerial extends LightDevice {
     }
   }
 
-  needsHeaderWithNumberOfLights () {
-    return this.encoding === ENCODING_POS_RGB
-        || this.encoding === ENCODING_POS_VGA
+  needsHeaderWithNumberOfLights() {
+    return (
+      this.encoding === ENCODING_POS_RGB || this.encoding === ENCODING_POS_VGA
+    );
   }
 
   writePixel(pos, r, g, b) {
     switch (this.encoding) {
       case ENCODING_RGB:
-        return this.write([r, g, b])
+        return this.write([r, g, b]);
       case ENCODING_VGA:
-        return this.write([rgbToVga(r, g, b)])
+        return this.write([rgbToVga(r, g, b)]);
       case ENCODING_POS_RGB:
-        return this.write([pos, r, g, b])
+        return this.write([pos, r, g, b]);
       case ENCODING_POS_VGA:
-        return this.write([pos, rgbToVga(r, g, b)])
+        return this.write([pos, rgbToVga(r, g, b)]);
       case ENCODING_RGB565:
-        return this.write(rgbToRgb565(r, g, b))
+        return this.write(rgbToRgb565(r, g, b));
       default:
-        this.logError('Invalid encoding!')
-        return
+        this.logError("Invalid encoding!");
+        return;
     }
   }
 
@@ -140,40 +141,39 @@ module.exports = class LightDeviceSerial extends LightDevice {
   }
 
   flush() {
-    if(this.port) {
-      this.port.write(Buffer.from(this.dataBuffer))
+    if (this.port) {
+      this.port.write(Buffer.from(this.dataBuffer));
     }
     this.dataBuffer = [];
   }
 
-  sendInitialKick(){
-    if(this.port) {
-      this.port.write('XXX', (err) => {
-          if(err){
-            this.handleError(err)
-          } else {
-            this.logInfo('Initial kick of data sent')
-          }
+  sendInitialKick() {
+    if (this.port) {
+      this.port.write("XXX", err => {
+        if (err) {
+          this.handleError(err);
+        } else {
+          this.logInfo("Initial kick of data sent");
         }
-      )
+      });
 
       clearTimeout(this.reconnectTimeout);
 
       this.reconnectTimeout = setTimeout(() => {
         // console.log("No initial connection. Retrying")
-        if(this.protocolRetries > 2) {
+        if (this.protocolRetries > 2) {
           this.restartSerialConnection();
           this.protocolRetries = 0;
         } else {
-          this.sendInitialKick()
+          this.sendInitialKick();
         }
-      }, reconnectTime)
+      }, reconnectTime);
     }
   }
 
   restartSerialConnection() {
-    console.log("Restarting serial connection to restart arduino.")
-    if(this.port) {
+    console.log("Restarting serial connection to restart arduino.");
+    if (this.port) {
       this.port.close();
     }
     setTimeout(() => this.setupCommunication(), 1500);
@@ -186,36 +186,38 @@ module.exports = class LightDeviceSerial extends LightDevice {
     const tryOpenPort = () => {
       try {
         this.port = new SerialPort(this.devicePort, {
-          baudRate: 1152000/2,
-        })
+          baudRate: 1152000 / 2
+        });
 
-        this.port.on('open', () => {
+        this.port.on("open", () => {
           this.updateState(this.STATE_CONNECTING);
-          this.logInfo('Port open. Data rate: ' + this.port.settings.baudRate);
-          setTimeout(this.sendInitialKick.bind(this), 2000)
-        })
-        const parser = this.port.pipe(new SerialPort.parsers.Readline({ delimiter: '\n' }));
-        this.port.on('error', this.handleError.bind(this))
-        parser.on('data', this.handleArduinoData.bind(this))
-        this.port.on('drain', this.handleDrain.bind(this))
-        this.port.on('close', this.handleClose.bind(this))
-        this.port.on('disconnect', this.handleClose.bind(this))
+          this.logInfo("Port open. Data rate: " + this.port.settings.baudRate);
+          setTimeout(this.sendInitialKick.bind(this), 2000);
+        });
+        const parser = this.port.pipe(
+          new SerialPort.parsers.Readline({ delimiter: "\n" })
+        );
+        this.port.on("error", this.handleError.bind(this));
+        parser.on("data", this.handleArduinoData.bind(this));
+        this.port.on("drain", this.handleDrain.bind(this));
+        this.port.on("close", this.handleClose.bind(this));
+        this.port.on("disconnect", this.handleClose.bind(this));
       } catch (err) {
         this.updateState(this.STATE_ERROR);
-        this.logError("Error retrying to open port. ", err)
+        this.logError("Error retrying to open port. ", err);
         setTimeout(() => this.setupCommunication(), 2000);
       }
     };
 
-    if(!this.port) {
+    if (!this.port) {
       tryOpenPort();
     }
   }
-// open errors will be emitted as an error event
+  // open errors will be emitted as an error event
   handleError(err) {
-    if(this.port) {
+    if (this.port) {
       this.updateState(this.STATE_ERROR);
-      this.logError('Error: ' + err.message)
+      this.logError("Error: " + err.message);
 
       const oldPort = this.port;
       // To prevent reentrancy with handlers
@@ -226,15 +228,15 @@ module.exports = class LightDeviceSerial extends LightDevice {
   }
 
   handleClose(err) {
-    if(this.port) {
+    if (this.port) {
       this.updateState(this.STATE_ERROR);
-      this.logError('Port closed.')
+      this.logError("Port closed.");
       this.port = null;
       setTimeout(() => this.setupCommunication(), 2000);
     }
   }
 
   handleDrain(err) {
-    this.logWarning('Port drained.')
+    this.logWarning("Port drained.");
   }
-}
+};

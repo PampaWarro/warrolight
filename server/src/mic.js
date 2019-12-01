@@ -1,8 +1,7 @@
 const portAudio = require("naudiodon");
-const soundEmitter = require("./soundEmitter")
+const soundEmitter = require("./soundEmitter");
 
 class Mic {
-
   constructor(options) {
     this.sampleRate = options.rate || 44100;
     this.channels = options.channels || 1;
@@ -21,7 +20,7 @@ class Mic {
   }
 
   start() {
-    let audioInput
+    let audioInput;
     if (this.audioInput === null) {
       try {
         audioInput = new portAudio.AudioIO({
@@ -125,13 +124,13 @@ class Mic {
       if (this.debug) console.log("Microphone resumed");
     }
   }
-};
+}
 
 let micInstance = null;
 
 function startMic() {
   if (micInstance) {
-    throw new Error('mic already started!')
+    throw new Error("mic already started!");
   }
 
   let frameSize = 512;
@@ -148,31 +147,30 @@ function startMic() {
     channels: 1,
     sampleRate: 44100,
     frameSize: frameSize,
-    windowType: 'hamming',
+    windowType: "hamming",
     frequencyBands: {
       bassCutoff: 10,
       bassMidCrossover: 300,
       midHighCrossover: 1200,
       highCutoff: 16000,
-      bandNames: ['bass', 'mid', 'high'],
-    },
+      bandNames: ["bass", "mid", "high"]
+    }
   });
 
-  soundEmitter.on('error', function(err) {
+  soundEmitter.on("error", function(err) {
     console.log("Microphone Error in Input Stream: " + err);
   });
 
-
-  soundEmitter.on('startComplete', function() {
+  soundEmitter.on("startComplete", function() {
     console.log("Microphone listening");
   });
 
-  soundEmitter.on('audioProcessExitComplete', function() {
+  soundEmitter.on("audioProcessExitComplete", function() {
     console.log("Microphone stopped listening. Retrying in 1s");
-    setTimeout(startMic, 1000)
+    setTimeout(startMic, 1000);
   });
 
   micInstance.start();
 }
 
-exports.startMic = startMic
+exports.startMic = startMic;

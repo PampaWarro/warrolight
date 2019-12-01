@@ -1,4 +1,3 @@
-
 const { startServer } = require("./server");
 const { loadSetup } = require("./setup");
 

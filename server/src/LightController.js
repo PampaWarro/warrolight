@@ -1,5 +1,5 @@
 const moment = require("moment");
-const Geometry = require("./Geometry");
+const { Geometry } = require("./geometry");
 const _ = require("lodash");
 
 const programNames = [
@@ -163,7 +163,7 @@ module.exports = class LightController {
   }
 
   loadProgram(name) {
-    const FunctionClass = require("./programs/" + name);
+    const FunctionClass = require("./light-programs/programs/" + name);
     return {
       name: name,
       configSchema: FunctionClass.configSchema(),

@@ -1,15 +1,15 @@
-const EventEmitter = require('events');
-const glob = require('glob');
-const path = require('path');
-const _ = require('lodash');
+const EventEmitter = require("events");
+const glob = require("glob");
+const path = require("path");
+const _ = require("lodash");
 
 // Load and initialize modules from "soundmodules" dir.
 function loadModules(config) {
-  const modules = {}
-  glob.sync(__dirname + '/soundmodules/*.js').forEach(function(file) {
-    const id = path.basename(file, '.js');
+  const modules = {};
+  glob.sync(__dirname + "/soundmodules/*.js").forEach(function(file) {
+    const id = path.basename(file, ".js");
     const module = require(path.resolve(file));
-    const moduleInstance = module.init(config)
+    const moduleInstance = module.init(config);
     if (!moduleInstance.run) {
       console.warn(`Module '${id}' has no run function.`);
     }
@@ -17,9 +17,9 @@ function loadModules(config) {
       modules[id] = {
         id: id,
         deps: module.deps,
-        instance: moduleInstance,
-      }
-    } catch(e) {
+        instance: moduleInstance
+      };
+    } catch (e) {
       console.error(`Failed to initialize module '${id}'.`);
       throw e;
     }
@@ -33,7 +33,7 @@ function topologicalSort(modules) {
   const sorted = [];
   const satisfied = [];
   const edges = {};
-  const reverseEdges = {}
+  const reverseEdges = {};
   _.forOwn(modules, function(module, id) {
     if (!module.deps || !module.deps.length) {
       satisfied.push(module);
@@ -47,7 +47,7 @@ function topologicalSort(modules) {
     }
   });
   if (satisfied.length == 0) {
-    throw 'No modules with 0 dependencies, nowhere to start.';
+    throw "No modules with 0 dependencies, nowhere to start.";
   }
   while (satisfied.length > 0) {
     const module = satisfied.pop();
@@ -65,8 +65,9 @@ function topologicalSort(modules) {
   }
   _.forOwn(reverseEdges, function(deps, id) {
     if (deps && deps.size > 0) {
-      throw `Module '${id}' has unsatisfiable deps '${
-        Array.from(deps)}' (cycle).`
+      throw `Module '${id}' has unsatisfiable deps '${Array.from(
+        deps
+      )}' (cycle).`;
     }
   });
   return sorted;
@@ -95,7 +96,7 @@ class SoundEmitter extends EventEmitter {
   init(config) {
     config.emitter = this;
     this._modules = topologicalSort(loadModules(config));
-    this.on('audioframe', this._processAudioFrame);
+    this.on("audioframe", this._processAudioFrame);
   }
 
   emitDeferred(name, event) {
@@ -115,14 +116,14 @@ class SoundEmitter extends EventEmitter {
     // Run all modules in order.
     this._modules.forEach(module => {
       if (module.instance.run) {
-        module.instance.run(frame, that)
+        module.instance.run(frame, that);
       }
     });
     // Update current frame.
     this.previousFrame = this.currentFrame;
     this.currentFrame = frame;
     // Emit the current frame.
-    this.emit('processedaudioframe', frame);
+    this.emit("processedaudioframe", frame);
     // console.log(this.currentFrame);
     // console.log(frame.center.spectralCentroid.bin);
     // Emit all deferred events.

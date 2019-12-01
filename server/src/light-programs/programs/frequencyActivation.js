@@ -1,7 +1,7 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class MusicVolumeDot extends SoundBasedFunction {
+module.exports = class FrequencyActivation extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
   }

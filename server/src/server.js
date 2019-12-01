@@ -21,6 +21,9 @@ exports.startServer = function startServer(controller, deviceMultiplexer) {
       ws.send(JSON.stringify({ type, payload }));
     }
 
+    // Each service handles a single client, consider using broadcasting
+    // to send data to all connected clients, then let clients takeover
+    // between themselves to avoid holding too many connections open.
     const service = new LightsService(
       controller,
       deviceMultiplexer,

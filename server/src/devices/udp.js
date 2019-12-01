@@ -1,7 +1,7 @@
 const dgram = require('dgram');
 const now = require('performance-now')
 
-const LightDevice = require('./LightDevice')
+const { LightDevice } = require('./base')
 
 let reconnectTime = 3000;
 

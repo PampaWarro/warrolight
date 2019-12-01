@@ -2,7 +2,7 @@ const _ = require('lodash')
 const SerialPort = require('serialport')
 const now = require('performance-now')
 
-const LightDevice = require('./LightDevice')
+const { LightDevice } = require('./base')
 
 let reconnectTime = 3000;
 

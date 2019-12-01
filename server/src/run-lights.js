@@ -18,8 +18,8 @@ let setup = require('./setups/default.json')
 
 function instantiateDevicesFromConfig(outputDevices) {
   const  devicesTypes = {
-    'LightDeviceSerial': require('./LightDeviceSerial'),
-    'LightDeviceUDP': require('./LightDeviceUDP'),
+    'LightDeviceSerial': require('./devices/serial'),
+    'LightDeviceUDP': require('./devices/udp'),
   }
 
   let devices = {};

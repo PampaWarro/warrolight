@@ -15,7 +15,7 @@ const rgbToVga = (r, g, b) => {
 
 let reconnectTime = 3000;
 
-module.exports = class LightDevice {
+exports.LightDevice = class LightDevice {
   constructor(numberOfLights, deviceId) {
     this.state = _.range(0, numberOfLights)
     this.numberOfLights = numberOfLights

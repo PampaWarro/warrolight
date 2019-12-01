@@ -4,8 +4,7 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/run-lights.js",
-    "loggc": "node --expose-gc --trace-gc src/run-lights.js",
+    "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js",
     "server": "node src/server.js",
     "prettier": "prettier --write src/**/*.js src/*/*/*.js test-scripts/**/*.js"
   },

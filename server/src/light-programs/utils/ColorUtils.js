@@ -8,7 +8,7 @@ exports.rgbToHex = function rgbToHex(r, g, b) {
 }
 
 exports.HSVtoHex = function HSVtoHex(h, s, v, a) {
-  return ColorUtils.rgbToHex(...ColorUtils.HSVtoRGB(h, s, v, a));
+  return rgbToHex(...HSVtoRGB(h, s, v, a));
 }
 
 exports.RGBtoHSV = function RGBtoHSV(r, g, b, a) {

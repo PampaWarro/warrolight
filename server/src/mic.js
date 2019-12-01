@@ -166,6 +166,7 @@ function startMic() {
   });
 
   soundEmitter.on("audioProcessExitComplete", function() {
+    micInstance = null;
     console.log("Microphone stopped listening. Retrying in 1s");
     setTimeout(startMic, 1000);
   });

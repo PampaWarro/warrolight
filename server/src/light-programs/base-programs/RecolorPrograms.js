@@ -24,7 +24,7 @@ const fadeColors = ([r, g, b]) => {
 };
 
 module.exports = function recolorProgram(Program) {
-  return class Func extends Program {
+  return class RecolorProgram extends Program {
     start(config, draw, done) {
       let changedDraw = colors => {
         colors = colors.map(fadeColors);

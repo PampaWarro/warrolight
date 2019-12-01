@@ -8,7 +8,7 @@ module.exports = function createMultiProgram(
   random = false,
   crossFade = 20000
 ) {
-  return class {
+  return class MultiProgram {
     constructor(config, leds, shapeMapping) {
       // Shallow copy of schedule
       this.programSchedule = []

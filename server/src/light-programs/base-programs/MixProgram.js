@@ -2,7 +2,7 @@ const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 
 module.exports = function mixPrograms(...programs) {
-  return class {
+  return class MixProgram {
     constructor(config, leds, shapeMapping) {
       // Shallow copy of schedule
       this.programs = [];

@@ -1,7 +1,7 @@
 const _ = require("lodash");
 
 module.exports = function programsByShape(mapping) {
-  return class {
+  return class ProgramsByShape {
     constructor(config, leds, shapeMapping) {
       this.instances = {};
       this.config = config;

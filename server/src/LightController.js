@@ -40,7 +40,7 @@ const Emitter = require("events");
 let lightsSampleEmitter = new Emitter();
 
 module.exports = class LightController {
-  constructor(setLightsCbk, geometryDefinition, geometryMapping) {
+  constructor(setLightsCbk, geometryDefinition, shapeMapping) {
     this.setLightsCbk = setLightsCbk;
 
     const geometry = new Geometry(geometryDefinition);
@@ -49,7 +49,7 @@ module.exports = class LightController {
       frequencyInHertz: 60
     };
 
-    this.mapping = geometryMapping;
+    this.mapping = shapeMapping;
 
     this.layout = {
       numberOfLeds: geometry.leds,

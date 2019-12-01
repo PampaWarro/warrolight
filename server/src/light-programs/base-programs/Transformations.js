@@ -2,11 +2,11 @@ const _ = require("lodash");
 
 module.exports = function programsByShape(mapping) {
   return class {
-    constructor(config, leds, geometryMapping) {
+    constructor(config, leds, shapeMapping) {
       this.instances = {};
       this.config = config;
 
-      this.knownMappings = geometryMapping();
+      this.knownMappings = shapeMapping();
 
       _.each(mapping, (Program, shapeName) => {
         let map = this.knownMappings[shapeName];

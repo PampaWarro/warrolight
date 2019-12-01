@@ -9,7 +9,7 @@ module.exports = function createMultiProgram(
   crossFade = 20000
 ) {
   return class {
-    constructor(config, leds, mapping) {
+    constructor(config, leds, shapeMapping) {
       // Shallow copy of schedule
       this.programSchedule = []
         .concat(programSchedule)
@@ -23,7 +23,7 @@ module.exports = function createMultiProgram(
           (scheduleItem.programInstance = new scheduleItem.program(
             config,
             leds,
-            mapping
+            shapeMapping
           ))
       );
       this.drawSubprogram = _.throttle(this.drawSubprogram, 16);

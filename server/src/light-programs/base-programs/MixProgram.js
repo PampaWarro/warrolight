@@ -3,7 +3,7 @@ const ColorUtils = require("../utils/ColorUtils");
 
 module.exports = function mixPrograms(...programs) {
   return class {
-    constructor(config, leds, mapping) {
+    constructor(config, leds, shapeMapping) {
       // Shallow copy of schedule
       this.programs = [];
       this.config = config;
@@ -17,7 +17,7 @@ module.exports = function mixPrograms(...programs) {
         let [program, specificConfig, alpha] = scheduleItem;
 
         this.programs.push({
-          programInstance: new program(config, leds, mapping),
+          programInstance: new program(config, leds, shapeMapping),
           customConfig: specificConfig,
           alpha: alpha || 1
         });

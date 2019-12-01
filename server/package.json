@@ -6,7 +6,8 @@
   "scripts": {
     "start": " node --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js $npm_package_warroLight_setup",
     "server": "node src/server.js $npm_package_warroLight_setup",
-    "prettier": "prettier --write src/*.js src/**/*.js test-scripts/*.js"
+    "prettier": "prettier --write src/*.js src/**/*.js test-scripts/*.js",
+    "lint": "eslint ."
   },
   "warroLight": {
     "setup": "una-tira-prueba"
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "eslint": "^6.7.2",
     "prettier": "^1.19.1"
   }
 }

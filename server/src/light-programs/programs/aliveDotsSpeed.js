@@ -2,41 +2,43 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
+class Dot {
+  constructor(numberOfLeds) {
+    this.numberOfLeds = numberOfLeds;
+    this.pos = Math.floor(Math.random() * numberOfLeds);
+    this.speed = 1;
+    this.intensity = Math.random();
+    this.val = 0.1;
+    this.color = Math.random() / 3;
+    this.saturation = Math.random() * 0.3 + 0.7;
+    this.direction = Math.sign(Math.random() - 0.5);
+  }
+
+  update(speedWeight, vol) {
+    if (this.val < this.intensity) {
+      this.val += 0.05;
+    }
+
+    this.pos =
+      this.pos + vol * vol * 4 * speedWeight * this.speed;
+
+    this.pos = this.pos % this.numberOfLeds;
+
+    if (this.pos < 0) {
+      this.pos = this.numberOfLeds + this.pos;
+    }
+  }
+}
+
 module.exports = class Func extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;
-    let self = this;
 
-    this.createDot = () => {
-      return {
-        pos: Math.floor(Math.random() * this.numberOfLeds),
-        speed: 1,
-        intensity: Math.random(),
-        val: 0.1,
-        color: Math.random() / 3,
-        saturation: Math.random() * 0.3 + 0.7,
-        direction: Math.sign(Math.random() - 0.5),
-        update: function() {
-          if (this.val < this.intensity) {
-            this.val += 0.05;
-          }
-          let vol = self.medianVolume;
-          this.pos =
-            this.pos + vol * vol * 4 * self.config.speedWeight * this.speed;
-
-          this.pos = this.pos % self.numberOfLeds;
-          // this.intensity = vol
-          if (this.pos < 0) {
-            this.pos = self.numberOfLeds + this.pos;
-          }
-        }
-      };
-    };
-
-    this.dots = _.map(_.range(this.config.numberOfParticles), i =>
-      this.createDot()
-    );
+    this.dots = [];
+    for (let i = 0; i < this.config.numberOfParticles; i++) {
+      this.dots.push(new Dot(this.numberOfLeds));
+    }
   }
 
   drawFrame(draw, done) {
@@ -44,7 +46,7 @@ module.exports = class Func extends SoundBasedFunction {
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
 
-    _.each(this.dots, dot => {
+    for (let dot of this.dots) {
       let roundPos = Math.floor(dot.pos);
       let roundPosNext = (roundPos + 1) % this.numberOfLeds;
       let [r2, g2, b2] = ColorUtils.HSVtoRGB(
@@ -56,7 +58,7 @@ module.exports = class Func extends SoundBasedFunction {
       let [r, g, b] = this.stars[roundPos];
       let [ru, gu, bu] = this.stars[roundPosNext];
 
-      dot.update();
+      dot.update(this.config.speedWeight, this.medianVolume);
 
       let high = dot.pos - roundPos;
       let low = 1 - high;
@@ -70,7 +72,7 @@ module.exports = class Func extends SoundBasedFunction {
 
       this.stars[roundPos] = [r, g, b];
       this.stars[roundPosNext] = [ru, gu, bu];
-    });
+    }
 
     draw(
       this.stars.map(([r, g, b]) =>

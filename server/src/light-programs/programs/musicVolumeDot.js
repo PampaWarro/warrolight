@@ -1,3 +1,4 @@
+const _ = require("lodash")
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
@@ -7,10 +8,8 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction {
   }
 
   start(config, draw, done) {
-    this.lastVolume = new Array(this.numberOfLeds + 1)
-      .join("0")
-      .split("")
-      .map(() => [0, 0, 0]);
+    this.lastVolume = new Array(this.numberOfLeds + 1);
+    _.fill(this.lastVolume, [0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
 

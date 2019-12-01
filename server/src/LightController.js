@@ -136,21 +136,24 @@ module.exports = class LightController {
 
   setCurrentProgram(name) {
     let selectedProgram = this.programs[name];
-    if (selectedProgram) {
-      if (this.running && this.currentProgram) {
-        this.currentProgram.stop();
-      }
-      this.currentProgramName = name;
-      let program = this.programs[name];
-      let config = this.getConfig(program.configSchema);
-      this.currentProgram = new program.generator(
-        config,
-        this.layout,
-        this.mapping
-      );
-      if (this.running) {
-        this.start();
-      }
+    if (!selectedProgram) {
+      console.warn(`Selected program ${name} not found.`)
+      return;
+    }
+
+    if (this.running && this.currentProgram) {
+      this.currentProgram.stop();
+    }
+    this.currentProgramName = name;
+    let program = this.programs[name];
+    let config = this.getConfig(program.configSchema);
+    this.currentProgram = new program.generator(
+      config,
+      this.layout,
+      this.mapping
+    );
+    if (this.running) {
+      this.start();
     }
   }
 

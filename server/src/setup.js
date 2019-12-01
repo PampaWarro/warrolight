@@ -83,7 +83,7 @@ exports.loadSetup = function loadSetup(setup) {
   );
 
   const controller = new LightController(
-    colorArray => multiplexer.setState(colorArray),
+    multiplexer,
     geometry,
     shapeMapping
   );

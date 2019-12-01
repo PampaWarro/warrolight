@@ -35,10 +35,9 @@ class FilteredBands {
     };
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       channel.filteredBands = {};
-      _.forOwn(that._filters, (filter, bandName) => {
+      _.forOwn(this._filters, (filter, bandName) => {
         const filteredSamples = filter.multiStep(channel.samples);
         channel.filteredBands[bandName] = {
           samples: filteredSamples

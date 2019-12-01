@@ -56,7 +56,6 @@ class PeakDetector {
     });
   }
   detectPeaks(frame, samples, state) {
-    const that = this;
     state = state || {};
     let lambda = state.lambda || 0;
     let inAttack = state.inAttack || false;
@@ -65,7 +64,7 @@ class PeakDetector {
       const absSample = Math.abs(sample);
       if (absSample >= lambda) {
         inAttack = true;
-        lambda += that._aa * (absSample - lambda);
+        lambda += this._aa * (absSample - lambda);
       } else {
         if (inAttack) {
           const offsetSamples = frame.offsetSamples + i - 1;
@@ -78,7 +77,7 @@ class PeakDetector {
           });
         }
         inAttack = false;
-        lambda += that._ar * (absSample - lambda);
+        lambda += this._ar * (absSample - lambda);
       }
     });
     return {
@@ -90,9 +89,8 @@ class PeakDetector {
     };
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach((channel, channelIndex) => {
-      const channelState = that._perChannelState[channelIndex];
+      const channelState = this._perChannelState[channelIndex];
       const perBandSamples = {
         global: channel.samples,
         bass: channel.filteredBands.bass.samples,
@@ -102,7 +100,7 @@ class PeakDetector {
       const perBandPeaks = {};
       _.forOwn(perBandSamples, (samples, bandName) => {
         const state = channelState[bandName];
-        const result = that.detectPeaks(frame, samples, state);
+        const result = this.detectPeaks(frame, samples, state);
         const peaks = result.peaks;
         channelState[bandName] = result.state;
         perBandPeaks[bandName] = peaks;

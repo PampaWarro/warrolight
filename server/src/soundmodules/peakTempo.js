@@ -16,7 +16,6 @@ class PeakTempo {
     if (peakWindow.length == 0) {
       return [];
     }
-    const that = this;
     const histogram = new Float32Array(this._maxTempo - this._minTempo + 1);
     for (let j = 1; j < peakWindow.length; j++) {
       const peakB = peakWindow[j];
@@ -47,7 +46,7 @@ class PeakTempo {
     }
     const estimates = [];
     histogram.forEach((energy, index) => {
-      const tempo = index + that._minTempo;
+      const tempo = index + this._minTempo;
       const range = histogram.slice(
         Math.max(index - 10, 0),
         Math.min(index + 10, histogram.length)
@@ -94,9 +93,8 @@ class PeakTempo {
   }
   // TODO: remove _ to re-enable when it stops being a CPU hog.
   _run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach((channel, channelIndex) => {
-      const channelState = that._perChannelState[channelIndex];
+      const channelState = this._perChannelState[channelIndex];
       const perBandPeaks = {
         global: channel.peaks,
         bass: channel.filteredBands.bass.peaks,
@@ -107,12 +105,12 @@ class PeakTempo {
       const perBandPeakTempo = {};
       _.forOwn(perBandPeaks, (peaks, bandName) => {
         const state = channelState[bandName] || {};
-        const result = that.updateTempoEstimate(frame, peaks, state);
+        const result = this.updateTempoEstimate(frame, peaks, state);
         channelState[bandName] = result.state;
         perBandPeakTempo[bandName] = result.estimates;
         allEstimates.push(...result.estimates);
       });
-      channel.bpm = that.pickBest(allEstimates);
+      channel.bpm = this.pickBest(allEstimates);
       channel.bpmEstimates = perBandPeakTempo.global;
       channel.filteredBands.bass.bpmEstimates = perBandPeakTempo.bass;
       channel.filteredBands.mid.bpmEstimates = perBandPeakTempo.mid;

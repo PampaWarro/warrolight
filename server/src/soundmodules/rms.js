@@ -9,11 +9,10 @@ class RMS {
     return Math.sqrt(samples.reduce((a, x) => a + x * x, 0) / samples.length);
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
-      channel.rms = that.rms(channel.samples);
+      channel.rms = this.rms(channel.samples);
       _.forOwn(channel.filteredBands, band => {
-        band.rms = that.rms(band.samples);
+        band.rms = this.rms(band.samples);
       });
     });
   }

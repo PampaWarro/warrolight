@@ -9,11 +9,10 @@ class FFTModule {
     this._fft = new FFT(config.frameSize);
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
-      const input = that._fft.toComplexArray(channel.windowedSamples);
-      const out = that._fft.createComplexArray();
-      that._fft.realTransform(out, input);
+      const input = this._fft.toComplexArray(channel.windowedSamples);
+      const out = this._fft.createComplexArray();
+      this._fft.realTransform(out, input);
       channel.fft = out;
     });
   }

@@ -45,10 +45,9 @@ class SpectralBands {
     });
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       channel.spectralBands = {};
-      _.forOwn(that._bands, (bandConfig, bandName) => {
+      _.forOwn(this._bands, (bandConfig, bandName) => {
         const subspectrum = channel.absolutefft.slice(
           bandConfig.bins[0],
           bandConfig.bins[1]

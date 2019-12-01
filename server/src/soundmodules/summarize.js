@@ -57,16 +57,15 @@ class Summarize {
     };
   }
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       const summary = (channel.summary = {});
       _.forOwn(channel.filteredBands, (band, bandName) => {
-        Object.assign(summary, that.summarizeFilteredBand(band, bandName));
+        Object.assign(summary, this.summarizeFilteredBand(band, bandName));
       });
       _.forOwn(channel.spectralBands, (band, bandName) => {
-        Object.assign(summary, that.summarizeSpectralBand(band, bandName));
+        Object.assign(summary, this.summarizeSpectralBand(band, bandName));
       });
-      Object.assign(summary, that.summarizeChannel(channel));
+      Object.assign(summary, this.summarizeChannel(channel));
     });
   }
 }

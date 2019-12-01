@@ -21,11 +21,10 @@ class Window {
   }
 
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       const windowed = new Float32Array(channel.samples.length);
       channel.samples.forEach((value, i) => {
-        windowed[i] = that._window[i] * value;
+        windowed[i] = this._window[i] * value;
       });
       channel.windowedSamples = windowed;
     });

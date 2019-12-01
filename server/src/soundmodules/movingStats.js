@@ -92,23 +92,22 @@ const statsExtractorOptions = {
 class MovingStats {
   constructor(options) {
     const bandNames = options.bandNames || ["bass", "mid", "high"];
-    const that = this;
     this.channelExtractors = {};
     _.forOwn(channelFeatures, (baseOptions, featureName) => {
-      that.channelExtractors[featureName] = {};
+      this.channelExtractors[featureName] = {};
       _.forOwn(statsExtractorOptions, (options, name) => {
-        that.channelExtractors[featureName][name] = new StatsExtractor(
+        this.channelExtractors[featureName][name] = new StatsExtractor(
           Object.assign({}, options, baseOptions)
         );
       });
     });
     this.filteredBandExtractors = {};
     _.forOwn(filteredBandFeatures, (baseOptions, featureName) => {
-      that.filteredBandExtractors[featureName] = {};
+      this.filteredBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
-        that.filteredBandExtractors[featureName][bandName] = {};
+        this.filteredBandExtractors[featureName][bandName] = {};
         _.forOwn(statsExtractorOptions, (options, name) => {
-          that.filteredBandExtractors[featureName][bandName][
+          this.filteredBandExtractors[featureName][bandName][
             name
           ] = new StatsExtractor(Object.assign({}, options, baseOptions));
         });
@@ -116,11 +115,11 @@ class MovingStats {
     });
     this.spectralBandExtractors = {};
     _.forOwn(spectralBandFeatures, (baseOptions, featureName) => {
-      that.spectralBandExtractors[featureName] = {};
+      this.spectralBandExtractors[featureName] = {};
       bandNames.forEach(bandName => {
-        that.spectralBandExtractors[featureName][bandName] = {};
+        this.spectralBandExtractors[featureName][bandName] = {};
         _.forOwn(statsExtractorOptions, (options, name) => {
-          that.spectralBandExtractors[featureName][bandName][
+          this.spectralBandExtractors[featureName][bandName][
             name
           ] = new StatsExtractor(Object.assign({}, options, baseOptions));
         });
@@ -129,10 +128,9 @@ class MovingStats {
   }
 
   run(frame, emitter) {
-    const that = this;
     frame.allChannels.forEach(channel => {
       channel.movingStats = {};
-      _.forOwn(that.channelExtractors, (extractor, name) => {
+      _.forOwn(this.channelExtractors, (extractor, name) => {
         channel.movingStats[name] = {
           slow: extractor.slow.extract(frame, channel),
           mid: extractor.mid.extract(frame, channel),
@@ -142,7 +140,7 @@ class MovingStats {
 
       _.forOwn(channel.filteredBands, (band, bandName) => {
         band.movingStats = {};
-        _.forOwn(that.filteredBandExtractors, (extractors, name) => {
+        _.forOwn(this.filteredBandExtractors, (extractors, name) => {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
             mid: extractors[bandName].mid.extract(frame, band),
@@ -153,7 +151,7 @@ class MovingStats {
 
       _.forOwn(channel.spectralBands, (band, bandName) => {
         band.movingStats = {};
-        _.forOwn(that.spectralBandExtractors, (extractors, name) => {
+        _.forOwn(this.spectralBandExtractors, (extractors, name) => {
           band.movingStats[name] = {
             slow: extractors[bandName].slow.extract(frame, band),
             mid: extractors[bandName].mid.extract(frame, band),

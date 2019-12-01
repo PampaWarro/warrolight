@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-module.exports = function getShapes(mapping) {
+module.exports = function getShapes() {
   const inv = arr => [].concat(arr).reverse();
 
   const quiebre_abajo = 30;

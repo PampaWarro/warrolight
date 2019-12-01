@@ -15,12 +15,13 @@ module.exports = class DeviceMultiplexer {
     }
     this.statusCbk = () => null;
 
-    // Report devices' states every 250ms
+    // Report devices' states every 1s
+    // TODO: clearInterval?
     setInterval(() => {
       this.statusCbk(_.map(devices, d => {
         return {state: d.deviceState, deviceId: d.deviceId, lastFps: d.lastFps}
       }));
-    }, 250)
+    }, 1000)
   }
 
   onDeviceStatus(cbk) {

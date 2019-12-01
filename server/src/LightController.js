@@ -1,3 +1,4 @@
+const EventEmitter = require("events");
 const moment = require("moment");
 const { Geometry } = require("./geometry");
 const _ = require("lodash");
@@ -36,8 +37,7 @@ const programNames = [
   "water-flood"
 ];
 
-const Emitter = require("events");
-let lightsSampleEmitter = new Emitter();
+let lightsSampleEmitter = new EventEmitter();
 
 module.exports = class LightController {
   constructor(setLightsCbk, geometryDefinition, shapeMapping) {

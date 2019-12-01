@@ -6,7 +6,7 @@
     "serial": {
       "type": "serial",
       "params": {
-        "numberOfLights": 150,
+        "numberOfLights": 300,
         "devicePortWindows": "COM27",
         "devicePortUnix": "/dev/ttyACM0"
       }

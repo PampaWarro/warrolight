@@ -4,10 +4,8 @@ const soundEmitter = require('./soundEmitter');
 const { MicConfig, startSoundListener } = require('./sound');
 const LightsService = require('./LightsService');
 
-startMic()
-
-exports.createRemoteControl = function createRemoteControl(lightProgram, deviceMultiplexer) {
-  const wss = new WebSocket.Server({ port: 8080 });
+exports.startServer = function startServer(lightProgram, deviceMultiplexer) {
+  startMic();
 
   const micConfig = new MicConfig({
     sendingMicData: true,
@@ -15,6 +13,8 @@ exports.createRemoteControl = function createRemoteControl(lightProgram, deviceM
   });
 
   const sound = startSoundListener(soundEmitter, micConfig);
+
+  const wss = new WebSocket.Server({ port: 8080 });
 
   wss.on('connection', function connection(ws) {
 

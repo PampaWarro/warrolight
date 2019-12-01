@@ -3,6 +3,7 @@ const moment = require("moment");
 const { Geometry } = require("./geometry");
 const _ = require("lodash");
 
+// TODO: move this to some configuration file
 const programNames = [
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",

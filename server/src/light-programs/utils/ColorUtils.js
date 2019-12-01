@@ -55,9 +55,6 @@ module.exports = class ColorUtils {
 
   static HSVtoRGB(h, s, v, a) {
     let r, g, b, i, f, p, q, t;
-    if (arguments.length === 1) {
-      (s = h.s), (v = h.v), (h = h.h);
-    }
     a = a === undefined ? 1 : a;
     i = Math.floor(h * 6);
     f = h * 6 - i;

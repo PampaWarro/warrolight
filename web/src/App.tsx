@@ -187,7 +187,7 @@ export class App extends React.Component<Props, State> {
                 onProgramChange={this.handleProgramChange}
               />
             </nav>
-            <div className="col-md-3 offset-2 sidebar-2 p-4">
+            <div className="col-md-3 offset-2 sidebar-2">
               <ProgramConfig
                 program={currentProgram}
                 selected={this.state.selected}

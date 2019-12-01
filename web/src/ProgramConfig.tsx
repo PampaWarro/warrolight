@@ -85,7 +85,7 @@ export class ProgramConfig extends React.Component<Props> {
     const presets = currentProgram.presets || [];
 
     return (
-      <div>
+      <div className="p-4">
         <h4 className="pt-2">
           {currentProgram.name} &nbsp;
           <a

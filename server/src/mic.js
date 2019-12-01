@@ -100,7 +100,7 @@ class Mic {
   stop() {
     if (this.audioInput != null) {
       this.audioInput.stop(() => {
-        if (this.debug) console.log("Microhphone stopped");
+        if (this.debug) console.log("Microphone stopped");
       });
       this.audioInput = null;
       this.soundEmitter.emit("stopComplete");

@@ -81,7 +81,7 @@ function HSVtoRGB(h, s, v, a) {
 }
 
 function hexToRgb(hexColor) {
-  if (hexColor) {
+  if (!hexColor) {
     throw new Error("hexToRgb called without value");
   }
 

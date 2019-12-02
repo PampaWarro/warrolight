@@ -111,7 +111,7 @@ module.exports = class LightController {
   }
 
   setLights(colorArray) {
-    this.multiplexer.setState(colorArray);
+    this.multiplexer.setLights(colorArray);
   }
 
   getConfig(configSchema) {

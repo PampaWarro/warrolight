@@ -59,7 +59,7 @@ exports.LightDevice = class LightDevice {
     }
   }
 
-  setState(rgbArray) {
+  setLights(rgbArray) {
     // Initialize everything black
     const newState = _.map(_.range(this.numberOfLights), () => [0, 0, 0]);
 

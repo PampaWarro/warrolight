@@ -33,7 +33,7 @@ module.exports = class DeviceMultiplexer {
     this.statusCbk = cbk;
   }
 
-  setState(rgbArray) {
+  setLights(rgbArray) {
     const deviceStateArrays = this.devices.map(device =>
       _.map(_.range(device.numberOfLights), i => [0, 0, 0])
     );
@@ -48,7 +48,7 @@ module.exports = class DeviceMultiplexer {
     }
 
     for (let i = 0; i < this.devices.length; i++) {
-      this.devices[i].setState(deviceStateArrays[i]);
+      this.devices[i].setLights(deviceStateArrays[i]);
     }
   }
 };

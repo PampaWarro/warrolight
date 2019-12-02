@@ -64,7 +64,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
       this.canvasCtx.fillStyle = "#FF4C4C";
       h = Math.round(bass * HEIGHT);
       this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 100,
+        this.canvasCtx.canvas.width - 130,
         HEIGHT - h,
         w,
         h
@@ -73,7 +73,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
       h = Math.round(mid * HEIGHT);
       this.canvasCtx.fillStyle = "#34BF49";
       this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 100,
+        this.canvasCtx.canvas.width - 130,
         HEIGHT - h + HEIGHT,
         w,
         h
@@ -82,7 +82,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
       h = Math.round(high * HEIGHT);
       this.canvasCtx.fillStyle = "#0099E5";
       this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 100,
+        this.canvasCtx.canvas.width - 130,
         HEIGHT - h + HEIGHT * 2,
         w,
         h
@@ -93,7 +93,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
       this.canvasCtx.fillStyle = `rgba(100,100,100)`;
       h = Math.round((rms / 255) * HEIGHT * 3);
       this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 100,
+        this.canvasCtx.canvas.width - 130,
         HEIGHT - h + HEIGHT * 2,
         w,
         h
@@ -164,18 +164,28 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     }
   }
 
+  renderButtons() {
+    if (!this.props.config.sendingMicData) {
+      return null;
+    }
+
+    return (
+      <div className="perband-btn">
+        <a className="btn btn-sm btn-outline-secondary mb-2" href="#" onClick={e => this.toggleMetric(e)}>
+          {this.props.config.metric}
+        </a>
+        <br />
+        <a className="btn btn-sm btn-outline-secondary" href="#" onClick={e => this.togglePerBandMode(e)}>
+          {this.state.perBand ? "Global" : "Per band"}
+        </a>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="mic-client">
-        <div className="perdband-btn">
-          <a href="#" onClick={e => this.toggleMetric(e)}>
-            {this.props.config.metric}
-          </a>
-          <br />
-          <a href="#" onClick={e => this.togglePerBandMode(e)}>
-            {this.state.perBand ? "Global" : "Per band"}
-          </a>
-        </div>
+        {this.renderButtons()}
 
         <canvas
           id="music"

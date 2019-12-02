@@ -178,6 +178,7 @@ module.exports = class LightController {
     this.setLightsCbk(rgbLeds);
     let lastUpdateLatency = new Date() - this.lastLightsUpdate;
     this.lastLightsUpdate = new Date();
+    // TODO: where does the number 34 come from?
     if (lastUpdateLatency > 34) {
       console.warn(
         `[${moment().format(

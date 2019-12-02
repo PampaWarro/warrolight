@@ -3,15 +3,15 @@ function componentToHex(c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-exports.rgbToHex = function rgbToHex(r, g, b) {
+function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-exports.HSVtoHex = function HSVtoHex(h, s, v, a) {
+function HSVtoHex(h, s, v, a) {
   return rgbToHex(...HSVtoRGB(h, s, v, a));
 }
 
-exports.RGBtoHSV = function RGBtoHSV(r, g, b, a) {
+function RGBtoHSV(r, g, b, a) {
   if (arguments.length === 1) {
     (g = r.g), (b = r.b), (r = r.r), (a = r.a);
   }
@@ -44,7 +44,7 @@ exports.RGBtoHSV = function RGBtoHSV(r, g, b, a) {
   return [h, s, v, a];
 }
 
-exports.HSVtoRGB = function HSVtoRGB(h, s, v, a) {
+function HSVtoRGB(h, s, v, a) {
   let r, g, b, i, f, p, q, t;
   a = a === undefined ? 1 : a;
   i = Math.floor(h * 6);
@@ -80,7 +80,7 @@ exports.HSVtoRGB = function HSVtoRGB(h, s, v, a) {
   ];
 }
 
-exports.hexToRgb = function hexToRgb(hexColor) {
+function hexToRgb(hexColor) {
   if (hexColor) {
     throw new Error("hexToRgb called without value");
   }
@@ -95,7 +95,7 @@ exports.hexToRgb = function hexToRgb(hexColor) {
   return [r, g, b, 1];
 }
 
-exports.mix = function mix([r, g, b, a], [r2, g2, b2, a2], ratio) {
+function mix([r, g, b, a], [r2, g2, b2, a2], ratio) {
   a = a === undefined ? 1 : a;
   a2 = a2 === undefined ? 1 : a2;
   return [
@@ -106,7 +106,7 @@ exports.mix = function mix([r, g, b, a], [r2, g2, b2, a2], ratio) {
   ];
 }
 
-exports.clamp = function clamp(r, g, b, a) {
+function clamp(r, g, b, a) {
   a = a === undefined ? 1 : a;
   return [
     Math.max(0, Math.min(255, Math.round(r))),
@@ -116,7 +116,7 @@ exports.clamp = function clamp(r, g, b, a) {
   ];
 }
 
-exports.dim = function dim([r, g, b, a], number) {
+function dim([r, g, b, a], number) {
   r = Math.floor(r * number);
   g = Math.floor(g * number);
   b = Math.floor(b * number);
@@ -125,6 +125,18 @@ exports.dim = function dim([r, g, b, a], number) {
 }
 
 // Modulo that handles negative numbers better.
-exports.mod = function mod(x, m) {
+function mod(x, m) {
   return ((x % m) + m) % m;
+}
+
+module.exports = {
+  mix,
+  rgbToHex,
+  HSVtoHex,
+  RGBtoHSV,
+  HSVtoRGB,
+  hexToRgb,
+  clamp,
+  dim,
+  mod
 }

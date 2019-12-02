@@ -32,13 +32,12 @@ module.exports = class LightDeviceUDP extends LightDevice {
     if (this.connected && this.freshData) {
       this.initEncoding();
 
-      let dim = 1;
       for (let i = 0; i < this.numberOfLights; i++) {
         this.writePixel(
           i,
-          this.state[i][0] / dim,
-          this.state[i][1] / dim,
-          this.state[i][2] / dim
+          this.state[i][0],
+          this.state[i][1],
+          this.state[i][2]
         );
       }
       this.freshData = false;

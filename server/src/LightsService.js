@@ -7,9 +7,9 @@ function lightsToByteString(ledsColorArray) {
 }
 
 module.exports = class LightsService {
-  constructor(controller, deviceMultiplexer, micConfig, send) {
+  constructor(controller, micConfig, send) {
     this.controller = controller;
-    this.deviceMultiplexer = deviceMultiplexer;
+    this.deviceMultiplexer = controller.multiplexer;
     this.micConfig = micConfig;
     this.send = send;
     this.simulating = false;

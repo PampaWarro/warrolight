@@ -82,11 +82,5 @@ exports.loadSetup = function loadSetup(setup) {
     setup.lightsToDevicesMapping
   );
 
-  const controller = new LightController(
-    multiplexer,
-    geometry,
-    shapeMapping
-  );
-
-  return { controller, multiplexer };
+  return new LightController(multiplexer, geometry, shapeMapping);
 };

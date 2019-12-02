@@ -4,7 +4,7 @@ const soundEmitter = require("./soundEmitter");
 const { MicConfig, startSoundListener } = require("./sound");
 const LightsService = require("./LightsService");
 
-exports.startServer = function startServer(controller, deviceMultiplexer) {
+exports.startServer = function startServer(controller) {
   startMic();
 
   const micConfig = new MicConfig({
@@ -24,12 +24,7 @@ exports.startServer = function startServer(controller, deviceMultiplexer) {
     // Each service handles a single client, consider using broadcasting
     // to send data to all connected clients, then let clients takeover
     // between themselves to avoid holding too many connections open.
-    const service = new LightsService(
-      controller,
-      deviceMultiplexer,
-      micConfig,
-      send
-    );
+    const service = new LightsService(controller, micConfig, send);
 
     sound.setListener(lastVolumes => send("micSample", lastVolumes));
 

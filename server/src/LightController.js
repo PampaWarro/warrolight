@@ -42,6 +42,7 @@ let lightsSampleEmitter = new EventEmitter();
 
 module.exports = class LightController {
   constructor(multiplexer, geometryDefinition, shapeMapping) {
+    this.multiplexer = multiplexer;
     this.setLightsCbk = (colorArray) => multiplexer.setState(colorArray);
 
     const geometry = new Geometry(geometryDefinition);

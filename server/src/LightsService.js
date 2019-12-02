@@ -7,8 +7,8 @@ function lightsToByteString(ledsColorArray) {
 }
 
 module.exports = class LightsService {
-  constructor(lightProgram, deviceMultiplexer, micConfig, send) {
-    this.lightProgram = lightProgram;
+  constructor(controller, deviceMultiplexer, micConfig, send) {
+    this.controller = controller;
     this.deviceMultiplexer = deviceMultiplexer;
     this.micConfig = micConfig;
     this.send = send;
@@ -18,16 +18,16 @@ module.exports = class LightsService {
   connect() {
     console.log("[ON] Remote control connnected".green);
 
-    const lightProgram = this.lightProgram;
+    const controller = this.controller;
 
     this.send("completeState", {
-      programs: lightProgram.getProgramsSchema(),
-      currentProgramName: lightProgram.currentProgramName,
-      currentConfig: lightProgram.getCurrentConfig(),
+      programs: controller.getProgramsSchema(),
+      currentProgramName: controller.currentProgramName,
+      currentConfig: controller.getCurrentConfig(),
       micConfig: this.micConfig.config
     });
 
-    lightProgram.onLights(this.lightsCallback);
+    controller.onLights(this.lightsCallback);
 
     // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
     // or rework it to support multiple listeners
@@ -44,10 +44,10 @@ module.exports = class LightsService {
   };
 
   broadcastStateChange() {
-    const lightProgram = this.lightProgram;
+    const controller = this.controller;
     this.send("stateChange", {
-      currentProgramName: lightProgram.currentProgramName,
-      currentConfig: lightProgram.getCurrentConfig(),
+      currentProgramName: controller.currentProgramName,
+      currentConfig: controller.getCurrentConfig(),
       micConfig: this.micConfig.config
     });
   }
@@ -65,16 +65,16 @@ module.exports = class LightsService {
   }
 
   setPreset(presetName) {
-    const lightProgram = this.lightProgram;
-    const presets = lightProgram.getCurrentPresets();
+    const controller = this.controller;
+    const presets = controller.getCurrentPresets();
 
     if (!presets[presetName]) {
       console.warn(`Selected preset ${presetName} not found.`)
       return;
     }
 
-    lightProgram.currentProgram.config = _.extend(
-      lightProgram.getConfig(),
+    controller.currentProgram.config = _.extend(
+      controller.getConfig(),
       presets[presetName]
     );
 
@@ -82,17 +82,17 @@ module.exports = class LightsService {
   }
 
   setCurrentProgram(programKey) {
-    this.lightProgram.setCurrentProgram(programKey);
+    this.controller.setCurrentProgram(programKey);
     this.broadcastStateChange();
   }
 
   updateConfigParam(config) {
-    const lightProgram = this.lightProgram;
-    lightProgram.currentProgram.config = config;
+    const controller = this.controller;
+    controller.currentProgram.config = config;
 
     this.send("stateChange", {
-      currentProgramName: lightProgram.currentProgramName,
-      currentConfig: lightProgram.getCurrentConfig(),
+      currentProgramName: controller.currentProgramName,
+      currentConfig: controller.getCurrentConfig(),
       micConfig: this.micConfig.config
     });
   }
@@ -100,7 +100,7 @@ module.exports = class LightsService {
   startSamplingLights() {
     console.log("[ON] Web client sampling lights data".green);
     this.simulating = true;
-    this.send("layout", this.lightProgram.layout);
+    this.send("layout", this.controller.layout);
   }
 
   stopSamplingLights() {
@@ -109,11 +109,11 @@ module.exports = class LightsService {
   }
 
   restartProgram() {
-    this.lightProgram.restart();
+    this.controller.restart();
   }
 
   disconnect() {
     console.log("[OFF] Remote control DISCONNNECTED".gray);
-    this.lightProgram.removeOnLights(this.lightsCallback);
+    this.controller.removeOnLights(this.lightsCallback);
   }
 };

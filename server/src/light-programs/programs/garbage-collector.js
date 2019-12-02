@@ -1,7 +1,7 @@
 const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const _ = require("lodash");
 
-module.exports = class Func extends SoundBasedFunction {
+module.exports = class GarbageCollector extends SoundBasedFunction {
   start(config, draw) {
     super.start(config, draw);
 

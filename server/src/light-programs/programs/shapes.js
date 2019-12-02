@@ -8,7 +8,7 @@ const {
   RadiusCosineBrightness
 } = require("../utils/drawables");
 
-module.exports = class Func extends LayerBasedFunction {
+module.exports = class Shapes extends LayerBasedFunction {
   getDrawables() {
     return {
       backgroundColors: new PolarColors({

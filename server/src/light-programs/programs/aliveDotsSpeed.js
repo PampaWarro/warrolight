@@ -30,7 +30,7 @@ class Dot {
   }
 }
 
-module.exports = class Func extends SoundBasedFunction {
+module.exports = class AliveDotsSpeed extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;

@@ -4,7 +4,7 @@ const { DrawableLayer } = require("../utils/layers");
 const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 
-module.exports = class Func extends LayerBasedFunction {
+module.exports = class BandParticles extends LayerBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.particles = {};

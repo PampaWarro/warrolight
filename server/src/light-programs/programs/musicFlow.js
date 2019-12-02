@@ -33,17 +33,6 @@ module.exports = class MusicFlow extends SoundBasedFunction {
         (vol - this.config.cutThreshold) * (1 / (1 - this.config.cutThreshold));
     }
 
-    let {
-      bassRms,
-      bassPeakDecay,
-      bassMax,
-      midRms,
-      midPeakDecay,
-      midMax,
-      highRms,
-      highPeakDecay,
-      highMax
-    } = this;
     let [hueVol] = ColorUtils.RGBtoHSV(
       this.midFastPeakDecay,
       this.highFastPeakDecay,

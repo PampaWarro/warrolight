@@ -20,7 +20,7 @@ function findBounds(values) {
   };
 }
 
-module.exports = class Func extends SoundBasedFunction {
+module.exports = class Circles extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
 

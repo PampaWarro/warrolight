@@ -4,7 +4,7 @@ module.exports = function animateParamProgram(
   frequency,
   change
 ) {
-  return class Func extends Program {
+  return class AnimateParam extends Program {
     drawFrame(draw) {
       this.count = (this.count || 0) + 1;
       if (this.count % frequency == 0) {

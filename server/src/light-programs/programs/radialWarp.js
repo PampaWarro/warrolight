@@ -6,7 +6,7 @@ const {
 } = require("../utils/drawables");
 const ColorUtils = require("../utils/ColorUtils");
 
-module.exports = class Func extends LayerBasedFunction {
+module.exports = class RadialWarp extends LayerBasedFunction {
   getDrawables() {
     return {
       backgroundColors: new PolarColors({

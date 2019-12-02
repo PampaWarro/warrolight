@@ -12,6 +12,8 @@ module.exports = class LightsService {
     this.micConfig = micConfig;
     this.send = send;
     this.simulating = false;
+
+    this.sendLightsSample = this.sendLightsSample.bind(this);
   }
 
   connect() {
@@ -26,7 +28,7 @@ module.exports = class LightsService {
       micConfig: this.micConfig.config
     });
 
-    controller.onLights(this.lightsCallback);
+    controller.onLights(this.sendLightsSample);
 
     // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
     // or rework it to support multiple listeners
@@ -35,12 +37,12 @@ module.exports = class LightsService {
     );
   }
 
-  lightsCallback = lights => {
+  sendLightsSample(lights) {
     if (this.simulating) {
       let encodedColors = lightsToByteString(lights);
       this.send("lightsSample", encodedColors);
     }
-  };
+  }
 
   broadcastStateChange() {
     const controller = this.controller;
@@ -113,6 +115,6 @@ module.exports = class LightsService {
 
   disconnect() {
     console.log("[OFF] Remote control DISCONNNECTED".gray);
-    this.controller.removeOnLights(this.lightsCallback);
+    this.controller.removeOnLights(this.sendLightsSample);
   }
 };

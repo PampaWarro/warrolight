@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const DeviceMultiplexer = require("./DeviceMultiplexer");
 const LightController = require("./LightController");
+const { Geometry } = require("./geometry");
 
 const devicesTypes = {
   serial: require("./devices/serial"),
@@ -75,7 +76,10 @@ function createLightsMultiplexer(
 
 exports.loadSetup = function loadSetup(setup) {
   const devices = instantiateDevicesFromConfig(setup.outputDevices);
-  const geometry = require(`../setups/geometries/${setup.geometry}`);
+
+  const geometryDefinition = require(`../setups/geometries/${setup.geometry}`);
+  const geometry = new Geometry(geometryDefinition);
+
   const shapeMapping = require(`../setups/shapeMappings/${setup.shapeMapping}`);
   const multiplexer = createLightsMultiplexer(
     setup.lights,

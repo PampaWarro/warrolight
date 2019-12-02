@@ -1,6 +1,5 @@
 const EventEmitter = require("events");
 const moment = require("moment");
-const { Geometry } = require("./geometry");
 const _ = require("lodash");
 
 // TODO: move this to some configuration file
@@ -41,10 +40,8 @@ const programNames = [
 let lightsSampleEmitter = new EventEmitter();
 
 module.exports = class LightController {
-  constructor(multiplexer, geometryDefinition, shapeMapping) {
+  constructor(multiplexer, geometry, shapeMapping) {
     this.multiplexer = multiplexer;
-
-    const geometry = new Geometry(geometryDefinition);
 
     this.defaultConfig = {
       frequencyInHertz: 60

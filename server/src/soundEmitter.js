@@ -47,7 +47,7 @@ function topologicalSort(modules) {
     }
   });
   if (satisfied.length == 0) {
-    throw "No modules with 0 dependencies, nowhere to start.";
+    throw new Error("No modules with 0 dependencies, nowhere to start.");
   }
   while (satisfied.length > 0) {
     const module = satisfied.pop();

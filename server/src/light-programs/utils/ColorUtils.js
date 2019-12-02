@@ -1,9 +1,9 @@
-exports.rgbToHex = function rgbToHex(r, g, b) {
-  function componentToHex(c) {
-    const hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  }
+function componentToHex(c) {
+  const hex = Math.max(0, Math.min(255, Math.floor(c))).toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
 
+exports.rgbToHex = function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 

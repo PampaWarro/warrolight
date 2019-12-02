@@ -33,17 +33,17 @@ module.exports = class DeviceMultiplexer {
     this.statusCbk = cbk;
   }
 
-  setState(newState) {
+  setState(rgbArray) {
     const deviceStateArrays = this.devices.map(device =>
       _.map(_.range(device.numberOfLights), i => [0, 0, 0])
     );
     const targetDevice = this.targetDevice;
     const targetPosition = this.targetPosition;
 
-    for (let i = 0; i < newState.length; i++) {
+    for (let i = 0; i < rgbArray.length; i++) {
       let deviceIndex = targetDevice[i];
       if (deviceIndex >= 0) {
-        deviceStateArrays[deviceIndex][targetPosition[i]] = newState[i];
+        deviceStateArrays[deviceIndex][targetPosition[i]] = rgbArray[i];
       }
     }
 

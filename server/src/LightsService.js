@@ -68,14 +68,17 @@ module.exports = class LightsService {
     const lightProgram = this.lightProgram;
     const presets = lightProgram.getCurrentPresets();
 
-    if (presets[presetName]) {
-      lightProgram.currentProgram.config = _.extend(
-        lightProgram.getConfig(),
-        presets[presetName]
-      );
-
-      this.broadcastStateChange();
+    if (!presets[presetName]) {
+      console.warn(`Selected preset ${presetName} not found.`)
+      return;
     }
+
+    lightProgram.currentProgram.config = _.extend(
+      lightProgram.getConfig(),
+      presets[presetName]
+    );
+
+    this.broadcastStateChange();
   }
 
   setCurrentProgram(programKey) {

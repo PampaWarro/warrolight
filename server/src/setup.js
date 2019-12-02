@@ -22,6 +22,7 @@ function instantiateDevicesFromConfig(outputDevices) {
   return devices;
 }
 
+// TODO: move this to multiplexer constructor?
 function createLightsMultiplexer(
   totalLightsCount,
   devices,

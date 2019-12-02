@@ -43,7 +43,6 @@ let lightsSampleEmitter = new EventEmitter();
 module.exports = class LightController {
   constructor(multiplexer, geometryDefinition, shapeMapping) {
     this.multiplexer = multiplexer;
-    this.setLightsCbk = (colorArray) => multiplexer.setState(colorArray);
 
     const geometry = new Geometry(geometryDefinition);
 
@@ -114,6 +113,10 @@ module.exports = class LightController {
     }
   }
 
+  setLights(colorArray) {
+    this.multiplexer.setState(colorArray);
+  }
+
   getConfig(configSchema) {
     let config = _.clone(this.defaultConfig);
 
@@ -176,7 +179,7 @@ module.exports = class LightController {
     const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
     lightsSampleEmitter.emit("lights", rgbLeds);
 
-    this.setLightsCbk(rgbLeds);
+    this.setLights(rgbLeds);
     let lastUpdateLatency = new Date() - this.lastLightsUpdate;
     this.lastLightsUpdate = new Date();
     // TODO: where does the number 34 come from?

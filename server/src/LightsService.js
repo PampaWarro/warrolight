@@ -9,7 +9,6 @@ function lightsToByteString(ledsColorArray) {
 module.exports = class LightsService {
   constructor(controller, micConfig, send) {
     this.controller = controller;
-    this.deviceMultiplexer = controller.multiplexer;
     this.micConfig = micConfig;
     this.send = send;
     this.simulating = false;
@@ -31,7 +30,7 @@ module.exports = class LightsService {
 
     // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
     // or rework it to support multiple listeners
-    this.deviceMultiplexer.onDeviceStatus(devicesStatus =>
+    controller.onDeviceStatus(devicesStatus =>
       this.send("devicesStatus", devicesStatus)
     );
   }

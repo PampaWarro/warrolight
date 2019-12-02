@@ -166,6 +166,10 @@ module.exports = class LightController {
     lightsSampleEmitter.removeListener("lights", cbk);
   }
 
+  onDeviceStatus(cbk) {
+    this.multiplexer.onDeviceStatus(cbk);
+  }
+
   loadProgram(name) {
     const FunctionClass = require("./light-programs/programs/" + name);
     return {

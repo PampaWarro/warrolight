@@ -177,6 +177,7 @@ module.exports = class LightController {
   }
 
   updateLeds(rgbaLeds) {
+    // TODO: remove rgba before?
     const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
     lightsSampleEmitter.emit("lights", rgbLeds);
 

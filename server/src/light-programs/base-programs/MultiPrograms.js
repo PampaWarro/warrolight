@@ -38,6 +38,7 @@ module.exports = function createMultiProgram(
 
           let c = 1 - Math.min(1, (new Date() - t) / crossFade);
           lastFrame = _.map(lastFrame, (f, i) =>
+            // TODO: there is an `undefined is not iterable problem to fix here`
             ColorUtils.mix(f, this.past.lastFrame[i], c)
           );
         }

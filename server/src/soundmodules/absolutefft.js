@@ -1,26 +1,24 @@
-// Takes the interleaved complex values in each channel's FFT and output the
-// norm of each in a new "absolutefft" buffer that's half the size of the input.
-// Most downstream modules that only care about the amount of energy on each bin
-// and can afford to ignore the phase information should use "absolutefft"
-// instead of "fft".
-class AbsoluteFFT {
-  constructor(config) {}
+const FFT = require("fft.js");
+
+// Computes the discrete Fourier transform (DFT) of the windowedSamples in each
+// channel. The output is a complex array with interleaved real and imaginary
+// parts. If the absolute energy per FFT bin is needed, take the output of the
+// downstream 'absolutefft' module.
+class AbsoluteFFTModule {
+  constructor(config) {
+    this._fft = new FFT(config.frameSize);
+  }
   run(frame, emitter) {
     frame.allChannels.forEach(channel => {
-      const absolutefft = new Float32Array(channel.fft.length / 2);
-      for (let bin = 0; bin < absolutefft.length / 2; bin++) {
-        // Magnitude = sqrt(real^2 + imaginary^2)
-        absolutefft[bin] = Math.sqrt(
-          Math.pow(channel.fft[bin * 2], 2) +
-            Math.pow(channel.fft[bin * 2 + 1], 2)
-        );
-      }
-      channel.absolutefft = absolutefft;
+      const input = this._fft.toComplexArray(channel.windowedSamples);
+      const out = new Array(this._fft.size)
+      this._fft.realTransform(out, input);
+      channel.absolutefft = out;
     });
   }
 }
 
 module.exports = {
-  deps: ["fft"],
-  init: config => new AbsoluteFFT(config)
+  deps: ["window"],
+  init: config => new AbsoluteFFTModule(config)
 };

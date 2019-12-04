@@ -10,11 +10,6 @@ module.exports = class TimeTickedFunction {
     this.position = leds.position;
   }
 
-  // Override in subclasses
-  drawFrame(draw) {
-    throw new Error("Child classes should override drawFrame");
-  }
-
   start(config, draw) {
     // TODO: creating new fields outside contructor prevents class optimization
     this.config = config;
@@ -54,6 +49,11 @@ module.exports = class TimeTickedFunction {
           )
         ),
     );
+  }
+
+  // Override in subclasses
+  drawFrame(draw) {
+    throw new Error("Child classes should override drawFrame");
   }
 
   stop() {

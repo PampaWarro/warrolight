@@ -26,14 +26,8 @@ module.exports = class TimeTickedFunction {
       let start = new Date();
       this.timeInMs = new Date() - this.startTime;
       this.frameNumber++;
-      this.drawFrame(
-        colorsArray =>
-          draw(
-            _.map(colorsArray, col =>
-              ColorUtils.dim(col, this.config.globalBrightness)
-            )
-          ),
-      );
+
+      this.step(draw);
 
       let drawingTimeMs = new Date() - start;
       let remainingTime = 1000 / this.config.fps - drawingTimeMs;
@@ -49,7 +43,17 @@ module.exports = class TimeTickedFunction {
     };
 
     setTimeout(frame, 1);
-    // setInterval(frame, 1000 / this.config.fps - 10);
+  }
+
+  step(draw) {
+    this.drawFrame(
+      colorsArray =>
+        draw(
+          _.map(colorsArray, col =>
+            ColorUtils.dim(col, this.config.globalBrightness)
+          )
+        ),
+    );
   }
 
   stop() {

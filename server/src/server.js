@@ -17,8 +17,8 @@ exports.startServer = function startServer(controller) {
   const wss = new WebSocket.Server({ port: 8080 });
 
   wss.on("connection", function connection(ws) {
-    function send(type, payload) {
-      ws.send(JSON.stringify({ type, payload }));
+    function send(event, data) {
+      ws.send(JSON.stringify([event, data]));
     }
 
     // Each service handles a single client, consider using broadcasting
@@ -29,29 +29,29 @@ exports.startServer = function startServer(controller) {
     sound.setListener(lastVolumes => send("micSample", lastVolumes));
 
     ws.on("message", function incoming(message) {
-      const { type, payload } = JSON.parse(message);
+      const [event, data] = JSON.parse(message);
 
-      switch (type) {
+      switch (event) {
         case "setMicDataConfig":
-          service.setMicDataConfig(payload);
+          service.setMicDataConfig(data);
           return;
         case "startSamplingLights":
-          service.startSamplingLights(payload);
+          service.startSamplingLights(data);
           return;
         case "stopSamplingLights":
-          service.stopSamplingLights(payload);
+          service.stopSamplingLights(data);
           return;
         case "restartProgram":
-          service.restartProgram(payload);
+          service.restartProgram(data);
           return;
         case "updateConfigParam":
-          service.updateConfigParam(payload);
+          service.updateConfigParam(data);
           return;
         case "setPreset":
-          service.setPreset(payload);
+          service.setPreset(data);
           return;
         case "setCurrentProgram":
-          service.setCurrentProgram(payload);
+          service.setCurrentProgram(data);
           return;
       }
     });

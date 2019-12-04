@@ -20,8 +20,8 @@ export class API extends EventEmitter {
     });
 
     ws.addEventListener("message", e => {
-      const data = JSON.parse(e.data);
-      this.emit(data.type, data.payload);
+      const [event, data] = JSON.parse(e.data);
+      this.emit(event, data);
     });
 
     this.ws = ws;
@@ -60,7 +60,6 @@ export class API extends EventEmitter {
       console.warn("websocket not ready when attempting to send message");
       return;
     }
-    const e = { type: event, payload: data };
-    this.ws.send(JSON.stringify(e));
+    this.ws.send(JSON.stringify([event, data]));
   }
 }

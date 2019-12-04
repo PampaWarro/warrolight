@@ -76,17 +76,10 @@ class Mic {
     }
 
     // TODO: deinterleave channels for stereo support.
-    const channels = [
-      {
-        samples: samples
-      }
-    ];
-    const center = channels[0];
-    const allChannels = [center].concat(channels);
+    const allChannels = [{ samples: samples }];
 
     this.soundEmitter.emit("audioframe", {
-      center: center,
-      channels: channels,
+      center: allChannels[0],
       allChannels: allChannels,
       sampleRate: this.sampleRate,
       frameSize: samples.length,

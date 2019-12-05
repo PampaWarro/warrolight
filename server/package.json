@@ -23,7 +23,7 @@
     "fili": "^2.0.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "naudiodon": "^2.1.0",
+    "naudiodon": "federicobond/naudiodon#master",
     "performance-now": "^2.1.0",
     "serialport": "^8.0.5",
     "ws": "^7.2.0"

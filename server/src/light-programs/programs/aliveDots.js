@@ -2,49 +2,30 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
+class Dot {
+  constructor(numberOfLeds) {
+    this.pos = Math.floor(Math.random() * numberOfLeds);
+    this.speed = Math.random() * 2 + 0.2;
+    this.intensity = Math.random();
+    this.val = 0.1;
+    this.color = Math.random() / 3;
+    this.saturation = Math.random() * 0.3 + 0.7;
+    this.direction = Math.sign(Math.random() - 0.5);
+  }
+}
+
 module.exports = class AliveDots extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;
-    let self = this;
     this.lastVolume = 0;
-
-    this.createDot = () => {
-      return {
-        pos: Math.floor(Math.random() * this.numberOfLeds),
-        speed: Math.random() * 2 + 0.2,
-        intensity: Math.random(),
-        val: 0.1,
-        color: Math.random() / 3,
-        saturation: Math.random() * 0.3 + 0.7,
-        direction: Math.sign(Math.random() - 0.5),
-        update: function() {
-          if (this.val < this.intensity) {
-            this.val += 0.05;
-          }
-          let vol = self.averageVolume;
-          let volDiff = vol - self.lastVolume;
-          this.pos =
-            this.pos +
-            this.speed * (vol * vol) * 100 * self.config.musicWeight * volDiff +
-            (self.config.doble ? this.direction : 1) *
-              self.config.speedWeight *
-              this.speed;
-
-          this.pos = this.pos % self.numberOfLeds;
-          // this.intensity = vol
-          if (this.pos < 0) {
-            this.pos = self.numberOfLeds + this.pos;
-          }
-        }
-      };
-    };
   }
 
   start(config, draw) {
     super.start(config, draw);
-    this.dots = _.map(_.range(this.config.numberOfParticles), i =>
-      this.createDot()
+    this.dots = _.map(
+      _.range(this.config.numberOfParticles),
+      () => new Dot(this.numberOfLeds)
     );
   }
 
@@ -65,7 +46,7 @@ module.exports = class AliveDots extends SoundBasedFunction {
       let [r, g, b] = this.stars[roundPos];
       let [ru, gu, bu] = this.stars[roundPosNext];
 
-      dot.update();
+      this.updateDot(dot);
 
       let high = dot.pos - roundPos;
       let low = 1 - high;
@@ -87,6 +68,27 @@ module.exports = class AliveDots extends SoundBasedFunction {
         ColorUtils.dim([r, g, b], this.config.brillo)
       )
     );
+  }
+
+  updateDot(dot) {
+    if (dot.val < dot.intensity) {
+      dot.val += 0.05;
+    }
+
+    let vol = this.averageVolume;
+    let volDiff = vol - this.lastVolume;
+    dot.pos =
+      dot.pos +
+      dot.speed * (vol * vol) * 100 * this.config.musicWeight * volDiff +
+      (this.config.doble ? dot.direction : 1) *
+        this.config.speedWeight *
+        dot.speed;
+
+    dot.pos = dot.pos % this.numberOfLeds;
+    // dot.intensity = vol
+    if (dot.pos < 0) {
+      dot.pos = this.numberOfLeds + dot.pos;
+    }
   }
 
   static presets() {

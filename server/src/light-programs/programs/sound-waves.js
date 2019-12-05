@@ -2,28 +2,26 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
+class Dot {
+  constructor(config, relativeVolume) {
+    //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
+    this.waveCenterX = config.waveCenterX;
+    this.waveCenterY = config.waveCenterY;
+    this.speed = relativeVolume * relativeVolume + 0.05;
+    // this.speed = 0.1;
+    this.intensity = relativeVolume;
+    this.distance = config.initialDistance;
+    this.color = relativeVolume;
+    this.saturation = 0.95;
+  }
+}
+
 module.exports = class SoundWaves extends SoundBasedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;
-    let self = this;
     this.lastCreation = new Date();
     this.dots = [];
-
-    this.createDot = () => {
-      let relativeVolume = self.averageRelativeVolume;
-      //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
-      return {
-        waveCenterX: this.config.waveCenterX,
-        waveCenterY: this.config.waveCenterY,
-        speed: relativeVolume * relativeVolume + 0.05,
-        // speed: 0.1,
-        intensity: relativeVolume,
-        distance: self.config.initialDistance,
-        color: relativeVolume,
-        saturation: 0.95
-      };
-    };
   }
 
   updateWave(wave) {
@@ -38,7 +36,7 @@ module.exports = class SoundWaves extends SoundBasedFunction {
       (timeSinceLastCreation > 50 && this.averageRelativeVolume > 0.3) ||
       (timeSinceLastCreation > 350 && this.averageRelativeVolume > 0.1)
     ) {
-      this.dots.push(this.createDot());
+      this.dots.push(new Dot(this.config, this.averageRelativeVolume));
       this.lastCreation = new Date();
 
       this.dots = _.filter(

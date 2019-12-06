@@ -13,20 +13,22 @@ exports.startServer = function startServer(controller) {
   });
 
   const sound = startSoundListener(soundAnalyzer, micConfig);
+  sound.setListener(lastVolumes => send("micSample", lastVolumes));
 
   const wss = new WebSocket.Server({ port: 8080 });
 
+  function send(event, data) {
+    const message = JSON.stringify([event, data]);
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  }
+
+  const service = new LightsService(controller, micConfig, send);
+
   wss.on("connection", function connection(ws) {
-    function send(event, data) {
-      ws.send(JSON.stringify([event, data]));
-    }
-
-    // Each service handles a single client, consider using broadcasting
-    // to send data to all connected clients, then let clients takeover
-    // between themselves to avoid holding too many connections open.
-    const service = new LightsService(controller, micConfig, send);
-
-    sound.setListener(lastVolumes => send("micSample", lastVolumes));
 
     ws.on("message", function incoming(message) {
       const [event, data] = JSON.parse(message);

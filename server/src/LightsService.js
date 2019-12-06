@@ -1,6 +1,6 @@
 const { startMic } = require("./mic");
 const soundAnalyzer = require("./soundAnalyzer");
-const { MicConfig, SoundListener } = require("./sound");
+const { SoundListener } = require("./sound");
 const _ = require("lodash");
 
 startMic();
@@ -13,10 +13,10 @@ function lightsToByteString(ledsColorArray) {
 module.exports = class LightsService {
   constructor(controller, send) {
     this.controller = controller;
-    this.micConfig = new MicConfig({
+    this.micConfig = {
       sendingMicData: true,
       metric: "Rms"
-    });
+    };
     this.send = send;
     this.simulating = false;
 
@@ -36,7 +36,7 @@ module.exports = class LightsService {
       programs: controller.getProgramsSchema(),
       currentProgramName: controller.currentProgramName,
       currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig.config
+      micConfig: this.micConfig
     });
 
     controller.on("lights", this.sendLightsSample);
@@ -60,7 +60,7 @@ module.exports = class LightsService {
     this.send("stateChange", {
       currentProgramName: controller.currentProgramName,
       currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig.config
+      micConfig: this.micConfig
     });
   }
 
@@ -71,7 +71,7 @@ module.exports = class LightsService {
       console.log("[OFF] Web client stopped receiving MIC data".gray);
     }
 
-    this.micConfig.update(newMicConfig);
+    Object.assign(this.micConfig, newMicConfig);
 
     this.broadcastStateChange();
   }
@@ -105,7 +105,7 @@ module.exports = class LightsService {
     this.send("stateChange", {
       currentProgramName: controller.currentProgramName,
       currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig.config
+      micConfig: this.micConfig
     });
   }
 

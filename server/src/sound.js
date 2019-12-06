@@ -1,23 +1,5 @@
 const _ = require("lodash");
 
-exports.MicConfig = class MicConfig {
-  constructor(config) {
-    this.config = config;
-  }
-
-  update(newConfig) {
-    Object.assign(this.config, newConfig);
-  }
-
-  isSendingMicData() {
-    return this.config.sendingMicData;
-  }
-
-  getMetric() {
-    return this.config.metric;
-  }
-};
-
 exports.SoundListener = class SoundListener {
 
   constructor(soundAnalyzer, micConfig) {
@@ -31,7 +13,7 @@ exports.SoundListener = class SoundListener {
     let lastRawVolumes = [];
 
     const flushVolume = _.throttle(() => {
-      if (this.micConfig.isSendingMicData()) {
+      if (this.micConfig.sendingMicData) {
         callback(lastVolumes);
       }
       lastVolumes = [];
@@ -54,7 +36,7 @@ exports.SoundListener = class SoundListener {
       lastRawVolumes.push({
         ..._.mapValues(
           filteredBands,
-          (b, name) => frame.center.summary[name + micConfig.getMetric()]
+          (b, name) => frame.center.summary[name + micConfig.metric]
         ),
         all: normalizedValue
       });

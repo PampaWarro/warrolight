@@ -17,7 +17,6 @@ module.exports = class LightProgram {
   }
 
   start(config, draw) {
-    // TODO: creating new fields outside contructor prevents class optimization
     this.config = config;
     this.timeInMs = 0;
     this.frameNumber = 0;

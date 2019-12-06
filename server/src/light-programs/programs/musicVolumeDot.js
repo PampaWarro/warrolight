@@ -1,4 +1,3 @@
-const _ = require("lodash")
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
@@ -8,8 +7,7 @@ module.exports = class MusicVolumeDot extends LightProgram {
   }
 
   start(config, draw) {
-    this.lastVolume = new Array(this.numberOfLeds + 1);
-    _.fill(this.lastVolume, [0, 0, 0]);
+    this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
 

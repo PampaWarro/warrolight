@@ -1,17 +1,78 @@
 const _ = require("lodash");
 
+const devicesTypes = {
+  serial: require("./devices/serial"),
+  udp: require("./devices/udp")
+};
+
+function instantiateDevicesFromConfig(outputDevices) {
+  let devices = {};
+  _.each(outputDevices, (deviceConfig, name) => {
+    const { type, params } = deviceConfig;
+    const deviceClass = devicesTypes[type];
+
+    if (!deviceClass) {
+      throw new Error(`Invalid device type: ${type}`);
+    }
+
+    devices[name] = new deviceClass(params);
+  });
+  return devices;
+}
+
 module.exports = class DeviceMultiplexer {
-  constructor(numberOfLights, devices, lightToDeviceMapping) {
-    this.numberOfLights = numberOfLights;
-    this.devices = devices;
+  constructor(setup) {
+    this.numberOfLights = setup.lights;
+
+    let devices = instantiateDevicesFromConfig(setup.outputDevices)
+    let devicesList = [];
+    let namesToIndex = {};
+    _.each(_.toPairs(devices), ([name, device], i) => {
+      devicesList.push(device);
+      namesToIndex[name] = i;
+    });
+    let lightToDevice = new Array(this.numberOfLights);
+
+    // For each segment, save that light 'i' of the strip corresponds to light 'j' of device 'deviceName'
+    _.each(setup.lightsToDevicesMapping, ({ from, to, baseIndex, deviceName }) => {
+      for (let i = from; i < to; i++) {
+        let j = i - from + baseIndex;
+        if (!lightToDevice[i]) {
+          lightToDevice[i] = [namesToIndex[deviceName], j];
+        } else {
+          console.warn(
+            `There are two devices being mapped to the same light (${deviceName} to ${i})`
+          );
+        }
+      }
+    });
+
+    let unmappedIndexes = [];
+    for (let i = 0; i < this.numberOfLights; i++) {
+      if (!lightToDevice[i]) {
+        unmappedIndexes.push(i);
+        // -1 indicates to the multiplexer that that light can be ignored
+        lightToDevice[i] = [-1, 0];
+      }
+    }
+
+    if (unmappedIndexes.length) {
+      console.warn(
+        "In the lights-devices mapping some light were not mapped to any device: ",
+        JSON.stringify(unmappedIndexes)
+      );
+    }
+
+    this.devices = devicesList;
     this.targetDevice = [];
     this.targetPosition = [];
 
-    for (let i = 0; i < numberOfLights; i++) {
-      const [device, position] = lightToDeviceMapping(i);
+    for (let i = 0; i < this.numberOfLights; i++) {
+      const [device, position] = lightToDevice[i];
       this.targetDevice[i] = device;
       this.targetPosition[i] = position;
     }
+
     this.statusCbk = () => null;
 
     // Report devices' states every 1s

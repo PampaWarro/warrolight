@@ -22,7 +22,10 @@ module.exports = class TimeTickedFunction {
       this.timeInMs = new Date() - this.startTime;
       this.frameNumber++;
 
-      this.step(draw);
+      this.step(colorsArray =>
+        draw(_.map(colorsArray, col =>
+          ColorUtils.dim(col, this.config.globalBrightness)))
+      );
 
       let drawingTimeMs = new Date() - start;
       let remainingTime = 1000 / this.config.fps - drawingTimeMs;
@@ -41,14 +44,7 @@ module.exports = class TimeTickedFunction {
   }
 
   step(draw) {
-    this.drawFrame(
-      colorsArray =>
-        draw(
-          _.map(colorsArray, col =>
-            ColorUtils.dim(col, this.config.globalBrightness)
-          )
-        ),
-    );
+    this.drawFrame(draw);
   }
 
   // Override in subclasses

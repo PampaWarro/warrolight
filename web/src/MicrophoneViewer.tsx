@@ -11,12 +11,14 @@ interface State {
 }
 
 export class MicrophoneViewer extends React.Component<Props, State> {
-  // TODO: remove this from instance variable
-  canvasCtx!: CanvasRenderingContext2D;
+  canvas: React.RefObject<HTMLCanvasElement>;
+  renderer: HistogramRenderer;
 
   constructor(props: Props) {
     super(props);
     this.state = { perBand: false };
+    this.canvas = React.createRef();
+    this.renderer = new HistogramRenderer();
   }
 
   toggleMic() {
@@ -29,113 +31,8 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this.createHistogramCanvas();
-  }
-
   update(samples: MicSample[]) {
-    for (let sample of samples) {
-      this.plotPerBandHistogram(sample);
-    }
-  }
-
-  createHistogramCanvas() {
-    const canvas = document.getElementById("music") as HTMLCanvasElement;
-    this.canvasCtx = canvas.getContext("2d")!;
-    this.canvasCtx.clearRect(
-      0,
-      0,
-      this.canvasCtx.canvas.width,
-      this.canvasCtx.canvas.height
-    );
-  }
-
-  plotPerBandHistogram({ bass, mid, high, all }: MicSample) {
-    let rms = Math.round(all * 255);
-    let max = 0;
-    let level = Math.min(1, (bass + mid + high) / 3);
-
-    let w = 2;
-    let HEIGHT = this.canvasCtx.canvas.height / 3;
-    let h;
-    if (this.state.perBand) {
-      this.canvasCtx.globalCompositeOperation = "screen";
-
-      this.canvasCtx.fillStyle = "#FF4C4C";
-      h = Math.round(bass * HEIGHT);
-      this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 130,
-        HEIGHT - h,
-        w,
-        h
-      );
-
-      h = Math.round(mid * HEIGHT);
-      this.canvasCtx.fillStyle = "#34BF49";
-      this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 130,
-        HEIGHT - h + HEIGHT,
-        w,
-        h
-      );
-
-      h = Math.round(high * HEIGHT);
-      this.canvasCtx.fillStyle = "#0099E5";
-      this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 130,
-        HEIGHT - h + HEIGHT * 2,
-        w,
-        h
-      );
-
-      this.canvasCtx.globalCompositeOperation = "source-over";
-    } else {
-      this.canvasCtx.fillStyle = `rgba(100,100,100)`;
-      h = Math.round((rms / 255) * HEIGHT * 3);
-      this.canvasCtx.fillRect(
-        this.canvasCtx.canvas.width - 130,
-        HEIGHT - h + HEIGHT * 2,
-        w,
-        h
-      );
-    }
-
-    // this.canvasCtx.fillStyle = `#ff5500`;
-    // Move all left
-    let imageData = this.canvasCtx.getImageData(
-      w,
-      0,
-      this.canvasCtx.canvas.width - 1,
-      this.canvasCtx.canvas.height
-    );
-    this.canvasCtx.putImageData(imageData, 0, 0);
-    // now clear the right-most pixels:
-    this.canvasCtx.clearRect(
-      this.canvasCtx.canvas.width - w,
-      0,
-      w,
-      this.canvasCtx.canvas.height
-    );
-
-    this.canvasCtx.fillStyle = "white";
-    this.canvasCtx.font = "12px sans-serif";
-    this.canvasCtx.clearRect(
-      this.canvasCtx.canvas.width - 100,
-      0,
-      100,
-      this.canvasCtx.canvas.height
-    );
-    this.canvasCtx.fillText(
-      `MAX Vol: ${Math.round(max * 100)}`,
-      this.canvasCtx.canvas.width - 80,
-      30
-    );
-    // this.canvasCtx.fillText(`    Vol: ${Math.round(this.averageVolume*100)}`, 310, 30);
-    this.canvasCtx.fillText(
-      `REL Vol: ${Math.round(level * 100)}`,
-      this.canvasCtx.canvas.width - 80,
-      50
-    );
+    this.renderer.draw(this.canvas.current!, samples, this.state.perBand);
   }
 
   togglePerBandMode(e: React.SyntheticEvent) {
@@ -189,6 +86,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
         <canvas
           id="music"
+          ref={this.canvas}
           width="800"
           onClick={this.toggleMic.bind(this)}
           height="200"
@@ -202,5 +100,60 @@ export class MicrophoneViewer extends React.Component<Props, State> {
         )}
       </div>
     );
+  }
+}
+
+
+class HistogramRenderer {
+
+  draw(canvas: HTMLCanvasElement, samples: MicSample[], perBand: boolean) {
+    let ctx = canvas.getContext("2d")!;
+
+    for (let sample of samples) {
+      const { bass, mid, high, all } = sample;
+
+      let rms = Math.round(all * 255);
+      let max = 0;
+      let level = Math.min(1, (bass + mid + high) / 3);
+
+      let w = 2;
+      let HEIGHT = canvas.height / 3;
+      let h;
+      if (perBand) {
+        ctx.globalCompositeOperation = "screen";
+
+        ctx.fillStyle = "#FF4C4C";
+        h = Math.round(bass * HEIGHT);
+        ctx.fillRect(canvas.width - 130, HEIGHT - h, w, h);
+
+        h = Math.round(mid * HEIGHT);
+        ctx.fillStyle = "#34BF49";
+        ctx.fillRect(canvas.width - 130, HEIGHT - h + HEIGHT, w, h);
+
+        h = Math.round(high * HEIGHT);
+        ctx.fillStyle = "#0099E5";
+        ctx.fillRect(canvas.width - 130, HEIGHT - h + HEIGHT * 2, w, h);
+
+        ctx.globalCompositeOperation = "source-over";
+      } else {
+        ctx.fillStyle = `rgba(100,100,100)`;
+        h = Math.round((rms / 255) * HEIGHT * 3);
+        ctx.fillRect(canvas.width - 130, HEIGHT - h + HEIGHT * 2, w, h);
+      }
+
+      // ctx.fillStyle = `#ff5500`;
+      // Move all left
+      let imageData = ctx.getImageData(w, 0, canvas.width - 1, canvas.height);
+      ctx.putImageData(imageData, 0, 0);
+      // now clear the right-most pixels:
+      ctx.clearRect(canvas.width - w, 0, w, canvas.height);
+
+      ctx.fillStyle = "white";
+      ctx.font = "12px sans-serif";
+      ctx.clearRect(canvas.width - 100, 0, 100, canvas.height);
+      ctx.fillText(`MAX Vol: ${Math.round(max * 100)}`, canvas.width - 80, 30);
+      // ctx.fillText(`    Vol: ${Math.round(this.averageVolume*100)}`, 310, 30);
+      ctx.fillText(`REL Vol: ${Math.round(level * 100)}`, canvas.width - 80, 50);
+    }
   }
 }

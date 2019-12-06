@@ -2,65 +2,66 @@ const TimeTickedFunction = require("./TimeTickedFunction");
 const _ = require("lodash");
 const soundEmitter = require("../../soundEmitter");
 
-let lastFrameData = {
-  centroid: 0,
-  rms: 0,
-  spectralBands: { bass: { energy: 0 } },
-  filteredBands: { bass: { energy: 0, rms: 25 } },
-  movingStats: { rms: { slow: { value: 0, normalizedValue: 0 } } },
-  spectralCentroid: { bin: 100 }
-};
+let audio = {
+  lastFrameData: {
+    centroid: 0,
+    rms: 0,
+    spectralBands: { bass: { energy: 0 } },
+    filteredBands: { bass: { energy: 0, rms: 25 } },
+    movingStats: { rms: { slow: { value: 0, normalizedValue: 0 } } },
+    spectralCentroid: { bin: 100 }
+  }
+}
 
-let currentAudioFrame = lastFrameData;
+audio.currentAudioFrame = audio.lastFrameData;
 
-let absolutefft = _.range(0, 512).map(() => 0);
-let maxabsolutefft = _.range(0, 512).map(() => 0);
-
-let medianVolume11 = _.map(_.range(11), () => 0);
-let averageVolume = 0;
-let averageRelativeVolume = 0;
-let averageVolumeSmoothed = 0;
-let averageVolumeSmoothedSlow = 0;
-let averageRelativeVolumeSmoothed = 0;
-let medianVolume = 0;
-let maxVolume = 0;
-let audioReady = false;
+audio.absolutefft = _.range(0, 512).map(() => 0);
+audio.maxabsolutefft = _.range(0, 512).map(() => 0);
+audio.medianVolume11 = _.map(_.range(11), () => 0);
+audio.averageVolume = 0;
+audio.averageRelativeVolume = 0;
+audio.averageVolumeSmoothed = 0;
+audio.averageVolumeSmoothedSlow = 0;
+audio.averageRelativeVolumeSmoothed = 0;
+audio.medianVolume = 0;
+audio.maxVolume = 0;
+audio.audioReady = false;
 
 soundEmitter.on("processedaudioframe", frame => {
   let { center: lastFrame } = frame;
-  realSound = frame.center.rms;
-  realSound = lastFrame.rms;
+  let realSound = frame.center.rms;
+  // realSound = lastFrame.rms;
 
-  currentAudioFrame = frame;
-  audioReady = true;
-  lastFrameData = lastFrame;
+  audio.currentAudioFrame = frame;
+  audio.audioReady = true;
+  audio.lastFrameData = lastFrame;
 
   _.each(
-    maxabsolutefft,
+    audio.maxabsolutefft,
     (v, i) =>
-      (maxabsolutefft[i] = Math.max(
-        maxabsolutefft[i] * 0.99,
+      (audio.maxabsolutefft[i] = Math.max(
+        audio.maxabsolutefft[i] * 0.99,
         lastFrame.absolutefft[i]
       ))
   );
   _.each(
-    absolutefft,
+    audio.absolutefft,
     (v, i) =>
-      (absolutefft[i] = absolutefft[i] * 0.5 + 0.5 * lastFrame.absolutefft[i])
+      (audio.absolutefft[i] = audio.absolutefft[i] * 0.5 + 0.5 * lastFrame.absolutefft[i])
   );
 
-  averageVolume = realSound;
-  averageVolumeSmoothed = (averageVolume + 2 * averageVolumeSmoothed) / 3;
-  averageVolumeSmoothedSlow =
-    (averageVolume + 20 * averageVolumeSmoothedSlow) / 21;
+  audio.averageVolume = realSound;
+  audio.averageVolumeSmoothed = (audio.averageVolume + 2 * audio.averageVolumeSmoothed) / 3;
+  audio.averageVolumeSmoothedSlow =
+    (audio.averageVolume + 20 * audio.averageVolumeSmoothedSlow) / 21;
 
-  medianVolume11.push(averageRelativeVolume);
-  medianVolume11 = medianVolume11.slice(1);
-  medianVolume = _.sortBy(medianVolume11)[5];
+  audio.medianVolume11.push(audio.averageRelativeVolume);
+  audio.medianVolume11 = audio.medianVolume11.slice(1);
+  audio.medianVolume = _.sortBy(audio.medianVolume11)[5];
 
-  maxVolume = (Math.max(maxVolume, averageVolume) * 500 + averageVolume) / 501;
-  averageRelativeVolume = averageVolume / (maxVolume || 1);
-  averageRelativeVolumeSmoothed = averageVolumeSmoothed / (maxVolume || 1);
+  audio.maxVolume = (Math.max(audio.maxVolume, audio.averageVolume) * 500 + audio.averageVolume) / 501;
+  audio.averageRelativeVolume = audio.averageVolume / (audio.maxVolume || 1);
+  audio.averageRelativeVolumeSmoothed = audio.averageVolumeSmoothed / (audio.maxVolume || 1);
 });
 
 module.exports = class SoundBasedFunction extends TimeTickedFunction {
@@ -69,38 +70,38 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
   }
 
   start(config, draw) {
-    this.audioReady = audioReady;
-    this.currentAudioFrame = currentAudioFrame;
-    this.averageVolume = averageVolume;
-    this.averageRelativeVolume = averageRelativeVolume;
-    this.averageVolumeSmoothed = averageVolumeSmoothed;
-    this.averageVolumeSmoothedSlow = averageVolumeSmoothedSlow;
-    this.medianVolume11 = medianVolume11;
-    this.medianVolume = medianVolume;
+    this.audioReady = audio.audioReady;
+    this.currentAudioFrame = audio.currentAudioFrame;
+    this.averageVolume = audio.averageVolume;
+    this.averageRelativeVolume = audio.averageRelativeVolume;
+    this.averageVolumeSmoothed = audio.averageVolumeSmoothed;
+    this.averageVolumeSmoothedSlow = audio.averageVolumeSmoothedSlow;
+    this.medianVolume11 = audio.medianVolume11;
+    this.medianVolume = audio.medianVolume;
     let self = this;
 
     self.processInterval = setTimeout(function updateValues() {
       // calculate average
-      self.audioReady = audioReady;
-      self.currentAudioFrame = currentAudioFrame;
-      self.averageVolume = averageVolume;
-      self.averageVolumeSmoothed = averageVolumeSmoothed;
-      self.averageVolumeSmoothedSlow = averageVolumeSmoothedSlow;
+      self.audioReady = audio.audioReady;
+      self.currentAudioFrame = audio.currentAudioFrame;
+      self.averageVolume = audio.averageVolume;
+      self.averageVolumeSmoothed = audio.averageVolumeSmoothed;
+      self.averageVolumeSmoothedSlow = audio.averageVolumeSmoothedSlow;
 
-      self.maxVolume = maxVolume;
-      self.averageRelativeVolume = averageRelativeVolume;
-      self.averageRelativeVolumeSmoothed = averageRelativeVolumeSmoothed;
+      self.maxVolume = audio.maxVolume;
+      self.averageRelativeVolume = audio.averageRelativeVolume;
+      self.averageRelativeVolumeSmoothed = audio.averageRelativeVolumeSmoothed;
 
-      self.medianVolume11 = medianVolume11;
-      self.medianVolume = medianVolume;
+      self.medianVolume11 = audio.medianVolume11;
+      self.medianVolume = audio.medianVolume;
 
-      self.centroid = lastFrameData.centroid;
-      self.lastFrame = lastFrameData;
-      self.absolutefft = absolutefft;
-      self.maxabsolutefft = maxabsolutefft;
+      self.centroid = audio.lastFrameData.centroid;
+      self.lastFrame = audio.lastFrameData;
+      self.absolutefft = audio.absolutefft;
+      self.maxabsolutefft = audio.maxabsolutefft;
 
       _.each(
-        _.get(currentAudioFrame, "center.summary"),
+        _.get(audio.currentAudioFrame, "center.summary"),
         (val, key) => (self[key] = val)
       );
 

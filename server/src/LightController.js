@@ -37,10 +37,9 @@ const programNames = [
   "water-flood"
 ];
 
-let lightsSampleEmitter = new EventEmitter();
-
-module.exports = class LightController {
+module.exports = class LightController extends EventEmitter {
   constructor(multiplexer, geometry, shapeMapping) {
+    super();
     this.multiplexer = multiplexer;
     this.layout = {
       numberOfLeds: geometry.leds,
@@ -150,11 +149,11 @@ module.exports = class LightController {
   }
 
   onLights(cbk) {
-    lightsSampleEmitter.on("lights", cbk);
+    this.on("lights", cbk);
   }
 
   removeOnLights(cbk) {
-    lightsSampleEmitter.removeListener("lights", cbk);
+    this.removeListener("lights", cbk);
   }
 
   onDeviceStatus(cbk) {
@@ -173,7 +172,7 @@ module.exports = class LightController {
   updateLeds(rgbaLeds) {
     // TODO: remove rgba before?
     const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
-    lightsSampleEmitter.emit("lights", rgbLeds);
+    this.emit("lights", rgbLeds);
 
     this.setLights(rgbLeds);
     let lastUpdateLatency = new Date() - this.lastLightsUpdate;

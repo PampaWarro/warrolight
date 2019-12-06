@@ -22,10 +22,10 @@ module.exports = class FrequencyActivation extends SoundBasedFunction {
     this.time += this.config.speed;
 
     let size = this.config.zoom;
-    if (this.absolutefft) {
+    if (this.audio.absolutefft) {
       for (let i = 0; i < this.numberOfLeds; i++) {
         let pos = Math.floor((i % 150) / size);
-        let vol = (this.config.multiplier * this.absolutefft[pos + 5]) / 10;
+        let vol = (this.config.multiplier * this.audio.absolutefft[pos + 5]) / 10;
 
         let newVal = ColorUtils.HSVtoRGB(vol, 1, Math.min(vol, 1));
 

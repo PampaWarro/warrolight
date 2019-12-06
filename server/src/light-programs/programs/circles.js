@@ -33,7 +33,7 @@ module.exports = class Circles extends SoundBasedFunction {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
-    const centerChannel = this.currentAudioFrame.center;
+    const centerChannel = this.audio.currentAudioFrame.center;
     if (!centerChannel) {
       return;
     }

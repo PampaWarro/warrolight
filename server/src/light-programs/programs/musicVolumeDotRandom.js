@@ -31,7 +31,8 @@ module.exports = class musicVolumeDotRandom extends SoundBasedFunction {
   drawFrame(draw) {
     this.time += this.config.speed;
 
-    let vol = (this[this.config.soundMetric] || 0) * this.config.multiplier;
+    const summary = this.audio.currentAudioFrame.center.summary;
+    let vol = (summary[this.config.soundMetric] || 0) * this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if (vol < this.config.cutThreshold) {

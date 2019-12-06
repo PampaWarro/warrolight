@@ -33,10 +33,12 @@ module.exports = class MusicFlow extends SoundBasedFunction {
         (vol - this.config.cutThreshold) * (1 / (1 - this.config.cutThreshold));
     }
 
+    let summary = this.audio.currentAudioFrame.center.summary;
+
     let [hueVol] = ColorUtils.RGBtoHSV(
-      this.midFastPeakDecay,
-      this.highFastPeakDecay,
-      this.bassFastPeakDecay
+      summary.midFastPeakDecay,
+      summary.highFastPeakDecay,
+      summary.bassFastPeakDecay
     );
     let newVal = ColorUtils.HSVtoRGB(
       (hueVol + this.realTime / 2000) % 1,

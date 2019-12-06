@@ -3,7 +3,7 @@ const _ = require("lodash");
 const soundEmitter = require("../../soundEmitter");
 
 let audio = {
-  lastFrameData: {
+  lastFrame: {
     centroid: 0,
     rms: 0,
     spectralBands: { bass: { energy: 0 } },
@@ -13,7 +13,7 @@ let audio = {
   }
 }
 
-audio.currentAudioFrame = audio.lastFrameData;
+audio.currentAudioFrame = audio.lastFrame;
 
 audio.absolutefft = _.range(0, 512).map(() => 0);
 audio.maxabsolutefft = _.range(0, 512).map(() => 0);
@@ -34,7 +34,7 @@ soundEmitter.on("processedaudioframe", frame => {
 
   audio.currentAudioFrame = frame;
   audio.audioReady = true;
-  audio.lastFrameData = lastFrame;
+  audio.lastFrame = lastFrame;
 
   _.each(
     audio.maxabsolutefft,
@@ -70,41 +70,11 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
   }
 
   start(config, draw) {
-    this.audioReady = audio.audioReady;
-    this.currentAudioFrame = audio.currentAudioFrame;
-    this.averageVolume = audio.averageVolume;
-    this.averageRelativeVolume = audio.averageRelativeVolume;
-    this.averageVolumeSmoothed = audio.averageVolumeSmoothed;
-    this.averageVolumeSmoothedSlow = audio.averageVolumeSmoothedSlow;
-    this.medianVolume11 = audio.medianVolume11;
-    this.medianVolume = audio.medianVolume;
+    this.audio = audio;
     let self = this;
 
     self.processInterval = setTimeout(function updateValues() {
-      // calculate average
-      self.audioReady = audio.audioReady;
-      self.currentAudioFrame = audio.currentAudioFrame;
-      self.averageVolume = audio.averageVolume;
-      self.averageVolumeSmoothed = audio.averageVolumeSmoothed;
-      self.averageVolumeSmoothedSlow = audio.averageVolumeSmoothedSlow;
-
-      self.maxVolume = audio.maxVolume;
-      self.averageRelativeVolume = audio.averageRelativeVolume;
-      self.averageRelativeVolumeSmoothed = audio.averageRelativeVolumeSmoothed;
-
-      self.medianVolume11 = audio.medianVolume11;
-      self.medianVolume = audio.medianVolume;
-
-      self.centroid = audio.lastFrameData.centroid;
-      self.lastFrame = audio.lastFrameData;
-      self.absolutefft = audio.absolutefft;
-      self.maxabsolutefft = audio.maxabsolutefft;
-
-      _.each(
-        _.get(audio.currentAudioFrame, "center.summary"),
-        (val, key) => (self[key] = val)
-      );
-
+      self.audio = audio;
       self.processInterval = setTimeout(updateValues, 1000 / self.config.fps);
     }, 1000 / self.config.fps);
 

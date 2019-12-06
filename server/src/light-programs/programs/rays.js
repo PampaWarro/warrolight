@@ -21,7 +21,7 @@ module.exports = class Rays extends SoundBasedFunction {
   updateRay(ray) {
     let speed = ray.speed * this.config.globalSpeed * ray.direction;
     if (this.config.useSoundSpeed) {
-      // let vol = Math.max(0.1, this.averageRelativeVolume - 0.2);
+      // let vol = Math.max(0.1, this.audio.averageRelativeVolume - 0.2);
       speed *= (this.bassFastPeakDecay || 0) * 3;
     }
     ray.pos += speed;

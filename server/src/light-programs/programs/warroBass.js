@@ -34,10 +34,10 @@ function audioFill(options) {
           0.35 * this.yBounds.scale * Math.cos((Math.PI * this.timeInMs) / 8000)
       ];
       // Audio dependent stuff.
-      if (!this.audioReady) {
+      if (!this.audio.audioReady) {
         return;
       }
-      const centerChannel = this.currentAudioFrame.center;
+      const centerChannel = this.audio.currentAudioFrame.center;
       const energy = getAudioEnergy(centerChannel);
       this.layers.fill.alpha = energy;
     }

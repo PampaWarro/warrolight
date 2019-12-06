@@ -135,10 +135,10 @@ module.exports = class Shapes extends LayerBasedFunction {
       1 + 0.2 * Math.cos((Math.PI * this.timeInMs) / 10000);
 
     // Audio dependent stuff.
-    if (!this.audioReady) {
+    if (!this.audio.audioReady) {
       return;
     }
-    const centerChannel = this.currentAudioFrame.center;
+    const centerChannel = this.audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;

@@ -63,10 +63,10 @@ module.exports = class RadialWarp extends LayerBasedFunction {
       (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3;
 
     // Audio dependent stuff.
-    if (!this.audioReady) {
+    if (!this.audio.audioReady) {
       return;
     }
-    const centerChannel = this.currentAudioFrame.center;
+    const centerChannel = this.audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;

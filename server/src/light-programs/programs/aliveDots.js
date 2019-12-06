@@ -75,7 +75,7 @@ module.exports = class AliveDots extends SoundBasedFunction {
       dot.val += 0.05;
     }
 
-    let vol = this.averageVolume;
+    let vol = this.audio.averageVolume;
     let volDiff = vol - this.lastVolume;
     dot.pos =
       dot.pos +

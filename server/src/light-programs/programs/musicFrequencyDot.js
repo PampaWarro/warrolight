@@ -21,7 +21,7 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
 
   // Override parent method
   drawFrame(draw) {
-    if (this.lastFrame && this.lastFrame.filteredBands) {
+    if (this.audio.lastFrame && this.audio.lastFrame.filteredBands) {
       let {
         bassRms,
         bassPeakDecay,
@@ -32,7 +32,7 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
         highRms,
         highPeakDecay,
         highMax
-      } = this.lastFrame.summary;
+      } = this.audio.lastFrame.summary;
       //let total = bassMax+midMax+highMax;
 
       let power = this.config.power; // To create contrast
@@ -52,8 +52,8 @@ module.exports = class MusicFrequencyDot extends SoundBasedFunction {
       let width = Math.round(this.numberOfLeds / this.config.numberOfOnLeds);
 
       for (let i = 0; i < this.numberOfLeds; i += 1) {
-        // let rms = this.lastFrame.movingStats.rms.slow.normalizedValue;
-        let rms = this.lastFrame.summary.bassPeakDecay;
+        // let rms = this.audio.lastFrame.movingStats.rms.slow.normalizedValue;
+        let rms = this.audio.lastFrame.summary.bassPeakDecay;
         let explosionLength = Math.ceil((Math.pow(rms, power) * width) / 3);
 
         let offsettedPosition = i % this.lastVolume.length;

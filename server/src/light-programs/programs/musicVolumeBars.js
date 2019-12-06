@@ -22,7 +22,7 @@ module.exports = class MusicVolumeBars extends SoundBasedFunction {
   drawFrame(draw) {
     this.time += this.config.speed;
 
-    // let vol = this.averageRelativeVolume * this.config.multiplier * 1.5;
+    // let vol = this.audio.averageRelativeVolume * this.config.multiplier * 1.5;
     // this.volPromedio = (vol+2*this.volPromedio)/3
     this.volPromedio = this.peakDecay;
 

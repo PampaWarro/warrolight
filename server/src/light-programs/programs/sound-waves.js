@@ -4,7 +4,7 @@ const _ = require("lodash");
 
 class Dot {
   constructor(config, relativeVolume) {
-    //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.averageVolume)}`)
+    //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.audio.averageVolume)}`)
     this.waveCenterX = config.waveCenterX;
     this.waveCenterY = config.waveCenterY;
     this.speed = relativeVolume * relativeVolume + 0.05;
@@ -33,10 +33,10 @@ module.exports = class SoundWaves extends SoundBasedFunction {
   drawFrame(draw) {
     let timeSinceLastCreation = new Date() - this.lastCreation;
     if (
-      (timeSinceLastCreation > 50 && this.averageRelativeVolume > 0.3) ||
-      (timeSinceLastCreation > 350 && this.averageRelativeVolume > 0.1)
+      (timeSinceLastCreation > 50 && this.audio.averageRelativeVolume > 0.3) ||
+      (timeSinceLastCreation > 350 && this.audio.averageRelativeVolume > 0.1)
     ) {
-      this.dots.push(new Dot(this.config, this.averageRelativeVolume));
+      this.dots.push(new Dot(this.config, this.audio.averageRelativeVolume));
       this.lastCreation = new Date();
 
       this.dots = _.filter(

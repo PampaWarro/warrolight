@@ -88,10 +88,10 @@ module.exports = class Bombs extends LayerBasedFunction {
     this.layers.high.alpha = this.config.highAlpha;
     this.layers.highNoise.alpha = this.config.highNoiseAlpha;
     // Audio dependent stuff.
-    if (!this.audioReady) {
+    if (!this.audio.audioReady) {
       return;
     }
-    const centerChannel = this.currentAudioFrame.center;
+    const centerChannel = this.audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const bass = audioSummary.bassPeakDecay;
     const highNoBass = audioSummary.highRmsNoBass;

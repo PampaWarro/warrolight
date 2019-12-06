@@ -66,8 +66,7 @@ module.exports = function mixPrograms(...programs) {
           colors => {
             this.frames[i] = colors;
             this.drawSubprogram();
-          },
-          () => true
+          }
         )
       );
     }

@@ -8,10 +8,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
   }
 
   start(config, draw) {
-    this.lastVolume = new Array(this.numberOfLeds + 1)
-      .join("0")
-      .split("")
-      .map(() => [0, 0, 0]);
+    this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
 

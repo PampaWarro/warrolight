@@ -75,25 +75,8 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
     super(config, leds);
   }
 
-  start(config, draw) {
-    this.audio = audio;
-    let self = this;
-
-    self.processInterval = setTimeout(function updateValues() {
-      self.audio = audio;
-      self.processInterval = setTimeout(updateValues, 1000 / self.config.fps);
-    }, 1000 / self.config.fps);
-
-    super.start(config, draw);
-  }
-
   step(draw) {
-    this.drawFrame(draw, this.audio);
-  }
-
-  stop() {
-    clearTimeout(this.processInterval);
-    super.stop();
+    this.drawFrame(draw, audio);
   }
 
   // Override and extend config Schema

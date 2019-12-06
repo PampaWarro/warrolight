@@ -1,8 +1,8 @@
-const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class Radial extends SoundBasedFunction {
+module.exports = class Radial extends TimeTickedFunction {
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;

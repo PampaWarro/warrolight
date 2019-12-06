@@ -1,7 +1,7 @@
-const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const _ = require("lodash");
 
-module.exports = class GarbageCollector extends SoundBasedFunction {
+module.exports = class GarbageCollector extends TimeTickedFunction {
   start(config, draw) {
     super.start(config, draw);
 

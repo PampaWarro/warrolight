@@ -1,4 +1,4 @@
-const SoundBasedFunction = require("./SoundBasedFunction.js");
+const TimeTickedFunction = require("./TimeTickedFunction.js");
 const { DrawableLayer, CompositeLayer } = require("../utils/layers");
 
 function findBounds(values) {
@@ -20,7 +20,7 @@ function findBounds(values) {
   };
 }
 
-module.exports = class LayerBasedFunction extends SoundBasedFunction {
+module.exports = class LayerBasedFunction extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.geometry = this.position || this.geometry;

@@ -1,7 +1,7 @@
-const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class MusicVolumeBars extends SoundBasedFunction {
+module.exports = class MusicVolumeBars extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.volPromedio = 0;

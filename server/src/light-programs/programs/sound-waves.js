@@ -1,4 +1,4 @@
-const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
+const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
@@ -16,7 +16,7 @@ class Dot {
   }
 }
 
-module.exports = class SoundWaves extends SoundBasedFunction {
+module.exports = class SoundWaves extends TimeTickedFunction {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;

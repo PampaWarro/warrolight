@@ -19,8 +19,8 @@ exports.MicConfig = class MicConfig {
 };
 
 class SoundListener {
-  constructor(soundEmitter, micConfig) {
-    this.soundEmitter = soundEmitter;
+  constructor(soundAnalyzer, micConfig) {
+    this.soundAnalyzer = soundAnalyzer;
     this.micConfig = micConfig;
     this.listener = () => {};
   }
@@ -39,7 +39,7 @@ class SoundListener {
 
     let avg = 1;
 
-    this.soundEmitter.on("processedaudioframe", frame => {
+    this.soundAnalyzer.on("processedaudioframe", frame => {
       let {
         center: {
           filteredBands,
@@ -85,10 +85,10 @@ class SoundListener {
 }
 
 exports.startSoundListener = function startSoundListener(
-  soundEmitter,
+  soundAnalyzer,
   micConfig
 ) {
-  const sound = new SoundListener(soundEmitter, micConfig);
+  const sound = new SoundListener(soundAnalyzer, micConfig);
   sound.start();
   return sound;
 };

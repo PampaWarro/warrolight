@@ -1,10 +1,10 @@
 const TimeTickedFunction = require("./TimeTickedFunction");
 const ProcessedAudioFrame = require("./ProcessedAudioFrame");
-const soundEmitter = require("../../soundEmitter");
+const soundAnalyzer = require("../../soundAnalyzer");
 
 const AUDIO = new ProcessedAudioFrame();
 
-soundEmitter.on("processedaudioframe", frame => AUDIO.update(frame));
+soundAnalyzer.on("processedaudioframe", frame => AUDIO.update(frame));
 
 module.exports = class SoundBasedFunction extends TimeTickedFunction {
   constructor(config, leds) {

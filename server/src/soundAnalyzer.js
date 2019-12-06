@@ -85,7 +85,7 @@ function checkModuleDeps(modules) {
 }
 
 // Main exported SoundEmitter object.
-class SoundEmitter extends EventEmitter {
+class SoundAnalyzer extends EventEmitter {
   constructor() {
     super();
     this._deferredEvents = [];
@@ -129,6 +129,4 @@ class SoundEmitter extends EventEmitter {
   }
 }
 
-const soundEmitter = new SoundEmitter();
-
-module.exports = soundEmitter;
+module.exports = new SoundAnalyzer();

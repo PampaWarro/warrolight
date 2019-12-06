@@ -1,5 +1,5 @@
 const portAudio = require("naudiodon");
-const soundEmitter = require("./soundEmitter");
+const soundAnalyzer = require("./soundAnalyzer");
 
 class Mic {
   constructor(options) {
@@ -14,7 +14,7 @@ class Mic {
     const outputBitwidth = 16;
     this.bufferSize = (this.frameSize * this.channels * outputBitwidth) / 8;
     this.debug = options.debug || false;
-    this.soundEmitter = options.soundEmitter;
+    this.soundAnalyzer = options.soundAnalyzer;
     this.audioInput = null;
     this.offsetSamples = 0;
   }
@@ -39,7 +39,7 @@ class Mic {
       }
 
       audioInput.on("end", () => {
-        soundEmitter.emit("audioProcessExitComplete");
+        soundAnalyzer.emit("audioProcessExitComplete");
       });
 
       audioInput.on("readable", () => {
@@ -53,7 +53,7 @@ class Mic {
         console.error("audio input error:", error);
       });
       audioInput.start();
-      soundEmitter.emit("startComplete");
+      soundAnalyzer.emit("startComplete");
     } else {
       if (this.debug) {
         console.error(
@@ -78,7 +78,7 @@ class Mic {
     // TODO: deinterleave channels for stereo support.
     const allChannels = [{ samples: samples }];
 
-    this.soundEmitter.emit("audioframe", {
+    this.soundAnalyzer.emit("audioframe", {
       center: allChannels[0],
       allChannels: allChannels,
       sampleRate: this.sampleRate,
@@ -96,15 +96,15 @@ class Mic {
         if (this.debug) console.log("Microphone stopped");
       });
       this.audioInput = null;
-      this.soundEmitter.emit("stopComplete");
+      this.soundAnalyzer.emit("stopComplete");
     }
   }
 
   pause() {
     if (this.audioInput != null) {
       this.audioInput.pause();
-      this.soundEmitter.pause();
-      this.soundEmitter.emit("pauseComplete");
+      this.soundAnalyzer.pause();
+      this.soundAnalyzer.emit("pauseComplete");
       if (this.debug) console.log("Microphone paused");
     }
   }
@@ -112,8 +112,8 @@ class Mic {
   resume() {
     if (this.audioInput != null) {
       this.audioInput.resume();
-      this.soundEmitter.resume();
-      this.soundEmitter.emit("resumeComplete");
+      this.soundAnalyzer.resume();
+      this.soundAnalyzer.emit("resumeComplete");
       if (this.debug) console.log("Microphone resumed");
     }
   }
@@ -133,10 +133,10 @@ function startMic() {
     channels: 1,
     bitwidth: 16,
     frameSize: frameSize,
-    soundEmitter: soundEmitter
+    soundAnalyzer: soundAnalyzer
   });
 
-  soundEmitter.init({
+  soundAnalyzer.init({
     channels: 1,
     sampleRate: 44100,
     frameSize: frameSize,
@@ -150,15 +150,15 @@ function startMic() {
     }
   });
 
-  soundEmitter.on("error", function(err) {
+  soundAnalyzer.on("error", function(err) {
     console.log("Microphone Error in Input Stream: " + err);
   });
 
-  soundEmitter.on("startComplete", function() {
+  soundAnalyzer.on("startComplete", function() {
     console.log("Microphone listening");
   });
 
-  soundEmitter.on("audioProcessExitComplete", function() {
+  soundAnalyzer.on("audioProcessExitComplete", function() {
     micInstance = null;
     console.log("Microphone stopped listening. Retrying in 1s");
     setTimeout(startMic, 1000);

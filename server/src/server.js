@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const { startMic } = require("./mic");
-const soundEmitter = require("./soundEmitter");
+const soundAnalyzer = require("./soundAnalyzer");
 const { MicConfig, startSoundListener } = require("./sound");
 const LightsService = require("./LightsService");
 
@@ -12,7 +12,7 @@ exports.startServer = function startServer(controller) {
     metric: "Rms"
   });
 
-  const sound = startSoundListener(soundEmitter, micConfig);
+  const sound = startSoundListener(soundAnalyzer, micConfig);
 
   const wss = new WebSocket.Server({ port: 8080 });
 

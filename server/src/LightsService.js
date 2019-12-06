@@ -1,4 +1,3 @@
-const { Buffer } = require("buffer");
 const { startMic } = require("./mic");
 const soundAnalyzer = require("./soundAnalyzer");
 const { MicConfig, SoundListener } = require("./sound");

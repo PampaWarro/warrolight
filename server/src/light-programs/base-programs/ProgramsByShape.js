@@ -42,7 +42,7 @@ module.exports = function programsByShape(mapping) {
         this.instances[shapeName] = new Program(specificConfig, localLeds);
         this.instances[shapeName].specificConfig = specificConfig;
       });
-      this.state = [...Array(leds.numberOfLeds)].map(() => [0, 0, 0]);
+      this.state = new Array(leds.numberOfLeds).fill([0, 0, 0]);
     }
 
     extractDefault(configSchema) {

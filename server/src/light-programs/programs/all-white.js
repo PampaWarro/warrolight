@@ -7,8 +7,8 @@ module.exports = class AllWhite extends LightProgram {
     // En HSV blanco es (0,0,1)
     let tonoDeBlanco = ColorUtils.HSVtoRGB(0, 0, this.config.brillo);
 
-    let colors = [...Array(this.numberOfLeds)]; // Array del tamaño de las luces
-    draw(colors.map(() => tonoDeBlanco));
+    let colors = new Array(this.numberOfLeds).fill(tonoDeBlanco);
+    draw(colors);
   }
 
   // Override and extend config Schema

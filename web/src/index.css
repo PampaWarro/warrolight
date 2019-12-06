@@ -89,6 +89,7 @@ input[type=range] {
   -webkit-appearance: none;
   margin: 10px 0px;
   width: 100%;
+  background-color: transparent;
 }
 
 input[type=range]::-webkit-slider-runnable-track {

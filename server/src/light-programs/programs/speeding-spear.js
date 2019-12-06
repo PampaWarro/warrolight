@@ -1,6 +1,6 @@
-const Spear = require("./color-spear");
+const ColorSpear = require("./color-spear");
 
-module.exports = class SpeedingSpear extends Spear {
+module.exports = class SpeedingSpear extends ColorSpear {
   drawFrame(draw) {
     this.count = (this.count || 0) + 1;
     if (this.count % 180 == 0) {

@@ -2,7 +2,7 @@ const LightProgram = require("./../base-programs/LightProgram");
 
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class Radial extends LightProgram {
+module.exports = class RadialSun extends LightProgram {
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;

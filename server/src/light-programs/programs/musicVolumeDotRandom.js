@@ -1,7 +1,7 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class musicVolumeDotRandom extends LightProgram {
+module.exports = class MusicVolumeDotRandom extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
   }

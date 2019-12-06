@@ -59,7 +59,6 @@ module.exports = class StripePattern extends LightProgram {
 
   start(config, draw) {
     this.pickRandomColor();
-    this.rebuildPattern();
     super.start(config, draw);
   }
 

@@ -24,11 +24,11 @@ function instantiateDevicesFromConfig(outputDevices) {
 }
 
 // TODO: move this to multiplexer constructor?
-function createLightsMultiplexer(
-  totalLightsCount,
-  devices,
-  lightsToDevicesMapping
-) {
+function createLightsMultiplexer(setup) {
+  const totalLightsCount = setup.lights;
+  const lightsToDevicesMapping = setup.lightsToDevicesMapping;
+
+  let devices = instantiateDevicesFromConfig(setup.outputDevices)
   let devicesList = [];
   let namesToIndex = {};
   _.each(_.toPairs(devices), ([name, device], i) => {
@@ -75,17 +75,11 @@ function createLightsMultiplexer(
 }
 
 exports.loadSetup = function loadSetup(setup) {
-  const devices = instantiateDevicesFromConfig(setup.outputDevices);
-
   const geometryDefinition = require(`../setups/geometries/${setup.geometry}`);
   const geometry = new Geometry(geometryDefinition);
 
   const shapeMapping = require(`../setups/shapeMappings/${setup.shapeMapping}`);
-  const multiplexer = createLightsMultiplexer(
-    setup.lights,
-    devices,
-    setup.lightsToDevicesMapping
-  );
+  const multiplexer = createLightsMultiplexer(setup);
 
   return new LightController(multiplexer, geometry, shapeMapping);
 };

@@ -1,22 +1,10 @@
 const WebSocket = require("ws");
-const { startMic } = require("./mic");
-const soundAnalyzer = require("./soundAnalyzer");
-const { MicConfig, startSoundListener } = require("./sound");
 const LightsService = require("./LightsService");
 
 exports.startServer = function startServer(controller) {
-  startMic();
-
-  const micConfig = new MicConfig({
-    sendingMicData: true,
-    metric: "Rms"
-  });
-
-  const sound = startSoundListener(soundAnalyzer, micConfig);
-  sound.setListener(lastVolumes => send("micSample", lastVolumes));
-
   const wss = new WebSocket.Server({ port: 8080 });
 
+  // Broadcast to all connected clients
   function send(event, data) {
     const message = JSON.stringify([event, data]);
     wss.clients.forEach(function each(client) {
@@ -26,7 +14,7 @@ exports.startServer = function startServer(controller) {
     });
   }
 
-  const service = new LightsService(controller, micConfig, send);
+  const service = new LightsService(controller, send);
 
   wss.on("connection", function connection(ws) {
 
@@ -61,7 +49,6 @@ exports.startServer = function startServer(controller) {
     service.connect();
 
     ws.on("disconnect", () => {
-      sound.clearListener();
       service.disconnect();
     });
   });

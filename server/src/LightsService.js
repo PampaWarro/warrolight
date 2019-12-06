@@ -1,5 +1,10 @@
 const { Buffer } = require("buffer");
+const { startMic } = require("./mic");
+const soundAnalyzer = require("./soundAnalyzer");
+const { MicConfig, SoundListener } = require("./sound");
 const _ = require("lodash");
+
+startMic();
 
 function lightsToByteString(ledsColorArray) {
   let bytes = _.flatten(ledsColorArray);
@@ -7,11 +12,18 @@ function lightsToByteString(ledsColorArray) {
 }
 
 module.exports = class LightsService {
-  constructor(controller, micConfig, send) {
+  constructor(controller, send) {
     this.controller = controller;
-    this.micConfig = micConfig;
+    this.micConfig = new MicConfig({
+      sendingMicData: true,
+      metric: "Rms"
+    });
     this.send = send;
     this.simulating = false;
+
+    const soundListener = new SoundListener(soundAnalyzer, this.micConfig);
+    // TODO: consider not processing sound when we don't have any clients.
+    soundListener.start(lastVolumes => send("micSample", lastVolumes));
 
     this.sendLightsSample = this.sendLightsSample.bind(this);
   }

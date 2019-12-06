@@ -18,21 +18,21 @@ exports.MicConfig = class MicConfig {
   }
 };
 
-class SoundListener {
+exports.SoundListener = class SoundListener {
+
   constructor(soundAnalyzer, micConfig) {
     this.soundAnalyzer = soundAnalyzer;
     this.micConfig = micConfig;
-    this.listener = () => {};
   }
 
-  start() {
+  start(callback) {
     let micConfig = this.micConfig;
     let lastVolumes = [];
     let lastRawVolumes = [];
 
     const flushVolume = _.throttle(() => {
       if (this.micConfig.isSendingMicData()) {
-        this.listener(lastVolumes);
+        callback(lastVolumes);
       }
       lastVolumes = [];
     }, 100);
@@ -74,21 +74,4 @@ class SoundListener {
       }
     });
   }
-
-  setListener(cb) {
-    this.listener = cb;
-  }
-
-  clearListener() {
-    this.listener = () => {};
-  }
 }
-
-exports.startSoundListener = function startSoundListener(
-  soundAnalyzer,
-  micConfig
-) {
-  const sound = new SoundListener(soundAnalyzer, micConfig);
-  sound.start();
-  return sound;
-};

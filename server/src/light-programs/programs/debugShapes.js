@@ -1,4 +1,4 @@
-const programsByShape = require("../base-programs/Transformations");
+const programsByShape = require("../base-programs/ProgramsByShape");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 
 const AllWhite = require("./all-white");

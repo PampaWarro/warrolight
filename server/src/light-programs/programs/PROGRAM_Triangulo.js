@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
-const programsByShape = require("../base-programs/Transformations");
+const programsByShape = require("../base-programs/ProgramsByShape");
 
 const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");

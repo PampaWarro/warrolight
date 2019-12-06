@@ -1,5 +1,5 @@
 const createMultiProgram = require("../base-programs/MultiPrograms");
-const programsByShape = require("../base-programs/Transformations");
+const programsByShape = require("../base-programs/ProgramsByShape");
 const TimeTickedFunction = require("../base-programs/TimeTickedFunction");
 const ColorUtils = require("../utils/ColorUtils");
 

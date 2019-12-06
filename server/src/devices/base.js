@@ -55,7 +55,6 @@ exports.LightDevice = class LightDevice {
         this.lastPrint = now();
         this.logInfo(`FPS: ${FPS}`.green);
       }
-    } else {
     }
   }
 

@@ -31,7 +31,7 @@ module.exports = class ProcessedAudioFrame {
     // realSound = lastFrame.rms;
   
     this.currentAudioFrame = frame;
-    this.thisReady = true;
+    this.audioReady = true;
     this.lastFrame = lastFrame;
   
     _.each(

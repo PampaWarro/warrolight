@@ -27,9 +27,10 @@ module.exports = class LightProgram {
       this.timeInMs = new Date() - this.startTime;
       this.frameNumber++;
 
-      this.step(colorsArray =>
-        draw(_.map(colorsArray, col =>
-          ColorUtils.dim(col, this.config.globalBrightness)))
+      this.drawFrame(
+        colorsArray => draw(_.map(colorsArray, col =>
+          ColorUtils.dim(col, this.config.globalBrightness))),
+        AUDIO
       );
 
       let drawingTimeMs = new Date() - start;
@@ -46,10 +47,6 @@ module.exports = class LightProgram {
     };
 
     setTimeout(frame, 1);
-  }
-
-  step(draw) {
-    this.drawFrame(draw, AUDIO);
   }
 
   // Override in subclasses

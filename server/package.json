@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "una-tira-prueba"
+    "setup": "fuego-2019"
   },
   "keywords": [],
   "author": "Pampa Warro",

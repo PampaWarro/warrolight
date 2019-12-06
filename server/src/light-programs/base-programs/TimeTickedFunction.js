@@ -1,5 +1,11 @@
+const ProcessedAudioFrame = require("./ProcessedAudioFrame");
+const soundAnalyzer = require("../../soundAnalyzer");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
+
+const AUDIO = new ProcessedAudioFrame();
+
+soundAnalyzer.on("processedaudioframe", frame => AUDIO.update(frame));
 
 module.exports = class TimeTickedFunction {
   constructor(config, leds) {
@@ -44,11 +50,11 @@ module.exports = class TimeTickedFunction {
   }
 
   step(draw) {
-    this.drawFrame(draw);
+    this.drawFrame(draw, AUDIO);
   }
 
   // Override in subclasses
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     throw new Error("Child classes should override drawFrame");
   }
 

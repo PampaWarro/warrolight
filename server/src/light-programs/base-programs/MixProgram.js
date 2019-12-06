@@ -13,10 +13,10 @@ module.exports = function mixPrograms(...programs) {
         if (!_.isArray(scheduleItem)) {
           scheduleItem = [scheduleItem, {}, 1];
         }
-        let [program, specificConfig, alpha] = scheduleItem;
+        let [Program, specificConfig, alpha] = scheduleItem;
 
         this.programs.push({
-          programInstance: new program(config, leds, shapeMapping),
+          programInstance: new Program(config, leds, shapeMapping),
           customConfig: specificConfig,
           alpha: alpha || 1
         });

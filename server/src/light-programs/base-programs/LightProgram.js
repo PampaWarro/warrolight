@@ -23,8 +23,8 @@ module.exports = class LightProgram {
     this.startTime = new Date();
 
     const frame = () => {
-      let start = new Date();
-      this.timeInMs = new Date() - this.startTime;
+      let start = Date.now();
+      this.timeInMs = Date.now() - this.startTime;
       this.frameNumber++;
 
       this.drawFrame(
@@ -33,7 +33,7 @@ module.exports = class LightProgram {
         AUDIO
       );
 
-      let drawingTimeMs = new Date() - start;
+      let drawingTimeMs = Date.now() - start;
       let remainingTime = 1000 / this.config.fps - drawingTimeMs;
 
       if (drawingTimeMs > 20) {

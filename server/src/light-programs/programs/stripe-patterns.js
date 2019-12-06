@@ -17,7 +17,7 @@ module.exports = class StripePattern extends SoundBasedFunction {
     );
   }
 
-  rebuildPattern() {
+  rebuildPattern(audio) {
     if (!this.pattern) {
       this.pattern = _.map(
         _.range(0, this.config.patternLength),
@@ -30,7 +30,7 @@ module.exports = class StripePattern extends SoundBasedFunction {
     // this.pattern = _.map(this.pattern, color => ColorUtils.dim(color, 0.97));
 
     let pSize = this.pattern.length;
-    let mixRatio = this.config.mixRatio * 2 * (this.bassRms || 0);
+    let mixRatio = this.config.mixRatio * 2 * (audio.bassRms || 0);
     for (let i = 0; i < 6; i++) {
       let randomPosition = Math.floor(Math.random() * (pSize - blockSize));
       for (let j = 0; j < blockSize; j++) {
@@ -63,11 +63,11 @@ module.exports = class StripePattern extends SoundBasedFunction {
     super.start(config, draw);
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     this.time += this.config.speed;
     const newColors = new Array(this.numberOfLeds);
 
-    this.rebuildPattern();
+    this.rebuildPattern(audio);
     if (Math.random() < 1 / 20) {
       this.pickRandomColor();
     }

@@ -81,17 +81,17 @@ module.exports = class Bombs extends LayerBasedFunction {
       ]
     };
   }
-  updateState() {
+  updateState(audio) {
     // Audio independent stuff.
     this.layers.bass.alpha = this.config.bassAlpha;
     this.layers.mid.alpha = this.config.midAlpha;
     this.layers.high.alpha = this.config.highAlpha;
     this.layers.highNoise.alpha = this.config.highNoiseAlpha;
     // Audio dependent stuff.
-    if (!this.audio.audioReady) {
+    if (!audio.audioReady) {
       return;
     }
-    const centerChannel = this.audio.currentAudioFrame.center;
+    const centerChannel = audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const bass = audioSummary.bassPeakDecay;
     const highNoBass = audioSummary.highRmsNoBass;

@@ -29,11 +29,11 @@ module.exports = class Circles extends SoundBasedFunction {
     this.yBounds = findBounds(geometry.y);
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
-    const centerChannel = this.audio.currentAudioFrame.center;
+    const centerChannel = audio.currentAudioFrame.center;
     if (!centerChannel) {
       return;
     }

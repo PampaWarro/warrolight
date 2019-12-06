@@ -3,6 +3,7 @@ const _ = require("lodash");
 const soundEmitter = require("../../soundEmitter");
 
 let audio = {
+  // TODO: add center property?
   lastFrame: {
     centroid: 0,
     rms: 0,
@@ -62,6 +63,11 @@ soundEmitter.on("processedaudioframe", frame => {
   audio.maxVolume = (Math.max(audio.maxVolume, audio.averageVolume) * 500 + audio.averageVolume) / 501;
   audio.averageRelativeVolume = audio.averageVolume / (audio.maxVolume || 1);
   audio.averageRelativeVolumeSmoothed = audio.averageVolumeSmoothed / (audio.maxVolume || 1);
+
+  _.each(
+    _.get(frame, "center.summary"),
+    (val, key) => (audio[key] = val)
+  );
 });
 
 module.exports = class SoundBasedFunction extends TimeTickedFunction {
@@ -79,6 +85,10 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
     }, 1000 / self.config.fps);
 
     super.start(config, draw);
+  }
+
+  step(draw) {
+    this.drawFrame(draw, this.audio);
   }
 
   stop() {

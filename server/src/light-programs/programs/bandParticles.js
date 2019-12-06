@@ -30,8 +30,8 @@ module.exports = class BandParticles extends LayerBasedFunction {
     };
   }
 
-  populatePerBandParticles() {
-    _.forOwn(this.audio.currentAudioFrame.center.filteredBands, (band, bandName) => {
+  populatePerBandParticles(audio) {
+    _.forOwn(audio.currentAudioFrame.center.filteredBands, (band, bandName) => {
       const bandParticles = (this.particles[bandName] =
         this.particles[bandName] || []);
       while (bandParticles.length < this.config.particlesPerBand) {
@@ -54,12 +54,12 @@ module.exports = class BandParticles extends LayerBasedFunction {
     });
   }
 
-  updateState() {
-    if (!this.audio.audioReady) {
+  updateState(audio) {
+    if (!audio.audioReady) {
       return;
     }
-    this.populatePerBandParticles();
-    const centerChannel = this.audio.currentAudioFrame.center;
+    this.populatePerBandParticles(audio);
+    const centerChannel = audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     _.forOwn(this.particles, (particles, bandName) => {
       const energy = audioSummary[`${bandName}PeakDecay`];

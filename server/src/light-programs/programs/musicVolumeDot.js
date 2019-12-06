@@ -17,11 +17,10 @@ module.exports = class MusicVolumeDot extends SoundBasedFunction {
   }
 
   // Override parent method
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     this.time += this.config.speed;
 
-    const summary = this.audio.currentAudioFrame.center.summary;
-    let vol = (summary[this.config.soundMetric] || 0) * this.config.multiplier;
+    let vol = (audio[this.config.soundMetric] || 0) * this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if (vol < this.config.cutThreshold) {

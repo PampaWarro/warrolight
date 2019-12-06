@@ -3,12 +3,11 @@ const SoundBasedFunction = require("./../base-programs/SoundBasedFunction");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class Radial extends SoundBasedFunction {
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 
-    const summary = this.audio.currentAudioFrame.center.summary;
-    const vol = summary[this.config.soundMetric] || 0;
+    const vol = audio[this.config.soundMetric] || 0;
     this.extraTime = (this.extraTime || 0) + vol * 5;
     let power = this.config.power;
     if (this.config.animatePower) {

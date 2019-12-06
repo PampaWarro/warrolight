@@ -102,7 +102,7 @@ module.exports = class Shapes extends LayerBasedFunction {
     };
   }
 
-  updateState() {
+  updateState(audio) {
     // Audio independent stuff.
     this.layers.bassCircle.enabled = this.config.bassCircle;
     this.layers.bassLine.enabled = this.config.bassLine;
@@ -135,10 +135,10 @@ module.exports = class Shapes extends LayerBasedFunction {
       1 + 0.2 * Math.cos((Math.PI * this.timeInMs) / 10000);
 
     // Audio dependent stuff.
-    if (!this.audio.audioReady) {
+    if (!audio.audioReady) {
       return;
     }
-    const centerChannel = this.audio.currentAudioFrame.center;
+    const centerChannel = audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;

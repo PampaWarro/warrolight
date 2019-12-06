@@ -18,11 +18,11 @@ module.exports = class Rays extends SoundBasedFunction {
     );
   }
 
-  updateRay(ray) {
+  updateRay(ray, audio) {
     let speed = ray.speed * this.config.globalSpeed * ray.direction;
     if (this.config.useSoundSpeed) {
-      // let vol = Math.max(0.1, this.audio.averageRelativeVolume - 0.2);
-      speed *= (this.bassFastPeakDecay || 0) * 3;
+      // let vol = Math.max(0.1, audio.averageRelativeVolume - 0.2);
+      speed *= (audio.bassFastPeakDecay || 0) * 3;
     }
     ray.pos += speed;
   }
@@ -39,7 +39,7 @@ module.exports = class Rays extends SoundBasedFunction {
     };
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     // let decay = this.config.decay;
     this.time++;
     let decay = this.config.decay;
@@ -58,7 +58,7 @@ module.exports = class Rays extends SoundBasedFunction {
 
     _.each(this.rays, ray => {
       let from = ray.pos;
-      this.updateRay(ray);
+      this.updateRay(ray, audio);
       let to = ray.pos;
 
       if (to < from) {

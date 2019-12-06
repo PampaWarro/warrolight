@@ -20,7 +20,7 @@ function audioFill(options) {
         drawable: drawables.fill
       };
     }
-    updateState() {
+    updateState(audio) {
       // Audio independent stuff.
       this.drawables.fill.angleOffset =
         Math.cos((Math.PI * this.timeInMs) / cycleMs) *
@@ -34,10 +34,10 @@ function audioFill(options) {
           0.35 * this.yBounds.scale * Math.cos((Math.PI * this.timeInMs) / 8000)
       ];
       // Audio dependent stuff.
-      if (!this.audio.audioReady) {
+      if (!audio.audioReady) {
         return;
       }
-      const centerChannel = this.audio.currentAudioFrame.center;
+      const centerChannel = audio.currentAudioFrame.center;
       const energy = getAudioEnergy(centerChannel);
       this.layers.fill.alpha = energy;
     }

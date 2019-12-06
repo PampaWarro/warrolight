@@ -19,11 +19,11 @@ module.exports = class MusicFlow extends SoundBasedFunction {
   }
 
   // Override parent method
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     this.time += this.config.speed;
     this.realTime += 1;
 
-    let vol = this.rms * this.config.multiplier;
+    let vol = audio.rms * this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if (vol < this.config.cutThreshold) {
@@ -33,12 +33,10 @@ module.exports = class MusicFlow extends SoundBasedFunction {
         (vol - this.config.cutThreshold) * (1 / (1 - this.config.cutThreshold));
     }
 
-    let summary = this.audio.currentAudioFrame.center.summary;
-
     let [hueVol] = ColorUtils.RGBtoHSV(
-      summary.midFastPeakDecay,
-      summary.highFastPeakDecay,
-      summary.bassFastPeakDecay
+      audio.midFastPeakDecay,
+      audio.highFastPeakDecay,
+      audio.bassFastPeakDecay
     );
     let newVal = ColorUtils.HSVtoRGB(
       (hueVol + this.realTime / 2000) % 1,

@@ -30,13 +30,13 @@ module.exports = class SoundWaves extends SoundBasedFunction {
     wave.intensity = (wave.intensity * (3 + Math.sqrt(wave.intensity))) / 4;
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     let timeSinceLastCreation = new Date() - this.lastCreation;
     if (
-      (timeSinceLastCreation > 50 && this.audio.averageRelativeVolume > 0.3) ||
-      (timeSinceLastCreation > 350 && this.audio.averageRelativeVolume > 0.1)
+      (timeSinceLastCreation > 50 && audio.averageRelativeVolume > 0.3) ||
+      (timeSinceLastCreation > 350 && audio.averageRelativeVolume > 0.1)
     ) {
-      this.dots.push(new Dot(this.config, this.audio.averageRelativeVolume));
+      this.dots.push(new Dot(this.config, audio.averageRelativeVolume));
       this.lastCreation = new Date();
 
       this.dots = _.filter(

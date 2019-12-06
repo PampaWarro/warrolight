@@ -19,12 +19,12 @@ module.exports = class MusicVolumeBars extends SoundBasedFunction {
   }
 
   // Override parent method
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     this.time += this.config.speed;
 
-    // let vol = this.audio.averageRelativeVolume * this.config.multiplier * 1.5;
+    // let vol = audio.averageRelativeVolume * this.config.multiplier * 1.5;
     // this.volPromedio = (vol+2*this.volPromedio)/3
-    this.volPromedio = this.peakDecay;
+    this.volPromedio = audio.peakDecay;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let newColor = [0, 0, 0];
@@ -42,7 +42,7 @@ module.exports = class MusicVolumeBars extends SoundBasedFunction {
         newColor = ColorUtils.HSVtoRGB(
           tone,
           1,
-          Math.min(1, this.peakDecay * this.peakDecay)
+          Math.min(1, audio.peakDecay * audio.peakDecay)
         );
       }
       this.lastVolume[i] = newColor;

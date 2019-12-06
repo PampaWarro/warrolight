@@ -41,7 +41,7 @@ module.exports = class AliveDotsSpeed extends SoundBasedFunction {
     }
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     // let decay = this.config.decay;
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
@@ -58,7 +58,7 @@ module.exports = class AliveDotsSpeed extends SoundBasedFunction {
       let [r, g, b] = this.stars[roundPos];
       let [ru, gu, bu] = this.stars[roundPosNext];
 
-      dot.update(this.config.speedWeight, this.audio.medianVolume);
+      dot.update(this.config.speedWeight, audio.medianVolume);
 
       let high = dot.pos - roundPos;
       let low = 1 - high;

@@ -31,7 +31,7 @@ module.exports = class Bombs extends LayerBasedFunction {
     return [x + warp * dx, y + warp * dy];
   }
 
-  updateState() {
+  updateState(audio) {
     // Audio independent stuff.
     this.bassWarpCenter = [
       this.xBounds.center +
@@ -48,10 +48,10 @@ module.exports = class Bombs extends LayerBasedFunction {
     ];
     this.drawables.grid.xyPeriod = [period, period];
     // Audio dependent stuff.
-    if (!this.audio.audioReady) {
+    if (!audio.audioReady) {
       return;
     }
-    const centerChannel = this.audio.currentAudioFrame.center;
+    const centerChannel = audio.currentAudioFrame.center;
     const audioSummary = centerChannel.summary;
     const bass = audioSummary.bassRms;
     this.warpK = bass * 100 * Math.cos((Math.PI * this.timeInMs) / 10000);

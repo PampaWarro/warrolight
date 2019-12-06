@@ -11,11 +11,11 @@ module.exports = class WaterFlood extends SoundBasedFunction {
     this.waterLevel = 0.5;
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
-    let vol = this.bassPeakDecay;
+    let vol = audio.bassPeakDecay;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let posY = 1 - geometry.y[i] / geometry.height;

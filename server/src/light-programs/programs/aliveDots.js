@@ -29,7 +29,7 @@ module.exports = class AliveDots extends SoundBasedFunction {
     );
   }
 
-  drawFrame(draw) {
+  drawFrame(draw, audio) {
     // let decay = this.config.decay;
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
@@ -46,7 +46,7 @@ module.exports = class AliveDots extends SoundBasedFunction {
       let [r, g, b] = this.stars[roundPos];
       let [ru, gu, bu] = this.stars[roundPosNext];
 
-      this.updateDot(dot);
+      this.updateDot(dot, audio);
 
       let high = dot.pos - roundPos;
       let low = 1 - high;
@@ -62,7 +62,7 @@ module.exports = class AliveDots extends SoundBasedFunction {
       this.stars[roundPosNext] = [ru, gu, bu];
     });
 
-    this.lastVolume = this.bassRms || 0;
+    this.lastVolume = audio.bassRms || 0;
     draw(
       this.stars.map(([r, g, b]) =>
         ColorUtils.dim([r, g, b], this.config.brillo)
@@ -70,12 +70,12 @@ module.exports = class AliveDots extends SoundBasedFunction {
     );
   }
 
-  updateDot(dot) {
+  updateDot(dot, audio) {
     if (dot.val < dot.intensity) {
       dot.val += 0.05;
     }
 
-    let vol = this.audio.averageVolume;
+    let vol = audio.averageVolume;
     let volDiff = vol - this.lastVolume;
     dot.pos =
       dot.pos +

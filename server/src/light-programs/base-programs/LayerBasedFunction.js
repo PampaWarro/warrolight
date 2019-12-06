@@ -68,8 +68,8 @@ module.exports = class LayerBasedFunction extends SoundBasedFunction {
     console.warn("Unimplemented updateState()");
   }
 
-  drawFrame(draw) {
-    this.updateState();
+  drawFrame(draw, audio) {
+    this.updateState(audio);
     const colors = new Array(this.numberOfLeds);
     colors.fill([0, 0, 0, 1]);
     if (!this.rootLayer) {

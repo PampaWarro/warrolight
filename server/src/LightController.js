@@ -151,14 +151,6 @@ module.exports = class LightController extends EventEmitter {
     }
   }
 
-  onLights(cbk) {
-    this.on("lights", cbk);
-  }
-
-  removeOnLights(cbk) {
-    this.removeListener("lights", cbk);
-  }
-
   onDeviceStatus(cbk) {
     this.multiplexer.onDeviceStatus(cbk);
   }

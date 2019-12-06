@@ -39,7 +39,7 @@ module.exports = class LightsService {
       micConfig: this.micConfig.config
     });
 
-    controller.onLights(this.sendLightsSample);
+    controller.on("lights", this.sendLightsSample);
 
     // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
     // or rework it to support multiple listeners
@@ -126,6 +126,6 @@ module.exports = class LightsService {
 
   disconnect() {
     console.log("[OFF] Remote control DISCONNNECTED".gray);
-    this.controller.removeOnLights(this.sendLightsSample);
+    this.controller.off("lights", this.sendLightsSample);
   }
 };

@@ -1,74 +1,10 @@
 const TimeTickedFunction = require("./TimeTickedFunction");
-const _ = require("lodash");
+const ProcessedAudioFrame = require("./ProcessedAudioFrame");
 const soundEmitter = require("../../soundEmitter");
 
-let audio = {
-  // TODO: add center property?
-  lastFrame: {
-    centroid: 0,
-    rms: 0,
-    spectralBands: { bass: { energy: 0 } },
-    filteredBands: { bass: { energy: 0, rms: 25 } },
-    movingStats: { rms: { slow: { value: 0, normalizedValue: 0 } } },
-    spectralCentroid: { bin: 100 }
-  }
-}
+const AUDIO = new ProcessedAudioFrame();
 
-audio.currentAudioFrame = audio.lastFrame;
-
-audio.absolutefft = _.range(0, 512).map(() => 0);
-audio.maxabsolutefft = _.range(0, 512).map(() => 0);
-audio.medianVolume11 = _.map(_.range(11), () => 0);
-audio.averageVolume = 0;
-audio.averageRelativeVolume = 0;
-audio.averageVolumeSmoothed = 0;
-audio.averageVolumeSmoothedSlow = 0;
-audio.averageRelativeVolumeSmoothed = 0;
-audio.medianVolume = 0;
-audio.maxVolume = 0;
-audio.audioReady = false;
-
-soundEmitter.on("processedaudioframe", frame => {
-  let { center: lastFrame } = frame;
-  let realSound = frame.center.rms;
-  // realSound = lastFrame.rms;
-
-  audio.currentAudioFrame = frame;
-  audio.audioReady = true;
-  audio.lastFrame = lastFrame;
-
-  _.each(
-    audio.maxabsolutefft,
-    (v, i) =>
-      (audio.maxabsolutefft[i] = Math.max(
-        audio.maxabsolutefft[i] * 0.99,
-        lastFrame.absolutefft[i]
-      ))
-  );
-  _.each(
-    audio.absolutefft,
-    (v, i) =>
-      (audio.absolutefft[i] = audio.absolutefft[i] * 0.5 + 0.5 * lastFrame.absolutefft[i])
-  );
-
-  audio.averageVolume = realSound;
-  audio.averageVolumeSmoothed = (audio.averageVolume + 2 * audio.averageVolumeSmoothed) / 3;
-  audio.averageVolumeSmoothedSlow =
-    (audio.averageVolume + 20 * audio.averageVolumeSmoothedSlow) / 21;
-
-  audio.medianVolume11.push(audio.averageRelativeVolume);
-  audio.medianVolume11 = audio.medianVolume11.slice(1);
-  audio.medianVolume = _.sortBy(audio.medianVolume11)[5];
-
-  audio.maxVolume = (Math.max(audio.maxVolume, audio.averageVolume) * 500 + audio.averageVolume) / 501;
-  audio.averageRelativeVolume = audio.averageVolume / (audio.maxVolume || 1);
-  audio.averageRelativeVolumeSmoothed = audio.averageVolumeSmoothed / (audio.maxVolume || 1);
-
-  _.each(
-    _.get(frame, "center.summary"),
-    (val, key) => (audio[key] = val)
-  );
-});
+soundEmitter.on("processedaudioframe", frame => AUDIO.update(frame));
 
 module.exports = class SoundBasedFunction extends TimeTickedFunction {
   constructor(config, leds) {
@@ -76,7 +12,7 @@ module.exports = class SoundBasedFunction extends TimeTickedFunction {
   }
 
   step(draw) {
-    this.drawFrame(draw, audio);
+    this.drawFrame(draw, AUDIO);
   }
 
   // Override and extend config Schema

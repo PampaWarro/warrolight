@@ -47,7 +47,7 @@ module.exports = class LightController {
       frequencyInHertz: 60
     };
 
-    this.mapping = shapeMapping;
+    this.shapeMapping = shapeMapping;
 
     this.layout = {
       numberOfLeds: geometry.leds,
@@ -148,7 +148,7 @@ module.exports = class LightController {
     this.currentProgram = new program.generator(
       config,
       this.layout,
-      this.mapping
+      this.shapeMapping
     );
     if (this.running) {
       this.start();

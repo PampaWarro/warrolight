@@ -1,6 +1,6 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 
-module.exports = class AllOff extends TimeTickedFunction {
+module.exports = class AllOff extends LightProgram {
   // Override base class
   drawFrame(draw) {
     let colors = [...Array(this.numberOfLeds)]; // Array del tamaño de las luces

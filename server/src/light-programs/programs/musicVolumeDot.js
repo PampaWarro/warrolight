@@ -1,8 +1,8 @@
 const _ = require("lodash")
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class MusicVolumeDot extends TimeTickedFunction {
+module.exports = class MusicVolumeDot extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
   }

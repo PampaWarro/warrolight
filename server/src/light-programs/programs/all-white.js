@@ -1,7 +1,7 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class AllWhite extends TimeTickedFunction {
+module.exports = class AllWhite extends LightProgram {
   // Override base class
   drawFrame(draw) {
     // En HSV blanco es (0,0,1)

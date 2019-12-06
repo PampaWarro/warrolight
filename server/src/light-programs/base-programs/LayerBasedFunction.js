@@ -1,4 +1,4 @@
-const TimeTickedFunction = require("./TimeTickedFunction.js");
+const LightProgram = require("./LightProgram.js");
 const { DrawableLayer, CompositeLayer } = require("../utils/layers");
 
 function findBounds(values) {
@@ -20,7 +20,7 @@ function findBounds(values) {
   };
 }
 
-module.exports = class LayerBasedFunction extends TimeTickedFunction {
+module.exports = class LayerBasedFunction extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
     this.geometry = this.position || this.geometry;

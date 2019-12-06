@@ -1,7 +1,7 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const _ = require("lodash");
 
-module.exports = class GarbageCollector extends TimeTickedFunction {
+module.exports = class GarbageCollector extends LightProgram {
   start(config, draw) {
     super.start(config, draw);
 

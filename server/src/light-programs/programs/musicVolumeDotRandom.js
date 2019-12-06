@@ -1,7 +1,7 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class musicVolumeDotRandom extends TimeTickedFunction {
+module.exports = class musicVolumeDotRandom extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
   }

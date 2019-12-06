@@ -1,4 +1,4 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 function findBounds(values) {
@@ -20,7 +20,7 @@ function findBounds(values) {
   };
 }
 
-module.exports = class Circles extends TimeTickedFunction {
+module.exports = class Circles extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
 

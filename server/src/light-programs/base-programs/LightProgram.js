@@ -7,7 +7,7 @@ const AUDIO = new ProcessedAudioFrame();
 
 soundAnalyzer.on("processedaudioframe", frame => AUDIO.update(frame));
 
-module.exports = class TimeTickedFunction {
+module.exports = class LightProgram {
   constructor(config, leds) {
     this.config = config;
     this.leds = leds;

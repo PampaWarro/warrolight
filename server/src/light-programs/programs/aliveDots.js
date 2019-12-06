@@ -1,4 +1,4 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
@@ -14,7 +14,7 @@ class Dot {
   }
 }
 
-module.exports = class AliveDots extends TimeTickedFunction {
+module.exports = class AliveDots extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
     this.time = 0;

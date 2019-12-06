@@ -39,7 +39,7 @@ yarn start
 
 ## Añadir programa de luces
 
-Los programas de luces están en `server/src/light-programs/programs`. Ahí podrás encontrar varios ejemplos. Todos heredan de un par de clases útiles, la mayoría de `TimeTickedFunction`, que representa una función que una vez cada cierto tiempo emite los colores para toda la tira de luces. Otros de `SoundBasedFunction` que son los programas audiorítmicos.
+Los programas de luces están en `server/src/light-programs/programs`. Ahí podrás encontrar varios ejemplos. Todos heredan de un par de clases útiles, la mayoría de `LightProgram`, que representa una función que una vez cada cierto tiempo emite los colores para toda la tira de luces.
 
 Para añadir un programa nuevo, pueden copiar uno simple como "all-white", ponerle un nombre nuevo a la copia y agregar el nombre del archivo en `server/src/LightController.js` que contiene un listado de todos los programas habilitados.
 

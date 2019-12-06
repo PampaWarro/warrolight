@@ -1,8 +1,8 @@
-const TimeTickedFunction = require("./../base-programs/TimeTickedFunction");
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
-module.exports = class StripePattern extends TimeTickedFunction {
+module.exports = class StripePattern extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
 

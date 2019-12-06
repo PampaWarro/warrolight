@@ -43,9 +43,7 @@ module.exports = class LightController {
   constructor(multiplexer, geometry, shapeMapping) {
     this.multiplexer = multiplexer;
 
-    this.defaultConfig = {
-      frequencyInHertz: 60
-    };
+    this.defaultConfig = {};
 
     this.shapeMapping = shapeMapping;
 

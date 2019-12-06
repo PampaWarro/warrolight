@@ -42,15 +42,11 @@ let lightsSampleEmitter = new EventEmitter();
 module.exports = class LightController {
   constructor(multiplexer, geometry, shapeMapping) {
     this.multiplexer = multiplexer;
-
-    this.defaultConfig = {};
-
-    this.shapeMapping = shapeMapping;
-
     this.layout = {
       numberOfLeds: geometry.leds,
       geometry: geometry
     };
+    this.shapeMapping = shapeMapping;
 
     this.leds = [];
 
@@ -113,7 +109,7 @@ module.exports = class LightController {
   }
 
   getConfig(configSchema) {
-    let config = _.clone(this.defaultConfig);
+    let config = {};
 
     if (!configSchema) {
       configSchema = this.programs[this.currentProgramName].configSchema;

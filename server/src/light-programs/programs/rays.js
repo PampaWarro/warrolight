@@ -8,10 +8,6 @@ module.exports = class Rays extends LightProgram {
     this.time = 0;
     this.rays = [];
     this.stars = [];
-  }
-
-  start(config, draw) {
-    super.start(config, draw);
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
     this.rays = _.map(_.range(0, this.config.numberOfParticles), () =>
       this.createRay()
@@ -56,7 +52,7 @@ module.exports = class Rays extends LightProgram {
     let hueOff = this.config.colorHueOffset;
     let hue = this.config.colorHueAmplitude;
 
-    _.each(this.rays, ray => {
+    for (let ray of this.rays) {
       let from = ray.pos;
       this.updateRay(ray, audio);
       let to = ray.pos;
@@ -95,7 +91,7 @@ module.exports = class Rays extends LightProgram {
         ];
         this.stars[pos] = [r, g, b];
       }
-    });
+    }
 
     draw(this.stars);
   }

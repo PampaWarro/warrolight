@@ -4,17 +4,12 @@ const ColorUtils = require("./../utils/ColorUtils");
 module.exports = class MusicVolumeDotRandom extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
-  }
-
-  start(config, draw) {
-
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
 
     this.onLeds = new Array(this.numberOfLeds).fill(false);
     this.assignLights();
-    super.start(config, draw);
   }
 
   assignLights() {

@@ -5,8 +5,8 @@ const _ = require("lodash");
 module.exports = class StripePattern extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
-
     this.time = 0;
+    this.pickRandomColor();
   }
 
   pickRandomColor() {
@@ -55,11 +55,6 @@ module.exports = class StripePattern extends LightProgram {
         );
       }
     }
-  }
-
-  start(config, draw) {
-    this.pickRandomColor();
-    super.start(config, draw);
   }
 
   drawFrame(draw, audio) {

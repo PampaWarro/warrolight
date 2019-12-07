@@ -55,11 +55,7 @@ module.exports = function programsByShape(mapping) {
       return config;
     }
 
-    start(config, draw) {
-      // Debounce draw para no enviar mil veces el estado cada vez que un subprograma cambia algo
-
-      const debouncedDraw = _.debounce(draw, 5);
-
+    drawFrame(draw, audio) {
       _.each(this.instances, (program, mapName) => {
         const map = this.knownMappings[mapName];
 
@@ -70,14 +66,15 @@ module.exports = function programsByShape(mapping) {
           return this.knownMappings["all"];
         }
 
-        program.start(
-          program.specificConfig,
+        program.drawFrame(
           colors => {
             _.each(colors, (col, index) => (this.state[map[index]] = col));
-            debouncedDraw(this.state);
           },
+          audio
         );
       });
+
+      draw(this.state);
     }
 
     updateConfig(key, value) {
@@ -90,10 +87,6 @@ module.exports = function programsByShape(mapping) {
           program.config[key] = value;
         }
       });
-    }
-
-    stop() {
-      _.each(this.instances, (program, mapName) => program.stop());
     }
 
     static configSchema() {

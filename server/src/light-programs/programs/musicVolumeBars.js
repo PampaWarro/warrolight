@@ -5,17 +5,11 @@ module.exports = class MusicVolumeBars extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
     this.volPromedio = 0;
-  }
-
-  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
-
-    super.start(config, draw);
   }
 
-  // Override parent method
   drawFrame(draw, audio) {
     this.time += this.config.speed;
 

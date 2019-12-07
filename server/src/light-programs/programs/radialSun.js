@@ -3,6 +3,11 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class RadialSun extends LightProgram {
+  constructor(config, leds) {
+    super(config, leds);
+    this.baseHue = Math.random();
+  }
+
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
@@ -33,11 +38,6 @@ module.exports = class RadialSun extends LightProgram {
       );
     }
     draw(colors);
-  }
-
-  start(...args) {
-    super.start(...args);
-    this.baseHue = Math.random();
   }
 
   static presets() {

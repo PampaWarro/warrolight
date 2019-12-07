@@ -4,19 +4,12 @@ const ColorUtils = require("./../utils/ColorUtils");
 module.exports = class MusicFrequencyDot extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
-  }
-
-  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
-
     this.hueOffset = Math.random();
-
-    super.start(config, draw);
   }
 
-  // Override parent method
   drawFrame(draw, audio) {
     if (audio.lastFrame && audio.lastFrame.filteredBands) {
       let {

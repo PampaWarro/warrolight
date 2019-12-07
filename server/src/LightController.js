@@ -1,6 +1,7 @@
 const EventEmitter = require("events");
 const moment = require("moment");
 const _ = require("lodash");
+const ProgramScheduler = require("./ProgramScheduler");
 
 // TODO: move this to some configuration file
 const programNames = [
@@ -141,10 +142,12 @@ module.exports = class LightController extends EventEmitter {
     this.currentProgramName = name;
     let program = this.programs[name];
     let config = this.getConfig(program.configSchema);
-    this.currentProgram = new program.generator(
-      config,
-      this.layout,
-      this.shapeMapping
+    this.currentProgram = new ProgramScheduler(
+      new program.generator(
+        config,
+        this.layout,
+        this.shapeMapping
+      )
     );
     if (this.running) {
       this.start();

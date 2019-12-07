@@ -19,10 +19,6 @@ module.exports = class AliveDots extends LightProgram {
     super(config, leds);
     this.time = 0;
     this.lastVolume = 0;
-  }
-
-  start(config, draw) {
-    super.start(config, draw);
     this.dots = _.map(
       _.range(this.config.numberOfParticles),
       () => new Dot(this.numberOfLeds)

@@ -1,7 +1,4 @@
 const _ = require("lodash");
-const ColorUtils = require("../utils/ColorUtils");
-
-let CROSSFADE_TIME_MS = 20000;
 
 module.exports = function createMultiProgram(
   programSchedule,
@@ -15,8 +12,12 @@ module.exports = function createMultiProgram(
         .concat(programSchedule)
         .map(item => _.extend({}, item));
       this.nextPosition = 0;
+      this.nextStartChange = null;
       this.config = config;
       this.past = null;
+      this.current = null;
+
+      // instantiate each program
       _.each(
         this.programSchedule,
         scheduleItem =>
@@ -26,70 +27,32 @@ module.exports = function createMultiProgram(
             shapeMapping
           ))
       );
-      this.drawSubprogram = _.throttle(this.drawSubprogram, 16);
     }
 
-    drawSubprogram() {
-      if (this.current && this.current.lastFrame) {
-        let lastFrame = this.current.lastFrame;
+    drawFrame(draw, audio) {
+      // init
+      if (this.current === null) {
+        let scheduleItem = this.programSchedule[this.nextPosition];
+        this.current = scheduleItem.programInstance;
+        this.nextStartChange = Date.now() + scheduleItem.duration;
+      }
 
-        if (this.past && this.past.lastFrame) {
-          let t = this.past.fadeStartTime;
+      // draw
+      this.current.drawFrame(draw, audio);
 
-          let c = 1 - Math.min(1, (new Date() - t) / crossFade);
-          lastFrame = _.map(lastFrame, (f, i) =>
-            // TODO: there is an `undefined is not iterable problem to fix here`
-            ColorUtils.mix(f, this.past.lastFrame[i], c)
-          );
+      // TODO: implement crossfade
+      if (Date.now() >= this.nextStartChange) {
+        if (random) {
+          this.nextPosition = Math.floor(
+            Math.random() * this.programSchedule.length
+          ) % this.programSchedule.length;
+        } else {
+          this.nextPosition = this.nextPosition + 1 % this.programSchedule.length;
         }
-        this.currentDrawFunc(lastFrame);
-      }
-    }
 
-    playNextProgram(config) {
-      if (this.past) {
-        this.past.programInstance.stop();
-        this.past = null;
-      }
-
-      // Put current program as past, for transition cross-fade
-      if (this.current) {
-        this.past = this.current;
-        this.past.fadeStartTime = new Date();
-
-        // PICK A RANDOM CROSSFADE TIME
-        CROSSFADE_TIME_MS = Math.random() * crossFade;
-        setTimeout(() => {
-          if (this.past) {
-            this.past.programInstance.stop();
-            this.past = null;
-          }
-        }, CROSSFADE_TIME_MS);
-      }
-
-      let nextProgram = this.programSchedule[this.nextPosition];
-      this.current = nextProgram;
-      this.current.programInstance.start(
-        config,
-        colors => {
-          nextProgram.lastFrame = colors;
-          this.drawSubprogram();
-        },
-        () => {}
-      );
-
-      this.nextTimeout = setTimeout(
-        () => this.playNextProgram(config),
-        this.current.duration
-      );
-
-      if (random) {
-        this.nextPosition =
-          Math.floor(Math.random() * this.programSchedule.length) %
-          this.programSchedule.length;
-      } else {
-        this.nextPosition =
-          (this.nextPosition + 1) % this.programSchedule.length;
+        let scheduleItem = this.programSchedule[this.nextPosition++]
+        this.current = scheduleItem.programInstance;
+        this.nextStartChange = Date.now() + scheduleItem.duration;
       }
     }
 
@@ -108,36 +71,19 @@ module.exports = function createMultiProgram(
     //   return config
     // }
 
-    updateConfig(key, value) {
-      let program = this.current.programInstance;
-      if (
-        program.config &&
-        program.config[key] &&
-        program.config[key] !== value
-      ) {
-        program.config[key] = value;
-        if (program.updateConfig) {
-          program.updateConfig(key, value);
-        }
-      }
-    }
-
-    start(config, draw) {
-      this.currentDrawFunc = draw;
-      this.playNextProgram(config);
-    }
-
-    stop() {
-      if (this.current) {
-        this.current.programInstance.stop();
-        this.current = null;
-      }
-
-      if (this.nextTimeout) {
-        clearTimeout(this.nextTimeout);
-        this.nextTimeout = null;
-      }
-    }
+    // updateConfig(key, value) {
+    //   let program = this.current.programInstance;
+    //   if (
+    //     program.config &&
+    //     program.config[key] &&
+    //     program.config[key] !== value
+    //   ) {
+    //     program.config[key] = value;
+    //     if (program.updateConfig) {
+    //       program.updateConfig(key, value);
+    //     }
+    //   }
+    // }
 
     static configSchema() {
       let schema = {};

@@ -4,15 +4,10 @@ const ColorUtils = require("./../utils/ColorUtils");
 module.exports = class MusicFlow extends LightProgram {
   constructor(config, leds) {
     super(config, leds);
-  }
-
-  start(config, draw) {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.realTime = 0;
     this.maxVolume = 0;
-
-    super.start(config, draw);
   }
 
   // Override parent method

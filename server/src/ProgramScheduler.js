@@ -23,6 +23,8 @@ module.exports = class ProgramScheduler {
     this.startTime = Date.now();
     this.config = config;
 
+    this.program.init();
+
     const frame = () => {
       this.timeInMs = Date.now() - this.startTime;
       this.frameNumber++;
@@ -59,7 +61,11 @@ module.exports = class ProgramScheduler {
     clearTimeout(this.nextTickTimeout);
   }
 
-  // TODO: restart by reconstructing program from config
+  restart() {
+    this.stop();
+    this.program.init(this.config, this.draw);
+    this.start();
+  }
 
   get config() {
       return this.program.config;

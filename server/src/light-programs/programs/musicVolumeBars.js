@@ -2,8 +2,8 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class MusicVolumeBars extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.volPromedio = 0;
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;

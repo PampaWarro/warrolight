@@ -1,12 +1,12 @@
 const _ = require("lodash");
+const LightProgram = require("./LightProgram");
 
 module.exports = function mixPrograms(...programs) {
-  return class MixProgram {
+  return class MixProgram extends LightProgram {
     constructor(config, leds, shapeMapping) {
+      super(config, leds);
       // Shallow copy of schedule
       this.programs = [];
-      this.config = config;
-      this.past = null;
 
       _.each(programs, scheduleItem => {
         if (!_.isArray(scheduleItem)) {
@@ -20,6 +20,11 @@ module.exports = function mixPrograms(...programs) {
           alpha: alpha || 1
         });
       });
+    }
+
+    init() {
+      this.past = null;
+      this.programs.forEach(p => p.programInstance.init());
     }
 
     mix(frames) {

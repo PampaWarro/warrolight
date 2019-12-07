@@ -5,8 +5,8 @@ const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 
 module.exports = class BandParticles extends LayerBasedFunction {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.particles = {};
     this.offsets = {
       bass: 0,

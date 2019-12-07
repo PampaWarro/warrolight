@@ -3,8 +3,8 @@ const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
 
 module.exports = class StripePattern extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.time = 0;
     this.pickRandomColor();
   }

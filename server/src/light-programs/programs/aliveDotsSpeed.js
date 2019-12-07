@@ -31,10 +31,9 @@ class Dot {
 }
 
 module.exports = class AliveDotsSpeed extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
-    this.time = 0;
 
+  init() {
+    this.time = 0;
     this.dots = [];
     for (let i = 0; i < this.config.numberOfParticles; i++) {
       this.dots.push(new Dot(this.numberOfLeds));

@@ -103,35 +103,38 @@ module.exports = class Shapes extends LayerBasedFunction {
   }
 
   updateState(audio) {
+    const { layers, drawables, config } = this;
+
     // Audio independent stuff.
-    this.layers.bassCircle.enabled = this.config.bassCircle;
-    this.layers.bassLine.enabled = this.config.bassLine;
-    this.layers.fillCircle.enabled = this.config.fillCircle;
-    this.layers.highPixels.alpha = this.config.highLayerAlpha;
-    this.layers.rotor.alpha = this.config.rotorAlpha;
-    this.layers.rainDots.alpha = this.config.rainDotsAlpha;
-    this.drawables.bassLine.angle = (-Math.PI * this.timeInMs) / 7000;
-    this.drawables.rotor.angle =
+    layers.bassCircle.enabled = config.bassCircle;
+    layers.bassLine.enabled = config.bassLine;
+    layers.fillCircle.enabled = config.fillCircle;
+    layers.highPixels.alpha = config.highLayerAlpha;
+    layers.rotor.alpha = config.rotorAlpha;
+    layers.rainDots.alpha = config.rainDotsAlpha;
+
+    drawables.bassLine.angle = (-Math.PI * this.timeInMs) / 7000;
+    drawables.rotor.angle =
       Math.cos((Math.PI * this.timeInMs) / 5000) *
       (((Math.PI * this.timeInMs) / 500) % Math.PI);
-    this.drawables.rainDots.offset = -this.timeInMs / 50;
-    this.drawables.rainDots.center[0] =
+    drawables.rainDots.offset = -this.timeInMs / 50;
+    drawables.rainDots.center[0] =
       this.xBounds.center +
       (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3;
-    this.drawables.fillCircle.radius =
+    drawables.fillCircle.radius =
       (300 * (3000 - (this.timeInMs % 5000))) / 5000;
-    this.drawables.backgroundColors.angleOffset =
+    drawables.backgroundColors.angleOffset =
       (Math.PI * this.timeInMs) / 5000;
-    this.drawables.backgroundMask.radiusOffset = Math.round(
+    drawables.backgroundMask.radiusOffset = Math.round(
       this.timeInMs / 1000
     );
-    this.drawables.backgroundMask.center = [
+    drawables.backgroundMask.center = [
       this.xBounds.center +
         0.35 * this.xBounds.scale * Math.cos((Math.PI * this.timeInMs) / 7000),
       this.yBounds.center +
         0.35 * this.yBounds.scale * Math.cos((Math.PI * this.timeInMs) / 8000)
     ];
-    this.drawables.backgroundMask.scale =
+    drawables.backgroundMask.scale =
       1 + 0.2 * Math.cos((Math.PI * this.timeInMs) / 10000);
 
     // Audio dependent stuff.
@@ -142,11 +145,11 @@ module.exports = class Shapes extends LayerBasedFunction {
     const audioSummary = centerChannel.summary;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;
-    this.drawables.bassCircle.radius =
+    drawables.bassCircle.radius =
       10 + this.config.bassCircleSensitivity * Math.pow(normalizedBass, 2);
-    this.drawables.bassLine.width =
+    drawables.bassLine.width =
       this.config.bassLineSensitivity * normalizedBass;
-    this.drawables.highPixels.threshold = 1 - 0.1 * highNoBass;
+    drawables.highPixels.threshold = 1 - 0.1 * highNoBass;
   }
 
   static presets() {

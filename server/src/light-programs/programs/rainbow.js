@@ -15,7 +15,9 @@ module.exports = class Rainbow extends LightProgram {
       "#5500CC",
       "#ffffff"
     ];
+  }
 
+  init() {
     this.time = 0;
   }
 

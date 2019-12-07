@@ -17,8 +17,8 @@ class Dot {
 }
 
 module.exports = class SoundWaves extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.time = 0;
     this.lastCreation = new Date();
     this.dots = [];

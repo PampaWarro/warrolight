@@ -2,12 +2,10 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class WaterFlood extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
 
+  init() {
     this.volumes = [];
     this.volumeSum = 0;
-
     this.waterLevel = 0.5;
   }
 

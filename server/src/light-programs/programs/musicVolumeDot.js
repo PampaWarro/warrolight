@@ -2,8 +2,8 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class MusicVolumeDot extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;

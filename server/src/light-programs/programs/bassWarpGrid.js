@@ -2,11 +2,12 @@ const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const { Grid } = require("../utils/drawables");
 
 module.exports = class Bombs extends LayerBasedFunction {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.warpK = 1;
     this.bassWarpCenter = [this.xBounds.center, this.yBounds.center];
   }
+
   getDrawables() {
     return {
       grid: new Grid({ xyWarp: this.bassXYWarp.bind(this) })

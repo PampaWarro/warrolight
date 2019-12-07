@@ -2,8 +2,8 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class ColorSpear extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.time = 0;
   }
 

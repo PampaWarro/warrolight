@@ -15,8 +15,8 @@ class Dot {
 }
 
 module.exports = class AliveDots extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.time = 0;
     this.lastVolume = 0;
     this.dots = _.map(

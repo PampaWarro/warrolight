@@ -93,11 +93,7 @@ module.exports = class LightController extends EventEmitter {
   }
 
   restart() {
-    this.currentProgram.stop();
-    this.currentProgram.start(
-      this.currentProgram.config,
-      leds => this.updateLeds(leds)
-    );
+    this.currentProgram.restart();
   }
 
   stop() {

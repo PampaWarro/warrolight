@@ -2,8 +2,8 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class Stars extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.stars = new Array(this.numberOfLeds).fill([0, 0, 0]);
     this.time = 0;
   }

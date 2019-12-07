@@ -2,12 +2,13 @@ const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
 const { PolarColors, Circle, RandomPixels } = require("../utils/drawables");
 
 module.exports = class Bombs extends LayerBasedFunction {
-  constructor(config, leds) {
-    super(config, leds);
+
+  init() {
     this.bassSum = Math.random() * 1000;
     this.midSum = Math.random() * 1000;
     this.highSum = Math.random() * 1000;
   }
+
   getDrawables() {
     return {
       bassFill: new PolarColors({

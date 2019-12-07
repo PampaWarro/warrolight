@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const LightProgram = require("./LightProgram");
 const ColorUtils = require("../utils/ColorUtils");
 
 function clamp(v, min, max) {
@@ -10,28 +11,36 @@ module.exports = function createMultiProgram(
   random = false,
   crossFade = 20000
 ) {
-  return class MultiProgram {
+  return class MultiProgram extends LightProgram {
     constructor(config, leds, shapeMapping) {
+      super(config, leds, shapeMapping);
+
       // Shallow copy of schedule
       this.programSchedule = []
         .concat(programSchedule)
         .map(item => _.extend({}, item));
-      this.position = 0;
-      this.nextStartChange = null;
-      this.config = config;
-      this.previous = null;
-      this.current = null;
 
       // instantiate each program
       _.each(
         this.programSchedule,
         scheduleItem =>
           (scheduleItem.programInstance = new scheduleItem.program(
-            config,
-            leds,
-            shapeMapping
+            this.config,
+            this.leds,
+            this.shapeMapping
           ))
       );
+    }
+
+    init() {
+      for (let scheduleItem of this.programSchedule) {
+        scheduleItem.programInstance.init();
+      }
+
+      this.position = 0;
+      this.nextStartChange = null;
+      this.previous = null;
+      this.current = null;
     }
 
     drawFrame(draw, audio) {

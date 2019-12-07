@@ -1,11 +1,14 @@
 module.exports = class LightProgram {
-  constructor(config, leds) {
+  constructor(config, leds, shapeMapping) {
     this.config = config;
     this.leds = leds;
+    this.shapeMapping = shapeMapping;
     this.numberOfLeds = leds.numberOfLeds;
     this.geometry = leds.geometry;
     this.position = leds.position;
   }
+
+  init() {}
 
   // Override in subclasses
   drawFrame(draw, audio) {

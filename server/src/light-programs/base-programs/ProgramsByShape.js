@@ -1,11 +1,11 @@
 const _ = require("lodash");
+const LightProgram = require("./LightProgram");
 
 module.exports = function programsByShape(mapping) {
-  return class ProgramsByShape {
+  return class ProgramsByShape extends LightProgram {
     constructor(config, leds, shapeMapping) {
+      super(config, leds)
       this.instances = {};
-      this.config = config;
-
       this.knownMappings = shapeMapping();
 
       _.each(mapping, (Program, shapeName) => {
@@ -43,6 +43,12 @@ module.exports = function programsByShape(mapping) {
         this.instances[shapeName].specificConfig = specificConfig;
       });
       this.state = new Array(leds.numberOfLeds).fill([0, 0, 0]);
+    }
+
+    init() {
+      for (let shapeName in this.instances) {
+        this.instances[shapeName].init();
+      }
     }
 
     extractDefault(configSchema) {

@@ -98,35 +98,6 @@ module.exports = function createMultiProgram(
       }
     }
 
-    // getConfig(programClass, globalConfig) {
-    //   let config = _.clone(this.defaultConfig);
-    //
-    //   if(!configSchema) {
-    //     configSchema = this.programs[this.currentProgramName].configSchema;
-    //   }
-    //
-    //   for (let paramName in configSchema) {
-    //     if (config[paramName] === undefined && configSchema[paramName].default !== undefined) {
-    //       config[paramName] = configSchema[paramName].default;
-    //     }
-    //   }
-    //   return config
-    // }
-
-    // updateConfig(key, value) {
-    //   let program = this.current.programInstance;
-    //   if (
-    //     program.config &&
-    //     program.config[key] &&
-    //     program.config[key] !== value
-    //   ) {
-    //     program.config[key] = value;
-    //     if (program.updateConfig) {
-    //       program.updateConfig(key, value);
-    //     }
-    //   }
-    // }
-
     static configSchema() {
       let schema = {};
       _.each(programSchedule, ({ program }) => {

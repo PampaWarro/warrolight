@@ -35,22 +35,6 @@ module.exports = function mixPrograms(...programs) {
       });
     }
 
-    // updateConfig(key, value) {
-    //   _.each(this.programs, p => {
-    //     const program = p.programInstance;
-    //     if (
-    //       program.config &&
-    //       program.config[key] &&
-    //       program.config[key] !== value
-    //     ) {
-    //       program.config[key] = value;
-    //       if (program.updateConfig) {
-    //         program.updateConfig(key, value);
-    //       }
-    //     }
-    //   });
-    // }
-
     drawFrame(draw, audio) {
       let frames = [];
       _.each(this.programs, (p, i) => {

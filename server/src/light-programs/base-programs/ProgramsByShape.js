@@ -81,18 +81,6 @@ module.exports = function programsByShape(mapping) {
       draw(this.state);
     }
 
-    updateConfig(key, value) {
-      _.each(this.instances, (program, mapName) => {
-        if (
-          program.specificConfig[key] &&
-          program.specificConfig[key] !== value
-        ) {
-          program.specificConfig[key] = value;
-          program.config[key] = value;
-        }
-      });
-    }
-
     static configSchema() {
       let schema = {};
       _.each(mapping, (Program, mapName) => {

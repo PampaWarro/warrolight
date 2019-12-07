@@ -25,6 +25,12 @@ module.exports = class LightsService {
     soundListener.start(lastVolumes => send("micSample", lastVolumes));
 
     this.sendLightsSample = this.sendLightsSample.bind(this);
+
+    controller.on("lights", this.sendLightsSample);
+
+    controller.onDeviceStatus(devicesStatus =>
+      this.send("devicesStatus", devicesStatus)
+    );
   }
 
   connect() {
@@ -38,14 +44,6 @@ module.exports = class LightsService {
       currentConfig: controller.getCurrentConfig(),
       micConfig: this.micConfig
     });
-
-    controller.on("lights", this.sendLightsSample);
-
-    // TODO: this supports a single listener only, probably rename it to setDeviceStatusListener
-    // or rework it to support multiple listeners
-    controller.onDeviceStatus(devicesStatus =>
-      this.send("devicesStatus", devicesStatus)
-    );
   }
 
   sendLightsSample(lights) {

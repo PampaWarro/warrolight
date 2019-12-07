@@ -90,7 +90,7 @@ module.exports = function createMultiProgram(
       if (Date.now() >= this.nextStartChange) {
         // start crossfade
         this.crossFadeStart = Date.now();
-        this.crossFadeFinish = Date.now() + Math.random() * this.programSchedule[this.position].duration / 5;
+        this.crossFadeFinish = Date.now() + crossFade;
         this.previous = this.current;
 
         if (random) {

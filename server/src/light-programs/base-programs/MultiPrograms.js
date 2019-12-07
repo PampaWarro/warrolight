@@ -50,7 +50,7 @@ module.exports = function createMultiProgram(
           this.nextPosition = this.nextPosition + 1 % this.programSchedule.length;
         }
 
-        let scheduleItem = this.programSchedule[this.nextPosition++]
+        let scheduleItem = this.programSchedule[this.nextPosition]
         this.current = scheduleItem.programInstance;
         this.nextStartChange = Date.now() + scheduleItem.duration;
       }

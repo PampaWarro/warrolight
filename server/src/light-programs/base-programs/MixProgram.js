@@ -23,6 +23,7 @@ module.exports = function mixPrograms(...programs) {
     }
 
     mix(frames) {
+      // TODO: clamp / divide final values?
       return _.map(frames[0], (c, i) => {
         let [r, g, b] = c;
         for (let j = 1; j < frames.length; j++) {

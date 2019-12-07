@@ -96,7 +96,7 @@ export class LightsSimulator extends React.Component<Props, State> {
   render() {
     return (
       <div className="lights-simulator mb-3">
-        <div className="preview-area py-4">
+        <div className="preview-area py-3">
           <canvas
             onClick={this.toggleRenderPreview.bind(this)}
             ref="canvas"
@@ -130,7 +130,6 @@ class LightsRenderer {
   draw(canvas: HTMLCanvasElement, layout: Layout, lights: Light[]) {
     const drawStartTime = performance.now();
 
-    const leds = layout.geometryX.length;
     const ctx = canvas.getContext("2d")!;
 
     ctx.globalCompositeOperation = "source-over";
@@ -139,53 +138,59 @@ class LightsRenderer {
 
     ctx.globalCompositeOperation = "lighter";
 
-    if (this.enabled) {
-      const X = layout.geometryX;
-      const Y = layout.geometryY;
+    if (!this.enabled) {
+      return;
+    }
 
-      for (let i = 0; i < leds; i++) {
-        const [r, g, b] = lights[i];
+    // TODO: calculate scale automatically
+    const scale = 4;
 
-        let SCALE = 4;
-        const x = X[i] * SCALE + 5 * SCALE;
-        const y = Y[i] * SCALE + 5 * SCALE;
+    // center layout in screen
+    const width = (layout.maxX - layout.minX) * scale;
+    const startX = canvas.width / 2 - width / 2;
+    const height = (layout.maxY - layout.minY) * scale;
+    const startY = canvas.height / 2 - height / 2;
 
-        let power = r + g + b;
-        if (power < 0) power = 0;
+    const leds = layout.geometryX.length;
+    const X = layout.geometryX;
+    const Y = layout.geometryY;
 
-        let m = 2;
-        if (power < 200) {
-          m = 4;
-        } else if (power < 100) {
-          m = 8;
-        } else if (power < 50) {
-          m = 16;
-        }
+    for (let i = 0; i < leds; i++) {
+      const [r, g, b] = lights[i];
 
-        let [or, og, ob] = [r * m, g * m, b * m];
-        if (or > 255) or = 255;
-        if (og > 255) og = 255;
-        if (ob > 255) ob = 255;
+      const x = X[i] * scale + startX;
+      const y = Y[i] * scale + startY;
 
-        ctx.beginPath();
+      let power = r + g + b;
+      if (power < 0) power = 0;
 
-        let lightRadius = (40 + ((r + g + b) / (255 * 3)) * 80) / 24;
-
-        ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
-
-        ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
-        ctx.fill();
+      let m = 2;
+      if (power < 200) {
+        m = 4;
+      } else if (power < 100) {
+        m = 8;
+      } else if (power < 50) {
+        m = 16;
       }
 
-      this.frameCount++;
-      this.debugInfo(ctx, drawStartTime)
-    }
-  }
+      let [or, og, ob] = [r * m, g * m, b * m];
+      if (or > 255) or = 255;
+      if (og > 255) og = 255;
+      if (ob > 255) ob = 255;
 
-  debugInfo(ctx: CanvasRenderingContext2D, drawStartTime: number) {
+      ctx.beginPath();
+
+      let lightRadius = (40 + ((r + g + b) / (255 * 3)) * 80) / 24;
+
+      ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
+
+      ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
+      ctx.fill();
+    }
+
+    this.frameCount++;
     let now = performance.now();
 
-    let drawMilliseconds = now - drawStartTime;
     let timeSinceLastFPS = now - this.lastFrameTime;
     if (timeSinceLastFPS > 100) {
       this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
@@ -193,14 +198,14 @@ class LightsRenderer {
       this.lastFrameTime = now;
     }
 
-    ctx.fillStyle = "white";
+    this.debugInfo(ctx, drawStartTime)
+  }
+
+  debugInfo(ctx: CanvasRenderingContext2D, drawStartTime: number) {
+
+    ctx.fillStyle = "#999";
     ctx.font = "12px sans-serif";
 
-    ctx.fillText(
-      `Sim overhead FPS: ${Math.floor(1000 / drawMilliseconds)}`,
-      10,
-      40
-    );
     ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
   }
 }

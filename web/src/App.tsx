@@ -201,8 +201,8 @@ export class App extends React.Component<Props, State> {
               <div className="m-3">
                 <LightsSimulator
                   ref={this.lightsSim}
-                  height={400}
-                  width={600}
+                height={400}
+                  width={700}
                   onStart={this.handleStartLights}
                   onStop={this.handleStopLights}
                 />

@@ -52,12 +52,16 @@ module.exports = function mixPrograms(...programs) {
 
     drawFrame(draw, audio) {
       let frames = [];
-      _.each(this.programs, (p, i) =>
+      _.each(this.programs, (p, i) => {
+        // TODO: remove this forwarding somehow
+        p.programInstance.timeInMs = this.timeInMs;
+        p.programInstance.frameNumber = this.frameNumber;
+
         p.programInstance.drawFrame(
           colors => frames[i] = colors,
           audio
         )
-      );
+      });
 
       draw(this.mix(frames));
     }

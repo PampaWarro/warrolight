@@ -66,6 +66,10 @@ module.exports = function programsByShape(mapping) {
           return this.knownMappings["all"];
         }
 
+        // TODO: remove this forwarding somehow
+        program.timeInMs = this.timeInMs;
+        program.frameNumber = this.frameNumber;
+
         program.drawFrame(
           colors => {
             _.each(colors, (col, index) => (this.state[map[index]] = col));

@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-exports.SoundListener = class SoundListener {
+module.exports = class SoundListener {
 
   constructor(soundAnalyzer, micConfig) {
     this.soundAnalyzer = soundAnalyzer;

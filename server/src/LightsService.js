@@ -1,6 +1,6 @@
 const { startMic } = require("./mic");
 const soundAnalyzer = require("./soundAnalyzer");
-const { SoundListener } = require("./sound");
+const SoundListener = require("./SoundListener");
 const _ = require("lodash");
 
 startMic();

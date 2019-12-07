@@ -59,6 +59,8 @@ module.exports = class ProgramScheduler {
     clearTimeout(this.nextTickTimeout);
   }
 
+  // TODO: restart by reconstructing program from config
+
   get config() {
       return this.program.config;
   }

@@ -74,6 +74,10 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 
   drawCanvas(lights: Light[]) {
+    if (!this.state.layout) {
+      return;
+    }
+
     this.lightsRenderer.draw(
       this.refs.canvas as HTMLCanvasElement,
       this.state.layout!,

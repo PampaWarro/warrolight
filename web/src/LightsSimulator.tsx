@@ -146,8 +146,11 @@ class LightsRenderer {
       return;
     }
 
-    // TODO: calculate scale automatically
-    const scale = 4;
+    // compute scaling factor based on canvas size
+    const padding = 50;
+    const scaleX = (canvas.width - padding) / (layout.maxX - layout.minX);
+    const scaleY = (canvas.height - padding) / (layout.maxY - layout.minY);
+    const scale = Math.min(scaleX, scaleY);
 
     // center layout in screen
     const width = (layout.maxX - layout.minX) * scale;

@@ -83,10 +83,10 @@ module.exports = class LightsService {
       return;
     }
 
-    controller.currentProgram.config = _.extend(
+    controller.currentProgram.updateConfig(_.extend(
       controller.getConfig(),
       presets[presetName]
-    );
+    ));
 
     this.broadcastStateChange();
   }
@@ -98,7 +98,7 @@ module.exports = class LightsService {
 
   updateConfigParam(config) {
     const controller = this.controller;
-    controller.currentProgram.config = config;
+    controller.currentProgram.updateConfig(config);
 
     this.send("stateChange", {
       currentProgramName: controller.currentProgramName,

@@ -72,6 +72,11 @@ module.exports = class ProgramScheduler {
   }
 
   set config(config) {
-      this.program.config = config;
+    this.updateConfig(config);
   }
+
+  updateConfig(config) {
+    this.program.updateConfig(config);
+  }
+
 }

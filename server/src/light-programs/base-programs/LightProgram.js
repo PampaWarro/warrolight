@@ -15,6 +15,10 @@ module.exports = class LightProgram {
     throw new Error("Child classes should override drawFrame");
   }
 
+  updateConfig(config) {
+    this.config = config;
+  }
+
   static configSchema() {
     // Child classes should call super.configSchema and extend this object
     return {

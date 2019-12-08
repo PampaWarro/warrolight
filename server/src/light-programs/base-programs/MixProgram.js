@@ -56,6 +56,13 @@ module.exports = function mixPrograms(...programs) {
       draw(this.mix(frames));
     }
 
+    updateConfig(config) {
+      this.config = config;
+      for (let item of this.programs) {
+        item.programInstance.config = config;
+      }
+    }
+
     static configSchema() {
       let schema = {};
       _.each(programs, program => {

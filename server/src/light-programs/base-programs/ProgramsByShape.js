@@ -87,6 +87,13 @@ module.exports = function programsByShape(mapping) {
       draw(this.state);
     }
 
+    updateConfig(config) {
+      this.config = config;
+      for (let shapeName in this.instances) {
+        this.instances[shapeName].config = config;
+      }
+    }
+
     static configSchema() {
       let schema = {};
       _.each(mapping, (Program, mapName) => {

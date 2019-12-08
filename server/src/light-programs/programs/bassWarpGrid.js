@@ -49,10 +49,10 @@ module.exports = class Bombs extends LayerBasedFunction {
     ];
     this.drawables.grid.xyPeriod = [period, period];
     // Audio dependent stuff.
-    if (!audio.audioReady) {
+    if (!audio.ready) {
       return;
     }
-    const centerChannel = audio.currentAudioFrame.center;
+    const centerChannel = audio.currentFrame.center;
     const audioSummary = centerChannel.summary;
     const bass = audioSummary.bassRms;
     this.warpK = bass * 100 * Math.cos((Math.PI * this.timeInMs) / 10000);

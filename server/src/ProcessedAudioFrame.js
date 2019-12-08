@@ -11,7 +11,7 @@ module.exports = class ProcessedAudioFrame {
       movingStats: { rms: { slow: { value: 0, normalizedValue: 0 } } },
       spectralCentroid: { bin: 100 }
     };
-    this.currentAudioFrame = this.lastFrame;
+    this.currentFrame = this.lastFrame;
     this.absolutefft = _.range(0, 512).map(() => 0);
     this.maxabsolutefft = _.range(0, 512).map(() => 0);
     this.medianVolume11 = _.map(_.range(11), () => 0);
@@ -22,7 +22,7 @@ module.exports = class ProcessedAudioFrame {
     this.averageRelativeVolumeSmoothed = 0;
     this.medianVolume = 0;
     this.maxVolume = 0;
-    this.audioReady = false;
+    this.ready = false;
   }
 
   update(frame) {
@@ -30,8 +30,8 @@ module.exports = class ProcessedAudioFrame {
     let realSound = frame.center.rms;
     // realSound = lastFrame.rms;
   
-    this.currentAudioFrame = frame;
-    this.audioReady = true;
+    this.currentFrame = frame;
+    this.ready = true;
     this.lastFrame = lastFrame;
   
     _.each(

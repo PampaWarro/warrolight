@@ -33,7 +33,7 @@ module.exports = class Circles extends LightProgram {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.position || this.geometry;
 
-    const centerChannel = audio.currentAudioFrame.center;
+    const centerChannel = audio.currentFrame.center;
     if (!centerChannel) {
       return;
     }

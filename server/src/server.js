@@ -21,28 +21,10 @@ exports.startServer = function startServer(controller) {
     ws.on("message", function incoming(message) {
       const [event, data] = JSON.parse(message);
 
-      switch (event) {
-        case "setMicDataConfig":
-          service.setMicDataConfig(data);
-          return;
-        case "startSamplingLights":
-          service.startSamplingLights(data);
-          return;
-        case "stopSamplingLights":
-          service.stopSamplingLights(data);
-          return;
-        case "restartProgram":
-          service.restartProgram(data);
-          return;
-        case "updateConfigParam":
-          service.updateConfigParam(data);
-          return;
-        case "setPreset":
-          service.setPreset(data);
-          return;
-        case "setCurrentProgram":
-          service.setCurrentProgram(data);
-          return;
+      if (event in service) {
+        service[event](data);
+      } else {
+        console.warn(`Unknown event name: ${event}`);
       }
     });
 

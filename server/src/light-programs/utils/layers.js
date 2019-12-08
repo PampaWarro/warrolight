@@ -54,7 +54,7 @@ class Layer {
   set blendMode(blendMode) {
     this.blendFunction = blendFunctions[blendMode];
     if (!this.blendFunction) {
-      throw `Blend function '${blendMode}' not found.`;
+      throw new Error(`Blend function '${blendMode}' not found.`);
     }
   }
   applyAtIndex(index, geometry, base) {
@@ -92,7 +92,7 @@ class CompositeLayer extends Layer {
     super(options);
     this.layers = options.layers;
     if (!this.layers) {
-      throw `Need a list of child layers, got ${this.layers}.`;
+      throw new Error(`Need a list of child layers, got ${this.layers}.`);
     }
   }
   colorAtIndex(index, geometry) {

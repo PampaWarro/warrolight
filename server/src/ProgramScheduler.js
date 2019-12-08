@@ -12,14 +12,12 @@ module.exports = class ProgramScheduler {
   constructor(program) {
     this.program = program;
     this.timeInMs = 0;
-    this.frameNumber = 0;
     this.startTime = null;
     this.nextTickTimeout = null;
   }
 
   start(config, draw) {
     this.timeInMs = 0;
-    this.frameNumber = 0;
     this.startTime = Date.now();
     this.config = config;
 
@@ -27,11 +25,9 @@ module.exports = class ProgramScheduler {
 
     const frame = () => {
       this.timeInMs = Date.now() - this.startTime;
-      this.frameNumber++;
 
       // TODO: find a way to remove this
       this.program.timeInMs = this.timeInMs;
-      this.program.frameNumber = this.frameNumber;
 
       let start = Date.now();
 

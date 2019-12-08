@@ -45,7 +45,6 @@ module.exports = function mixPrograms(...programs) {
       _.each(this.programs, (p, i) => {
         // TODO: remove this forwarding somehow
         p.programInstance.timeInMs = this.timeInMs;
-        p.programInstance.frameNumber = this.frameNumber;
 
         p.programInstance.drawFrame(
           colors => frames[i] = colors,

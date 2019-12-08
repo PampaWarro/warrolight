@@ -56,9 +56,7 @@ module.exports = function createMultiProgram(
 
         // TODO: remove this forwarding somehow
         this.previous.timeInMs = this.timeInMs;
-        this.previous.frameNumber = this.frameNumber;
         this.current.timeInMs = this.timeInMs;
-        this.current.frameNumber = this.frameNumber;
 
         this.previous.drawFrame((colors) => previousColors = colors, audio);
         this.current.drawFrame((colors) => currentColors = colors, audio);
@@ -76,7 +74,6 @@ module.exports = function createMultiProgram(
       } else {
         // TODO: remove this forwarding somehow
         this.current.timeInMs = this.timeInMs;
-        this.current.frameNumber = this.frameNumber;
 
         this.current.drawFrame(draw, audio);
       }

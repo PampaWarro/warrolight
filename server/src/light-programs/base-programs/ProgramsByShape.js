@@ -74,7 +74,6 @@ module.exports = function programsByShape(mapping) {
 
         // TODO: remove this forwarding somehow
         program.timeInMs = this.timeInMs;
-        program.frameNumber = this.frameNumber;
 
         program.drawFrame(
           colors => {

@@ -8,6 +8,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     this.time = 0;
     this.maxVolume = 0;
     this.hueOffset = Math.random();
+    this.frameNumber = 0; // TODO: frameNumber is an antipattern, use time-dependent variables
   }
 
   drawFrame(draw, audio) {
@@ -58,6 +59,8 @@ module.exports = class MusicFrequencyDot extends LightProgram {
         }
       }
     }
+
+    this.frameNumber++;
 
     draw(this.lastVolume);
   }

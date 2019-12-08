@@ -59,7 +59,7 @@ module.exports = function mixPrograms(...programs) {
     updateConfig(config) {
       this.config = config;
       for (let item of this.programs) {
-        item.programInstance.config = config;
+        item.programInstance.updateConfig(config);
       }
     }
 

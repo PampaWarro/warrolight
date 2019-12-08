@@ -110,7 +110,7 @@ module.exports = function createMultiProgram(
     updateConfig(config) {
       this.config = config;
       for (let item of this.programSchedule) {
-        item.programInstance.config = config;
+        item.programInstance.updateConfig(config);
       }
     }
 

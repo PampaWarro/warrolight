@@ -68,13 +68,13 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
     return (
       <div className="perband-btn">
-        <a className="btn btn-sm btn-outline-secondary mb-2" href="#" onClick={e => this.toggleMetric(e)}>
+        <button className="btn btn-sm btn-outline-secondary mb-2" onClick={e => this.toggleMetric(e)}>
           {this.props.config.metric}
-        </a>
+        </button>
         <br />
-        <a className="btn btn-sm btn-outline-secondary" href="#" onClick={e => this.togglePerBandMode(e)}>
+        <button className="btn btn-sm btn-outline-secondary" onClick={e => this.togglePerBandMode(e)}>
           {this.state.perBand ? "Global" : "Per band"}
-        </a>
+        </button>
       </div>
     );
   }

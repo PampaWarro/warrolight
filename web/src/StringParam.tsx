@@ -25,8 +25,7 @@ export class StringParam extends React.Component<Props> {
           <br />
           <div className="list-group">
             {_.map(this.props.options, v => (
-              <a
-                href="#"
+              <button
                 key={v}
                 className={
                   "list-group-item list-group-item-action " +
@@ -35,7 +34,7 @@ export class StringParam extends React.Component<Props> {
                 onClick={e => this.handleChange(e, v)}
               >
                 {v}
-              </a>
+              </button>
             ))}
           </div>
         </div>

@@ -88,13 +88,12 @@ export class ProgramConfig extends React.Component<Props> {
       <div className="p-4">
         <h4 className="pt-2">
           {currentProgram.name} &nbsp;
-          <a
-            href="#"
+          <button
             className="btn btn-sm btn-outline-secondary"
             onClick={this.handleRestartProgram.bind(this)}
           >
             Restart
-          </a>
+          </button>
         </h4>
         <Presets presets={presets} onSelect={this.props.onSelectPreset} />
         <hr />
@@ -118,14 +117,13 @@ const Presets: React.FC<PresetsProps> = ({ presets, onSelect }) => {
     <div>
       <hr />
       {presets.map(preset => (
-        <a
+        <button
           className="btn btn-sm btn-outline-success mr-1 mb-1"
-          href="#"
           key={preset}
           onClick={e => onSelect(preset)}
         >
           {preset}
-        </a>
+        </button>
       ))}
     </div>
   );

@@ -21,13 +21,12 @@ export class ProgramList extends React.Component<Props> {
 
           return (
             <li key={key} className="nav-item">
-              <a
-                href="#"
+              <span
                 className={"nav-link " + (selected ? "active" : "")}
                 onClick={() => this.props.onProgramChange(key)}
               >
                 {program.name}
-              </a>
+              </span>
             </li>
           );
         })}

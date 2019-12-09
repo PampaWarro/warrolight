@@ -19,6 +19,10 @@ body {
   bottom: 0;
 }
 
+.sidebar .nav-link {
+  cursor: pointer;
+}
+
 .sidebar .nav-link.active {
   color: white;
   background-color: #343a40;

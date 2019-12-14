@@ -91,12 +91,18 @@ class SoundAnalyzer extends EventEmitter {
     this._deferredEvents = [];
     this.previousFrame = null;
     this.currentFrame = null;
+    this.ringBuffer = [];
   }
 
   init(config) {
     config.emitter = this;
     this._modules = topologicalSort(loadModules(config));
-    this.on("audioframe", this._processAudioFrame);
+    this.on("audioframe", (frame) => {
+      if (this.ringBuffer.length >= 10) {
+        this.ringBuffer.shift();
+      }
+      this.ringBuffer.push(frame);
+    });
   }
 
   emitDeferred(name, event) {
@@ -108,6 +114,17 @@ class SoundAnalyzer extends EventEmitter {
       this.emit(e[0], e[1]);
     });
     this._deferredEvents = [];
+  }
+
+  update() {
+    const frame = this.ringBuffer.shift();
+    if (!frame) {
+      return;
+    }
+    if (this.ringBuffer.length === 0) {
+      this.ringBuffer.unshift(frame);
+    }
+    this._processAudioFrame(frame);
   }
 
   _processAudioFrame(frame) {

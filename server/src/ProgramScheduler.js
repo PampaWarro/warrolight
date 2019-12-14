@@ -31,6 +31,8 @@ module.exports = class ProgramScheduler {
 
       let start = Date.now();
 
+      soundAnalyzer.update();
+
       this.program.drawFrame(
         colorsArray => draw(_.map(colorsArray, col =>
           ColorUtils.dim(col, this.config.globalBrightness))),

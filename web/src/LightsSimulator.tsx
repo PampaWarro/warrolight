@@ -99,9 +99,10 @@ export class LightsSimulator extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="lights-simulator mb-3">
-        <div className="preview-area py-3">
+      <div className="lights-simulator">
+        <div className="preview-area">
           <canvas
+            className={'border border-dark'}
             onClick={this.toggleRenderPreview.bind(this)}
             ref="canvas"
             width={this.props.width}

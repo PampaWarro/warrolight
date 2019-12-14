@@ -22,7 +22,7 @@ export class ProgramList extends React.Component<Props> {
           return (
             <li key={key} className="nav-item">
               <span
-                className={"nav-link " + (selected ? "active" : "")}
+                className={"nav-link py-0 px-2 border-bottom border-dark  " + (selected ? "active" : "")}
                 onClick={() => this.props.onProgramChange(key)}
               >
                 {program.name}

@@ -81,15 +81,15 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="mic-client">
+      <div className="mic-client text-right">
         {this.renderButtons()}
 
         <canvas
           id="music"
           ref={this.canvas}
-          width="800"
           onClick={this.toggleMic.bind(this)}
           height="200"
+          width="800"
           style={{ opacity: this.props.config.sendingMicData ? "1" : "0.5" }}
         />
 

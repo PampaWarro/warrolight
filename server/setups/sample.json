@@ -1,0 +1,23 @@
+{
+  "geometry": "geometry-wchica",
+  "shapeMapping": "shape-mapping-wchica",
+  "lights": 150,
+  "outputDevices": {
+    "serial": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 150,
+        "devicePortWindows": "COM27",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 150,
+      "baseIndex": 0,
+      "deviceName": "serial"
+    }
+  ]
+}

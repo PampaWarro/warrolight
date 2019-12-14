@@ -17,7 +17,7 @@ export class NumberParam extends React.Component<Props> {
 
   render() {
     return (
-      <div className="config-item my-3">
+      <div className="config-item my-1">
         <div className="overflow-auto">
           <div className="float-left">{this.props.name}</div>
           <div className="float-right font-weight-bold">{this.props.value}</div>

@@ -85,8 +85,8 @@ export class ProgramConfig extends React.Component<Props> {
     const presets = currentProgram.presets || [];
 
     return (
-      <div className="p-4">
-        <h4 className="pt-2">
+      <div>
+        <h5 className="">
           {currentProgram.name} &nbsp;
           <button
             className="btn btn-sm btn-outline-secondary"
@@ -94,7 +94,7 @@ export class ProgramConfig extends React.Component<Props> {
           >
             Restart
           </button>
-        </h4>
+        </h5>
         <Presets presets={presets} onSelect={this.props.onSelectPreset} />
         <hr />
         <div>{configOptions}</div>

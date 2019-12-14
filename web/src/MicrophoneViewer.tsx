@@ -67,7 +67,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     }
 
     return (
-      <div className="perband-btn">
+      <div className="mic-btns">
         <button className="btn btn-sm btn-outline-secondary mb-2" onClick={e => this.toggleMetric(e)}>
           {this.props.config.metric}
         </button>
@@ -87,9 +87,9 @@ export class MicrophoneViewer extends React.Component<Props, State> {
         <canvas
           id="music"
           ref={this.canvas}
-          width="800"
           onClick={this.toggleMic.bind(this)}
           height="200"
+          width="800"
           style={{ opacity: this.props.config.sendingMicData ? "1" : "0.5" }}
         />
 

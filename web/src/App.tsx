@@ -173,21 +173,21 @@ export class App extends React.Component<Props, State> {
 
     return (
       <div>
-        <nav className="navbar fixed-top navbar-dark bg-dark">
-          <span className="navbar-brand">WarroLight</span>
-          <DevicesStatus devices={this.state.devices} />
-          <ConnectionStatus status={this.state.connection} />
-        </nav>
-        <div className="container-fluid">
-          <div className="row">
-            <nav className="sidebar">
+        <div className="">
+          <div className="grid-container">
+            <nav className="devicesbar bg-dark d-flex justify-content-between align-items-center p-2">
+              <span className="navbar-brand">WarroLight</span>
+              <DevicesStatus devices={this.state.devices}/>
+              <ConnectionStatus status={this.state.connection}/>
+            </nav>
+            <nav className="programsbar overflow-auto py-2">
               <ProgramList
                 programs={this.state.programs}
                 selected={this.state.selected}
                 onProgramChange={this.handleProgramChange}
               />
             </nav>
-            <div className="col-md-3 offset-2 sidebar-2">
+            <div className="controlsbar overflow-auto p-3">
               <ProgramConfig
                 program={currentProgram}
                 selected={this.state.selected}
@@ -197,21 +197,21 @@ export class App extends React.Component<Props, State> {
                 onChangeProgramConfig={this.handleChangeProgramConfig}
               />
             </div>
-            <div className="offset-5 fixed-top">
-              <div className="m-3">
-                <LightsSimulator
-                  ref={this.lightsSim}
+            <div className="preview p-2">
+              <LightsSimulator
+                ref={this.lightsSim}
                 height={400}
-                  width={700}
-                  onStart={this.handleStartLights}
-                  onStop={this.handleStopLights}
-                />
-                <MicrophoneViewer
-                  ref={this.micViewer}
-                  config={this.state.micConfig}
-                  onSetConfig={this.handleSetMicConfig}
-                />
-              </div>
+                width={600}
+                onStart={this.handleStartLights}
+                onStop={this.handleStopLights}
+              />
+            </div>
+            <div className="soundbar p-2">
+              <MicrophoneViewer
+                ref={this.micViewer}
+                config={this.state.micConfig}
+                onSetConfig={this.handleSetMicConfig}
+              />
             </div>
           </div>
         </div>

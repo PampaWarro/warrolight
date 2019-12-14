@@ -19,6 +19,7 @@ module.exports = class AliveDots extends LightProgram {
   init() {
     this.time = 0;
     this.lastVolume = 0;
+    // TODO: recreate dots if config updates number of particles
     this.dots = _.map(
       _.range(this.config.numberOfParticles),
       () => new Dot(this.numberOfLeds)

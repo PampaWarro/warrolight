@@ -4,8 +4,6 @@
 #include <colorpalettes.h>
 #include <colorutils.h>
 #include <controller.h>
-#include <cpp_compat.h>
-#include <dmx.h>
 #include <FastLED.h>
 #include <fastled_config.h>
 #include <fastled_delay.h>
@@ -14,7 +12,6 @@
 #include <hsv2rgb.h>
 #include <led_sysdefs.h>
 #include <lib8tion.h>
-#include <noise.h>
 #include <pixelset.h>
 #include <pixeltypes.h>
 #include <platforms.h>

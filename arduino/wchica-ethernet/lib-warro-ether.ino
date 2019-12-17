@@ -1,8 +1,6 @@
 #include <SPI.h>        
 #include <UIPEthernet.h>
 
-
-
 IPAddress myDns(192, 168, 1, 1);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);

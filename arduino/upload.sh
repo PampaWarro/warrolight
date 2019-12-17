@@ -1,4 +1,5 @@
 #!/bin/bash
+# Upload a sketch to the Arduino connected via USB to this computer.
 
 set -e
 

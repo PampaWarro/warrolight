@@ -1,4 +1,6 @@
 #!/bin/bash
+# Compile every sketch in the arduino/ directory. Useful for quickly making
+# sure we did not break the build. Soon to be integrated in CI.
 
 set -e
 

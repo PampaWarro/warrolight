@@ -34,10 +34,10 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2) {
   FastLED.show();
 }
 
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
+const byte ENCODING_POS_RGB = 1;
+const byte ENCODING_POS_VGA = 2;
+const byte ENCODING_VGA = 3;
+const byte ENCODING_RGB = 4;
 
 void writeLeds(int pos, byte r, byte g, byte  b) {
   if (pos < 150) {

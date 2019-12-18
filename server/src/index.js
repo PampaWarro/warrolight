@@ -1,7 +1,9 @@
 const { startServer } = require("./server");
 const { loadSetup } = require("./setup");
 
-const setupPath = `../setups/${process.argv[2]}`;
+const setupFile = process.argv[2] || "sample.json";
+const setupPath = `../setups/${setupFile}`;
+
 console.log(`Loading setup from ${setupPath}`)
 const setup = require(setupPath);
 

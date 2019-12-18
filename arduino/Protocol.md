@@ -36,3 +36,11 @@ Uses 3 bytes for each light, in RGB order. Every light configured in this board 
 ### RGB565
 
 Uses 2 bytes for each light. The colors are encoded using 5 bits for red, 6 bits for green, and 5 bits for blue, making a total of 16 bits (= 2 bytes).
+
+## Ethernet protocol
+
+TODO
+
+## RF protocol
+
+TODO, specify channels, RF parameters, etc.

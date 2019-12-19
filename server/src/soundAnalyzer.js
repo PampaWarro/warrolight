@@ -6,24 +6,29 @@ const _ = require("lodash");
 // Load and initialize modules from "soundmodules" dir.
 function loadModules(config) {
   const modules = {};
-  glob.sync(__dirname + "/soundmodules/*.js").forEach(function(file) {
-    const id = path.basename(file, ".js");
-    const module = require(path.resolve(file));
-    const moduleInstance = module.init(config);
-    if (!moduleInstance.run) {
-      console.warn(`Module '${id}' has no run function.`);
-    }
-    try {
-      modules[id] = {
-        id: id,
-        deps: module.deps,
-        instance: moduleInstance
-      };
-    } catch (e) {
-      console.error(`Failed to initialize module '${id}'.`);
-      throw e;
-    }
-  });
+  glob.sync(__dirname + "/soundmodules/*.js")
+      .concat(glob.sync(__dirname + "/soundmodules/*.ts"))
+      .forEach(function(file) {
+        const id = path.parse(path.basename(file)).name;
+        if (id in modules) {
+          throw `Duplicate module name ${id}.`
+        }
+        const module = require(path.resolve(file));
+        const moduleInstance = module.init(config);
+        if (!moduleInstance.run) {
+          console.warn(`Module '${id}' has no run function.`);
+        }
+        try {
+          modules[id] = {
+            id : id,
+            deps : module.deps,
+            instance : moduleInstance
+          };
+        } catch (e) {
+          console.error(`Failed to initialize module '${id}'.`);
+          throw e;
+        }
+      });
   checkModuleDeps(modules);
   return modules;
 }

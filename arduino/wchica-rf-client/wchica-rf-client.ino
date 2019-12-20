@@ -1,8 +1,8 @@
 #include "FastLED.h"
-
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <Warrolight.h>
 
 // How many leds in your strip?
 // #define NUM_LEDS 150
@@ -14,9 +14,6 @@
 #define DATA_PIN 6
 #define DATA_PIN2 7
 #define CLOCK_PIN 13
-
-// Define the array of leds
-CRGB leds[NUM_LEDS];
 
 // This variable is persisted even after reseting the arduino. That allows cycling through
 // different programs of light
@@ -63,50 +60,12 @@ void setup() {
   radio.startListening();
 }
 
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
-byte ENCODING_RGB565 = 5;
 
 int j = 0;
 byte pos = 3;
 byte r = 0;
 byte g = 0;
 byte b = 0;
-
-byte vgaRed(byte vga) {
-  return ((vga & 0xE0) >> 5) * 32;
-}
-byte vgaBlue(byte vga) {
-  return ((vga & 0x03)) * 64;
-}
-byte vgaGreen(byte vga) {
-  return ((vga & 0x1C) >> 2) * 32;
-}
-
-void writeLeds(int pos, byte r, byte g, byte  b) {
-  if (pos < 150) {
-    leds[pos].red = r;
-    leds[pos].green = g;
-    leds[pos].blue = b;
-  }
-}
-
-void writeLedsRgb565(int pos, byte ba, byte bb) {
-    int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff)) ;
-    byte b = ((rgb565 & 0x001f)) << 3;
-    byte g = ((rgb565 & 0x7E0) >> 5) << 2;
-    byte r = ((rgb565) >> 11) << 3;
-    writeLeds(pos, r, g, b);     
-}
-
-void writeLedsHSB(int pos, byte h, byte s, byte  b) {
-  if (pos < 150) {
-    leds[pos].setHSV(h, s, b);
-  }
-}
-
 
 int stripSize = NUM_LEDS;
 

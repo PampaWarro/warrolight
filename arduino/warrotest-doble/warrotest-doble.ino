@@ -1,26 +1,12 @@
 #include "FastLED.h"
+#include <Warrolight.h>
 
-// How many leds in your strip?
-#define NUM_LEDS 150
-
-// For led chips like Neopixels, which have a data line, ground, and power, you just
-// need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
-// ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
-#define DATA_PIN 6
-#define DATA_PIN2 7
-#define CLOCK_PIN 13
-
-// Define the array of leds
-CRGB leds[NUM_LEDS];
-CRGB leds2[NUM_LEDS];
-
-void setup() { 
+void setup() {
       // Uncomment/edit one of the following lines for your leds arrangement.
       FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
       FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, NUM_LEDS);
       
       Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-      //Serial.println("Hello world!");  // prints hello with ending line break 
 
       for(int i = 0; i<NUM_LEDS; i++){
         leds[i] = CRGB::Black;
@@ -39,20 +25,11 @@ void setup() {
       FastLED.show();
 }
 
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
-
 int j = 0;
 byte pos = 3;
 byte r = 0;
 byte g = 0;
 byte b = 0;
-
-byte vgaRed(byte vga){return ((vga & 0xE0) >> 5) * 32;}
-byte vgaBlue(byte vga){return ((vga & 0x03)) * 64;}
-byte vgaGreen(byte vga){return ((vga & 0x1C) >> 2) * 32;}
 
 void writeLeds(int pos, byte r, byte g, byte  b){
   if(pos < 150){

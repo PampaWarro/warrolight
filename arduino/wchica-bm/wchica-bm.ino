@@ -1,35 +1,13 @@
 #include "FastLED.h"
-
-// How many leds in your strip?
-// #define NUM_LEDS 150
-#define NUM_LEDS 150
-
-// For led chips like Neopixels, which have a data line, ground, and power, you just
-// need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
-// ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
-#define DATA_PIN 6
-#define DATA_PIN2 7
-#define CLOCK_PIN 13
-
-// Define the array of leds
-CRGB leds[NUM_LEDS];
-
-// This variable is persisted even after reseting the arduino. That allows cycling through
-// different programs of light
-__attribute__((section(".noinit"))) unsigned int program;
+#include <Warrolight.h>
 
 void setup() {
   program = (program + 1) % 2;
-  //program = 0;
 
-  // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
-  Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-  //Serial.begin(230400/4);           // set up Serial library at 1152000 bps, the same than in Node.js
-
-  //Serial.println("Hello world!");  // prints hello with ending line break
+  Serial.begin(576000);
 
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
@@ -43,44 +21,7 @@ void setup() {
   FastLED.show();
 }
 
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
-
-int j = 0;
-byte pos = 3;
-byte r = 0;
-byte g = 0;
-byte b = 0;
-
-byte vgaRed(byte vga) {
-  return ((vga & 0xE0) >> 5) * 32;
-}
-byte vgaBlue(byte vga) {
-  return ((vga & 0x03)) * 64;
-}
-byte vgaGreen(byte vga) {
-  return ((vga & 0x1C) >> 2) * 32;
-}
-
-void writeLeds(int pos, byte r, byte g, byte  b) {
-  if (pos < 150) {
-    leds[pos].red = r;
-    leds[pos].green = g;
-    leds[pos].blue = b;
-  }
-}
-
-void writeLedsHSB(int pos, byte h, byte s, byte  b) {
-  if (pos < 150) {
-    leds[pos].setHSV(h, s, b);
-  }
-}
-
-
 int stripSize = NUM_LEDS;
-
 
 boolean connected = false;
 void reconnect() {
@@ -97,6 +38,8 @@ void drainSerial() {
 
 boolean waitingSerial = true;
 int waitingCounter = 0;
+unsigned long lastConnectionTime = millis();
+
 void loop() {
   if (connected || Serial.available() >= 2) {
     readLedsFromSerial();
@@ -106,9 +49,6 @@ void loop() {
   }
 }
 
-
-
-unsigned long lastConnectionTime = millis();
 void readLedsFromSerial() {
   if (!connected) {
     if (Serial.available() >= 3) {
@@ -148,7 +88,7 @@ void readLedsFromSerial() {
         leds[i] = CRGB::Black;
       }
       for (int i = 0; i < j; i++) {
-        pos = data[0 + i * 4];
+        int pos = data[0 + i * 4];
         writeLeds(pos, data[1 + i * 4], data[2 + i * 4], data[3 + i * 4]);
       }
     } else {
@@ -163,7 +103,7 @@ void readLedsFromSerial() {
         leds[i] = CRGB::Black;
       }
       for (int i = 0; i < j; i++) {
-        pos = data[0 + i * 2];
+        int pos = data[0 + i * 2];
         byte vga = data[1 + i * 2];
         writeLeds(pos, vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
       }
@@ -208,13 +148,9 @@ unsigned long time = 0;
 void arduinoProgram() {
   if (program == 0) {
     programRainbow();
-  //} else if (program == 1){
-    
   } else {
     programStars();
   }
-
-  //programSusi();
 
   byte debugCycle = (time / 10) % 3;
   if (debugCycle == 0) {
@@ -279,36 +215,3 @@ unsigned int rng(int from, int to) {
   y ^= y << 2; y ^= y >> 7; y ^= y << 7;
   return y % (to - from) + from;
 }
-
-/////////////////////////////////////////////////////////////////////////////////////
-// RAINBOW //////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-
-byte sines[] = {0, 12, 25, 38, 50, 63, 75, 87, 99, 110, 122, 133, 143, 154, 164, 173, 182, 191, 199, 207, 214, 221, 227, 232, 237, 241, 245, 248, 251, 253, 254, 254, 254, 254, 252, 250, 248, 245, 241, 236, 231, 226, 220, 213, 206, 198, 190, 181, 172, 162, 152, 142, 131, 120, 108, 97, 85, 73, 61, 48, 35, 23, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 29, 42, 54, 67, 79, 91, 103, 114, 125, 136, 147, 157, 167, 176, 185, 194, 202, 209, 216, 223, 229, 234};
-int PARAM_SPEED = 5;
-void programRainbow() {
-  if (!programInitialized) {
-    //PARAM_SPEED = random(1, 1);
-    programInitialized = true;
-  }
-  
-  for (int i = 0; i < NUM_LEDS; i++) {
-    int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
-    writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i*6 + time * PARAM_SPEED) % 150]);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-// SUSI /////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-void programSusi() {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if(i == ((time/20) % NUM_LEDS)){
-      writeLedsHSB(i, 130+((time/10) % 100), 255, 255);
-    } else {
-      writeLeds(i, 0,0,0);
-    }
-  }
-}
-

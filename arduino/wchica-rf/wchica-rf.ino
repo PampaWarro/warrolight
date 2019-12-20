@@ -2,7 +2,6 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-
 // How many leds in your strip?
 #define NUM_LEDS 150
 

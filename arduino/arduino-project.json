@@ -1,0 +1,8 @@
+{
+    "board": "arduino:avr:uno",
+    "libraries": {
+        "FastLED": "*",
+        "RF24": "*",
+        "UIPEthernet": "*"
+    }
+}

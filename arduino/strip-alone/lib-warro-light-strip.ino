@@ -32,11 +32,7 @@ void setupLeds(int numLeds, int dataPin1) {
   FastLED.show();
 }
 
-void writeLeds(int pos, byte r, byte g, byte b) {
-  leds[pos].red = r;
-  leds[pos].green = g;
-  leds[pos].blue = b;
-}
+void writeLeds(int pos, byte r, byte g, byte b) { leds[pos].setRGB(r, g, b); }
 
 void writeLedsHSB(int pos, byte h, byte s, byte b) {
   if (pos < 150) {

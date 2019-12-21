@@ -14,7 +14,6 @@ CRGB leds2[STRIP_NUM_LEDS];
 void setupLeds(int numLeds, int dataPin1) {
   NUM_LEDS = numLeds;
 
-  // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, STRIP_NUM_LEDS);    
     
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);

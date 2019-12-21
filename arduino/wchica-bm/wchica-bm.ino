@@ -2,7 +2,6 @@
 #include <Warrolight.h>
 
 // How many leds in your strip?
-// #define NUM_LEDS 150
 #define NUM_LEDS 150
 
 // For led chips like Neopixels, which have a data line, ground, and power, you

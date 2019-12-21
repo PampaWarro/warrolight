@@ -1,4 +1,5 @@
-#include "FastLED.h"
+#include <FastLED.h>
+#include <Warrolight.h>
 
 #define STRIP_NUM_LEDS 150
 
@@ -33,11 +34,6 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2) {
 
   FastLED.show();
 }
-
-const byte ENCODING_POS_RGB = 1;
-const byte ENCODING_POS_VGA = 2;
-const byte ENCODING_VGA = 3;
-const byte ENCODING_RGB = 4;
 
 void writeLeds(int pos, byte r, byte g, byte  b) {
   if (pos < 150) {

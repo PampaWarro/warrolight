@@ -1,8 +1,8 @@
-#include "FastLED.h"
-
+#include <FastLED.h>
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <Warrolight.h>
 
 // How many leds in your strip?
 // #define NUM_LEDS 150
@@ -62,12 +62,6 @@ void setup() {
   radio.setAutoAck(false);
   radio.startListening();
 }
-
-byte ENCODING_POS_RGB = 1;
-byte ENCODING_POS_VGA = 2;
-byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
-byte ENCODING_RGB565 = 5;
 
 int j = 0;
 byte pos = 3;

@@ -44,11 +44,7 @@ void setup() {
   FastLED.show();
 }
 
-int j = 0;
 byte pos = 3;
-byte r = 0;
-byte g = 0;
-byte b = 0;
 
 byte vgaRed(byte vga) {
   return ((vga & 0xE0) >> 5) * 32;

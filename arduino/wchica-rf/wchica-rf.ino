@@ -9,14 +9,11 @@
 #define NUM_CHANNELS 2
 
 RF24 radio(7, 8); // CE, CSN
-const byte address[6] = "90909";
 
 int PAYLOAD_SIZE = 32;
 
 void setup() {
-  Serial.begin(
-      1152000 /
-      2); // set up Serial library at 1152000 bps, the same than in Node.js
+  Serial.begin(1152000 / 2);
   Serial.println("ARDUINOSTART");
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);

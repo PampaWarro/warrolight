@@ -23,7 +23,6 @@ CRGB leds[NUM_LEDS];
 // __attribute__((section(".noinit"))) unsigned int program;
 
 RF24 radio(7, 8); // CE, CSN
-const byte address[6] = "90909";
 
 #define PAYLOAD_SIZE 32
 

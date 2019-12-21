@@ -44,8 +44,6 @@ void setup() {
   FastLED.show();
 }
 
-byte pos = 3;
-
 byte vgaRed(byte vga) {
   return ((vga & 0xE0) >> 5) * 32;
 }
@@ -140,7 +138,7 @@ void readLedsFromSerial() {
         leds[i] = CRGB::Black;
       }
       for (int i = 0; i < j; i++) {
-        pos = data[0 + i * 4];
+        int pos = data[0 + i * 4];
         writeLeds(pos, data[1 + i * 4], data[2 + i * 4], data[3 + i * 4]);
       }
     } else {
@@ -155,7 +153,7 @@ void readLedsFromSerial() {
         leds[i] = CRGB::Black;
       }
       for (int i = 0; i < j; i++) {
-        pos = data[0 + i * 2];
+        int pos = data[0 + i * 2];
         byte vga = data[1 + i * 2];
         writeLeds(pos, vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
       }

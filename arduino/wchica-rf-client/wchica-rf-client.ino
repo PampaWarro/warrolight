@@ -28,7 +28,6 @@ const byte address[6] = "90909";
 #define PAYLOAD_SIZE 32
 
 void setup() {
-  // Uncomment/edit one of the following lines for your leds arrangement.
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 600);

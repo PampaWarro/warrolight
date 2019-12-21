@@ -16,12 +16,10 @@ CRGB leds[NUM_LEDS];
 CRGB leds2[NUM_LEDS];
 
 void setup() { 
-      // Uncomment/edit one of the following lines for your leds arrangement.
       FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
       FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, NUM_LEDS);
       
-      Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-      //Serial.println("Hello world!");  // prints hello with ending line break 
+      Serial.begin(576000);
 
       for(int i = 0; i<NUM_LEDS; i++){
         leds[i] = CRGB::Black;

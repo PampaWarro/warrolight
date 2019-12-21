@@ -73,44 +73,43 @@ byte lastC = 0;
 bool checkForNewUDPMsg(char packetBuffer[]) {
   int packetSize = udp.parsePacket();
 
-  if(packetSize)
-  {   
-    //Serial.print("Received packet of size ");       
-    //Serial.println(packetSize);
-    
-    udp.read(packetBuffer,packetSize);
-
-    byte c = packetBuffer[0];
-    if(c - lastC > 1) {
-      Serial.print("Missed ");
-      Serial.print(c - lastC - 1, DEC);
-      Serial.print(" - packet #");
-      Serial.println(c, DEC);
-    }  
-      
-    if((c % 50) == 0){  
-      //Serial.print("Received packet #");
-      //Serial.println(c, DEC);
-    }
-
-    lastC = c;  
-    
-    /*
-    Serial.print(" from IP : ");
-    IPAddress remote = udp.remoteIP();
-    //print out the remote connection's IP address
-    Serial.print(remote);
-    
-    Serial.print(" on port : ");
-    //print out the remote connection's port
-    Serial.println(udp.remotePort());
-
-    udp.beginPacket(remote, udp.remotePort());
-    udp.write("OK");
-    udp.endPacket();
-    */
-    return true;
-  } else {
+  if (packetSize == 0) {
     return false;
   }
+
+  //Serial.print("Received packet of size ");       
+  //Serial.println(packetSize);
+  
+  udp.read(packetBuffer,packetSize);
+
+  byte c = packetBuffer[0];
+  if(c - lastC > 1) {
+    Serial.print("Missed ");
+    Serial.print(c - lastC - 1, DEC);
+    Serial.print(" - packet #");
+    Serial.println(c, DEC);
+  }  
+    
+  if((c % 50) == 0){
+    //Serial.print("Received packet #");
+    //Serial.println(c, DEC);
+  }
+
+  lastC = c;
+
+  /*
+  Serial.print(" from IP : ");
+  IPAddress remote = udp.remoteIP();
+  //print out the remote connection's IP address
+  Serial.print(remote);
+
+  Serial.print(" on port : ");
+  //print out the remote connection's port
+  Serial.println(udp.remotePort());
+
+  udp.beginPacket(remote, udp.remotePort());
+  udp.write("OK");
+  udp.endPacket();
+  */
+  return true;
 }

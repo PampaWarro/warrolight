@@ -8,7 +8,6 @@
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
 // ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
 #define DATA_PIN 6
-#define CLOCK_PIN 13
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];

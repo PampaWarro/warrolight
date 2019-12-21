@@ -45,17 +45,6 @@ void writeLedsHSB(int pos, byte h, byte s, byte  b) {
   }
 }
 
-void writeLedsHSBMixed(int pos, byte h, byte s, byte v, float mix) {
-    /*let [r,g,b] = ColorUtils.HSVtoRGB(h/255, s/255, v/255);
-
-    leds[pos].red = Math.floor((this.colors[pos][0]*(MIX_STEPS-mix) + r*mix)/MIX_STEPS);
-    this.colors[pos][1] = Math.floor((this.colors[pos][1]*(MIX_STEPS-mix) + g*mix)/MIX_STEPS);
-    this.colors[pos][2] = Math.floor((this.colors[pos][2]*(MIX_STEPS-mix) + b*mix)/MIX_STEPS);
-
-    writeLedsHSB(pos, a, b, c);
-    */
-}
-
 void showLeds() {
     FastLED.show();
 }

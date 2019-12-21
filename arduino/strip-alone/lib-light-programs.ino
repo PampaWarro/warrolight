@@ -19,16 +19,6 @@ byte transitionEase[] = {
 double params[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 double paramsOld[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-// create a random integer from 0 - 65535
-unsigned int rdm(int from, int to) {
-  static unsigned int y = 0;
-  y += micros() + globalSeed; // seed that changes every time arduino is reseted
-  y ^= y << 2;
-  y ^= y >> 7;
-  y ^= y << 7;
-  return y % (to - from) + from;
-}
-
 void set(int paramPos, int val) { params[paramPos] = val; }
 
 void init(int paramPos, int val) {
@@ -38,7 +28,7 @@ void init(int paramPos, int val) {
 
 void setRandom(int paramPos, int from, int to) {
   paramsOld[paramPos] = params[paramPos];
-  params[paramPos] = rdm(from, to);
+  params[paramPos] = random(from, to);
 }
 
 int getP(int paramPos) {
@@ -161,19 +151,19 @@ void programStars() {
     memset(stars, 0, sizeof(stars));
     memset(stars, 0, sizeof(starsColors));
     memset(stars, 0, sizeof(starsSaturation));
-    int i = rdm(0, 100);
+    int i = random(0, 100);
     PARAM_CHANCE = 100 - i;
     PARAM_DECAY = 999 - i;
-    PARAM_TONE = rdm(0, 255);
+    PARAM_TONE = random(0, 255);
   }
 
   long time = globalTime;
 
   for (int i = 0; i < NUM_LEDS_PROGRAM; i++) {
-    if (rdm(0, PARAM_CHANCE) == 0) {
-      stars[i] = min(255, (int)stars[i] + rdm(20, 255));
-      starsColors[i] = rdm(0, 10) + (time / 10 % 255);
-      starsSaturation[i] = rdm(0, 150) + 50;
+    if (random(0, PARAM_CHANCE) == 0) {
+      stars[i] = min(255, (int)stars[i] + random(20, 255));
+      starsColors[i] = random(0, 10) + (time / 10 % 255);
+      starsSaturation[i] = random(0, 150) + 50;
     }
     if (stars[i] > 0) {
       stars[i] = max(0, (((long)stars[i]) * PARAM_DECAY / 1000));
@@ -195,9 +185,9 @@ int expIntensity = 30;
 
 void explosion() {
   if (!programInitialized || expLife < 0) {
-    expIntensity = rdm(5, 25);
+    expIntensity = random(5, 25);
     expLife = expIntensity;
-    expCenter = rdm(1, 25);
+    expCenter = random(1, 25);
     setRandom(PARAM_COLOR_TONE, 1, 255);
     setRandom(PARAM_SATURATION, 0, 255);
   }
@@ -255,7 +245,7 @@ void arduinoProgram() {
   if ((globalTime - 1) % (60 * programTime * 1) == 0) {
     programInitialized = false;
     if (program == 0) {
-      randomProgram = rdm(0, 4);
+      randomProgram = random(0, 4);
     }
   }
 

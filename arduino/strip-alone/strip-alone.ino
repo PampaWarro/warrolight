@@ -18,8 +18,6 @@ void setup() {
   // Generate random seed using analog pin noise
   randomSeed(analogRead(0));
 
-  // Global seed makes sure each time the lights are different
-  globalSeed = random(32000);
   // Serial.println(globalSeed);
 
   setupLeds(150, 6);

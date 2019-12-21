@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <Warrolight.h>
 
 
 // How many leds in your strip?
@@ -27,12 +28,6 @@ void setup() {
   radio.setAutoAck(false);
   radio.stopListening();
 }
-
-//byte ENCODING_POS_RGB = 1;
-//byte ENCODING_POS_VGA = 2;
-//byte ENCODING_VGA = 3;
-byte ENCODING_RGB = 4;
-byte ENCODING_RGB565 = 5;
 
 int stripSize = NUM_LEDS*NUM_CHANNELS;
 

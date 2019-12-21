@@ -15,6 +15,8 @@
 #define DATA_PIN 6
 #define DATA_PIN2 7
 
+#define RADIO_PAYLOAD_SIZE 32
+
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
@@ -23,8 +25,6 @@ CRGB leds[NUM_LEDS];
 // __attribute__((section(".noinit"))) unsigned int program;
 
 RF24 radio(7, 8); // CE, CSN
-
-#define PAYLOAD_SIZE 32
 
 void setup() {
   randomSeed(analogRead(0));
@@ -57,7 +57,7 @@ void setup() {
 
   radio.setPALevel(RF24_PA_HIGH);
   // radio.enableDynamicPayloads();
-  radio.setPayloadSize(PAYLOAD_SIZE);
+  radio.setPayloadSize(RADIO_PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
   radio.setAutoAck(false);
   radio.startListening();
@@ -92,7 +92,7 @@ int partsCount = 0;
 int lastFrame = 0;
 boolean painted = false;
 
-byte data[PAYLOAD_SIZE];
+byte data[RADIO_PAYLOAD_SIZE];
 unsigned long lastFrameMs = millis();
 
 void loop() {
@@ -128,7 +128,7 @@ void loop() {
     partsCount++;
 
     int offset = data[0];
-    for (int i = 2; i + 2 < PAYLOAD_SIZE; i += ledSize) {
+    for (int i = 2; i + 2 < RADIO_PAYLOAD_SIZE; i += ledSize) {
       if (ledSize == 3) {
         writeLeds(offset + i / ledSize, data[i], data[i + 1], data[i + 2]);
       } else if (ledSize == 2) {

@@ -8,9 +8,9 @@
 
 #define NUM_CHANNELS 2
 
-RF24 radio(7, 8); // CE, CSN
+#define RADIO_PAYLOAD_SIZE 32
 
-int PAYLOAD_SIZE = 32;
+RF24 radio(7, 8); // CE, CSN
 
 void setup() {
   Serial.begin(1152000 / 2);
@@ -20,7 +20,7 @@ void setup() {
   // radio.setChannel(81);
   radio.setChannel(92);
   radio.setPALevel(RF24_PA_HIGH);
-  radio.setPayloadSize(PAYLOAD_SIZE);
+  radio.setPayloadSize(RADIO_PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
   // radio.enableDynamicPayloads();
   radio.setAutoAck(false);

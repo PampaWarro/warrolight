@@ -4,7 +4,6 @@ bool programInitialized = false;
 
 long globalTime = 0;
 long relativeTime = 0;
-long starRelativeTime = 0;
 
 // bool inTransition = false;
 int transitionProgress = 0;

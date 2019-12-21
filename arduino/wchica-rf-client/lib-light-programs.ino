@@ -14,14 +14,6 @@ byte transitionEase[] = {0,0,0,0,0,1,1,1,2,2,2,3,4,4,5,5,6,7,8,9,10,10,11,12,14,
 double params[] = {0,0,0,0,0,0,0,0,0,0,0,0};
 double paramsOld[] = {0,0,0,0,0,0,0,0,0,0,0,0};
 
-// create a random integer from 0 - 65535
-unsigned int rdm(int from, int to) {
-  static unsigned int y = 0;
-  y += micros(); // seeded with changing number
-  y ^= y << 2; y ^= y >> 7; y ^= y << 7;
-  return y % (to - from) + from;
-}
-
 void set(int paramPos, int val) {
   params[paramPos] = val;
 }
@@ -33,7 +25,7 @@ void init(int paramPos, int val) {
 
 void setRandom(int paramPos, int from, int to) {
   paramsOld[paramPos] = params[paramPos];
-  params[paramPos] = rdm(from, to);
+  params[paramPos] = random(from, to);
 }
 
 int getP(int paramPos) {
@@ -144,7 +136,7 @@ void arduinoProgram() {
   }
 
   if (globalTime % (60 * 4 * 1) == 0) {
-    program = rdm(0, 2);
+    program = random(0, 2);
     programInitialized = false;
     program = 1;
     inTransition = true;

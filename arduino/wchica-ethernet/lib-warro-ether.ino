@@ -1,4 +1,4 @@
-#include <SPI.h>        
+#include <SPI.h>
 #include <UIPEthernet.h>
 
 IPAddress myDns(192, 168, 1, 1);
@@ -12,10 +12,10 @@ EthernetUDP udp;
 
 void setupUDPConnection(unsigned int port, byte ipSegment) {
   // MAC address and IP address (in case DHCP fails)
-  byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, ipSegment };
+  byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, ipSegment};
   localPort = port;
 
-    // start the Ethernet and UDP:
+  // start the Ethernet and UDP:
   IPAddress useIp(192, 168, 1, ipSegment);
   Ethernet.begin(mac, useIp, myDns, gateway, subnet);
   /*Serial.println("Trying to get an IP address using DHCP");
@@ -24,7 +24,7 @@ void setupUDPConnection(unsigned int port, byte ipSegment) {
     // initialize the Ethernet device not using DHCP:
     Ethernet.begin(mac, ip, myDns, gateway, subnet);
   }*/
-  
+
   Serial.print("My IP address: ");
   IPAddress ip = Ethernet.localIP();
   for (byte thisByte = 0; thisByte < 4; thisByte++) {
@@ -33,11 +33,11 @@ void setupUDPConnection(unsigned int port, byte ipSegment) {
     Serial.print(".");
   }
   Serial.println("");
-  
+
   udp.begin(localPort);
 
   withIp = true;
-  
+
   broadcastAlive();
 }
 
@@ -66,7 +66,6 @@ void broadcastPerf(int frames) {
 int count = 0;
 byte lastC = 0;
 
-
 bool checkForNewUDPMsg(char packetBuffer[]) {
   int packetSize = udp.parsePacket();
 
@@ -74,22 +73,22 @@ bool checkForNewUDPMsg(char packetBuffer[]) {
     return false;
   }
 
-  //Serial.print("Received packet of size ");       
-  //Serial.println(packetSize);
-  
-  udp.read(packetBuffer,packetSize);
+  // Serial.print("Received packet of size ");
+  // Serial.println(packetSize);
+
+  udp.read(packetBuffer, packetSize);
 
   byte c = packetBuffer[0];
-  if(c - lastC > 1) {
+  if (c - lastC > 1) {
     Serial.print("Missed ");
     Serial.print(c - lastC - 1, DEC);
     Serial.print(" - packet #");
     Serial.println(c, DEC);
-  }  
-    
-  if((c % 50) == 0){
-    //Serial.print("Received packet #");
-    //Serial.println(c, DEC);
+  }
+
+  if ((c % 50) == 0) {
+    // Serial.print("Received packet #");
+    // Serial.println(c, DEC);
   }
 
   lastC = c;

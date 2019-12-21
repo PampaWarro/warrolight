@@ -1,24 +1,25 @@
 #include <FastLED.h>
-#include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
+#include <SPI.h>
 #include <Warrolight.h>
+#include <nRF24L01.h>
 
 // How many leds in your strip?
 // #define NUM_LEDS 150
 #define NUM_LEDS 150
 
-// For led chips like Neopixels, which have a data line, ground, and power, you just
-// need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
-// ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
+// For led chips like Neopixels, which have a data line, ground, and power, you
+// just need to define DATA_PIN.  For led chipsets that are SPI based (four
+// wires - data, clock, ground, and power), like the LPD8806 define both
+// DATA_PIN and CLOCK_PIN
 #define DATA_PIN 6
 #define DATA_PIN2 7
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
-// This variable is persisted even after reseting the arduino. That allows cycling through
-// different programs of light
+// This variable is persisted even after reseting the arduino. That allows
+// cycling through different programs of light
 // __attribute__((section(".noinit"))) unsigned int program;
 
 RF24 radio(7, 8); // CE, CSN
@@ -30,7 +31,7 @@ void setup() {
   randomSeed(analogRead(0));
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  
+
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 600);
 
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -43,7 +44,7 @@ void setup() {
   leds[3] = CRGB::Blue;
 
   FastLED.show();
-  //Serial.begin(9600);
+  // Serial.begin(9600);
   radio.begin();
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
 
@@ -53,17 +54,17 @@ void setup() {
 
   // Max power 700 mah
   radio.setChannel(81);
-  //radio.setChannel(114);
-  
-  radio.setPALevel(RF24_PA_HIGH);  
-  //radio.enableDynamicPayloads();
+  // radio.setChannel(114);
+
+  radio.setPALevel(RF24_PA_HIGH);
+  // radio.enableDynamicPayloads();
   radio.setPayloadSize(PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
   radio.setAutoAck(false);
   radio.startListening();
 }
 
-void writeLeds(int pos, byte r, byte g, byte  b) {
+void writeLeds(int pos, byte r, byte g, byte b) {
   if (pos < 150) {
     leds[pos].red = r;
     leds[pos].green = g;
@@ -72,19 +73,18 @@ void writeLeds(int pos, byte r, byte g, byte  b) {
 }
 
 void writeLedsRgb565(int pos, byte ba, byte bb) {
-    int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff)) ;
-    byte b = ((rgb565 & 0x001f)) << 3;
-    byte g = ((rgb565 & 0x7E0) >> 5) << 2;
-    byte r = ((rgb565) >> 11) << 3;
-    writeLeds(pos, r, g, b);     
+  int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff));
+  byte b = ((rgb565 & 0x001f)) << 3;
+  byte g = ((rgb565 & 0x7E0) >> 5) << 2;
+  byte r = ((rgb565) >> 11) << 3;
+  writeLeds(pos, r, g, b);
 }
 
-void writeLedsHSB(int pos, byte h, byte s, byte  b) {
+void writeLedsHSB(int pos, byte h, byte s, byte b) {
   if (pos < 150) {
     leds[pos].setHSV(h, s, b);
   }
 }
-
 
 int stripSize = NUM_LEDS;
 
@@ -97,31 +97,31 @@ byte data[PAYLOAD_SIZE];
 unsigned long lastFrameMs = millis();
 
 void loop() {
-  int ledSize = 3;   
+  int ledSize = 3;
 
   unsigned long nowMs = millis();
-  
-  if (radio.available()) {           
-    while (radio.available()) {                     // While there is data ready
-      radio.read( &data, sizeof(data));             // Get the payload
+
+  if (radio.available()) {
+    while (radio.available()) {        // While there is data ready
+      radio.read(&data, sizeof(data)); // Get the payload
     }
     int pos = data[0];
-    byte frame = data[1];                 
-    //Serial.print("Received ");
-    //Serial.println(pos);
+    byte frame = data[1];
+    // Serial.print("Received ");
+    // Serial.println(pos);
 
-    if(frame != lastFrame) {
-      if(painted) {
+    if (frame != lastFrame) {
+      if (painted) {
         painted = false;
       } else {
         painted = true;
         partsCount = 0;
-        /*for (int i = 0; i < 75; i+=1) {  
+        /*for (int i = 0; i < 75; i+=1) {
           writeLeds(i, 255,0,0);
-        }*/        
-        // Show whatever is in the buffer, clearly the end of last frame was lost
-        // Mark second led with purple dot
-        //writeLeds(1, 200,0,255);
+        }*/
+        // Show whatever is in the buffer, clearly the end of last frame was
+        // lost Mark second led with purple dot
+        // writeLeds(1, 200,0,255);
         FastLED.show();
       }
     }
@@ -129,41 +129,42 @@ void loop() {
     partsCount++;
 
     int offset = data[0];
-    for (int i = 2; i+2 < PAYLOAD_SIZE; i+=ledSize) {      
-      if(ledSize == 3) {
-        writeLeds(offset+i/ledSize, data[i],data[i+1],data[i+2]);   
-      } else if(ledSize == 2) {
-        writeLedsRgb565(offset+i/ledSize, data[i], data[i+1]);      
+    for (int i = 2; i + 2 < PAYLOAD_SIZE; i += ledSize) {
+      if (ledSize == 3) {
+        writeLeds(offset + i / ledSize, data[i], data[i + 1], data[i + 2]);
+      } else if (ledSize == 2) {
+        writeLedsRgb565(offset + i / ledSize, data[i], data[i + 1]);
       }
     }
-    
-    if((offset+30/ledSize) > 145){
+
+    if ((offset + 30 / ledSize) > 145) {
       /*
       // For debugging lost packets in the frame
-      if(partsCount != 15) {      
-        for (int i = 0; i < 20; i+=1) {  
+      if(partsCount != 15) {
+        for (int i = 0; i < 20; i+=1) {
           writeLeds(i, 255,255,0);
         }
       }
       */
       partsCount = 0;
-      FastLED.show();        FastLED.show();
+      FastLED.show();
+      FastLED.show();
       painted = true;
-    }         
-    lastFrameMs = nowMs;  
+    }
+    lastFrameMs = nowMs;
   } else {
     long timeSinceLastSignal = (nowMs - lastFrameMs);
-    if(timeSinceLastSignal > 3000) {
+    if (timeSinceLastSignal > 3000) {
       // Indicate no signal in more than 3 seconds
       byte ledToTurnOn = 0;
-      if(timeSinceLastSignal % 300 > 150) {
-        ledToTurnOn = 1; 
+      if (timeSinceLastSignal % 300 > 150) {
+        ledToTurnOn = 1;
       }
-      
-      writeLeds(ledToTurnOn,255,0,0);
-      writeLeds((ledToTurnOn+1)%2,0,0,0);     
-      writeLeds(2,0,0,0);
-      writeLeds(3,0,0,0);
+
+      writeLeds(ledToTurnOn, 255, 0, 0);
+      writeLeds((ledToTurnOn + 1) % 2, 0, 0, 0);
+      writeLeds(2, 0, 0, 0);
+      writeLeds(3, 0, 0, 0);
       FastLED.show();
     }
     /*if((nowMs - lastFrame) > 1000) {
@@ -172,4 +173,3 @@ void loop() {
     } */
   }
 }
-

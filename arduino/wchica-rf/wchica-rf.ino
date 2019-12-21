@@ -1,8 +1,7 @@
-#include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
+#include <SPI.h>
 #include <Warrolight.h>
-
+#include <nRF24L01.h>
 
 // How many leds in your strip?
 #define NUM_LEDS 150
@@ -15,21 +14,23 @@ const byte address[6] = "90909";
 int PAYLOAD_SIZE = 32;
 
 void setup() {
-  Serial.begin(1152000/2);         // set up Serial library at 1152000 bps, the same than in Node.js
+  Serial.begin(
+      1152000 /
+      2); // set up Serial library at 1152000 bps, the same than in Node.js
   Serial.println("ARDUINOSTART");
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);
-  //radio.setChannel(81);
+  // radio.setChannel(81);
   radio.setChannel(92);
   radio.setPALevel(RF24_PA_HIGH);
   radio.setPayloadSize(PAYLOAD_SIZE);
   radio.setDataRate(RF24_2MBPS);
-  //radio.enableDynamicPayloads();
+  // radio.enableDynamicPayloads();
   radio.setAutoAck(false);
   radio.stopListening();
 }
 
-int stripSize = NUM_LEDS*NUM_CHANNELS;
+int stripSize = NUM_LEDS * NUM_CHANNELS;
 
 boolean connected = false;
 void reconnect() {
@@ -41,7 +42,7 @@ void drainSerial() {
   // Drain incoming bytes
   while (Serial.available() > 0) {
     Serial.read();
-  }  
+  }
 }
 
 boolean waitingSerial = true;
@@ -52,8 +53,8 @@ void loop() {
     readLedsFromSerial();
     waitingCounter = 0;
   } else {
-    waitingCounter ++;
-    if(waitingCounter == 200000) {
+    waitingCounter++;
+    if (waitingCounter == 200000) {
       Serial.println("WAITING");
       waitingCounter = 0;
     }
@@ -94,40 +95,40 @@ void readLedsFromSerial() {
 
   int encoding = Serial.read();
   int pos = 0;
-  
+
   if (encoding == ENCODING_RGB) {
     int j = stripSize;
 
-    int total = Serial.readBytes(ledData+2, 3 * j);
+    int total = Serial.readBytes(ledData + 2, 3 * j);
     if (total != 3 * j) {
       return reconnect();
     }
   } else if (encoding == ENCODING_RGB565) {
     int j = stripSize;
 
-    int total = Serial.readBytes(ledData+2, 2 * j);
+    int total = Serial.readBytes(ledData + 2, 2 * j);
     if (total != 2 * j) {
       return reconnect();
     }
   } else {
-    Serial.println("WRONG ENCODING");    
+    Serial.println("WRONG ENCODING");
     reconnect();
-    //Serial.println("RESTART");    
+    // Serial.println("RESTART");
   }
 
-  if(!transmitRadio()) {
+  if (!transmitRadio()) {
     Serial.println("FAILED_RF_WRITE");
   } else {
     Serial.println("OK"); // ASCII printable characters
   }
 
-  //delay(20);
+  // delay(20);
 
   // Protocolo que entiende node.js
 }
 
-//int channels[] = {81, 114};
-int channels[] = {92,103};
+// int channels[] = {81, 114};
+int channels[] = {92, 103};
 
 // To detect missing frames in the client
 byte frameNumber = 0;
@@ -139,20 +140,20 @@ bool transmitRadio() {
     radio.setChannel(channel);
 
     int offset = k * bytesPerPixel * NUM_LEDS;
-    
+
     for (int j = 0; j < NUM_LEDS;) {
       ledData[offset] = j;
-      ledData[offset + 1] = frameNumber; // Clients can use it to detect missing packets
-      
-      if(!radio.write(&ledData[offset], 32)) {       
+      ledData[offset + 1] =
+          frameNumber; // Clients can use it to detect missing packets
+
+      if (!radio.write(&ledData[offset], 32)) {
         return false;
       }
-            
-      offset = offset + 30;
-      j += 30/bytesPerPixel;        
-    }    
-  }
-  frameNumber++; 
-  return true; 
-}
 
+      offset = offset + 30;
+      j += 30 / bytesPerPixel;
+    }
+  }
+  frameNumber++;
+  return true;
+}

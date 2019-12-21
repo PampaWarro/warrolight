@@ -2,44 +2,44 @@
 void setup() {
   Serial.begin(250000);
   Serial.println("Serial connected");
-  setupLeds(300,6,7); 
+  setupLeds(300, 6, 7);
 
   // COM17 - 6666 6
   // COM16 - 5555 5
-   
+
   setupUDPConnection(2222, 2); // MEGA ETH 2
-  //setupUDPConnection(4444, 4); // MEGA ETH 4
+  // setupUDPConnection(4444, 4); // MEGA ETH 4
 }
 
 bool connected = false;
 int disconnectedCounter = 0;
 bool withIp = false;
 
-char ledsBuffer[2*3*150+2];  //buffer to hold incoming packet,
+char ledsBuffer[2 * 3 * 150 + 2]; // buffer to hold incoming packet,
 unsigned long lastPerfStatus = millis();
 unsigned long lastFrame = millis();
 int frameCount = 0;
 void loop() {
-  if(withIp) {
+  if (withIp) {
     unsigned long nowMs = millis();
-    if(nowMs - lastPerfStatus > 1000) {
+    if (nowMs - lastPerfStatus > 1000) {
       lastPerfStatus = nowMs;
-      if(!connected) {      
-        broadcastAlive();       
+      if (!connected) {
+        broadcastAlive();
       } else {
         broadcastPerf(frameCount);
-        frameCount = 0;        
+        frameCount = 0;
       }
     }
-  
-    if(checkForNewUDPMsg(ledsBuffer)) {
+
+    if (checkForNewUDPMsg(ledsBuffer)) {
       writeLedFrame(ledsBuffer, 1);
       connected = true;
       disconnectedCounter = 0;
       frameCount++;
       lastFrame = nowMs;
     } else {
-      if(nowMs - lastFrame > 2000) {
+      if (nowMs - lastFrame > 2000) {
         connected = false;
       }
     }

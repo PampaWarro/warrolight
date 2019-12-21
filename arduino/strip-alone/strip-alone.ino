@@ -3,6 +3,9 @@ __attribute__((section(".noinit"))) unsigned int lastTime;
 
 unsigned int globalSeed = lastTime;
 
+unsigned long lastFrame = millis();
+int frameCount = 0;
+
 void setup() {
   // Serial.begin(9600);
   // Serial.println("Serial connected");
@@ -35,8 +38,6 @@ void setup() {
   delay(300);
 }
 
-unsigned long lastFrame = millis();
-int frameCount = 0;
 void loop() {
   unsigned long nowMs = millis();
 

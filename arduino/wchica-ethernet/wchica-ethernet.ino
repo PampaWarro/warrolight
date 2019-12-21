@@ -1,5 +1,4 @@
 bool connected = false;
-int disconnectedCounter = 0;
 bool withIp = false;
 
 char ledsBuffer[2 * 3 * 150 + 2]; // buffer to hold incoming packet
@@ -37,7 +36,6 @@ void loop() {
     if (checkForNewUDPMsg(ledsBuffer)) {
       writeLedFrame(ledsBuffer, 1);
       connected = true;
-      disconnectedCounter = 0;
       frameCount++;
       lastFrame = nowMs;
     } else {

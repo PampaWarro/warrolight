@@ -50,15 +50,6 @@ int getP(int paramPos) {
   //}
 }
 
-double getFloat(int paramPos) {
-  /*if (inTransition) {
-    int t = transitionEase[transitionProgress];
-    return (params[paramPos] * (t) + paramsOld[paramPos] * (100.0 - t)) / 100.0;
-  } else {*/
-  return params[paramPos];
-  //}
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////
 // RAINBOW
 //////////////////////////////////////////////////////////////////////////////////////////

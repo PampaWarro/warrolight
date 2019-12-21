@@ -29,12 +29,6 @@ void setup() {
       FastLED.show();
 }
 
-int j = 0;
-byte pos = 3;
-byte r = 0;
-byte g = 0;
-byte b = 0;
-
 void loop() { 
   int c = 0;
   int stripSize = NUM_LEDS;
@@ -49,7 +43,7 @@ void loop() {
             leds[i] = CRGB::Black;
           }
           for(int i = 0; i<j; i++){
-            pos = data[0+i*4];
+            int pos = data[0+i*4];
             leds[pos].red = data[1+i*4];
             leds[pos].green = data[2+i*4];
             leds[pos].blue = data[3+i*4];
@@ -64,7 +58,7 @@ void loop() {
             leds[i] = CRGB::Black;
           }
           for(int i = 0; i<j; i++){
-            pos = data[0+i*2];
+            int pos = data[0+i*2];
             byte vga = data[1+i*2];
             leds[pos].red = vgaRed(vga);
             leds[pos].green = vgaGreen(vga);

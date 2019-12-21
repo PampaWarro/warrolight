@@ -64,12 +64,6 @@ void setup() {
   radio.startListening();
 }
 
-int j = 0;
-byte pos = 3;
-byte r = 0;
-byte g = 0;
-byte b = 0;
-
 void writeLeds(int pos, byte r, byte g, byte  b) {
   if (pos < 150) {
     leds[pos].red = r;

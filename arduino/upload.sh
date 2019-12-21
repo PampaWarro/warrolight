@@ -17,6 +17,8 @@ if [ "$port" == "" ]; then
   exit 1
 fi
 
+export ARDUINO_SKETCHBOOK_DIR=.
+
 echo "Found Arduino connected at port $port"
 
 printf "Uploading $sketch to board... "

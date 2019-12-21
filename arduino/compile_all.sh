@@ -10,9 +10,15 @@ die () { >&2 echo "error: $1"; exit 1; }
 
 command -v arduino-cli > /dev/null || die "arduino-cli not installed."
 
+export ARDUINO_SKETCHBOOK_DIR=.
+
 code=0
 
 for sketch in */ ; do
+  if [ "$sketch" == "libraries/" ]; then
+    continue
+  fi
+
   echo "${GREEN}Compiling sketch in $sketch${RESET}"
   arduino-cli compile --fqbn arduino:avr:uno "$sketch"
   if [ $? -ne 0 ]; then

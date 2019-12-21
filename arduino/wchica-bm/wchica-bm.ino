@@ -44,16 +44,6 @@ void setup() {
   FastLED.show();
 }
 
-byte vgaRed(byte vga) {
-  return ((vga & 0xE0) >> 5) * 32;
-}
-byte vgaBlue(byte vga) {
-  return ((vga & 0x03)) * 64;
-}
-byte vgaGreen(byte vga) {
-  return ((vga & 0x1C) >> 2) * 32;
-}
-
 void writeLeds(int pos, byte r, byte g, byte  b) {
   if (pos < 150) {
     leds[pos].red = r;

@@ -1,3 +1,13 @@
+bool connected = false;
+int disconnectedCounter = 0;
+bool withIp = false;
+
+char ledsBuffer[2 * 3 * 150 + 2]; // buffer to hold incoming packet
+
+unsigned long lastPerfStatus = millis();
+unsigned long lastFrame = millis();
+
+int frameCount = 0;
 
 void setup() {
   Serial.begin(250000);
@@ -11,14 +21,6 @@ void setup() {
   // setupUDPConnection(4444, 4); // MEGA ETH 4
 }
 
-bool connected = false;
-int disconnectedCounter = 0;
-bool withIp = false;
-
-char ledsBuffer[2 * 3 * 150 + 2]; // buffer to hold incoming packet,
-unsigned long lastPerfStatus = millis();
-unsigned long lastFrame = millis();
-int frameCount = 0;
 void loop() {
   if (withIp) {
     unsigned long nowMs = millis();

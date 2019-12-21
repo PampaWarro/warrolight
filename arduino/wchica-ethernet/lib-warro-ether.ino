@@ -7,9 +7,6 @@ IPAddress subnet(255, 255, 255, 0);
 
 unsigned int localPort = 5555; // local port to listen on
 
-// buffers for receiving and sending data
-//char ReplyBuffer[] = "acknowledged";       // a string to send back
-
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP udp;
 

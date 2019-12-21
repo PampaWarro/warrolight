@@ -36,13 +36,9 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2) {
 
 void writeLeds(int pos, byte r, byte g, byte b) {
   if (pos < 150) {
-    leds[pos].red = r;
-    leds[pos].green = g;
-    leds[pos].blue = b;
+    leds[pos].setRGB(r, g, b);
   } else {
-    leds2[pos - 150].red = r;
-    leds2[pos - 150].green = g;
-    leds2[pos - 150].blue = b;
+    leds2[pos - 150].setRGB(r, g, b);
   }
 }
 

@@ -184,8 +184,6 @@ void arduinoProgram() {
     programStars();
   }
 
-  // programSusi();
-
   byte debugCycle = (time / 10) % 3;
   if (debugCycle == 0) {
     writeLeds(0, 10, 0, 20);
@@ -271,19 +269,5 @@ void programRainbow() {
     int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
     writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255,
                  sines[(i * 6 + time * PARAM_SPEED) % 150]);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-// SUSI
-// /////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-void programSusi() {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i == ((time / 20) % NUM_LEDS)) {
-      writeLedsHSB(i, 130 + ((time / 10) % 100), 255, 255);
-    } else {
-      writeLeds(i, 0, 0, 0);
-    }
   }
 }

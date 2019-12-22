@@ -82,14 +82,6 @@ void writeLedsRgb565(int pos, byte ba, byte bb)
   writeLeds(pos, r, g, b);
 }
 
-void writeLedsHSB(int pos, byte h, byte s, byte b)
-{
-  if (pos < 150)
-  {
-    leds[pos].setHSV(h, s, b);
-  }
-}
-
 int stripSize = NUM_LEDS;
 
 int waitingCounter = 0;

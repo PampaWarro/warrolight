@@ -125,3 +125,38 @@ void Pulse::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
     leds[i].setHSV(m_tone % 255, 200, pulse);
   }
 }
+
+void MultiProgram::setup()
+{
+  m_program = random(0, MULTIPROGRAM_NUM_PROGRAMS);
+  m_init = true;
+}
+
+void MultiProgram::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
+{
+  if (!m_init)
+  {
+    setup();
+  }
+
+  if (time % MULTIPROGRAM_INTERVAL == 0)
+  {
+    m_program = (m_program + 1) % MULTIPROGRAM_NUM_PROGRAMS;
+  }
+
+  switch (m_program)
+  {
+  case 0:
+    m_stars.draw(leds, numLeds, time);
+    break;
+  case 1:
+    m_rainbow.draw(leds, numLeds, time);
+    break;
+  case 2:
+    m_explosion.draw(leds, numLeds, time);
+    break;
+  case 3:
+    m_pulse.draw(leds, numLeds, time);
+    break;
+  }
+}

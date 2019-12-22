@@ -28,6 +28,7 @@ private:
   int m_decay = 9900;
   int m_tone = 0;
 
+  // TODO: assumes 150 leds as strip size
   byte m_stars[150];
   byte m_starsColors[150];
   byte m_starsSaturation[150];
@@ -72,6 +73,24 @@ private:
 
   int m_tone;
   int m_speed;
+};
+
+class MultiProgram
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+  int m_program = 0;
+
+#define MULTIPROGRAM_INTERVAL 2000
+#define MULTIPROGRAM_NUM_PROGRAMS 4
+  Stars m_stars;
+  Rainbow m_rainbow;
+  Explosion m_explosion;
+  Pulse m_pulse;
 };
 
 #endif

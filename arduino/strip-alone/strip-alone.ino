@@ -1,50 +1,33 @@
-__attribute__((section(".noinit"))) unsigned int program;
-__attribute__((section(".noinit"))) unsigned int lastTime;
+#include <FastLED.h>
+#include <Warrolight.h>
 
-unsigned int globalSeed = lastTime;
+// How many leds in your strip?
+#define NUM_LEDS 150
 
-unsigned long lastFrame = millis();
-int frameCount = 0;
+// For led chips like Neopixels, which have a data line, ground, and power, you
+// just need to define DATA_PIN.  For led chipsets that are SPI based (four
+// wires - data, clock, ground, and power), like the LPD8806 define both
+// DATA_PIN and CLOCK_PIN
+#define DATA_PIN 6
 
-void setup() {
-  // Serial.begin(9600);
-  // Serial.println("Serial connected");
-  // Serial.println(program);
-  if (program > 100)
-    program = 0;
-  else
-    program = (program + 1) % 5;
+// Define the array of leds
+CRGB leds[NUM_LEDS];
+unsigned long time = 0;
 
-  // For developing, force program
-  // program = 4;
+MultiProgram program;
 
-  // Generate random seed using analog pin noise
+void setup()
+{
   randomSeed(analogRead(0));
 
-  // Serial.println(globalSeed);
-
-  setupLeds(150, 6);
-
-  initParams();
-
-  // Show with lights selected program
-  for (int i = 0; i < 50; i++) {
-    writeLeds(i, 0, 0, 0);
-  }
-
-  writeLeds(0 + program, 255, 50, 255); // pink
-
-  showLeds();
-  delay(300);
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);
+  FastLED.show();
 }
 
-void loop() {
-  unsigned long nowMs = millis();
-
-  if (nowMs - lastFrame > 20) {
-    arduinoProgram();
-    showLeds();
-    lastFrame = nowMs;
-    lastTime = (int)nowMs;
-  }
+void loop()
+{
+  program.draw(leds, NUM_LEDS, time);
+  FastLED.show();
+  time++;
 }

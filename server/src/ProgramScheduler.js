@@ -1,11 +1,11 @@
 const _ = require("lodash");
 const ProcessedAudioFrame = require("./ProcessedAudioFrame");
-const soundAnalyzer = require("./soundAnalyzer");
 const ColorUtils = require("./light-programs/utils/ColorUtils");
+const {soundEmitter} = require('./SoundEmitter');
 
 const AUDIO = new ProcessedAudioFrame();
 
-soundAnalyzer.on("processedaudioframe", frame => AUDIO.update(frame));
+soundEmitter.on("processedaudioframe", frame => AUDIO.update(frame));
 
 module.exports = class ProgramScheduler {
 
@@ -30,8 +30,6 @@ module.exports = class ProgramScheduler {
       this.program.timeInMs = this.timeInMs;
 
       let start = Date.now();
-
-      soundAnalyzer.update();
 
       this.program.drawFrame(
         colorsArray => draw(_.map(colorsArray, col =>

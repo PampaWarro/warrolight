@@ -1,4 +1,3 @@
-const EventEmitter = require("events");
 const glob = require("glob");
 const path = require("path");
 const _ = require("lodash");
@@ -70,9 +69,8 @@ function topologicalSort(modules) {
   }
   _.forOwn(reverseEdges, function(deps, id) {
     if (deps && deps.size > 0) {
-      throw `Module '${id}' has unsatisfiable deps '${Array.from(
-        deps
-      )}' (cycle).`;
+      throw `Module '${id}' has unsatisfiable deps '${
+          Array.from(deps)}' (cycle).`;
     }
   });
   return sorted;
@@ -89,66 +87,22 @@ function checkModuleDeps(modules) {
   });
 }
 
-// Main exported SoundEmitter object.
-class SoundAnalyzer extends EventEmitter {
-  constructor() {
-    super();
-    this._deferredEvents = [];
+class SoundAnalyzer {
+  constructor(config) {
     this.previousFrame = null;
     this.currentFrame = null;
-    this.ringBuffer = [];
-  }
-
-  init(config) {
-    config.emitter = this;
     this._modules = topologicalSort(loadModules(config));
-    this.on("audioframe", (frame) => {
-      if (this.ringBuffer.length >= 10) {
-        this.ringBuffer.shift();
-      }
-      this.ringBuffer.push(frame);
-    });
   }
 
-  emitDeferred(name, event) {
-    this._deferredEvents.push([name, event]);
-  }
-
-  _flushDeferredEvents() {
-    this._deferredEvents.forEach(e => {
-      this.emit(e[0], e[1]);
-    });
-    this._deferredEvents = [];
-  }
-
-  update() {
-    const frame = this.ringBuffer.shift();
-    if (!frame) {
-      return;
-    }
-    if (this.ringBuffer.length === 0) {
-      this.ringBuffer.unshift(frame);
-    }
-    this._processAudioFrame(frame);
-  }
-
-  _processAudioFrame(frame) {
+  processAudioFrame(frame) {
     // Run all modules in order.
     this._modules.forEach(module => {
       if (module.instance.run) {
         module.instance.run(frame, this);
       }
     });
-    // Update current frame.
-    this.previousFrame = this.currentFrame;
-    this.currentFrame = frame;
-    // Emit the current frame.
-    this.emit("processedaudioframe", frame);
-    // console.log(this.currentFrame);
-    // console.log(frame.center.spectralCentroid.bin);
-    // Emit all deferred events.
-    this._flushDeferredEvents();
+    return frame;
   }
 }
 
-module.exports = new SoundAnalyzer();
+module.exports = {SoundAnalyzer}

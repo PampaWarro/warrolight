@@ -1,5 +1,5 @@
 const { startMic } = require("./mic");
-const soundAnalyzer = require("./soundAnalyzer");
+const {soundEmitter} = require("./SoundEmitter.ts");
 const SoundListener = require("./SoundListener");
 const _ = require("lodash");
 
@@ -20,7 +20,7 @@ module.exports = class LightsService {
     this.send = send;
     this.simulating = false;
 
-    const soundListener = new SoundListener(soundAnalyzer, this.micConfig);
+    const soundListener = new SoundListener(soundEmitter, this.micConfig);
     // TODO: consider not processing sound when we don't have any clients.
     soundListener.start(lastVolumes => send("micSample", lastVolumes));
 

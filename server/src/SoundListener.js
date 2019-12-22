@@ -2,8 +2,8 @@ const _ = require("lodash");
 
 module.exports = class SoundListener {
 
-  constructor(soundAnalyzer, micConfig) {
-    this.soundAnalyzer = soundAnalyzer;
+  constructor(soundEmitter, micConfig) {
+    this.soundEmitter = soundEmitter;
     this.micConfig = micConfig;
   }
 
@@ -21,7 +21,7 @@ module.exports = class SoundListener {
 
     let avg = 1;
 
-    this.soundAnalyzer.on("processedaudioframe", frame => {
+    this.soundEmitter.on("processedaudioframe", frame => {
       let {
         center: {
           filteredBands,

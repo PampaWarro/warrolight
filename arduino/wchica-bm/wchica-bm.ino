@@ -19,6 +19,8 @@ CRGB leds[NUM_LEDS];
 __attribute__((section(".noinit"))) unsigned int program;
 
 void setup() {
+  randomSeed(analogRead(0));
+
   program = (program + 1) % 2;
   // program = 0;
 
@@ -214,18 +216,18 @@ void programStars() {
     memset(stars, 0, sizeof(stars));
     memset(stars, 0, sizeof(starsColors));
     memset(stars, 0, sizeof(starsSaturation));
-    int i = rng(0, 1000);
+    int i = random(0, 1000);
     PARAM_CHANCE = 1000 - i;
     PARAM_DECAY = 9999 - i;
-    PARAM_TONE = rng(0, 255);
+    PARAM_TONE = random(0, 255);
     programInitialized = true;
   }
 
   for (int i = 0; i < NUM_LEDS; i++) {
-    if (rng(0, PARAM_CHANCE) == 0) {
-      stars[i] = min(255, (int)stars[i] + rng(20, 255));
-      starsColors[i] = rng(0, 10) + (time / 10 % 255);
-      starsSaturation[i] = rng(0, 150) + 50;
+    if (random(0, PARAM_CHANCE) == 0) {
+      stars[i] = min(255, (int)stars[i] + random(20, 255));
+      starsColors[i] = random(0, 10) + (time / 10 % 255);
+      starsSaturation[i] = random(0, 150) + 50;
     }
     if (stars[i] > 0) {
       stars[i] = max(0, (((long)stars[i]) * PARAM_DECAY / 10000));
@@ -240,16 +242,6 @@ void programStars() {
   if (time % (60 * 3 * 10) == 0) {
     programInitialized = false;
   }
-}
-
-// create a random integer from 0 - 65535
-unsigned int rng(int from, int to) {
-  static unsigned int y = 0;
-  y += micros(); // seeded with changing number
-  y ^= y << 2;
-  y ^= y >> 7;
-  y ^= y << 7;
-  return y % (to - from) + from;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////

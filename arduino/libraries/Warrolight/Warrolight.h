@@ -44,4 +44,21 @@ private:
   int m_speed = 5;
 };
 
+class Explosion
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+
+  int m_tone;
+  int m_saturation;
+
+  int m_life = 30;
+  int m_center = 5;
+  int m_intensity = 30;
+};
+
 #endif

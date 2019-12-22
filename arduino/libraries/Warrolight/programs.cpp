@@ -67,3 +67,38 @@ void Rainbow::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
     leds[i].setHSV(h, s, v);
   }
 }
+
+void Explosion::setup()
+{
+  m_intensity = random(5, 25);
+  m_life = m_intensity;
+  m_center = random(1, 25);
+  m_tone = random(1, 255);
+  m_saturation = random(0, 255);
+  m_init = true;
+}
+
+void Explosion::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
+{
+  if (!m_init || m_life < 0)
+  {
+    setup();
+  }
+
+  for (int i = 0; i < numLeds; i++)
+  {
+    int d = abs(i % 25 - m_center);
+    if (d < (m_intensity - m_life))
+    {
+      long fb = min(255, max(0, (255 / m_intensity) * m_life));
+      byte b = (byte)round(256 * ((fb / 256.0 * fb / 256.0)));
+      leds[i].setHSV(m_tone, m_saturation, b);
+    }
+    else
+    {
+      leds[i] = CRGB::Black;
+    }
+  }
+
+  m_life--;
+}

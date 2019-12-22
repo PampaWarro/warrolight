@@ -14,6 +14,7 @@
 CRGB leds[NUM_LEDS];
 unsigned long time = 0;
 // Stars program;
+// Explosion program;
 Rainbow program;
 
 void setup()

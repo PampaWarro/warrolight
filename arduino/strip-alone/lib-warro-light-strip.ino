@@ -24,10 +24,7 @@ void writeLeds(int pos, byte r, byte g, byte b) { leds[pos].setRGB(r, g, b); }
 
 void writeLedsHSB(int pos, byte h, byte s, byte b)
 {
-  if (pos < 150)
-  {
-    leds[pos].setHSV(h, s, b);
-  }
+  leds[pos].setHSV(h, s, b);
 }
 
 void showLeds() { FastLED.show(); }

@@ -26,14 +26,16 @@ CRGB leds[NUM_LEDS];
 
 RF24 radio(7, 8); // CE, CSN
 
-void setup() {
+void setup()
+{
   randomSeed(analogRead(0));
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 600);
 
-  for (int i = 0; i < NUM_LEDS; i++) {
+  for (int i = 0; i < NUM_LEDS; i++)
+  {
     leds[i] = CRGB::Black;
   }
 
@@ -63,13 +65,16 @@ void setup() {
   radio.startListening();
 }
 
-void writeLeds(int pos, byte r, byte g, byte b) {
-  if (pos < 150) {
+void writeLeds(int pos, byte r, byte g, byte b)
+{
+  if (pos < 150)
+  {
     leds[pos].setRGB(r, g, b);
   }
 }
 
-void writeLedsRgb565(int pos, byte ba, byte bb) {
+void writeLedsRgb565(int pos, byte ba, byte bb)
+{
   int rgb565 = ((int)(ba & 0xff) << 8) | ((int)(bb & 0xff));
   byte b = ((rgb565 & 0x001f)) << 3;
   byte g = ((rgb565 & 0x7E0) >> 5) << 2;
@@ -77,8 +82,10 @@ void writeLedsRgb565(int pos, byte ba, byte bb) {
   writeLeds(pos, r, g, b);
 }
 
-void writeLedsHSB(int pos, byte h, byte s, byte b) {
-  if (pos < 150) {
+void writeLedsHSB(int pos, byte h, byte s, byte b)
+{
+  if (pos < 150)
+  {
     leds[pos].setHSV(h, s, b);
   }
 }
@@ -93,13 +100,16 @@ boolean painted = false;
 byte data[RADIO_PAYLOAD_SIZE];
 unsigned long lastFrameMs = millis();
 
-void loop() {
+void loop()
+{
   int ledSize = 3;
 
   unsigned long nowMs = millis();
 
-  if (radio.available()) {
-    while (radio.available()) {        // While there is data ready
+  if (radio.available())
+  {
+    while (radio.available())
+    {                                  // While there is data ready
       radio.read(&data, sizeof(data)); // Get the payload
     }
     int pos = data[0];
@@ -107,10 +117,14 @@ void loop() {
     // Serial.print("Received ");
     // Serial.println(pos);
 
-    if (frame != lastFrame) {
-      if (painted) {
+    if (frame != lastFrame)
+    {
+      if (painted)
+      {
         painted = false;
-      } else {
+      }
+      else
+      {
         painted = true;
         partsCount = 0;
         /*for (int i = 0; i < 75; i+=1) {
@@ -126,15 +140,20 @@ void loop() {
     partsCount++;
 
     int offset = data[0];
-    for (int i = 2; i + 2 < RADIO_PAYLOAD_SIZE; i += ledSize) {
-      if (ledSize == 3) {
+    for (int i = 2; i + 2 < RADIO_PAYLOAD_SIZE; i += ledSize)
+    {
+      if (ledSize == 3)
+      {
         writeLeds(offset + i / ledSize, data[i], data[i + 1], data[i + 2]);
-      } else if (ledSize == 2) {
+      }
+      else if (ledSize == 2)
+      {
         writeLedsRgb565(offset + i / ledSize, data[i], data[i + 1]);
       }
     }
 
-    if ((offset + 30 / ledSize) > 145) {
+    if ((offset + 30 / ledSize) > 145)
+    {
       /*
       // For debugging lost packets in the frame
       if(partsCount != 15) {
@@ -149,12 +168,16 @@ void loop() {
       painted = true;
     }
     lastFrameMs = nowMs;
-  } else {
+  }
+  else
+  {
     long timeSinceLastSignal = (nowMs - lastFrameMs);
-    if (timeSinceLastSignal > 3000) {
+    if (timeSinceLastSignal > 3000)
+    {
       // Indicate no signal in more than 3 seconds
       byte ledToTurnOn = 0;
-      if (timeSinceLastSignal % 300 > 150) {
+      if (timeSinceLastSignal % 300 > 150)
+      {
         ledToTurnOn = 1;
       }
 

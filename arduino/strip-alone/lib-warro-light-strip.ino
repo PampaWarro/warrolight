@@ -19,10 +19,7 @@ void setupLeds(int numLeds, int dataPin1)
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);
 
-  for (int i = 0; i < NUM_LEDS; i++)
-  {
-    writeLeds(i, 0, 0, 0);
-  }
+  FastLED.showColor(CRGB::Black);
 
   for (int i = 0; i < 1; i++)
   {

@@ -61,4 +61,17 @@ private:
   int m_intensity = 30;
 };
 
+class Pulse
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+
+  int m_tone;
+  int m_speed;
+};
+
 #endif

@@ -102,3 +102,26 @@ void Explosion::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
 
   m_life--;
 }
+
+void Pulse::setup()
+{
+  m_tone = random(1, 255);
+  m_speed = random(1, 2);
+  m_init = true;
+}
+
+void Pulse::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
+{
+  if (!m_init)
+  {
+    setup();
+  }
+
+  int pulse =
+      (int)200 * (sin(time / 30.0 * m_speed * 2) + 1) / 2 + 50;
+
+  for (int i = 0; i < numLeds; i++)
+  {
+    leds[i].setHSV(m_tone % 255, 200, pulse);
+  }
+}

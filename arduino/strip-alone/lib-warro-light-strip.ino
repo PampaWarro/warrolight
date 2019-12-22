@@ -16,19 +16,7 @@ void setupLeds(int numLeds, int dataPin1)
   NUM_LEDS = numLeds;
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, STRIP_NUM_LEDS);
-
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 150);
-
-  FastLED.showColor(CRGB::Black);
-
-  for (int i = 0; i < 1; i++)
-  {
-    writeLeds(0 + i * STRIP_NUM_LEDS, 0, 0, 0);   // Black
-    writeLeds(1 + i * STRIP_NUM_LEDS, 255, 0, 0); // Red
-    writeLeds(2 + i * STRIP_NUM_LEDS, 0, 255, 0); // Green
-    writeLeds(3 + i * STRIP_NUM_LEDS, 0, 0, 255); // Blue
-  }
-
   FastLED.show();
 }
 

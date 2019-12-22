@@ -50,14 +50,6 @@ void writeLeds(int pos, byte r, byte g, byte b)
   }
 }
 
-void writeLedsHSB(int pos, byte h, byte s, byte b)
-{
-  if (pos < 150)
-  {
-    leds[pos].setHSV(h, s, b);
-  }
-}
-
 int stripSize = NUM_LEDS;
 
 boolean connected = false;

@@ -1,6 +1,8 @@
 #ifndef __INC_WARROLIGHT_H
 #define __INC_WARROLIGHT_H
 
+#include <FastLED.h>
+
 // encoding constants
 const byte ENCODING_POS_RGB = 1;
 const byte ENCODING_POS_VGA = 2;
@@ -12,5 +14,34 @@ const byte ENCODING_RGB565 = 5;
 byte vgaRed(byte vga);
 byte vgaBlue(byte vga);
 byte vgaGreen(byte vga);
+
+class Stars
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+
+  int m_chance = 1000;
+  int m_decay = 9900;
+  int m_tone = 0;
+
+  byte m_stars[150];
+  byte m_starsColors[150];
+  byte m_starsSaturation[150];
+};
+
+class Rainbow
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+  int m_speed = 5;
+};
 
 #endif

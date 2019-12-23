@@ -1,6 +1,5 @@
 #!/bin/bash
-# Compile every sketch in the arduino/ directory. Useful for quickly making
-# sure we did not break the build. Soon to be integrated in CI.
+# Install libraries for the Arduino project.
 
 die () { >&2 echo "error: $1"; exit 1; }
 

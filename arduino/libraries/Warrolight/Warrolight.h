@@ -4,11 +4,11 @@
 #include <FastLED.h>
 
 // encoding constants
-const byte ENCODING_POS_RGB = 1;
-const byte ENCODING_POS_VGA = 2;
-const byte ENCODING_VGA = 3;
-const byte ENCODING_RGB = 4;
-const byte ENCODING_RGB565 = 5;
+constexpr byte ENCODING_POS_RGB = 1;
+constexpr byte ENCODING_POS_VGA = 2;
+constexpr byte ENCODING_VGA = 3;
+constexpr byte ENCODING_RGB = 4;
+constexpr byte ENCODING_RGB565 = 5;
 
 // VGA functions
 byte vgaRed(byte vga);

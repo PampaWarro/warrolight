@@ -10,14 +10,13 @@ int NUM_LEDS = STRIP_NUM_LEDS;
 
 // Define the array of leds
 CRGB leds[STRIP_NUM_LEDS];
-CRGB leds2[STRIP_NUM_LEDS];
 
 void setupLeds(int numLeds, int dataPin1, int dataPin2)
 {
   NUM_LEDS = numLeds;
 
-  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, STRIP_NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, STRIP_NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, 0, STRIP_NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, STRIP_NUM_LEDS, STRIP_NUM_LEDS);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 5000);
 
@@ -39,14 +38,7 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
 
 void writeLeds(int pos, byte r, byte g, byte b)
 {
-  if (pos < 150)
-  {
-    leds[pos].setRGB(r, g, b);
-  }
-  else
-  {
-    leds2[pos - 150].setRGB(r, g, b);
-  }
+  leds[pos].setRGB(r, g, b);
 }
 
 void writeLedFrame(char data[], int offset)

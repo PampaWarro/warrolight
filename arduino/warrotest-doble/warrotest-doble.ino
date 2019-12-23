@@ -34,11 +34,6 @@ void setup()
   FastLED.show();
 }
 
-void writeLeds(int pos, byte r, byte g, byte b)
-{
-  leds[pos].setRGB(r, g, b);
-}
-
 void loop()
 {
   int c = 0;
@@ -60,7 +55,10 @@ void loop()
         for (int i = 0; i < j; i++)
         {
           int pos = data[0 + i * 4];
-          writeLeds(pos, data[1 + i * 4], data[2 + i * 4], data[3 + i * 4]);
+          int r = data[1 + i * 4];
+          int g = data[2 + i * 4];
+          int b = data[3 + i * 4];
+          leds[pos].setRGB(r, g, b);
         }
       }
     }
@@ -79,7 +77,7 @@ void loop()
         {
           int pos = data[0 + i * 2];
           byte vga = data[1 + i * 2];
-          writeLeds(pos, vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
+          leds[pos].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
         }
       }
     }
@@ -93,7 +91,7 @@ void loop()
         for (int i = 0; i < j; i++)
         {
           byte vga = data[i];
-          writeLeds(i, vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
+          leds[i].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
         }
       }
     }
@@ -106,7 +104,10 @@ void loop()
       {
         for (int i = 0; i < j; i++)
         {
-          writeLeds(i, data[i * 3], data[1 + i * 3], data[2 + i * 3]);
+          int r = data[i * 3];
+          int g = data[1 + i * 3];
+          int b = data[2 + i * 3];
+          leds[i].setRGB(r, g, b);
         }
       }
     }

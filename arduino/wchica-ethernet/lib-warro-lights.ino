@@ -22,23 +22,18 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
 
   for (int i = 0; i < NUM_LEDS; i++)
   {
-    writeLeds(i, 0, 0, 0);
+    leds[i] = CRGB::Black;
   }
 
   for (int i = 0; i < 2; i++)
   {
-    writeLeds(0 + i * STRIP_NUM_LEDS, 0, 0, 0);   // Black
-    writeLeds(1 + i * STRIP_NUM_LEDS, 255, 0, 0); // Red
-    writeLeds(2 + i * STRIP_NUM_LEDS, 0, 255, 0); // Green
-    writeLeds(3 + i * STRIP_NUM_LEDS, 0, 0, 255); // Blue
+    leds[0 + i * STRIP_NUM_LEDS] = CRGB::Black;
+    leds[1 + i * STRIP_NUM_LEDS] = CRGB::Red;
+    leds[2 + i * STRIP_NUM_LEDS] = CRGB::Green;
+    leds[3 + i * STRIP_NUM_LEDS] = CRGB::Blue;
   }
 
   FastLED.show();
-}
-
-void writeLeds(int pos, byte r, byte g, byte b)
-{
-  leds[pos].setRGB(r, g, b);
 }
 
 void writeLedFrame(char data[], int offset)
@@ -48,9 +43,11 @@ void writeLedFrame(char data[], int offset)
   {
     for (int i = 0; i < NUM_LEDS; i++)
     {
-      writeLeds(i, data[1 + i * 3 + offset], data[1 + 1 + i * 3 + offset],
-                data[1 + 2 + i * 3 + offset]);
-      // writeLeds(i, i, 0, 0);
+      int r = data[1 + i * 3 + offset];
+      int g = data[1 + 1 + i * 3 + offset];
+      int b = data[1 + 2 + i * 3 + offset];
+
+      leds[i].setRGB(r, g, b);
     }
   }
   else

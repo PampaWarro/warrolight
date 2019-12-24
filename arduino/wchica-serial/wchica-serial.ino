@@ -228,6 +228,7 @@ void arduinoProgram()
     starsProgram.draw(leds, NUM_LEDS, time);
   }
 
+  // TODO: remove or add a comment about this
   byte debugCycle = (time / 10) % 3;
   if (debugCycle == 0)
   {

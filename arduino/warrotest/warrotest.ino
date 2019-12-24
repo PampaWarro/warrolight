@@ -17,7 +17,7 @@ void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
 
-  Serial.begin(1152000 / 2);
+  Serial.begin(576000);
 
   FastLED.showColor(CRGB::Black);
 

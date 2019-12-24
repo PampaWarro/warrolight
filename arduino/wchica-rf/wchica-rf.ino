@@ -42,7 +42,6 @@ void drainSerial() {
   }
 }
 
-boolean waitingSerial = true;
 int waitingCounter = 0;
 
 void loop() {
@@ -116,12 +115,8 @@ void readLedsFromSerial() {
   if (!transmitRadio()) {
     Serial.println("FAILED_RF_WRITE");
   } else {
-    Serial.println("OK"); // ASCII printable characters
+    Serial.println("OK");
   }
-
-  // delay(20);
-
-  // Protocolo que entiende node.js
 }
 
 // int channels[] = {81, 114};

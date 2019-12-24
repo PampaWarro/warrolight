@@ -15,9 +15,7 @@ void drainSerial()
 {
   // Drain incoming bytes
   while (Serial.available() > 0)
-  {
     Serial.read();
-  }
 }
 
 unsigned long lastConnectionTime = millis();

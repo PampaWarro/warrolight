@@ -231,11 +231,11 @@ void arduinoProgram()
   byte debugCycle = (time / 10) % 3;
   if (debugCycle == 0)
   {
-    writeLeds(0, 10, 0, 20);
+    leds[0].setRGB(10, 0, 20);
   }
   else
   {
-    writeLeds(0, 0, 0, 0);
+    leds[0].setRGB(0, 0, 0);
   }
 
   FastLED.show();

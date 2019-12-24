@@ -30,7 +30,6 @@ void setup()
 
 void loop()
 {
-  int c = 0;
   int stripSize = NUM_LEDS;
   if (Serial.available() >= 2)
   {
@@ -111,21 +110,6 @@ void loop()
     }
     FastLED.show();
 
-    Serial.println("OK"); // ASCII printable characters
-    // Serial.println(c, DEC);
+    Serial.println("OK");
   }
-  /*
-  while (Serial.available() >= 12) {
-     // read the incoming byte:
-     pos = Serial.read();
-     r = Serial.read();
-     g = Serial.read();
-     b = Serial.read();
-
-     leds[pos].red = r;
-     leds[pos].blue = b;
-     leds[pos].green = g;
-
-     c++;
-  }*/
 }

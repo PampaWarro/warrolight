@@ -69,7 +69,6 @@ void drainSerial()
 }
 
 boolean waitingSerial = true;
-int waitingCounter = 0;
 void loop()
 {
   if (connected || Serial.available() >= 2)
@@ -78,7 +77,6 @@ void loop()
   }
   else
   {
-    waitingCounter = 0;
     arduinoProgram();
   }
 }

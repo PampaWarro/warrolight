@@ -162,12 +162,11 @@ void readLedsFromSerial()
   }
   else if (encoding == ENCODING_VGA)
   {
-    int j = stripSize;
-    char data[j];
-    int readTotal = Serial.readBytes(data, j);
-    if (readTotal == j)
+    char data[stripSize];
+    int readTotal = Serial.readBytes(data, stripSize);
+    if (readTotal == stripSize)
     {
-      for (int i = 0; i < j; i++)
+      for (int i = 0; i < stripSize; i++)
       {
         byte vga = data[i];
         leds[i].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
@@ -180,12 +179,11 @@ void readLedsFromSerial()
   }
   else if (encoding == ENCODING_RGB)
   {
-    int j = stripSize;
-    char data[3 * j];
-    int total = Serial.readBytes(data, 3 * j);
-    if (total == 3 * j)
+    char data[3 * stripSize];
+    int total = Serial.readBytes(data, 3 * stripSize);
+    if (total == 3 * stripSize)
     {
-      for (int i = 0; i < j; i++)
+      for (int i = 0; i < stripSize; i++)
       {
         int r = data[i * 3];
         int g = data[1 + i * 3];

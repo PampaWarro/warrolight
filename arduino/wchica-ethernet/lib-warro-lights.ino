@@ -9,7 +9,7 @@ int NUM_LEDS = STRIP_NUM_LEDS;
 #define DATA_PIN2 7
 
 // Define the array of leds
-CRGB leds[STRIP_NUM_LEDS];
+CRGB leds[STRIP_NUM_LEDS * 2];
 
 void setupLeds(int numLeds, int dataPin1, int dataPin2)
 {

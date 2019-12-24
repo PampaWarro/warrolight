@@ -12,7 +12,7 @@
 #define DATA_PIN2 7
 
 // Define the array of leds
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS * 2];
 
 void setup()
 {

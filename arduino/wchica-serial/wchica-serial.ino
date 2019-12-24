@@ -20,6 +20,8 @@ __attribute__((section(".noinit"))) unsigned int program;
 Stars starsProgram;
 Rainbow rainbowProgram;
 
+WSerial wserial;
+
 void setup()
 {
   randomSeed(analogRead(0));
@@ -47,8 +49,8 @@ void setup()
 
 void loop()
 {
-  if (availableFromSerial())
-    readLedsFromSerial(leds, NUM_LEDS);
+  if (wserial.available())
+    wserial.readLeds(leds, NUM_LEDS);
   else
     arduinoProgram();
 }

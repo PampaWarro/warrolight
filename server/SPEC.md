@@ -27,7 +27,7 @@ Sent when client wants to change the current light program. `data` MUST be a str
 
 Sent when client wants to change the preset for the current light program. `data` MUST be a string with the name of the new preset. If a preset with that name is not found, the message SHOULD be ignored.
 
-#### `setMicDataConfig`
+#### `setMicConfig`
 
 Sent when the client wants to change the configuration for the real-time microphone output configuration. `data` MUST be an object with the shape `{ sendingMicData: bool, metric: string }`. Supported metrics are "Rms", "PeakDecay" and "FastPeakDecay". The server MUST acknowledge this message with a `stateChange` message containing the updated mic config.
 

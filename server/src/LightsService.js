@@ -62,7 +62,7 @@ module.exports = class LightsService {
     });
   }
 
-  setMicDataConfig(newMicConfig) {
+  setMicConfig(newMicConfig) {
     if (newMicConfig.sendingMicData === true) {
       console.log("[ON] Web client receiving MIC data".green);
     } else if (newMicConfig.sendingMicData === false) {

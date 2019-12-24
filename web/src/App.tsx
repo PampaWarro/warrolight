@@ -153,7 +153,7 @@ export class App extends React.Component<Props, State> {
   };
 
   handleSetMicConfig = (config: Partial<MicConfig>) => {
-    this.api.setMicDataConfig(config);
+    this.api.setMicConfig(config);
   };
 
   handleChangeProgramConfig = (config: { [name: string]: ConfigValue }) => {

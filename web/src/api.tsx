@@ -43,8 +43,8 @@ export class API extends EventEmitter {
     this.send("updateConfigParam", config);
   }
 
-  setMicDataConfig(config: Partial<MicConfig>) {
-    this.send("setMicDataConfig", config);
+  setMicConfig(config: Partial<MicConfig>) {
+    this.send("setMicConfig", config);
   }
 
   startSamplingLights() {

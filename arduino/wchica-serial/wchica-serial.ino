@@ -60,7 +60,6 @@ void drainSerial()
   }
 }
 
-boolean waitingSerial = true;
 void loop()
 {
   if (connected || Serial.available() >= 2)

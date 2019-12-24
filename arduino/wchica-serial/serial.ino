@@ -1,4 +1,5 @@
 boolean connected = false;
+unsigned long lastConnectionTime = millis();
 
 bool availableFromSerial()
 {
@@ -17,8 +18,6 @@ void drainSerial()
   while (Serial.available() > 0)
     Serial.read();
 }
-
-unsigned long lastConnectionTime = millis();
 
 void readLedsFromSerial(CRGB *leds, int numLeds)
 {

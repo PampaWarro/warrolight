@@ -133,7 +133,8 @@ void readLedsFromSerial()
     }
     else
     {
-      return reconnect();
+      reconnect();
+      return;
     }
   }
   else if (encoding == ENCODING_POS_VGA)
@@ -156,7 +157,8 @@ void readLedsFromSerial()
     }
     else
     {
-      return reconnect();
+      reconnect();
+      return;
     }
   }
   else if (encoding == ENCODING_VGA)
@@ -173,7 +175,8 @@ void readLedsFromSerial()
     }
     else
     {
-      return reconnect();
+      reconnect();
+      return;
     }
   }
   else if (encoding == ENCODING_RGB)
@@ -192,12 +195,14 @@ void readLedsFromSerial()
     }
     else
     {
-      return reconnect();
+      reconnect();
+      return;
     }
   }
   else
   {
-    return reconnect();
+    reconnect();
+    return;
   }
 
   FastLED.show();

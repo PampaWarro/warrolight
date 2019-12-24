@@ -205,8 +205,7 @@ void readLedsFromSerial()
 
   FastLED.show();
 
-  // Protocolo que entiende node.js
-  Serial.println("OK"); // ASCII printable characters
+  Serial.println("OK");
 }
 
 Stars starsProgram;

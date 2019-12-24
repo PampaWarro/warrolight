@@ -111,95 +111,18 @@ void readLedsFromSerial()
   lastConnectionTime = millis();
 
   int encoding = Serial.read();
+  int ok = false;
+
   if (encoding == ENCODING_POS_RGB)
-  {
-    int j = Serial.read();
-    char data[4 * j];
-    int total = Serial.readBytes(data, 4 * j);
-    if (total == 4 * j)
-    {
-      for (int i = 0; i < stripSize; i++)
-      {
-        leds[i] = CRGB::Black;
-      }
-      for (int i = 0; i < j; i++)
-      {
-        int pos = data[0 + i * 4];
-        int r = data[1 + i * 4];
-        int g = data[2 + i * 4];
-        int b = data[3 + i * 4];
-        leds[pos].setRGB(r, g, b);
-      }
-    }
-    else
-    {
-      reconnect();
-      return;
-    }
-  }
+    ok = readPosRGB();
   else if (encoding == ENCODING_POS_VGA)
-  {
-    int j = Serial.read();
-    char data[2 * j];
-    int total = Serial.readBytes(data, 2 * j);
-    if (total == 2 * j)
-    {
-      for (int i = 0; i < stripSize; i++)
-      {
-        leds[i] = CRGB::Black;
-      }
-      for (int i = 0; i < j; i++)
-      {
-        int pos = data[0 + i * 2];
-        byte vga = data[1 + i * 2];
-        leds[pos].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
-      }
-    }
-    else
-    {
-      reconnect();
-      return;
-    }
-  }
+    ok = readPosVGA();
   else if (encoding == ENCODING_VGA)
-  {
-    char data[stripSize];
-    int readTotal = Serial.readBytes(data, stripSize);
-    if (readTotal == stripSize)
-    {
-      for (int i = 0; i < stripSize; i++)
-      {
-        byte vga = data[i];
-        leds[i].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
-      }
-    }
-    else
-    {
-      reconnect();
-      return;
-    }
-  }
+    ok = readVGA();
   else if (encoding == ENCODING_RGB)
-  {
-    char data[3 * stripSize];
-    int total = Serial.readBytes(data, 3 * stripSize);
-    if (total == 3 * stripSize)
-    {
-      for (int i = 0; i < stripSize; i++)
-      {
-        int r = data[i * 3];
-        int g = data[1 + i * 3];
-        int b = data[2 + i * 3];
-        leds[i].setRGB(r, g, b);
-      }
-    }
-    else
-    {
-      reconnect();
-      return;
-    }
-  }
-  else
+    ok = readRGB();
+
+  if (!ok)
   {
     reconnect();
     return;
@@ -208,6 +131,81 @@ void readLedsFromSerial()
   FastLED.show();
 
   Serial.println("OK");
+}
+
+bool readPosRGB()
+{
+  int j = Serial.read();
+  char data[4 * j];
+  int total = Serial.readBytes(data, 4 * j);
+  if (total != 4 * j)
+    return false;
+
+  for (int i = 0; i < stripSize; i++)
+    leds[i] = CRGB::Black;
+
+  for (int i = 0; i < j; i++)
+  {
+    int pos = data[0 + i * 4];
+    int r = data[1 + i * 4];
+    int g = data[2 + i * 4];
+    int b = data[3 + i * 4];
+    leds[pos].setRGB(r, g, b);
+  }
+  return true;
+}
+
+bool readPosVGA()
+{
+  int j = Serial.read();
+  char data[2 * j];
+  int total = Serial.readBytes(data, 2 * j);
+  if (total != 2 * j)
+    return false;
+
+  for (int i = 0; i < stripSize; i++)
+    leds[i] = CRGB::Black;
+
+  for (int i = 0; i < j; i++)
+  {
+    int pos = data[0 + i * 2];
+    byte vga = data[1 + i * 2];
+    leds[pos].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
+  }
+  return true;
+}
+
+bool readVGA()
+{
+  char data[stripSize];
+  int readTotal = Serial.readBytes(data, stripSize);
+  if (readTotal != stripSize)
+    return false;
+
+  for (int i = 0; i < stripSize; i++)
+  {
+    byte vga = data[i];
+    leds[i].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
+  }
+  return true;
+}
+
+bool readRGB()
+{
+  char data[3 * stripSize];
+  int total = Serial.readBytes(data, 3 * stripSize);
+  if (total != 3 * stripSize)
+    return false;
+
+  for (int i = 0; i < stripSize; i++)
+  {
+    int r = data[i * 3];
+    int g = data[1 + i * 3];
+    int b = data[2 + i * 3];
+    leds[i].setRGB(r, g, b);
+  }
+
+  return true;
 }
 
 Stars starsProgram;

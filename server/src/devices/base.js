@@ -78,30 +78,21 @@ exports.LightDevice = class LightDevice {
     throw new Error("Must be implemented by subclasses");
   }
 
-  logDebug(message) {
-    if (this.verbosity <= DEBUG) {
-      message = typeof message === "function" ? message() : message;
-      this.logInfo(message);
-    }
-  }
-
   logInfo(message) {
     if (this.verbosity <= INFO) {
-      this.lastStateMsg = message;
+      console.log(new Date(), this.deviceId, message.blue)
     }
   }
 
   logWarning(message) {
     if (this.verbosity <= WARNING) {
-      this.logInfo(message);
-      // console.log(new Date(), this.deviceId, message.yellow)
+      console.log(new Date(), this.deviceId, message.yellow)
     }
   }
 
   logError(message) {
     if (this.verbosity <= ERROR) {
-      this.logInfo(message);
-      // console.log(new Date(), this.deviceId, message.red)
+      console.log(new Date(), this.deviceId, message.red)
     }
   }
 };

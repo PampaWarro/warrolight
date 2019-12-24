@@ -42,8 +42,6 @@ void setup()
   FastLED.show();
 }
 
-int stripSize = NUM_LEDS;
-
 boolean connected = false;
 void reconnect()
 {
@@ -64,7 +62,7 @@ void loop()
 {
   if (connected || Serial.available() >= 2)
   {
-    readLedsFromSerial();
+    readLedsFromSerial(leds, NUM_LEDS);
   }
   else
   {
@@ -73,7 +71,7 @@ void loop()
 }
 
 unsigned long lastConnectionTime = millis();
-void readLedsFromSerial()
+void readLedsFromSerial(CRGB *leds, int numLeds)
 {
   if (!connected)
   {
@@ -114,13 +112,13 @@ void readLedsFromSerial()
   int ok = false;
 
   if (encoding == ENCODING_POS_RGB)
-    ok = readPosRGB();
+    ok = readPosRGB(leds, numLeds);
   else if (encoding == ENCODING_POS_VGA)
-    ok = readPosVGA();
+    ok = readPosVGA(leds, numLeds);
   else if (encoding == ENCODING_VGA)
-    ok = readVGA();
+    ok = readVGA(leds, numLeds);
   else if (encoding == ENCODING_RGB)
-    ok = readRGB();
+    ok = readRGB(leds, numLeds);
 
   if (!ok)
   {
@@ -133,7 +131,7 @@ void readLedsFromSerial()
   Serial.println("OK");
 }
 
-bool readPosRGB()
+bool readPosRGB(CRGB *leds, int numLeds)
 {
   int j = Serial.read();
   char data[4 * j];
@@ -141,7 +139,7 @@ bool readPosRGB()
   if (total != 4 * j)
     return false;
 
-  for (int i = 0; i < stripSize; i++)
+  for (int i = 0; i < numLeds; i++)
     leds[i] = CRGB::Black;
 
   for (int i = 0; i < j; i++)
@@ -155,7 +153,7 @@ bool readPosRGB()
   return true;
 }
 
-bool readPosVGA()
+bool readPosVGA(CRGB *leds, int numLeds)
 {
   int j = Serial.read();
   char data[2 * j];
@@ -163,7 +161,7 @@ bool readPosVGA()
   if (total != 2 * j)
     return false;
 
-  for (int i = 0; i < stripSize; i++)
+  for (int i = 0; i < numLeds; i++)
     leds[i] = CRGB::Black;
 
   for (int i = 0; i < j; i++)
@@ -175,14 +173,14 @@ bool readPosVGA()
   return true;
 }
 
-bool readVGA()
+bool readVGA(CRGB *leds, int numLeds)
 {
-  char data[stripSize];
-  int readTotal = Serial.readBytes(data, stripSize);
-  if (readTotal != stripSize)
+  char data[numLeds];
+  int readTotal = Serial.readBytes(data, numLeds);
+  if (readTotal != numLeds)
     return false;
 
-  for (int i = 0; i < stripSize; i++)
+  for (int i = 0; i < numLeds; i++)
   {
     byte vga = data[i];
     leds[i].setRGB(vgaRed(vga), vgaGreen(vga), vgaBlue(vga));
@@ -190,14 +188,14 @@ bool readVGA()
   return true;
 }
 
-bool readRGB()
+bool readRGB(CRGB *leds, int numLeds)
 {
-  char data[3 * stripSize];
-  int total = Serial.readBytes(data, 3 * stripSize);
-  if (total != 3 * stripSize)
+  char data[3 * numLeds];
+  int total = Serial.readBytes(data, 3 * numLeds);
+  if (total != 3 * numLeds)
     return false;
 
-  for (int i = 0; i < stripSize; i++)
+  for (int i = 0; i < numLeds; i++)
   {
     int r = data[i * 3];
     int g = data[1 + i * 3];

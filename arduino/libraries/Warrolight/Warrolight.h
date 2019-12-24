@@ -93,4 +93,23 @@ private:
   Pulse m_pulse;
 };
 
+class WSerial
+{
+public:
+  WSerial();
+  bool read(CRGB *leds, int numLeds);
+  bool connected() { return m_connected; }
+
+private:
+  bool readPosRGB(CRGB *leds, int numLeds);
+  bool readPosVGA(CRGB *leds, int numLeds);
+  bool readRGB(CRGB *leds, int numLeds);
+  bool readVGA(CRGB *leds, int numLeds);
+  void reconnect();
+  void drain();
+
+  bool m_connected = false;
+  unsigned long m_lastConnectionTime;
+};
+
 #endif

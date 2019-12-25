@@ -81,7 +81,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
       payload.length,
       this.remotePort,
       this.remoteAddress,
-      (err, bytes) => {
+      (err) => {
         if (err) {
           this.handleError(err);
         }

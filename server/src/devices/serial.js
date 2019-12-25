@@ -74,7 +74,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         logger.info("Reconnected");
         this.updateState(this.STATE_RUNNING);
       } else if (data === "OK") {
-        logger.info(`ACK`);
+        //logger.info(`ACK`);
       } else if (data === "ARDUINOSTART") {
         logger.info("ARDUINOSTART");
         return;

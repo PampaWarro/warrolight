@@ -1,5 +1,6 @@
 const dgram = require("dgram");
 const now = require("performance-now");
+const logger = require("pino")({ prettyPrint: true });
 
 const { LightDevice, rgbToVga } = require("./base");
 
@@ -50,18 +51,18 @@ module.exports = class LightDeviceUDP extends LightDevice {
       data = data.replace(/[^\w]+/gi, "");
 
       if (data === "YEAH") {
-        this.logInfo("Reconnected");
+        logger.info("Reconnected");
         this.updateState(this.STATE_RUNNING);
       } else if (data.startsWith("PERF")) {
         let perfCount = parseInt(data.substring(4) || 0);
         this.lastFps = perfCount;
         // console.log("Perf ", perfCount)
-        //this.logInfo(`ACK`)
+        //logger.info(`ACK`)
       } else {
-        this.logInfo(`UNEXPECTED MSG'${data}'`);
+        logger.info(`UNEXPECTED MSG'${data}'`);
       }
     } else {
-      this.logInfo(`No data received`);
+      logger.info(`No data received`);
     }
 
     clearTimeout(this.reconnectTimeout);
@@ -69,7 +70,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.reconnectTimeout = setTimeout(() => {
       this.connected = false;
       this.updateState(this.STATE_CONNECTING);
-      this.logInfo(`no data`);
+      logger.info(`no data`);
     }, reconnectTime);
   }
 
@@ -77,7 +78,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   logDeviceState() {
     if (this.deviceState === this.STATE_RUNNING) {
       if (now() - this.lastPrint > 250) {
-        this.logInfo(`FPS: ${this.lastFps}`.green);
+        logger.info(`FPS: ${this.lastFps}`.green);
         this.lastPrint = now();
       }
     }
@@ -107,7 +108,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
       case ENCODING_POS_VGA:
         return this.write([pos, rgbToVga(r, g, b)]);
       default:
-        this.logError("Invalid encoding!");
+        logger.error("Invalid encoding!");
         return;
     }
   }
@@ -140,7 +141,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.udpSocket.on("error", err => {
       this.udpSocket.close();
       this.updateState(this.STATE_ERROR);
-      this.logError("Error: " + err.message);
+      logger.error("Error: " + err.message);
       // Create socket again
       setTimeout(() => this.setupCommunication(), 500);
     });
@@ -189,7 +190,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   handleError(err) {
     if (this.port) {
       this.updateState(this.STATE_ERROR);
-      this.logError("Error: " + err.message);
+      logger.error("Error: " + err.message);
 
       // setTimeout(() => this.setupCommunication(), 2000);
     }

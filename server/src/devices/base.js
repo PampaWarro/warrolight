@@ -1,6 +1,7 @@
 require("colors");
 const _ = require("lodash");
 const now = require("performance-now");
+const logger = require("pino")({ prettyPrint: true });
 
 const { DEBUG, INFO, WARNING, ERROR } = {
   DEBUG: 1,
@@ -53,7 +54,7 @@ exports.LightDevice = class LightDevice {
         this.framesCount = 0;
         this.lastFps = FPS;
         this.lastPrint = now();
-        this.logInfo(`FPS: ${FPS}`.green);
+        logger.info(`FPS: ${FPS}`);
       }
     }
   }
@@ -76,23 +77,5 @@ exports.LightDevice = class LightDevice {
 
   setupCommunication() {
     throw new Error("Must be implemented by subclasses");
-  }
-
-  logInfo(message) {
-    if (this.verbosity <= INFO) {
-      console.log(new Date(), this.deviceId, message.blue)
-    }
-  }
-
-  logWarning(message) {
-    if (this.verbosity <= WARNING) {
-      console.log(new Date(), this.deviceId, message.yellow)
-    }
-  }
-
-  logError(message) {
-    if (this.verbosity <= ERROR) {
-      console.log(new Date(), this.deviceId, message.red)
-    }
   }
 };

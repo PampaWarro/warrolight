@@ -1,4 +1,5 @@
 const SerialPort = require("serialport");
+const logger = require("pino")({ prettyPrint: true });
 
 const { LightDevice, rgbToVga } = require("./base");
 
@@ -70,12 +71,12 @@ module.exports = class LightDeviceSerial extends LightDevice {
       data = data.toString().replace(/[^\w]+/gi, "");
 
       if (data === "YEAH") {
-        this.logInfo("Reconnected");
+        logger.info("Reconnected");
         this.updateState(this.STATE_RUNNING);
       } else if (data === "OK") {
-        this.logInfo(`ACK`);
+        logger.info(`ACK`);
       } else if (data === "ARDUINOSTART") {
-        this.logInfo("ARDUINOSTART");
+        logger.info("ARDUINOSTART");
         return;
       } else if (data === "FAILED_RF_WRITE") {
         console.log(`Hardware failure. Restart serial port.`);
@@ -83,12 +84,12 @@ module.exports = class LightDeviceSerial extends LightDevice {
         this.restartSerialConnection();
         return;
       } else {
-        this.logInfo(`UNEXPECTED MSG'${data}'`);
+        logger.info(`UNEXPECTED MSG'${data}'`);
         console.log(`UNEXPECTED MSG'${data}'`);
         return;
       }
     } else {
-      this.logInfo(`No data received`);
+      logger.info(`No data received`);
     }
 
     clearTimeout(this.reconnectTimeout);
@@ -128,7 +129,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
       case ENCODING_RGB565:
         return this.write(rgbToRgb565(r, g, b));
       default:
-        this.logError("Invalid encoding!");
+        logger.error("Invalid encoding!");
         return;
     }
   }
@@ -150,7 +151,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         if (err) {
           this.handleError(err);
         } else {
-          this.logInfo("Initial kick of data sent");
+          logger.info("Initial kick of data sent");
         }
       });
 
@@ -188,7 +189,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
         this.port.on("open", () => {
           this.updateState(this.STATE_CONNECTING);
-          this.logInfo("Port open. Data rate: " + this.port.settings.baudRate);
+          logger.info("Port open. Data rate: " + this.port.settings.baudRate);
           setTimeout(this.sendInitialKick.bind(this), 2000);
         });
         const parser = this.port.pipe(
@@ -201,7 +202,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         this.port.on("disconnect", this.handleClose.bind(this));
       } catch (err) {
         this.updateState(this.STATE_ERROR);
-        this.logError("Error retrying to open port. ", err);
+        logger.error("Error retrying to open port. ", err);
         setTimeout(() => this.setupCommunication(), 2000);
       }
     };
@@ -214,7 +215,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   handleError(err) {
     if (this.port) {
       this.updateState(this.STATE_ERROR);
-      this.logError("Error: " + err.message);
+      logger.error("Error: " + err.message);
 
       const oldPort = this.port;
       // To prevent reentrancy with handlers
@@ -227,13 +228,13 @@ module.exports = class LightDeviceSerial extends LightDevice {
   handleClose(err) {
     if (this.port) {
       this.updateState(this.STATE_ERROR);
-      this.logError("Port closed.");
+      logger.error("Port closed.");
       this.port = null;
       setTimeout(() => this.setupCommunication(), 2000);
     }
   }
 
   handleDrain(err) {
-    this.logWarning("Port drained.");
+    logger.warn("Port drained.");
   }
 };

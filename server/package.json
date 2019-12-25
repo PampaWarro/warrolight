@@ -25,6 +25,8 @@
     "moment": "^2.24.0",
     "naudiodon": "federicobond/naudiodon#master",
     "performance-now": "^2.1.0",
+    "pino": "^5.15.0",
+    "pino-pretty": "^3.5.0",
     "serialport": "^8.0.5",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.3",

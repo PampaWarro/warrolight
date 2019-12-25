@@ -26,7 +26,6 @@ const HALF_WIDTH = WIDTH / 2;
 const LEDS_LONG = 90;
 const HALF_LEDS = 45;
 const QUART_LEDS = 23;
-const LAST_LED = 1;
 
 // El orden de los segmentos es clave. Replica cómo vamos a conectar las luces y el orden natural de esos 600 leds
 const hideX = 0;

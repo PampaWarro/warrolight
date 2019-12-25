@@ -16,8 +16,6 @@ exports.Geometry = class Geometry {
     const marginX = 0;
     const marginY = 0;
 
-    this.stripes = stripes;
-
     let minX = Infinity, minY = Infinity;
     let maxX = -Infinity, maxY = -Infinity;
 
@@ -48,11 +46,12 @@ exports.Geometry = class Geometry {
 
     this.x = [];
     this.y = [];
-    const stripeCount = this.stripes.length;
+
     let count = 0;
-    for (let i = 0; i < stripeCount; i++) {
-      const stripe = this.stripes[i];
+    for (let i = 0; i < stripes.length; i++) {
+      const stripe = stripes[i];
       const stripeLength = stripe.leds;
+
       for (let j = 0; j < stripeLength; j++) {
         this.x[count + j] = (stripe.x[j] - minX) * xScale + xBase;
         this.y[count + j] = (stripe.y[j] - minY) * yScale + yBase;

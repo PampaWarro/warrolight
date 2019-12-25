@@ -47,13 +47,12 @@ module.exports = class LightDeviceSerial extends LightDevice {
         logger.info("ARDUINOSTART");
         return;
       } else if (data === "FAILED_RF_WRITE") {
-        console.log(`Hardware failure. Restart serial port.`);
+        logger.error(`Hardware failure. Restart serial port.`);
         clearTimeout(this.reconnectTimeout);
         this.restartSerialConnection();
         return;
       } else {
         logger.info(`UNEXPECTED MSG'${data}'`);
-        console.log(`UNEXPECTED MSG'${data}'`);
         return;
       }
     } else {
@@ -90,7 +89,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
       clearTimeout(this.reconnectTimeout);
 
       this.reconnectTimeout = setTimeout(() => {
-        // console.log("No initial connection. Retrying")
+        // logger.info("No initial connection. Retrying")
         if (this.protocolRetries > 2) {
           this.restartSerialConnection();
           this.protocolRetries = 0;
@@ -102,7 +101,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   }
 
   restartSerialConnection() {
-    console.log("Restarting serial connection to restart arduino.");
+    logger.info("Restarting serial connection to restart arduino.");
     if (this.port) {
       this.port.close();
     }

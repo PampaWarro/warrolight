@@ -45,8 +45,8 @@ module.exports = class LightDeviceUDP extends LightDevice {
       } else if (data.startsWith("PERF")) {
         let perfCount = parseInt(data.substring(4) || 0);
         this.lastFps = perfCount;
-        // console.log("Perf ", perfCount)
-        //logger.info(`ACK`)
+        // logger.info("Perf ", perfCount)
+        // logger.info(`ACK`)
       } else {
         logger.info(`UNEXPECTED MSG'${data}'`);
       }
@@ -103,19 +103,19 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.udpSocket.on("listening", () => {
       const address = this.udpSocket.address();
       this.updateStatus(this.STATUS_CONNECTING);
-      console.log(
+      logger.info(
         "UDP Server listening on " + address.address + ":" + address.port
       );
     });
 
     this.udpSocket.on("message", (message, remote) => {
-      // console.log(message.toString(), remote.address)
+      // logger.info(message.toString(), remote.address)
       if (remote.address === this.expectedIp) {
         this.remotePort = remote.port;
         this.remoteAddress = remote.address;
 
         if (!this.connected) {
-          console.log(`Connected to ${this.remoteAddress}:${this.remotePort}`);
+          logger.info(`Connected to ${this.remoteAddress}:${this.remotePort}`);
           this.connected = true;
           this.updateStatus(this.STATUS_RUNNING);
         }

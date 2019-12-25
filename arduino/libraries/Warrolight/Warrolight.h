@@ -15,6 +15,7 @@ byte vgaRed(byte vga);
 byte vgaBlue(byte vga);
 byte vgaGreen(byte vga);
 
+// Light programs coded for Arduino
 class Stars
 {
 public:
@@ -93,6 +94,7 @@ private:
   Pulse m_pulse;
 };
 
+// Warrolight serial communication protocol
 class WSerial
 {
 public:

@@ -21,17 +21,15 @@ function findBounds(values) {
 }
 
 module.exports = class Circles extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+  constructor(config, geometry) {
+    super(config, geometry);
 
-    const geometry = this.position || this.geometry;
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
   }
 
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
-    const geometry = this.position || this.geometry;
 
     const centerChannel = audio.currentFrame.center;
     if (!centerChannel) {
@@ -52,8 +50,8 @@ module.exports = class Circles extends LightProgram {
     const maxScale = Math.max(this.xBounds.scale, this.yBounds.scale);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      const x = geometry.x[i];
-      const y = geometry.y[i];
+      const x = this.geometry.x[i];
+      const y = this.geometry.y[i];
       const rx = x - centerX;
       const ry = y - centerY;
       const r = Math.sqrt(Math.pow(rx, 2) + Math.pow(ry, 2));

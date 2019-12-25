@@ -12,8 +12,8 @@ module.exports = function createMultiProgram(
   crossFade = 20000
 ) {
   return class MultiProgram extends LightProgram {
-    constructor(config, leds, shapeMapping) {
-      super(config, leds, shapeMapping);
+    constructor(config, geometry, shapeMapping) {
+      super(config, geometry, shapeMapping);
 
       // Shallow copy of schedule
       this.programSchedule = []
@@ -26,7 +26,7 @@ module.exports = function createMultiProgram(
         scheduleItem =>
           (scheduleItem.programInstance = new scheduleItem.program(
             this.config,
-            this.leds,
+            this.geometry,
             this.shapeMapping
           ))
       );

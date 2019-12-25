@@ -53,7 +53,7 @@ module.exports = class SoundWaves extends LightProgram {
       }
     }
 
-    let geometry = this.position || this.geometry;
+    let geometry = this.geometry;
 
     const colors = _.map(new Array(this.numberOfLeds), c => [0, 0, 0]);
     for (let i = 0; i < this.numberOfLeds; i++) {

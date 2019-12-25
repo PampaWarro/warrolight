@@ -110,7 +110,9 @@ module.exports = class LightsService {
   startSamplingLights() {
     console.log("[ON] Web client sampling lights data".green);
     this.simulating = true;
-    this.send("layout", this.controller.layout);
+    this.send("layout", {
+      geometry: this.controller.geometry
+    });
   }
 
   stopSamplingLights() {

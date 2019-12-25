@@ -3,8 +3,8 @@ const LightProgram = require("./LightProgram");
 
 module.exports = function mixPrograms(...programs) {
   return class MixProgram extends LightProgram {
-    constructor(config, leds, shapeMapping) {
-      super(config, leds);
+    constructor(config, geometry, shapeMapping) {
+      super(config, geometry);
       // Shallow copy of schedule
       this.programs = [];
 
@@ -15,7 +15,7 @@ module.exports = function mixPrograms(...programs) {
         let [Program, specificConfig, alpha] = scheduleItem;
 
         this.programs.push({
-          programInstance: new Program(config, leds, shapeMapping),
+          programInstance: new Program(config, geometry, shapeMapping),
           customConfig: specificConfig,
           alpha: alpha || 1
         });

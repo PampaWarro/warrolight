@@ -20,7 +20,7 @@ module.exports = class RadialSun extends LightProgram {
     }
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      let geometry = this.position || this.geometry;
+      let geometry = this.geometry;
 
       const dx = 0 * (geometry.x[i] - geometry.width / 2 - this.config.centerX);
       const dy = geometry.y[i] - geometry.height + this.config.centerY; // 18 is the offset

@@ -42,10 +42,7 @@ module.exports = class LightController extends EventEmitter {
   constructor(multiplexer, geometry, shapeMapping) {
     super();
     this.multiplexer = multiplexer;
-    this.layout = {
-      numberOfLeds: geometry.leds,
-      geometry: geometry
-    };
+    this.geometry = geometry;
     this.shapeMapping = shapeMapping;
 
     this.leds = [];
@@ -141,7 +138,7 @@ module.exports = class LightController extends EventEmitter {
     this.currentProgram = new ProgramScheduler(
       new program.generator(
         config,
-        this.layout,
+        this.geometry,
         this.shapeMapping
       )
     );

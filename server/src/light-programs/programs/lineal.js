@@ -9,7 +9,7 @@ module.exports = class Lineal extends LightProgram {
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      let geometry = this.position || this.geometry;
+      let geometry = this.geometry;
 
       let d = geometry.y[i] - geometry.height + this.config.centerY;
       if (this.config.horizontal) {

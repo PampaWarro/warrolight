@@ -2,8 +2,8 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class Rainbow extends LightProgram {
-  constructor(config, leds) {
-    super(config, leds);
+  constructor(config, geometry) {
+    super(config, geometry);
 
     this.colorSet = [
       "#ff0000",

@@ -11,7 +11,7 @@ module.exports = class WaterFlood extends LightProgram {
 
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
-    const geometry = this.position || this.geometry;
+    const geometry = this.geometry;
 
     let vol = audio.bassPeakDecay;
 

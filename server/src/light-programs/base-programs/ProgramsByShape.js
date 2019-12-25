@@ -3,8 +3,8 @@ const LightProgram = require("./LightProgram");
 
 module.exports = function programsByShape(mapping) {
   return class ProgramsByShape extends LightProgram {
-    constructor(config, leds, shapeMapping) {
-      super(config, leds)
+    constructor(config, geometry, shapeMapping) {
+      super(config, geometry)
       this.instances = {};
       this.knownMappings = shapeMapping();
 
@@ -18,18 +18,21 @@ module.exports = function programsByShape(mapping) {
           map = this.knownMappings.allOfIt;
         }
 
-        let localLeds = _.extend({}, leds, { numberOfLeds: map.length });
         // Map new geometry
-        localLeds.position = {
+        // TODO: we are creating a Geometry-like object, unify with the original Geometry
+        const shape = {
           x: [...Array(map.length)],
           y: [...Array(map.length)],
-          height: leds.geometry.height,
-          width: leds.geometry.width
+          height: geometry.height,
+          width: geometry.width,
+          leds: map.length
         };
+
         for (let i = 0; i < map.length; i++) {
-          localLeds.position.x[i] = leds.geometry.x[map[i]];
-          localLeds.position.y[i] = leds.geometry.y[map[i]];
+          shape.x[i] = geometry.x[map[i]];
+          shape.y[i] = geometry.y[map[i]];
         }
+
         // Support specific configs
         let specificConfig = config;
         if (_.isArray(Program)) {
@@ -39,10 +42,10 @@ module.exports = function programsByShape(mapping) {
           );
           specificConfig = _.extend({}, config, defaultConfig, specificConfig);
         }
-        this.instances[shapeName] = new Program(specificConfig, localLeds);
+        this.instances[shapeName] = new Program(specificConfig, shape);
         this.instances[shapeName].specificConfig = specificConfig;
       });
-      this.state = new Array(leds.numberOfLeds).fill([0, 0, 0]);
+      this.state = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
     init() {

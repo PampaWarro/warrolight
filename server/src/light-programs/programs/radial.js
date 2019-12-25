@@ -9,7 +9,7 @@ module.exports = class Radial extends LightProgram {
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      let geometry = this.position || this.geometry;
+      let geometry = this.geometry;
 
       const dx = geometry.x[i] - geometry.width / 2 - this.config.centerX;
       const dy = geometry.y[i] - geometry.height + this.config.centerY + 18; // 18 is the offset

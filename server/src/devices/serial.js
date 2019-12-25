@@ -116,12 +116,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
       baudRate: 1152000 / 2
     });
 
-    this.port.on("open", () => {
-      this.updateState(this.STATE_CONNECTING);
-      logger.info("Port open. Data rate: " + this.port.settings.baudRate);
-      setTimeout(this.sendInitialKick.bind(this), 2000);
-    });
-
+    this.port.on("open", this.handleOpen.bind(this));
     this.port.on("error", this.handleError.bind(this));
     this.port.on("drain", this.handleDrain.bind(this));
     this.port.on("close", this.handleClose.bind(this));
@@ -131,6 +126,12 @@ module.exports = class LightDeviceSerial extends LightDevice {
     parser.on("data", this.handleArduinoData.bind(this));
 
     this.port.pipe(parser);
+  }
+
+  handleOpen() {
+    this.updateState(this.STATE_CONNECTING);
+    logger.info("Port open. Data rate: " + this.port.settings.baudRate);
+    setTimeout(this.sendInitialKick.bind(this), 2000);
   }
 
   // open errors will be emitted as an error event

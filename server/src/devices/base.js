@@ -20,12 +20,12 @@ exports.LightDevice = class LightDevice {
     this.freshData = false;
     this.waitingResponse = true;
 
-    this.STATE_OFF = "off";
-    this.STATE_CONNECTING = "connecting";
-    this.STATE_RUNNING = "running";
-    this.STATE_ERROR = "error";
+    this.STATUS_OFF = "off";
+    this.STATUS_CONNECTING = "connecting";
+    this.STATUS_RUNNING = "running";
+    this.STATUS_ERROR = "error";
 
-    this.deviceState = this.STATE_OFF;
+    this.status = this.STATUS_OFF;
 
     this.lastPrint = 0;
     this.framesCount = 0;
@@ -33,12 +33,12 @@ exports.LightDevice = class LightDevice {
     setInterval(() => this.logDeviceState(), 250);
   }
 
-  updateState(state) {
-    this.deviceState = state;
+  updateStatus(status) {
+    this.status = status;
   }
 
   logDeviceState() {
-    if (this.deviceState !== this.STATE_RUNNING) {
+    if (this.status !== this.STATUS_RUNNING) {
       return;
     }
 

@@ -13,7 +13,7 @@ export type ConfigValue = string | number | boolean;
 
 export interface Device {
   deviceId: string;
-  state: string;
+  status: string;
   lastFps: number;
 }
 

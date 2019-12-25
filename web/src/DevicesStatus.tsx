@@ -9,8 +9,8 @@ export class DevicesStatus extends React.Component<Props> {
   render() {
     const { devices } = this.props;
 
-    function className(state: string) {
-      switch (state) {
+    function className(status: string) {
+      switch (status) {
         case "running":
           return "success";
         case "connecting":
@@ -25,9 +25,9 @@ export class DevicesStatus extends React.Component<Props> {
         {devices.map(device => (
           <span
             key={device.deviceId}
-            className={"mr-2 btn btn-sm btn-" + className(device.state)}
+            className={"mr-2 btn btn-sm btn-" + className(device.status)}
           >
-            {device.deviceId} ({device.state.toUpperCase()}) {device.lastFps}
+            {device.deviceId} ({device.status.toUpperCase()}) {device.lastFps}
           </span>
         ))}
       </div>

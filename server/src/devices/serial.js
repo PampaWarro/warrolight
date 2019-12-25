@@ -40,7 +40,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
       if (data === "YEAH") {
         logger.info("Reconnected");
-        this.updateState(this.STATE_RUNNING);
+        this.updateStatus(this.STATUS_RUNNING);
       } else if (data === "OK") {
         //logger.info(`ACK`);
       } else if (data === "ARDUINOSTART") {
@@ -110,7 +110,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   }
 
   setupCommunication() {
-    this.updateState(this.STATE_CONNECTING);
+    this.updateStatus(this.STATUS_CONNECTING);
 
     this.port = new SerialPort(this.devicePort, {
       baudRate: 1152000 / 2
@@ -129,7 +129,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   }
 
   handleOpen() {
-    this.updateState(this.STATE_CONNECTING);
+    this.updateStatus(this.STATUS_CONNECTING);
     logger.info("Port open. Data rate: " + this.port.settings.baudRate);
     setTimeout(this.sendInitialKick.bind(this), 2000);
   }
@@ -137,7 +137,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   // open errors will be emitted as an error event
   handleError(err) {
     if (this.port) {
-      this.updateState(this.STATE_ERROR);
+      this.updateStatus(this.STATUS_ERROR);
       logger.error("Error: " + err.message);
 
       const oldPort = this.port;
@@ -150,7 +150,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
   handleClose(err) {
     if (this.port) {
-      this.updateState(this.STATE_ERROR);
+      this.updateStatus(this.STATUS_ERROR);
       logger.error("Port closed.");
       this.port = null;
       setTimeout(() => this.setupCommunication(), 2000);

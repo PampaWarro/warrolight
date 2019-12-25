@@ -41,7 +41,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
       if (data === "YEAH") {
         logger.info("Reconnected");
-        this.updateState(this.STATE_RUNNING);
+        this.updateStatus(this.STATUS_RUNNING);
       } else if (data.startsWith("PERF")) {
         let perfCount = parseInt(data.substring(4) || 0);
         this.lastFps = perfCount;
@@ -58,14 +58,14 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
     this.reconnectTimeout = setTimeout(() => {
       this.connected = false;
-      this.updateState(this.STATE_CONNECTING);
+      this.updateStatus(this.STATUS_CONNECTING);
       logger.info(`no data`);
     }, reconnectTime);
   }
 
   // Override parent
   logDeviceState() {
-    if (this.deviceState === this.STATE_RUNNING) {
+    if (this.status === this.STATUS_RUNNING) {
       if (now() - this.lastPrint > 250) {
         logger.info(`FPS: ${this.lastFps}`.green);
         this.lastPrint = now();
@@ -94,7 +94,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
     this.udpSocket.on("error", err => {
       this.udpSocket.close();
-      this.updateState(this.STATE_ERROR);
+      this.updateStatus(this.STATUS_ERROR);
       logger.error("Error: " + err.message);
       // Create socket again
       setTimeout(() => this.setupCommunication(), 500);
@@ -102,7 +102,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
     this.udpSocket.on("listening", () => {
       const address = this.udpSocket.address();
-      this.updateState(this.STATE_CONNECTING);
+      this.updateStatus(this.STATUS_CONNECTING);
       console.log(
         "UDP Server listening on " + address.address + ":" + address.port
       );
@@ -117,7 +117,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
         if (!this.connected) {
           console.log(`Connected to ${this.remoteAddress}:${this.remotePort}`);
           this.connected = true;
-          this.updateState(this.STATE_RUNNING);
+          this.updateStatus(this.STATUS_RUNNING);
         }
 
         this.handleArduinoData(message.toString());
@@ -143,7 +143,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   // open errors will be emitted as an error event
   handleError(err) {
     if (this.port) {
-      this.updateState(this.STATE_ERROR);
+      this.updateStatus(this.STATUS_ERROR);
       logger.error("Error: " + err.message);
 
       // setTimeout(() => this.setupCommunication(), 2000);

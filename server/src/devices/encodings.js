@@ -15,7 +15,7 @@ class Encoder {
   }
 
   write(data) {
-    this.buf = this.buf.concat(data);
+    this.buf.push(...data);
   }
 }
 

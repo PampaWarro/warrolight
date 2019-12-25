@@ -10,10 +10,6 @@ const { DEBUG, INFO, WARNING, ERROR } = {
   ERROR: 4
 };
 
-exports.rgbToVga = function rgbToVga(r, g, b) {
-  return (r & 0xe0) + ((g & 0xe0) >> 3) + ((b & 0xc0) >> 6);
-};
-
 exports.LightDevice = class LightDevice {
   constructor(numberOfLights, deviceId) {
     this.state = _.range(0, numberOfLights);

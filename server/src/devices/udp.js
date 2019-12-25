@@ -92,37 +92,12 @@ module.exports = class LightDeviceUDP extends LightDevice {
   setupCommunication() {
     this.udpSocket = dgram.createSocket("udp4");
 
-    this.udpSocket.on("error", err => {
-      this.udpSocket.close();
-      this.updateStatus(this.STATUS_ERROR);
-      logger.error("Error: " + err.message);
-      // Create socket again
-      setTimeout(() => this.setupCommunication(), 500);
-    });
+    this.udpSocket.on("listening", this.handleListening.bind(this));
+    this.udpSocket.on("message", this.handleMessage.bind(this));
+    this.udpSocket.on("error", this.handleError.bind(this));
+    this.udpSocket.on("close", this.handleClose.bind(this));
 
-    this.udpSocket.on("listening", () => {
-      const address = this.udpSocket.address();
-      this.updateStatus(this.STATUS_CONNECTING);
-      logger.info(
-        "UDP Server listening on " + address.address + ":" + address.port
-      );
-    });
-
-    this.udpSocket.on("message", (message, remote) => {
-      // logger.info(message.toString(), remote.address)
-      if (remote.address === this.expectedIp) {
-        this.remotePort = remote.port;
-        this.remoteAddress = remote.address;
-
-        if (!this.connected) {
-          logger.info(`Connected to ${this.remoteAddress}:${this.remotePort}`);
-          this.connected = true;
-          this.updateStatus(this.STATUS_RUNNING);
-        }
-
-        this.handleArduinoData(message.toString());
-      }
-    });
+    this.udpSocket.bind(this.udpPort);
 
     setInterval(() => {
       // Es UDP, no esperamos respuesta
@@ -130,23 +105,45 @@ module.exports = class LightDeviceUDP extends LightDevice {
         this.sendNextFrame();
       }
     }, 16);
-
-    this.udpSocket.on("error", err => {
-      this.handleError(err);
-    });
-    this.udpSocket.on("close", () => {
-      this.handleError("socket closed. Falta manejarlo");
-    });
-
-    this.udpSocket.bind(this.udpPort);
   }
+
+  handleListening() {
+    const address = this.udpSocket.address();
+    this.updateStatus(this.STATUS_CONNECTING);
+    logger.info(
+      "UDP Server listening on " + address.address + ":" + address.port
+    );
+  }
+
+  handleMessage(message, remote) {
+    // logger.info(message.toString(), remote.address)
+    if (remote.address === this.expectedIp) {
+      logger.warn("UDP message came from different IP");
+      return;
+    }
+
+    this.remotePort = remote.port;
+    this.remoteAddress = remote.address;
+
+    if (!this.connected) {
+      logger.info(`Connected to ${this.remoteAddress}:${this.remotePort}`);
+      this.connected = true;
+      this.updateStatus(this.STATUS_RUNNING);
+    }
+
+    this.handleArduinoData(message.toString());
+  }
+
+  handleClose() {
+    this.handleError("socket closed. Falta manejarlo");
+  }
+
   // open errors will be emitted as an error event
   handleError(err) {
-    if (this.port) {
-      this.updateStatus(this.STATUS_ERROR);
-      logger.error("Error: " + err.message);
-
-      // setTimeout(() => this.setupCommunication(), 2000);
-    }
+    this.udpSocket.close();
+    this.updateStatus(this.STATUS_ERROR);
+    logger.error("Error: " + err.message);
+    // Create socket again
+    setTimeout(() => this.setupCommunication(), 500);
   }
 };

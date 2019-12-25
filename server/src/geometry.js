@@ -12,9 +12,9 @@ exports.Stripe = class Stripe {
 };
 
 exports.Geometry = class Geometry {
-  constructor(stripes, width, height, marginX, marginY) {
-    marginX = parseInt(marginX) || 0;
-    marginY = parseInt(marginY) || 0;
+  constructor(stripes) {
+    const marginX = 0;
+    const marginY = 0;
 
     this.stripes = stripes;
 
@@ -23,8 +23,8 @@ exports.Geometry = class Geometry {
     const minY = getFromStripe(this.stripes, Math.min, Infinity, "y");
     const maxY = getFromStripe(this.stripes, Math.max, -Infinity, "y");
 
-    this.width = width ? parseInt(width, 10) : maxX - minX;
-    this.height = height ? parseInt(height, 10) : maxY - minY;
+    this.width = maxX - minX;
+    this.height = maxY - minY;
 
     const xScale = (this.width - 2 * marginX) / (maxX - minX);
     const yScale = (this.height - 2 * marginY) / (maxY - minY);

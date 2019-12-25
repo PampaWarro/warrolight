@@ -21,8 +21,6 @@ exports.LightDevice = class LightDevice {
 
     this.deviceId = deviceId;
 
-    this.verbosity = DEBUG;
-
     this.freshData = false;
     this.waitingResponse = true;
 
@@ -41,22 +39,22 @@ exports.LightDevice = class LightDevice {
 
   updateState(state) {
     this.deviceState = state;
-    this.logDeviceState();
   }
 
   logDeviceState() {
-    if (this.deviceState === this.STATE_RUNNING) {
-      if (now() - this.lastPrint > 250) {
-        const FPS = (
-          (this.framesCount * 1000) /
-          (now() - this.lastPrint)
-        ).toFixed(1);
-        this.framesCount = 0;
-        this.lastFps = FPS;
-        this.lastPrint = now();
-        logger.info(`FPS: ${FPS}`);
-      }
+    if (this.deviceState !== this.STATE_RUNNING) {
+      return;
     }
+
+    const FPS = (
+      (this.framesCount * 1000) /
+      (now() - this.lastPrint)
+    ).toFixed(1);
+
+    this.framesCount = 0;
+    this.lastFps = FPS;
+    this.lastPrint = now();
+    logger.info(`FPS: ${FPS}`);
   }
 
   setLights(rgbArray) {

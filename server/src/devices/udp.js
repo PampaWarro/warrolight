@@ -2,14 +2,10 @@ const dgram = require("dgram");
 const now = require("performance-now");
 const logger = require("pino")({ prettyPrint: true });
 
-const { LightDevice, rgbToVga } = require("./base");
+const { LightDevice } = require("./base");
+const { RGBEncoder } = require("./encodings");
 
 let reconnectTime = 3000;
-
-const ENCODING_POS_RGB = 1;
-const ENCODING_POS_VGA = 2;
-const ENCODING_VGA = 3;
-const ENCODING_RGB = 4;
 
 module.exports = class LightDeviceUDP extends LightDevice {
   constructor({ numberOfLights, ip, udpPort }) {
@@ -18,10 +14,9 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.expectedIp = ip;
     this.udpPort = udpPort;
 
-    this.encoding = ENCODING_RGB;
+    this.encoder = new RGBEncoder();
 
     this.freshData = false;
-    this.dataBuffer = [0];
     this.connected = false;
 
     this.packageCount = 0;
@@ -31,18 +26,9 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
   sendNextFrame() {
     if (this.connected && this.freshData) {
-      this.initEncoding();
-
-      for (let i = 0; i < this.numberOfLights; i++) {
-        this.writePixel(
-          i,
-          this.state[i][0],
-          this.state[i][1],
-          this.state[i][2]
-        );
-      }
+      const data = this.encoder.encode(this.state)
       this.freshData = false;
-      this.flush();
+      this.flush(data);
     }
   }
 
@@ -84,41 +70,8 @@ module.exports = class LightDeviceUDP extends LightDevice {
     }
   }
 
-  initEncoding() {
-    this.write([this.encoding]);
-    if (this.needsHeaderWithNumberOfLights()) {
-      this.write([this.numberOfLights]);
-    }
-  }
-
-  needsHeaderWithNumberOfLights() {
-    return (
-      this.encoding === ENCODING_POS_RGB || this.encoding === ENCODING_POS_VGA
-    );
-  }
-
-  writePixel(pos, r, g, b) {
-    switch (this.encoding) {
-      case ENCODING_RGB:
-        return this.write([r, g, b]);
-      case ENCODING_VGA:
-        return this.write([rgbToVga(r, g, b)]);
-      case ENCODING_POS_RGB:
-        return this.write([pos, r, g, b]);
-      case ENCODING_POS_VGA:
-        return this.write([pos, rgbToVga(r, g, b)]);
-      default:
-        logger.error("Invalid encoding!");
-        return;
-    }
-  }
-
-  write(data) {
-    this.dataBuffer = this.dataBuffer.concat(data);
-  }
-
-  flush() {
-    let payload = Buffer.from(this.dataBuffer);
+  flush(data) {
+    let payload = Buffer.from(data);
     this.udpSocket.send(
       payload,
       0,
@@ -131,8 +84,6 @@ module.exports = class LightDeviceUDP extends LightDevice {
         }
       }
     );
-
-    this.dataBuffer = [this.packageCount++ % 256];
   }
 
   setupCommunication() {

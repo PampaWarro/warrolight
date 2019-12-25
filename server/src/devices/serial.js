@@ -1,32 +1,10 @@
 const SerialPort = require("serialport");
 const logger = require("pino")({ prettyPrint: true });
 
-const { LightDevice, rgbToVga } = require("./base");
+const { LightDevice } = require("./base");
+const { RGBEncoder } = require("./encodings");
 
 let reconnectTime = 3000;
-
-const ENCODING_POS_RGB = 1;
-const ENCODING_POS_VGA = 2;
-const ENCODING_VGA = 3;
-const ENCODING_RGB = 4;
-const ENCODING_RGB565 = 5;
-
-const rgbToRgb565 = (r, g, b) => {
-  let b5 = (b >> 3) & 0x001f;
-  let g6 = ((g >> 2) & 0x003f) << 5;
-  let r5 = ((r >> 3) & 0x001f) << 11;
-
-  let bytes = r5 | g6 | b5;
-  return [bytes >> 8, bytes & 0xff];
-};
-
-const rgb565ToRgb = rgb565 => {
-  let b = (rgb565 & 0x001f) << 3;
-  let g = ((rgb565 & 0x7e0) >> 5) << 2;
-  let r = (rgb565 >> 11) << 3;
-
-  return [r, g, b];
-};
 
 module.exports = class LightDeviceSerial extends LightDevice {
   constructor({ numberOfLights, devicePortWindows, devicePortUnix }) {
@@ -37,13 +15,12 @@ module.exports = class LightDeviceSerial extends LightDevice {
     super(numberOfLights, port);
 
     this.devicePort = port;
-    this.encoding = ENCODING_RGB;
+    this.encoder = new RGBEncoder();
 
     this.protocolRetries = 0;
 
     this.freshData = false;
     this.waitingResponse = true;
-    this.dataBuffer = [];
 
     this.setupCommunication();
   }
@@ -101,48 +78,6 @@ module.exports = class LightDeviceSerial extends LightDevice {
     this.framesCount++;
     this.waitingResponse = false;
     this.sendNextFrame();
-  }
-
-  initEncoding() {
-    this.write([this.encoding]);
-    if (this.needsHeaderWithNumberOfLights()) {
-      this.write([this.numberOfLights]);
-    }
-  }
-
-  needsHeaderWithNumberOfLights() {
-    return (
-      this.encoding === ENCODING_POS_RGB || this.encoding === ENCODING_POS_VGA
-    );
-  }
-
-  writePixel(pos, r, g, b) {
-    switch (this.encoding) {
-      case ENCODING_RGB:
-        return this.write([r, g, b]);
-      case ENCODING_VGA:
-        return this.write([rgbToVga(r, g, b)]);
-      case ENCODING_POS_RGB:
-        return this.write([pos, r, g, b]);
-      case ENCODING_POS_VGA:
-        return this.write([pos, rgbToVga(r, g, b)]);
-      case ENCODING_RGB565:
-        return this.write(rgbToRgb565(r, g, b));
-      default:
-        logger.error("Invalid encoding!");
-        return;
-    }
-  }
-
-  write(data) {
-    this.dataBuffer = this.dataBuffer.concat(data);
-  }
-
-  flush() {
-    if (this.port) {
-      this.port.write(Buffer.from(this.dataBuffer));
-    }
-    this.dataBuffer = [];
   }
 
   sendInitialKick() {

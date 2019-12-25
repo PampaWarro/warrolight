@@ -5,7 +5,7 @@ const logger = require("pino")({ prettyPrint: true });
 const { LightDevice } = require("./base");
 const { RGBEncoder } = require("./encodings");
 
-let reconnectTime = 3000;
+const RECONNECT_TIME = 3000;
 
 module.exports = class LightDeviceUDP extends LightDevice {
   constructor({ numberOfLights, ip, udpPort }) {
@@ -60,7 +60,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
       this.connected = false;
       this.updateStatus(this.STATUS_CONNECTING);
       logger.info(`no data`);
-    }, reconnectTime);
+    }, RECONNECT_TIME);
   }
 
   // Override parent

@@ -4,7 +4,7 @@ const logger = require("pino")({ prettyPrint: true });
 const { LightDevice } = require("./base");
 const { RGBEncoder } = require("./encodings");
 
-let reconnectTime = 3000;
+const RECONNECT_TIME = 3000;
 
 module.exports = class LightDeviceSerial extends LightDevice {
   constructor({ numberOfLights, devicePortWindows, devicePortUnix }) {
@@ -63,7 +63,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
     this.reconnectTimeout = setTimeout(() => {
       this.sendInitialKick();
-    }, reconnectTime);
+    }, RECONNECT_TIME);
 
     this.framesCount++;
     this.waitingResponse = false;
@@ -96,7 +96,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
         } else {
           this.sendInitialKick();
         }
-      }, reconnectTime);
+      }, RECONNECT_TIME);
     }
   }
 

@@ -18,10 +18,25 @@ exports.Geometry = class Geometry {
 
     this.stripes = stripes;
 
-    const minX = getFromStripe(this.stripes, Math.min, Infinity, "x");
-    const maxX = getFromStripe(this.stripes, Math.max, -Infinity, "x");
-    const minY = getFromStripe(this.stripes, Math.min, Infinity, "y");
-    const maxY = getFromStripe(this.stripes, Math.max, -Infinity, "y");
+    let minX = Infinity, minY = Infinity;
+    let maxX = -Infinity, maxY = -Infinity;
+
+    for (let stripe of stripes) {
+      for (let i = 0; i < stripe.leds; i++) {
+        if (stripe.x[i] < minX) {
+          minX = stripe.x[i];
+        }
+        if (stripe.y[i] < minY) {
+          minY = stripe.y[i];
+        }
+        if (stripe.x[i] > maxX) {
+          maxX = stripe.x[i];
+        }
+        if (stripe.y[i] > maxY) {
+          maxY = stripe.y[i];
+        }
+      }
+    }
 
     this.width = maxX - minX;
     this.height = maxY - minY;
@@ -47,15 +62,3 @@ exports.Geometry = class Geometry {
     this.leds = count;
   }
 };
-
-function getFromStripe(stripes, func, defaultValue, propName) {
-  return stripes.reduce((prop, stripe) => {
-    return func(
-      prop,
-      stripe[propName].reduce(
-        (prop2, coordinate) => func(prop2, coordinate),
-        defaultValue
-      )
-    );
-  }, defaultValue);
-}

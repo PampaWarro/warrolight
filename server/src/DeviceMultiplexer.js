@@ -81,7 +81,7 @@ module.exports = class DeviceMultiplexer {
       this.statusCbk(
         _.map(devices, d => {
           return {
-            state: d.status,
+            status: d.status,
             deviceId: d.deviceId,
             lastFps: d.lastFps
           };

@@ -25,6 +25,7 @@ void setup()
   leds[1] = CRGB::Red;
   leds[2] = CRGB::Green;
   leds[3] = CRGB::Blue;
+
   FastLED.show();
 }
 

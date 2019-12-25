@@ -122,15 +122,15 @@ module.exports = class LightDeviceSerial extends LightDevice {
       setTimeout(this.sendInitialKick.bind(this), 2000);
     });
 
-    const parser = this.port.pipe(
-      new SerialPort.parsers.Readline({ delimiter: "\n" })
-    );
-    parser.on("data", this.handleArduinoData.bind(this));
-
     this.port.on("error", this.handleError.bind(this));
     this.port.on("drain", this.handleDrain.bind(this));
     this.port.on("close", this.handleClose.bind(this));
     this.port.on("disconnect", this.handleClose.bind(this));
+
+    const parser = new SerialPort.parsers.Readline({ delimiter: "\n" });
+    parser.on("data", this.handleArduinoData.bind(this));
+
+    this.port.pipe(parser);
   }
 
   // open errors will be emitted as an error event

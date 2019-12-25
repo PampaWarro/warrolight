@@ -1,6 +1,7 @@
 const LightProgram = require("./LightProgram.js");
 const { DrawableLayer, CompositeLayer } = require("../utils/layers");
 
+// TODO: consider moving this to the Geometry object itself
 function findBounds(values) {
   let min = null;
   let max = null;

@@ -111,38 +111,28 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
   setupCommunication() {
     this.updateState(this.STATE_CONNECTING);
-    // const setRetry = function() { setTimeout(tryOpenPort, 2000) };
 
-    const tryOpenPort = () => {
-      try {
-        this.port = new SerialPort(this.devicePort, {
-          baudRate: 1152000 / 2
-        });
+    this.port = new SerialPort(this.devicePort, {
+      baudRate: 1152000 / 2
+    });
 
-        this.port.on("open", () => {
-          this.updateState(this.STATE_CONNECTING);
-          logger.info("Port open. Data rate: " + this.port.settings.baudRate);
-          setTimeout(this.sendInitialKick.bind(this), 2000);
-        });
-        const parser = this.port.pipe(
-          new SerialPort.parsers.Readline({ delimiter: "\n" })
-        );
-        this.port.on("error", this.handleError.bind(this));
-        parser.on("data", this.handleArduinoData.bind(this));
-        this.port.on("drain", this.handleDrain.bind(this));
-        this.port.on("close", this.handleClose.bind(this));
-        this.port.on("disconnect", this.handleClose.bind(this));
-      } catch (err) {
-        this.updateState(this.STATE_ERROR);
-        logger.error("Error retrying to open port. ", err);
-        setTimeout(() => this.setupCommunication(), 2000);
-      }
-    };
+    this.port.on("open", () => {
+      this.updateState(this.STATE_CONNECTING);
+      logger.info("Port open. Data rate: " + this.port.settings.baudRate);
+      setTimeout(this.sendInitialKick.bind(this), 2000);
+    });
 
-    if (!this.port) {
-      tryOpenPort();
-    }
+    const parser = this.port.pipe(
+      new SerialPort.parsers.Readline({ delimiter: "\n" })
+    );
+    parser.on("data", this.handleArduinoData.bind(this));
+
+    this.port.on("error", this.handleError.bind(this));
+    this.port.on("drain", this.handleDrain.bind(this));
+    this.port.on("close", this.handleClose.bind(this));
+    this.port.on("disconnect", this.handleClose.bind(this));
   }
+
   // open errors will be emitted as an error event
   handleError(err) {
     if (this.port) {

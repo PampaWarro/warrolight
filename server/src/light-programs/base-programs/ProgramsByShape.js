@@ -70,9 +70,9 @@ module.exports = function programsByShape(mapping) {
 
         if (!map) {
           console.warn(
-            `NO MAPPING FOUND WITH KEY ${mapName}. Defaulting to all`
+            `No mapping found with key ${mapName}. Defaulting to 'allOfIt'`
           );
-          return this.knownMappings["all"];
+          return this.knownMappings["allOfIt"];
         }
 
         // TODO: remove this forwarding somehow

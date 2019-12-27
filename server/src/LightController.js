@@ -25,6 +25,7 @@ const programNames = [
   "musicVolumeBars",
   "musicVolumeDot",
   "musicVolumeDotRandom",
+  "noise",
   "radial",
   "radialSun",
   "radialWarp",

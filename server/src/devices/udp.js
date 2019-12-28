@@ -117,8 +117,8 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
   handleMessage(message, remote) {
     // logger.info(message.toString(), remote.address)
-    if (remote.address === this.expectedIp) {
-      logger.warn("UDP message came from different IP");
+    if (remote.address !== this.expectedIp) {
+      logger.warn("UDP message came from %s, expected %s", remote.address, this.expectedIp);
       return;
     }
 

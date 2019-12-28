@@ -211,6 +211,9 @@ class LightsRenderer {
   debugInfo(ctx: CanvasRenderingContext2D, drawStartTime: number) {
 
     ctx.fillStyle = "#999";
+    if(this.lastFPS < 30) {
+      ctx.fillStyle = "#f00";
+    }
     ctx.font = "12px sans-serif";
 
     ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);

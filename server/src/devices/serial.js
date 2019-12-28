@@ -137,7 +137,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
   handleError(err) {
     if (this.port) {
       this.updateStatus(this.STATUS_ERROR);
-      logger.error("Error: " + err.message);
+      // logger.error("Error: " + err.message);
 
       const oldPort = this.port;
       // To prevent reentrancy with handlers

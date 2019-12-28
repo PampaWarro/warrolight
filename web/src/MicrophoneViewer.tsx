@@ -116,22 +116,27 @@ class HistogramRenderer {
       let max = 0;
       let level = Math.min(1, (bass + mid + high) / 3);
 
+      let r = Math.round(bass*255);
+      let g = Math.round(mid*255);
+      let b = Math.round(high*255);
+      let MIN = 30;
+
       let w = 2;
       let HEIGHT = canvas.height / 3;
       let h;
       if (perBand) {
         ctx.globalCompositeOperation = "screen";
 
-        ctx.fillStyle = "#FF4C4C";
+        ctx.fillStyle =  `rgba(${Math.max(MIN, r)}, ${0}, ${0})`;
         h = Math.round(bass * HEIGHT);
         ctx.fillRect(canvas.width - 130, HEIGHT - h, w, h);
 
         h = Math.round(mid * HEIGHT);
-        ctx.fillStyle = "#34BF49";
+        ctx.fillStyle = `rgba(${0}, ${Math.max(MIN, g)}, ${0})`;
         ctx.fillRect(canvas.width - 130, HEIGHT - h + HEIGHT, w, h);
 
         h = Math.round(high * HEIGHT);
-        ctx.fillStyle = "#0099E5";
+        ctx.fillStyle = `rgba(${0}, ${0}, ${Math.max(MIN, b)})`;
         ctx.fillRect(canvas.width - 130, HEIGHT - h + HEIGHT * 2, w, h);
 
         ctx.globalCompositeOperation = "source-over";

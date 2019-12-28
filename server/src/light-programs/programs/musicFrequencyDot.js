@@ -81,20 +81,8 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
     res.move = { type: Boolean, default: false };
     res.power = { type: Number, min: 1, max: 20, step: 1, default: 2 };
-    res.numberOfOnLeds = {
-      type: Number,
-      min: 1,
-      max: 100,
-      step: 1,
-      default: 40
-    };
-    res.cutThreshold = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0.45
-    };
+    res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     return res;
   }
 };

@@ -6,3 +6,5 @@ node_modules
 npm-debug.log
 arduino/**/*.hex
 arduino/**/*.elf
+
+__pycache__/

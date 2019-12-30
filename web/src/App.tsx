@@ -33,7 +33,7 @@ export class App extends React.Component<Props, State> {
   api!: API;
   lightsSim: React.RefObject<LightsSimulator>;
   micViewer: React.RefObject<MicrophoneViewer>;
-  private lightsToRender: string | null = null;
+  private pendingAnimationFrame: number | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -95,16 +95,15 @@ export class App extends React.Component<Props, State> {
     );
 
     api.on("lightsSample", (encodedLights: string) => {
-      // Save last lights information, request animation frame and render last frame only once
-      this.lightsToRender = encodedLights;
-      window.requestAnimationFrame(() => {
-        if(this.lightsToRender) {
-          const lights = decodeLedsColorsFromString(this.lightsToRender);
-          this.lightsSim.current!.drawCanvas(lights);
-          // Ensure the last frame is not rendered twice, otherwise animation frame requests can queue and render
-          // all at the same time
-          this.lightsToRender = null;
-        }
+      if (this.pendingAnimationFrame) {
+        window.cancelAnimationFrame(this.pendingAnimationFrame);
+        this.pendingAnimationFrame = null;
+      }
+      const that = this;
+      this.pendingAnimationFrame = window.requestAnimationFrame(() => {
+        that.pendingAnimationFrame = null;
+        const lights = decodeLedsColorsFromString(encodedLights);
+        this.lightsSim.current!.drawCanvas(lights);
       })
     });
 

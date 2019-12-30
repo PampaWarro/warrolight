@@ -106,9 +106,15 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
 
 class HistogramRenderer {
+  pendingAnimationFrame: number | null = null;
 
   draw(canvas: HTMLCanvasElement, samples: MicSample[], perBand: boolean) {
-    window.requestAnimationFrame(() => {
+    if (this.pendingAnimationFrame) {
+      window.cancelAnimationFrame(this.pendingAnimationFrame);
+    }
+    const that = this;
+    this.pendingAnimationFrame = window.requestAnimationFrame(() => {
+      that.pendingAnimationFrame = null;
       let ctx = canvas.getContext("2d")!;
 
       let samplesCount = samples.length;

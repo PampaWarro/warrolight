@@ -1,0 +1,11 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "playground": "node playground.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "msgpack": "^1.0.3",
+    "socket.io": "^2.3.0"
+  }
+}

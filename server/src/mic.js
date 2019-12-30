@@ -28,7 +28,8 @@ class Mic {
             channelCount: this.channels,
             sampleFormat: portAudio.SampleFormat16Bit,
             sampleRate: this.sampleRate,
-            deviceId: this.deviceId
+            deviceId: this.deviceId,
+            highwaterMark: this.bufferSize,
           }
         });
         this.audioInput = audioInput;

@@ -23,6 +23,6 @@ echo "Found Arduino connected at port $port"
 
 printf "Uploading $sketch to board... "
 
-arduino-cli compile --upload --port "$port" --fqbn arduino:avr:uno "$sketch"
+arduino-cli compile --upload --port "$port" --fqbn arduino:avr:mega "$sketch"
 
 echo "Done!"

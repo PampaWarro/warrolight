@@ -104,7 +104,11 @@ module.exports = class DeviceMultiplexer {
     for (let i = 0; i < rgbArray.length; i++) {
       let deviceIndex = targetDevice[i];
       if (deviceIndex >= 0) {
-        deviceStateArrays[deviceIndex][targetPosition[i]] = rgbArray[i];
+        let pos = targetPosition[i];
+        if (pos >= 150) {
+          pos = 242 - pos + 150;
+        }
+        deviceStateArrays[deviceIndex][pos] = rgbArray[i];
       }
     }
 

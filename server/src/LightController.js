@@ -5,9 +5,10 @@ const ProgramScheduler = require("./ProgramScheduler");
 
 // TODO: move this to some configuration file
 const programNames = [
-  "PROGRAM_Triangulo",
-  "PROGRAM_Transition",
-  "PROGRAM_Main_fuego2019",
+  // "PROGRAM_Triangulo",
+  // "PROGRAM_Transition",
+  // "PROGRAM_Main_fuego2019",
+  "Particles",
   "aliveDots",
   "aliveDotsSpeed",
   "all-off",

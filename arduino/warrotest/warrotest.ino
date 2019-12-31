@@ -9,13 +9,15 @@
 // wires - data, clock, ground, and power), like the LPD8806 define both
 // DATA_PIN and CLOCK_PIN
 #define DATA_PIN 6
+#define DATA_PIN2 7
 
 // Define the array of leds
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS * 2];
 
 void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, NUM_LEDS, NUM_LEDS);
 
   Serial.begin(576000);
 

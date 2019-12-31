@@ -9,26 +9,29 @@
 // wires - data, clock, ground, and power), like the LPD8806 define both
 // DATA_PIN and CLOCK_PIN
 #define DATA_PIN 6
+#define DATA_PIN2 7
 
 // Define the array of leds
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS * 2];
 unsigned long time = 0;
 // Stars program;
 // Explosion program;
 // Pulse program;
-Rainbow program;
+//Rainbow program;
+MultiProgram program;
 
 void setup()
 {
     randomSeed(analogRead(0));
 
     FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, NUM_LEDS, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 }
 
 void loop()
 {
-    program.draw(leds, NUM_LEDS, time);
+    program.draw(leds, NUM_LEDS * 2, time);
     FastLED.show();
     time++;
 }

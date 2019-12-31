@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "fuego-2019"
+    "setup": "hangar-2020"
   },
   "keywords": [],
   "author": "Pampa Warro",

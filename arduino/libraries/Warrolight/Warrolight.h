@@ -30,9 +30,9 @@ private:
   int m_tone = 0;
 
   // TODO: assumes 150 leds as strip size
-  byte m_stars[150];
-  byte m_starsColors[150];
-  byte m_starsSaturation[150];
+  byte m_stars[300];
+  byte m_starsColors[300];
+  byte m_starsSaturation[300];
 };
 
 class Rainbow

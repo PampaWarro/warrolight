@@ -1,0 +1,23 @@
+{
+  "geometry": "geometry-hangar-2020",
+  "shapeMapping": "shape-mapping-hangar-2020",
+  "lights": 243,
+  "outputDevices": {
+    "ether1": {
+      "type": "udp",
+      "params": {
+        "numberOfLights": 243,
+        "ip": "192.168.1.2",
+        "udpPort": 2222
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 243,
+      "baseIndex": 0,
+      "deviceName": "ether1"
+    }
+  ]
+}

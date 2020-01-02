@@ -37,7 +37,8 @@ module.exports = function createMultiProgram(
         scheduleItem.programInstance.init();
       }
 
-      this.position = 0;
+      // choose a random program from the schedule
+      this.position = Math.trunc(Math.random() * this.programSchedule.length);
       this.nextStartChange = null;
       this.previous = null;
       this.current = null;

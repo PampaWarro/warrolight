@@ -1,6 +1,6 @@
 {
-  "geometry": "geometry-fuego19",
-  "shapeMapping": "shape-mapping-fuego19",
+  "geometry": "fuego19",
+  "shapeMapping": "fuego19",
   "lights": 1200,
   "outputDevices": {
     "ether1": {

@@ -7,7 +7,7 @@ exports.loadSetup = function loadSetup(setup) {
   const geometryDefinition = require(`../setups/geometries/${setup.geometry}`);
   const geometry = new Geometry(geometryDefinition);
 
-  const shapeMapping = require(`../setups/shapeMappings/${setup.shapeMapping}`);
+  const shapeMapping = require(`../setups/shape-mappings/${setup.shapeMapping}`);
   const multiplexer = new DeviceMultiplexer(setup);
 
   return new LightController(multiplexer, geometry, shapeMapping);

@@ -21,7 +21,7 @@ function findBounds(values) {
   };
 }
 
-module.exports = class LayerBasedFunction extends LightProgram {
+module.exports = class LayerBasedProgram extends LightProgram {
   constructor(config, geometry) {
     super(config, geometry);
     this.xBounds = findBounds(this.geometry.x);

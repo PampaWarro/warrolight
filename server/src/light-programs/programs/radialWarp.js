@@ -1,4 +1,4 @@
-const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
+const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const {
   InfiniteCircles,
   PolarColors,
@@ -6,7 +6,7 @@ const {
 } = require("../utils/drawables");
 const ColorUtils = require("../utils/ColorUtils");
 
-module.exports = class RadialWarp extends LayerBasedFunction {
+module.exports = class RadialWarp extends LayerBasedProgram {
   getDrawables() {
     return {
       backgroundColors: new PolarColors({

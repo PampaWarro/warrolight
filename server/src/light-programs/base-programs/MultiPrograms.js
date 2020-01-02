@@ -80,6 +80,7 @@ module.exports = function createMultiProgram(
       }
 
       if (this.crossFadeFinish && Date.now() >= this.crossFadeFinish) {
+        console.log("Current program: ", this.current.toString())
         this.crossFadeStart = null;
         this.crossFadeFinish = null;
         this.previous = null;

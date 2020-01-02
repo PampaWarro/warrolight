@@ -17,6 +17,10 @@ module.exports = class LightProgram {
     this.config = config;
   }
 
+  toString() {
+    return this.constructor.name;
+  }
+
   static configSchema() {
     // Child classes should call super.configSchema and extend this object
     return {
@@ -25,7 +29,7 @@ module.exports = class LightProgram {
         min: 0,
         max: 1,
         step: 0.01,
-        default: 1
+        default: 0.5
       },
       fps: { type: Number, min: 2, max: 60, default: 60 }
     };

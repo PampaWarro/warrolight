@@ -1,4 +1,4 @@
-const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
+const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const programsByShape = require("../base-programs/ProgramsByShape");
 const { PolarColors } = require("../utils/drawables");
 
@@ -6,7 +6,7 @@ function audioFill(options) {
   options = options || {};
   const getAudioEnergy = options.getAudioEnergy;
   const cycleMs = options.cycleMs || 5000;
-  class AudioFill extends LayerBasedFunction {
+  class AudioFill extends LayerBasedProgram {
     getDrawables() {
       return {
         fill: new PolarColors({

@@ -1,10 +1,10 @@
-const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
+const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const { SingleLed } = require("../utils/drawables");
 const { DrawableLayer } = require("../utils/layers");
 const _ = require("lodash");
 const ColorUtils = require("../utils/ColorUtils");
 
-module.exports = class BandParticles extends LayerBasedFunction {
+module.exports = class BandParticles extends LayerBasedProgram {
 
   init() {
     this.particles = {};

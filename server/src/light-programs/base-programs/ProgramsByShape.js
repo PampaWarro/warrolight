@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const util = require("util");
 const LightProgram = require("./LightProgram");
 
 module.exports = function programsByShape(mapping) {
@@ -69,9 +70,9 @@ module.exports = function programsByShape(mapping) {
         const map = this.knownMappings[mapName];
 
         if (!map) {
-          console.warn(
-            `No mapping found with key ${mapName}. Defaulting to 'allOfIt'`
-          );
+          // console.warn(
+          //   `No mapping found with key ${mapName}. Defaulting to 'allOfIt'`
+          // );
           return this.knownMappings["allOfIt"];
         }
 
@@ -94,6 +95,10 @@ module.exports = function programsByShape(mapping) {
       for (let shapeName in this.instances) {
         this.instances[shapeName].updateConfig(config);
       }
+    }
+
+    toString() {
+      return `${super.toString()}(${util.inspect(this.instances)})`;
     }
 
     static configSchema() {

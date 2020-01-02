@@ -1,4 +1,4 @@
-const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
+const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const {
   Line,
   Circle,
@@ -8,7 +8,7 @@ const {
   RadiusCosineBrightness
 } = require("../utils/drawables");
 
-module.exports = class Shapes extends LayerBasedFunction {
+module.exports = class Shapes extends LayerBasedProgram {
   getDrawables() {
     return {
       backgroundColors: new PolarColors({

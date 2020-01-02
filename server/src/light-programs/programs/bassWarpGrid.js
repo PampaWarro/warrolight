@@ -1,7 +1,7 @@
-const LayerBasedFunction = require("../base-programs/LayerBasedFunction");
+const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const { Grid } = require("../utils/drawables");
 
-module.exports = class Bombs extends LayerBasedFunction {
+module.exports = class Bombs extends LayerBasedProgram {
 
   init() {
     this.warpK = 1;

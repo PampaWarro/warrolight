@@ -20,6 +20,7 @@ module.exports = class ProgramScheduler {
     this.timeInMs = 0;
     this.startTime = Date.now();
     this.config = config;
+    this.draw = draw;
 
     this.program.init();
 
@@ -61,8 +62,8 @@ module.exports = class ProgramScheduler {
 
   restart() {
     this.stop();
-    this.program.init(this.config, this.draw);
-    this.start();
+    this.program.init();
+    this.start(this.config, this.draw);
   }
 
   get config() {

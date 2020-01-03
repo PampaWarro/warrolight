@@ -31,7 +31,8 @@ module.exports = class BandParticles extends LayerBasedProgram {
   }
 
   populatePerBandParticles(audio) {
-    _.forOwn(audio.currentFrame.center.filteredBands, (band, bandName) => {
+    console.log(audio);
+    _.forEach(['low', 'mid', 'high'], (bandName) => {
       const bandParticles = (this.particles[bandName] =
         this.particles[bandName] || []);
       while (bandParticles.length < this.config.particlesPerBand) {
@@ -59,8 +60,7 @@ module.exports = class BandParticles extends LayerBasedProgram {
       return;
     }
     this.populatePerBandParticles(audio);
-    const centerChannel = audio.currentFrame.center;
-    const audioSummary = centerChannel.summary;
+    const audioSummary = audio.currentFrame;
     _.forOwn(this.particles, (particles, bandName) => {
       const energy = audioSummary[`${bandName}PeakDecay`];
       const hue = ColorUtils.mod(

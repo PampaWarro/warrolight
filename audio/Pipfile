@@ -11,6 +11,7 @@ sounddevice = "*"
 numpy = "*"
 msgpack = "*"
 scipy = "*"
+stringcase = "*"
 
 [requires]
 python_version = "3.7"

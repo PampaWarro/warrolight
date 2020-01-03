@@ -52,9 +52,7 @@ module.exports = class Bombs extends LayerBasedProgram {
     if (!audio.ready) {
       return;
     }
-    const centerChannel = audio.currentFrame.center;
-    const audioSummary = centerChannel.summary;
-    const bass = audioSummary.bassRms;
+    const bass = audio.currentFrame.bassRms;
     this.warpK = bass * 100 * Math.cos((Math.PI * this.timeInMs) / 10000);
     this.warpPow = 1.5 + 0.5 * Math.cos((Math.PI * this.timeInMs) / 4000);
     this.layers.grid.alpha = 0.3 + 0.7 * bass * bass;

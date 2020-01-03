@@ -12,7 +12,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
   }
 
   drawFrame(draw, audio) {
-    if (audio.lastFrame && audio.lastFrame.filteredBands) {
+    if (audio.ready) {
       let {
         bassRms,
         bassPeakDecay,
@@ -23,7 +23,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
         highRms,
         highPeakDecay,
         highMax
-      } = audio.lastFrame.summary;
+      } = audio.currentFrame;
       //let total = bassMax+midMax+highMax;
 
       let power = this.config.power; // To create contrast
@@ -43,8 +43,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
       let width = Math.round(this.numberOfLeds / this.config.numberOfOnLeds);
 
       for (let i = 0; i < this.numberOfLeds; i += 1) {
-        // let rms = audio.lastFrame.movingStats.rms.slow.normalizedValue;
-        let rms = audio.lastFrame.summary.bassPeakDecay;
+        let rms = bassPeakDecay;
         let explosionLength = Math.ceil((Math.pow(rms, power) * width) / 3);
 
         let offsettedPosition = i % this.lastVolume.length;

@@ -105,7 +105,7 @@
           ctx.stroke();
           const bin = this.xToBin(x, spectrum.length, this.canvas.width);
           const freq =
-              this.binToFreq(bin, spectrum.length, this.audioFrame.samplerate);
+              this.binToFreq(bin, spectrum.length, this.audioFrame.sampleRate);
           const binLabel = `bin=${Math.round(bin)}`;
           const binLabelWidth = ctx.measureText(binLabel).width;
           const freqLabel = `freq=${this.formatFreq(freq)}Hz`;
@@ -190,6 +190,7 @@
   socket.on('connect', () => { console.log('connected'); });
   socket.on('disconnect', () => { console.log('disconnected'); });
   socket.on('audioframe', (frame) => {
+    window.lastAudioFrame = frame;
     renderers.forEach((renderer) => { renderer.audioFrame = frame; });
   });
 
@@ -210,26 +211,20 @@
   }
 
   $(() => {
+    renderers.push(new SamplesRenderer(addVizCanvas('samples', 600, 100),
+                                       (frame) => { return frame.samples; }));
+    renderers.push(new SpectrumRenderer(addVizCanvas('spectrum', 600, 100),
+                                        (frame) => { return frame.slowFft; }));
+    renderers.push(new HistoryRenderer(addVizCanvas('rms', 600, 100),
+                                       (frame) => { return frame.rms; }, 300));
     renderers.push(
-        new SamplesRenderer(addVizCanvas('samples', 600, 100),
-                            (frame) => { return frame.center.samples; }));
+        new HistoryRenderer(addVizCanvas('bass', 600, 100),
+                            (frame) => { return frame.bassFastPeakDecay; }, 300));
     renderers.push(
-        new SpectrumRenderer(addVizCanvas('spectrum', 600, 100),
-                             (frame) => { return frame.center.slow_fft; }));
-    renderers.push(new HistoryRenderer(
-        addVizCanvas('max', 600, 100),
-        (frame) => { return frame.center.normalized_fast_max; }, 300));
-    renderers.push(new HistoryRenderer(
-        addVizCanvas('bass max', 600, 100),
-        (frame) => { return Math.pow(frame.center.bands.bass.normalized_fast_max, 2); },
-        300));
-    renderers.push(new HistoryRenderer(
-        addVizCanvas('mid max', 600, 100),
-        (frame) => { return Math.pow(frame.center.bands.mid.normalized_fast_max, 2); },
-        300));
-    renderers.push(new HistoryRenderer(
-        addVizCanvas('high max', 600, 100),
-        (frame) => { return Math.pow(frame.center.bands.high.normalized_fast_max, 2); },
-        300));
+        new HistoryRenderer(addVizCanvas('mid', 600, 100),
+                            (frame) => { return frame.midFastPeakDecay; }, 300));
+    renderers.push(
+        new HistoryRenderer(addVizCanvas('high', 600, 100),
+                            (frame) => { return frame.highFastPeakDecay; }, 300));
   });
 })();

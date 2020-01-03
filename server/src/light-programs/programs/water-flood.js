@@ -13,7 +13,10 @@ module.exports = class WaterFlood extends LightProgram {
     const colors = new Array(this.numberOfLeds);
     const geometry = this.geometry;
 
-    let vol = audio.bassPeakDecay;
+    if (!audio.ready) {
+      return;
+    }
+    let vol = audio.currentFrame.bassPeakDecay;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let posY = 1 - geometry.y[i] / geometry.height;

@@ -2,8 +2,8 @@ const _ = require("lodash");
 
 module.exports = class SoundListener {
 
-  constructor(soundAnalyzer, micConfig) {
-    this.soundAnalyzer = soundAnalyzer;
+  constructor(audioEmitter, micConfig) {
+    this.audioEmitter = audioEmitter;
     this.micConfig = micConfig;
   }
 
@@ -21,32 +21,23 @@ module.exports = class SoundListener {
 
     let avg = 1;
 
-    this.soundAnalyzer.on("processedaudioframe", frame => {
-      let {
-        center: {
-          filteredBands,
-          movingStats: {
-            rms: {
-              slow: { normalizedValue }
-            }
-          }
-        }
-      } = frame;
+    this.audioEmitter.on("audioframe", frame => {
+      const summary = {
+        ..._.fromPairs(_.map(
+            [ 'bass', 'mid', 'high' ],
+            (bandName) => [bandName, frame[bandName + micConfig.metric]],
+            )),
+        all : frame.fastPeakDecay,
+      };
 
-      lastRawVolumes.push({
-        ..._.mapValues(
-          filteredBands,
-          (b, name) => frame.center.summary[name + micConfig.metric]
-        ),
-        all: normalizedValue
-      });
+      lastRawVolumes.push(summary);
 
       if (lastRawVolumes.length >= avg) {
         let avgLastVolumes = {
-          bass: _.sum(_.map(lastRawVolumes, "bass")) / avg,
-          mid: _.sum(_.map(lastRawVolumes, "mid")) / avg,
-          high: _.sum(_.map(lastRawVolumes, "high")) / avg,
-          all: _.sum(_.map(lastRawVolumes, "all")) / avg
+          bass : _.sum(_.map(lastRawVolumes, "bass")) / avg,
+          mid : _.sum(_.map(lastRawVolumes, "mid")) / avg,
+          high : _.sum(_.map(lastRawVolumes, "high")) / avg,
+          all : _.sum(_.map(lastRawVolumes, "all")) / avg
         };
 
         lastVolumes.push(avgLastVolumes);

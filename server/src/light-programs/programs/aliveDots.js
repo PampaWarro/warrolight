@@ -28,6 +28,9 @@ module.exports = class AliveDots extends LightProgram {
 
   drawFrame(draw, audio) {
     // let decay = this.config.decay;
+    if (!audio.ready) {
+      return;
+    }
     this.time++;
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
 
@@ -59,7 +62,7 @@ module.exports = class AliveDots extends LightProgram {
       this.stars[roundPosNext] = [ru, gu, bu];
     });
 
-    this.lastVolume = audio.bassRms || 0;
+    this.lastVolume = audio.currentFrame.bassRms || 0;
     draw(
       this.stars.map(([r, g, b]) =>
         ColorUtils.dim([r, g, b], this.config.brillo)
@@ -72,7 +75,7 @@ module.exports = class AliveDots extends LightProgram {
       dot.val += 0.05;
     }
 
-    let vol = audio.averageVolume;
+    let vol = audio.currentFrame.bassRms;
     let volDiff = vol - this.lastVolume;
     dot.pos =
       dot.pos +

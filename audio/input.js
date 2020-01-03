@@ -3,13 +3,11 @@ const EventEmitter = require('events');
 const path = require('path');
 const msgpack = require('msgpack');
 
-const venvPath = cp.execSync('pipenv --venv', {encoding : 'utf8'}).trim();
-
+const venvPath =
+    cp.execSync('pipenv --venv', {encoding : 'utf8', cwd : __dirname}).trim();
 const pythonBinaryFolder = /^win/.test(process.platform) ? 'Scripts' : 'bin';
-
 const python = path.join(venvPath, pythonBinaryFolder, 'python')
-
-const mainScript = 'main.py'
+const mainScript = path.join(__dirname, 'main.py')
 
 class AudioInput extends EventEmitter {
   constructor(options) {

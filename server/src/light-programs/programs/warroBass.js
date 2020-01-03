@@ -37,8 +37,7 @@ function audioFill(options) {
       if (!audio.ready) {
         return;
       }
-      const centerChannel = audio.currentFrame.center;
-      const energy = getAudioEnergy(centerChannel);
+      const energy = getAudioEnergy(audio.currentFrame);
       this.layers.fill.alpha = energy;
     }
 
@@ -52,15 +51,15 @@ function audioFill(options) {
 }
 
 const BassFill = audioFill({
-  getAudioEnergy: c => Math.pow(c.summary.bassPeakDecay, 4),
+  getAudioEnergy: c => Math.pow(c.bassPeakDecay, 4),
   cycleMs: 5000
 });
 const MidFill = audioFill({
-  getAudioEnergy: c => Math.pow(c.summary.midPeakDecay, 4),
+  getAudioEnergy: c => Math.pow(c.midPeakDecay, 4),
   cycleMs: 11000
 });
 const HighFill = audioFill({
-  getAudioEnergy: c => Math.pow(c.summary.highPeakDecay, 6),
+  getAudioEnergy: c => Math.pow(c.highPeakDecay, 6),
   cycleMs: 9000
 });
 

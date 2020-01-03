@@ -12,6 +12,10 @@ module.exports = class MusicFlow extends LightProgram {
 
   // Override parent method
   drawFrame(draw, audio) {
+    if (!audio.ready) {
+      return;
+    }
+    audio = audio.currentFrame;
     this.time += this.config.speed;
     this.realTime += 1;
 

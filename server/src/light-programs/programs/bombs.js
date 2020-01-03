@@ -92,8 +92,7 @@ module.exports = class Bombs extends LayerBasedProgram {
     if (!audio.ready) {
       return;
     }
-    const centerChannel = audio.currentFrame.center;
-    const audioSummary = centerChannel.summary;
+    const audioSummary = audio.currentFrame;
     const bass = audioSummary.bassPeakDecay;
     const highNoBass = audioSummary.highRmsNoBass;
     this.drawables.highNoise.threshold = 1 - 0.1 * highNoBass;
@@ -108,7 +107,7 @@ module.exports = class Bombs extends LayerBasedProgram {
       this.yBounds.center +
         0.35 * this.yBounds.scale * Math.cos((Math.PI * this.bassSum) / 133)
     ];
-    const mid = centerChannel.summary.midPeakDecay;
+    const mid = audioSummary.midPeakDecay;
     this.midSum += mid;
     this.drawables.midFill.angleOffset = Math.cos(
       mid + (Math.PI * this.timeInMs) / 20000
@@ -120,10 +119,10 @@ module.exports = class Bombs extends LayerBasedProgram {
       this.yBounds.center +
         0.35 * this.yBounds.scale * Math.cos((Math.PI * this.midSum) / 133)
     ];
-    this.layers.bass.alpha = bass * bass + 0.05;
-    this.layers.mid.alpha = mid * mid + 0.05;
-    const high = centerChannel.summary.highPeakDecay;
-    this.layers.high.alpha = high * high + 0.05;
+    this.layers.bass.alpha *= bass * bass + 0.05;
+    this.layers.mid.alpha *= mid * mid + 0.05;
+    const high = audioSummary.highPeakDecay;
+    this.layers.high.alpha *= high * high + 0.05;
     this.highSum += high;
     this.drawables.highFill.angleOffset = Math.cos(
       high + (Math.PI * this.timeInMs) / 10000

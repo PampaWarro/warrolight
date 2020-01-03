@@ -11,18 +11,19 @@ module.exports = class FrequencyActivation extends LightProgram {
 
   // Override parent method
   drawFrame(draw, audio) {
+    if (!audio.ready) {
+      return;
+    }
     this.time += this.config.speed;
 
     let size = this.config.zoom;
-    if (audio.absolutefft) {
-      for (let i = 0; i < this.numberOfLeds; i++) {
-        let pos = Math.floor((i % 150) / size);
-        let vol = (this.config.multiplier * audio.absolutefft[pos + 5]) / 10;
+    for (let i = 0; i < this.numberOfLeds; i++) {
+      let pos = Math.floor((i % 150) / size);
+      let vol = (this.config.multiplier * audio.currentFrame.fft[pos + 5]) / 10;
 
-        let newVal = ColorUtils.HSVtoRGB(vol, 1, Math.min(vol, 1));
+      let newVal = ColorUtils.HSVtoRGB(vol, 1, Math.min(vol, 1));
 
-        this.lastVolume[i] = newVal;
-      }
+      this.lastVolume[i] = newVal;
     }
 
     draw(this.lastVolume);

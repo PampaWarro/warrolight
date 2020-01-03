@@ -61,7 +61,9 @@ module.exports = class StripePattern extends LightProgram {
     this.time += this.config.speed;
     const newColors = new Array(this.numberOfLeds);
 
-    this.rebuildPattern(audio);
+    if (audio.ready) {
+      this.rebuildPattern(audio.currentFrame);
+    }
     if (Math.random() < 1 / 20) {
       this.pickRandomColor();
     }

@@ -1,9 +1,6 @@
-const { startMic } = require("./mic");
-const soundAnalyzer = require("./soundAnalyzer");
-const SoundListener = require("./SoundListener");
 const _ = require("lodash");
-
-startMic();
+const SoundListener = require("./SoundListener");
+const audioEmitter = require("./audioEmitter");
 
 function lightsToByteString(ledsColorArray) {
   let bytes = _.flatten(ledsColorArray);
@@ -13,15 +10,11 @@ function lightsToByteString(ledsColorArray) {
 module.exports = class LightsService {
   constructor(controller, send) {
     this.controller = controller;
-    this.micConfig = {
-      sendingMicData: true,
-      metric: "Rms"
-    };
+    this.micConfig = {sendingMicData : true, metric : "Rms"};
     this.send = send;
     this.simulating = false;
 
-    const soundListener = new SoundListener(soundAnalyzer, this.micConfig);
-    // TODO: consider not processing sound when we don't have any clients.
+    const soundListener = new SoundListener(audioEmitter, this.micConfig);
     soundListener.start(lastVolumes => send("micSample", lastVolumes));
 
     this.sendLightsSample = this.sendLightsSample.bind(this);
@@ -29,8 +22,7 @@ module.exports = class LightsService {
     controller.on("lights", this.sendLightsSample);
 
     controller.onDeviceStatus(devicesStatus =>
-      this.send("devicesStatus", devicesStatus)
-    );
+                                  this.send("devicesStatus", devicesStatus));
   }
 
   connect() {
@@ -39,10 +31,10 @@ module.exports = class LightsService {
     const controller = this.controller;
 
     this.send("completeState", {
-      programs: controller.getProgramsSchema(),
-      currentProgramName: controller.currentProgramName,
-      currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig
+      programs : controller.getProgramsSchema(),
+      currentProgramName : controller.currentProgramName,
+      currentConfig : controller.getCurrentConfig(),
+      micConfig : this.micConfig
     });
   }
 
@@ -56,9 +48,9 @@ module.exports = class LightsService {
   broadcastStateChange() {
     const controller = this.controller;
     this.send("stateChange", {
-      currentProgramName: controller.currentProgramName,
-      currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig
+      currentProgramName : controller.currentProgramName,
+      currentConfig : controller.getCurrentConfig(),
+      micConfig : this.micConfig
     });
   }
 
@@ -83,10 +75,8 @@ module.exports = class LightsService {
       return;
     }
 
-    controller.currentProgram.updateConfig(_.extend(
-      controller.getConfig(),
-      presets[presetName]
-    ));
+    controller.currentProgram.updateConfig(
+        _.extend(controller.getConfig(), presets[presetName]));
 
     this.broadcastStateChange();
   }
@@ -101,18 +91,16 @@ module.exports = class LightsService {
     controller.currentProgram.updateConfig(config);
 
     this.send("stateChange", {
-      currentProgramName: controller.currentProgramName,
-      currentConfig: controller.getCurrentConfig(),
-      micConfig: this.micConfig
+      currentProgramName : controller.currentProgramName,
+      currentConfig : controller.getCurrentConfig(),
+      micConfig : this.micConfig
     });
   }
 
   startSamplingLights() {
     console.log("[ON] Web client sampling lights data".green);
     this.simulating = true;
-    this.send("layout", {
-      geometry: this.controller.geometry
-    });
+    this.send("layout", {geometry : this.controller.geometry});
   }
 
   stopSamplingLights() {
@@ -120,9 +108,7 @@ module.exports = class LightsService {
     this.simulating = false;
   }
 
-  restartProgram() {
-    this.controller.restart();
-  }
+  restartProgram() { this.controller.restart(); }
 
   disconnect() {
     console.log("[OFF] Remote control DISCONNNECTED".gray);

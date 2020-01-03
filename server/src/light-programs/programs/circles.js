@@ -31,12 +31,11 @@ module.exports = class Circles extends LightProgram {
   drawFrame(draw, audio) {
     const colors = new Array(this.numberOfLeds);
 
-    const centerChannel = audio.currentFrame.center;
-    if (!centerChannel) {
+    const frame = audio.currentFrame;
+    if (!frame) {
       return;
     }
-    const normalizedBass =
-      centerChannel.filteredBands.bass.movingStats.rms.slow.normalizedValue;
+    const normalizedBass = frame.bassPeakDecay;
     const centerX =
       this.xBounds.center +
       0.25 *
@@ -60,7 +59,7 @@ module.exports = class Circles extends LightProgram {
       const radiusFactor =
         0.2 * Math.sin(this.timeInMs / 1000) +
         0.2 * this.config.escala +
-        0.2 * centerChannel.filteredBands.bass.rms;
+        0.2 * frame.slowRms;
       const h = (r * 0.1 + (this.timeInMs * this.config.velocidad) / 10000) % 1;
       const s = 1 / (1 + normalizedR);
       const v =

@@ -28,6 +28,7 @@ import logging
 import sys
 from processor import RawAudioProcessor
 import msgpack
+import stringcase
 
 logger = logging.getLogger(__name__)
 
@@ -35,14 +36,35 @@ logger = logging.getLogger(__name__)
 def encode(obj):
     if isinstance(obj, np.ndarray):
         return obj.tolist()
-    if isinstance(obj, np.float32):
+    if isinstance(obj, (np.float32, np.int64)):
         return obj.item()
     return obj
 
 
+CAMEL_CACHE = {}
+
+def to_camel(s):
+    try:
+        return CAMEL_CACHE[s]
+    except KeyError:
+        camel = stringcase.camelcase(s)
+        CAMEL_CACHE[s] = camel
+        return camel
+
+def obj_to_camel(o):
+    if isinstance(o, dict):
+        return {
+            to_camel(k): obj_to_camel(v)
+            for k, v in o.items()
+        }
+    if isinstance(o, (list, tuple)):
+        return [obj_to_camel(x) for x in o]
+    return o
+
+
 def write_output_frame(frame):
     sys.stdout.buffer.write(
-        msgpack.packb(frame, use_bin_type=True, default=encode))
+        msgpack.packb(obj_to_camel(frame), use_bin_type=True, default=encode))
     sys.stdout.buffer.flush()
 
 
@@ -84,7 +106,7 @@ def main():
     logger.info('Using device "%s".', device['name'])
     try:
         audio_loop(args.device)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, BrokenPipeError):
         pass
 
 

@@ -11,6 +11,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
   }
 
   drawFrame(draw, audio) {
+    audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
     // let vol = audio.averageRelativeVolume * this.config.multiplier * 1.5;

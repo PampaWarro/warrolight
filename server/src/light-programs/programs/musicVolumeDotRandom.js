@@ -22,6 +22,7 @@ module.exports = class MusicVolumeDotRandom extends LightProgram {
 
   // Override parent method
   drawFrame(draw, audio) {
+    audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
     let vol = (audio[this.config.soundMetric] || 0) * this.config.multiplier;

@@ -31,12 +31,16 @@ module.exports = class SoundWaves extends LightProgram {
   }
 
   drawFrame(draw, audio) {
+    if (!audio.ready) {
+      return;
+    }
+    audio = audio.currentFrame;
     let timeSinceLastCreation = new Date() - this.lastCreation;
     if (
-      (timeSinceLastCreation > 50 && audio.averageRelativeVolume > 0.3) ||
-      (timeSinceLastCreation > 350 && audio.averageRelativeVolume > 0.1)
+      (timeSinceLastCreation > 50 && audio.peakDecay > 0.3) ||
+      (timeSinceLastCreation > 350 && audio.peakDecay > 0.1)
     ) {
-      this.dots.push(new Dot(this.config, audio.averageRelativeVolume));
+      this.dots.push(new Dot(this.config, audio.peakDecay));
       this.lastCreation = new Date();
 
       this.dots = _.filter(

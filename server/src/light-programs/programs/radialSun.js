@@ -9,6 +9,10 @@ module.exports = class RadialSun extends LightProgram {
   }
 
   drawFrame(draw, audio) {
+    if (!audio.ready) {
+      return;
+    }
+    audio = audio.currentFrame;
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 

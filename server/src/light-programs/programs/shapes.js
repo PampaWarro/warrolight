@@ -141,8 +141,7 @@ module.exports = class Shapes extends LayerBasedProgram {
     if (!audio.ready) {
       return;
     }
-    const centerChannel = audio.currentFrame.center;
-    const audioSummary = centerChannel.summary;
+    const audioSummary = audio.currentFrame;
     const highNoBass = audioSummary.highRmsNoBass;
     const normalizedBass = audioSummary.bassPeakDecay;
     drawables.bassCircle.radius =

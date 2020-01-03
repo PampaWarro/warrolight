@@ -10,6 +10,7 @@ module.exports = class MusicVolumeDot extends LightProgram {
   }
 
   drawFrame(draw, audio) {
+    audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
     let vol = (audio[this.config.soundMetric] || 0) * this.config.multiplier;

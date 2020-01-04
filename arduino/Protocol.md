@@ -42,7 +42,7 @@ Uses 2 bytes for each light. The colors are encoded using 5 bits for red, 6 bits
 On start, the Arduino will use the static IP configured in the program and listen for UDP packets on port 2222 or 4444. It will also start brodcasting UDP packets containing the 4-byte word `YEAH`  every 1 second. If it receives a UDP packet, it will read it.
 
  - If the length of the packet is 0, it will discard it and set its state to disconnected.
- - The first byte in the packet should contain the sequence number. Non-consecutive sequence numbers are reported because they indicate some packet loss.
+ - The first byte in the packet should contain the sequence number. Non-consecutive sequence numbers are reported via a serial message because they indicate some packet loss.
  - The rest of the packet contains encoded lights and are interpreted as described in the Serial protocol section. Only RGB encoded lights are accepted.
 
 ## RF protocol

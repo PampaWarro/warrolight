@@ -47,4 +47,6 @@ En `PROGRAM_Transition.js` pueden ver un ejemplo de agarrar varios programas dis
 
 ### Arduino
 
-Si estás familiarizado con la IDE de Arduino podés usarla para compilar y subir los scripts del directorio `arduino/`. De lo contrario la herramienta de `arduino-cli` también funciona muy bien. Podés encontrar instrucciones completas de cómo bajarla y usarla en https://github.com/arduino/arduino-cli.
+Si estás familiarizado con la IDE de Arduino podés usarla para compilar y subir los scripts del directorio `arduino/`. Recordá configurar la localización del proyecto (sketchbook) al directorio `arduino/` de este repositorio.
+
+Si preferís usar tu editor favorito, la herramienta `arduino-cli` también funciona muy bien. Podés encontrar instrucciones completas de cómo bajarla y usarla en https://github.com/arduino/arduino-cli.

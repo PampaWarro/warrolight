@@ -49,6 +49,8 @@ On start, the Arduino will use the static IP configured in the program and liste
 
 ## RF protocol
 
-The RF protocol is used to communicate light frames between two Arduinos. The first Arduino we will call the server, and the second, the client. The server receives lights via Serial protocol.
+The RF protocol is used to communicate light frames between two Arduinos. One of the Arduinos acts as the server, and is connected to the computer via serial port. The second one is the client, and receives light frames remotely.
 
-// TODO: finish
+The server reads light frames using the serial protocol and retransmits them split into individual packages of 32 bytes each one. The first byte contains the index of the first light that is specified in the package. The second byte describes the frame number. The rest of the package contains the RGB values for the next 10 lights. Note that 3 bytes x 10 lights is 30 bytes, which covers the remaining space in the packet.
+
+The server transmits half of the lights in one radio channel, and half in the other, thus controlling 2 strips of 150 lights each.

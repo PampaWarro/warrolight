@@ -27,16 +27,16 @@
     "performance-now": "^2.1.0",
     "pino": "^5.15.0",
     "pino-pretty": "^3.5.0",
-    "serialport": "^8.0.5",
+    "serialport": "^8.0.6",
     "ts-node": "^8.5.4",
     "tumult": "^3.0.14",
-    "typescript": "^3.7.3",
-    "ws": "^7.2.0"
+    "typescript": "^3.7.4",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
-    "@types/node": "^12.12.21",
+    "@types/node": "^13.1.4",
     "babel-cli": "^6.26.0",
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "prettier": "^1.19.1"
   }
 }

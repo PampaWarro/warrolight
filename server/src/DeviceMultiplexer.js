@@ -99,16 +99,14 @@ module.exports = class DeviceMultiplexer {
   }
 
   setLights(rgbArray) {
-    const deviceStateArrays = this.devices.map(device =>
-      _.map(_.range(device.numberOfLights), i => [0, 0, 0])
-    );
-    const targetDevice = this.targetDevice;
-    const targetPosition = this.targetPosition;
+    const deviceStateArrays = this.devices.map(
+        device => _.map(_.range(device.numberOfLights), i => [0, 0, 0]));
 
     for (let i = 0; i < rgbArray.length; i++) {
-      let deviceIndex = targetDevice[i];
+      const deviceIndex = this.targetDevice[i];
+      const positionIndex = this.targetPosition[i];
       if (deviceIndex >= 0) {
-        deviceStateArrays[deviceIndex][targetPosition[i]] = rgbArray[i];
+        deviceStateArrays[deviceIndex][positionIndex] = rgbArray[i];
       }
     }
 

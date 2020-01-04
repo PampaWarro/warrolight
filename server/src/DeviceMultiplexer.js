@@ -1,21 +1,25 @@
 const _ = require('lodash');
-
-const devicesTypes = {
-  serial: require('./devices/serial'),
-  udp: require('./devices/udp')
-};
+const DeviceSerial = require('./devices/serial');
+const DeviceUDP = require('./devices/udp');
 
 function initDevicesFromConfig(outputDevices) {
   let devices = {};
   _.each(outputDevices, (deviceConfig, name) => {
     const {type, params} = deviceConfig;
-    const deviceClass = devicesTypes[type];
 
-    if (!deviceClass) {
-      throw new Error(`Invalid device type: ${type}`);
+    let device
+    switch (type) {
+      case 'serial':
+        device = new DeviceSerial(params);
+        break;
+      case 'udp':
+        device = new DeviceUDP(params);
+        break;
+      default:
+        throw new Error(`Invalid device type: ${type}`);
     }
 
-    devices[name] = new deviceClass(params);
+    devices[name] = device;
   });
   return devices;
 }

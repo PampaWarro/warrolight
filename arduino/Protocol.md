@@ -47,4 +47,6 @@ On start, the Arduino will use the static IP configured in the program and liste
 
 ## RF protocol
 
-TODO, specify channels, RF parameters, etc.
+The RF protocol is used to communicate light frames between two Arduinos. The first Arduino we will call the server, and the second, the client. The server receives lights via Serial protocol.
+
+// TODO: finish

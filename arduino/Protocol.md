@@ -9,11 +9,11 @@ After opening the serial port, the server waits 2s to send an "initial kick" (se
 
 If the Arduino is not connected:
 
- - If the Arduino has 3 or more bytes to read from the serial port, it reads the first 3 bytes and checks if they match the string `XXX`. If they do, then it drains the serial port, sets its state to connected and responds with the 4-byte ack message `YEAH`. If this first message does not match `XXX`, then it consumes the rest of the serial port and waits 50 milliseconds to read again.
+ - If the Arduino has 3 or more bytes to read from the serial port, it reads the first 3 bytes and checks if they match the string `XXX`. If they do, then it drains the serial port, sets its state to connected and responds with the 5-byte ack message `YEAH\n`. If this first message does not match `XXX`, then it consumes the rest of the serial port and waits 50 milliseconds to read again.
 
 If the Arduino is connected:
 
- - If the Arduino has less than 2 bytes to read from the serial port, ignore it. Otherwise interpret it as a lights packet. Light packets start with 1 byte defining the encoding followed by a variable number of bytes with the light's data that depends on the encoding and the number of leds. The encoding byte can be any of `POS_RGB` (1), `POS_VGA` (2), `VGA` (3), `RGB` (4), or `RGB565`. The board reads the first byte, then reads the expected number of bytes according to the encoding, updates the lights and finally sends the 2-byte ASCII message `OK` to acknowledge the new lights state.
+ - If the Arduino has less than 2 bytes to read from the serial port, ignore it. Otherwise interpret it as a lights packet. Light packets start with 1 byte defining the encoding followed by a variable number of bytes with the light's data that depends on the encoding and the number of leds. The encoding byte can be any of `POS_RGB` (1), `POS_VGA` (2), `VGA` (3), `RGB` (4), or `RGB565`. The board reads the first byte, then reads the expected number of bytes according to the encoding, updates the lights and finally sends the 4-byte ASCII message `OK\n` to acknowledge the new lights state.
 
 ## Encodings
 
@@ -39,7 +39,11 @@ Uses 2 bytes for each light. The colors are encoded using 5 bits for red, 6 bits
 
 ## Ethernet protocol
 
-TODO
+On start, the Arduino will use the static IP configured in the program and listen for UDP packets on port 2222 or 4444. It will also start brodcasting UDP packets containing the 4-byte word `YEAH`  every 1 second. If it receives a UDP packet, it will read it.
+
+ - If the length of the packet is 0, it will discard it and set its state to disconnected.
+ - The first byte in the packet should contain the sequence number. Non-consecutive sequence numbers are reported because they indicate some packet loss.
+ - The rest of the packet contains encoded lights and are interpreted as described in the Serial protocol section. Only RGB encoded lights are accepted.
 
 ## RF protocol
 

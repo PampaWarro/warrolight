@@ -13,7 +13,7 @@ If the Arduino is not connected:
 
 If the Arduino is connected:
 
- - If the Arduino has less than 2 bytes to read from the serial port, ignore it. Otherwise interpret it as a lights packet. Light packets start with 1 byte defining the encoding followed by a variable number of bytes with the light's data that depends on the encoding and the number of leds. The encoding byte can be any of `POS_RGB` (1), `POS_VGA` (2), `VGA` (3), `RGB` (4), or `RGB565`. The board reads the first byte, then reads the expected number of bytes according to the encoding, updates the lights and finally sends the 4-byte ASCII message `OK\n` to acknowledge the new lights state.
+ - If the Arduino has less than 2 bytes to read from the serial port, ignore it. Otherwise interpret it as a lights packet. Light packets start with 1 byte defining the encoding followed by a variable number of bytes with the light's data that depends on the encoding and the number of leds. The encoding byte can be any of `POS_RGB` (1), `POS_VGA` (2), `VGA` (3), `RGB` (4), or `RGB565` (5). The board reads the first byte, then reads the expected number of bytes according to the encoding, updates the lights and finally sends the 4-byte ASCII message `OK\n` to acknowledge the new lights state. If the encoding byte is not one of the values specified above, it attempts to reconnect.
 
 To reconnect, the Arduino consumes from the serial port until there is no more data (also called "drain") and waits 50 milliseconds to read from it again.
 

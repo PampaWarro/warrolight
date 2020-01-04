@@ -9,11 +9,13 @@ After opening the serial port, the server waits 2s to send an "initial kick" (se
 
 If the Arduino is not connected:
 
- - If the Arduino has 3 or more bytes to read from the serial port, it reads the first 3 bytes and checks if they match the string `XXX`. If they do, then it drains the serial port, sets its state to connected and responds with the 5-byte ack message `YEAH\n`. If this first message does not match `XXX`, then it consumes the rest of the serial port and waits 50 milliseconds to read again.
+ - If the Arduino has 3 or more bytes to read from the serial port, it reads the first 3 bytes and checks if they match the string `XXX`. If they do, then it drains the serial port, sets its state to connected and responds with the 5-byte ack message `YEAH\n`. If this first message does not match `XXX`, then it attempts to reconnect (see below).
 
 If the Arduino is connected:
 
  - If the Arduino has less than 2 bytes to read from the serial port, ignore it. Otherwise interpret it as a lights packet. Light packets start with 1 byte defining the encoding followed by a variable number of bytes with the light's data that depends on the encoding and the number of leds. The encoding byte can be any of `POS_RGB` (1), `POS_VGA` (2), `VGA` (3), `RGB` (4), or `RGB565`. The board reads the first byte, then reads the expected number of bytes according to the encoding, updates the lights and finally sends the 4-byte ASCII message `OK\n` to acknowledge the new lights state.
+
+To reconnect, the Arduino consumes from the serial port until there is no more data (also called "drain") and waits 50 milliseconds to read from it again.
 
 ## Encodings
 

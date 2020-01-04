@@ -1,14 +1,14 @@
-const _ = require("lodash");
+const _ = require('lodash');
 
 const devicesTypes = {
-  serial: require("./devices/serial"),
-  udp: require("./devices/udp")
+  serial: require('./devices/serial'),
+  udp: require('./devices/udp')
 };
 
-function instantiateDevicesFromConfig(outputDevices) {
+function initDevicesFromConfig(outputDevices) {
   let devices = {};
   _.each(outputDevices, (deviceConfig, name) => {
-    const { type, params } = deviceConfig;
+    const {type, params} = deviceConfig;
     const deviceClass = devicesTypes[type];
 
     if (!deviceClass) {
@@ -24,7 +24,7 @@ module.exports = class DeviceMultiplexer {
   constructor(setup) {
     this.numberOfLights = setup.lights;
 
-    let devices = instantiateDevicesFromConfig(setup.outputDevices)
+    let devices = initDevicesFromConfig(setup.outputDevices)
     let devicesList = [];
     let namesToIndex = {};
     _.each(_.toPairs(devices), ([name, device], i) => {

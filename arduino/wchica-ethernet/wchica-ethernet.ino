@@ -22,26 +22,28 @@ void setup() {
 
 void loop() {
   if (withIp) {
-    unsigned long nowMs = millis();
-    if (nowMs - lastPerfStatus > 1000) {
-      lastPerfStatus = nowMs;
-      if (!connected) {
-        broadcastAlive();
-      } else {
-        broadcastPerf(frameCount);
-        frameCount = 0;
-      }
-    }
+    return;
+  }
 
-    if (checkForNewUDPMsg(ledsBuffer)) {
-      writeLedFrame(ledsBuffer, 1);
-      connected = true;
-      frameCount++;
-      lastFrame = nowMs;
+  unsigned long nowMs = millis();
+  if (nowMs - lastPerfStatus > 1000) {
+    lastPerfStatus = nowMs;
+    if (!connected) {
+      broadcastAlive();
     } else {
-      if (nowMs - lastFrame > 2000) {
-        connected = false;
-      }
+      broadcastPerf(frameCount);
+      frameCount = 0;
+    }
+  }
+
+  if (checkForNewUDPMsg(ledsBuffer)) {
+    writeLedFrame(ledsBuffer, 1);
+    connected = true;
+    frameCount++;
+    lastFrame = nowMs;
+  } else {
+    if (nowMs - lastFrame > 2000) {
+      connected = false;
     }
   }
 }

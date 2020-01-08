@@ -8,3 +8,4 @@ arduino/**/*.hex
 arduino/**/*.elf
 
 __pycache__/
+.DS_Store/

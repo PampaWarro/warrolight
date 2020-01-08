@@ -1,5 +1,7 @@
 const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
-const { Grid } = require("../utils/drawables");
+const { Grid, GradientColorize } = require("../utils/drawables");
+const _ = require('lodash');
+const gradients = require("../utils/gradients");
 
 module.exports = class Bombs extends LayerBasedProgram {
 
@@ -9,8 +11,16 @@ module.exports = class Bombs extends LayerBasedProgram {
   }
 
   getDrawables() {
+    const grid = new Grid({ xyWarp: this.bassXYWarp.bind(this) });
+    const colorizedGrid = new GradientColorize({
+      drawable: grid,
+      gradient: 'tas04',
+      preserveAlpha: true,
+      invert: true,
+    });
     return {
-      grid: new Grid({ xyWarp: this.bassXYWarp.bind(this) })
+      grid: grid,
+      colorizedGrid: colorizedGrid,
     };
   }
   getLayers(drawables) {
@@ -18,7 +28,7 @@ module.exports = class Bombs extends LayerBasedProgram {
       layers: [
         {
           name: "grid",
-          drawable: drawables.grid,
+          drawable: drawables.colorizedGrid,
           blendMode: "normal"
         }
       ]
@@ -34,6 +44,7 @@ module.exports = class Bombs extends LayerBasedProgram {
 
   updateState(audio) {
     // Audio independent stuff.
+    this.drawables.colorizedGrid.gradient = this.config.gradient;
     this.bassWarpCenter = [
       this.xBounds.center +
         0.35 * this.xBounds.scale * Math.cos((Math.PI * this.timeInMs) / 7000),
@@ -55,12 +66,23 @@ module.exports = class Bombs extends LayerBasedProgram {
     const bass = audio.currentFrame.bassRms;
     this.warpK = bass * 100 * Math.cos((Math.PI * this.timeInMs) / 10000);
     this.warpPow = 1.5 + 0.5 * Math.cos((Math.PI * this.timeInMs) / 4000);
-    this.layers.grid.alpha = 0.3 + 0.7 * bass * bass;
+    this.drawables.grid.color[3] = 0.3 + 0.7 * bass * bass;
   }
 
   static presets() {
     return {
       default: {}
     };
+  }
+
+  // Override and extend config Schema
+  static configSchema() {
+    let res = super.configSchema();
+    res.gradient = {
+      type: String,
+      values: _.keys(gradients),
+      default: _.keys(gradients)[0],
+    };
+    return res;
   }
 };

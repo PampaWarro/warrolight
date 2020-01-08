@@ -1,7 +1,52 @@
 const ColorUtils = require("./ColorUtils");
+const gradients = require('./gradients');
 
 class Drawable {
   colorAtIndex(index, geometry) {}
+}
+
+class GradientColorize extends Drawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.drawable = options.drawable;
+    this.value = options.value || 'alphaluminance';
+    this.gradient = options.gradient;
+    this.preserveAlpha = !!options.preserveAlpha;
+    this.invert = !!options.invert;
+  }
+  set gradient(gradient) {
+    this._gradient = gradients[gradient] || gradient;
+  }
+  set value(value) {
+    if (value == 'alpha') {
+      this.getValue = this._getAlpha;
+    } else if (value == 'luminance') {
+      this.getValue = color => ColorUtils.luminance(...color) / 255;
+    } else if (value == 'alphaluminance') {
+      this.getValue = color => {
+        return this._getAlpha(color) * ColorUtils.luminance(...color) / 255;
+      };
+    } else {
+      this.getValue = value;
+    }
+  }
+  _getAlpha([r, g, b, a]) {
+    if (a == null) {
+      return 1;
+    }
+    return a;
+  }
+  colorAtIndex(index, geometry) {
+    const color = this.drawable.colorAtIndex(index, geometry);
+    let value = this.getValue(color);
+    if (this.invert) {
+      value = 1 - value;
+    }
+    const {r, g, b, a} = this._gradient.rgbAt(value).toRgb();
+    const newColor = [r, g, b, this.preserveAlpha? color[3] : a];
+    return newColor;
+  }
 }
 
 class SingleLed extends Drawable {
@@ -242,6 +287,7 @@ class RadiusCosineBrightness extends PolarDrawable {
 
 module.exports = {
   Drawable,
+  GradientColorize,
   SingleLed,
   SolidColor,
   RandomPixels,

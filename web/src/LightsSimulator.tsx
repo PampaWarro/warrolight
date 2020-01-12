@@ -30,7 +30,7 @@ export class LightsSimulator extends React.Component<Props, State> {
 
     this.state = { layout: null };
 
-    this.lightsRenderer = new LightsRenderer();
+    this.lightsRenderer = new Canvas2DLightsRenderer();
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
   }
@@ -78,11 +78,9 @@ export class LightsSimulator extends React.Component<Props, State> {
       return;
     }
 
-    this.lightsRenderer.draw(
-      this.refs.canvas as HTMLCanvasElement,
-      this.state.layout!,
-      lights
-    );
+    this.lightsRenderer.draw(this.state.layout!, lights);
+
+    this.lightsRenderer.drawDebugInfo();
   }
 
   updateLayout(layout: Layout) {
@@ -97,13 +95,17 @@ export class LightsSimulator extends React.Component<Props, State> {
     }
   }
 
+  setCanvas(canvas: HTMLCanvasElement | null) {
+    this.lightsRenderer.canvas = canvas;
+  }
+
   render() {
     return (
       <div className="lights-simulator">
         <div className="preview-area">
           <canvas
             onClick={this.toggleRenderPreview.bind(this)}
-            ref="canvas"
+            ref={this.setCanvas.bind(this)}
             width={this.props.width}
             height={this.props.height}
           />
@@ -118,11 +120,12 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 }
 
-class LightsRenderer {
+abstract class LightsRenderer {
   enabled: boolean;
   lastFrameTime: number;
   lastFPS: number;
   frameCount: number;
+  _canvas: HTMLCanvasElement | null = null;
 
   constructor() {
     this.enabled = true;
@@ -131,9 +134,64 @@ class LightsRenderer {
     this.frameCount = 0;
   }
 
-  draw(canvas: HTMLCanvasElement, layout: Layout, lights: Light[]) {
-    const drawStartTime = performance.now();
+  get canvas() {
+    return this._canvas;
+  }
 
+  set canvas(canvas: HTMLCanvasElement | null) {
+    this._canvas = canvas;
+  }
+
+  protected canvasChanged(canvas: HTMLCanvasElement | null) {}
+
+  draw(layout: Layout, lights: Light[]) {
+    const drawStartTime = performance.now();
+    if (!this.enabled) {
+      return;
+    }
+    if (this.canvas == null) {
+      return;
+    }
+
+    this._draw(this.canvas!, layout, lights);
+
+    this.frameCount++;
+    let now = performance.now();
+
+    let timeSinceLastFPS = now - this.lastFrameTime;
+    if (timeSinceLastFPS > 100) {
+      this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
+      this.frameCount = 0;
+      this.lastFrameTime = now;
+    }
+  }
+
+  protected abstract _draw(
+    canvas: HTMLCanvasElement,
+    layout: Layout,
+    lights: Light[]
+  ): void;
+
+  drawDebugInfo() {
+    const canvas = this.canvas;
+    if (canvas == null) {
+      return;
+    }
+    const ctx = canvas.getContext("2d")!;
+
+    ctx.fillStyle = "#999";
+    if (this.lastFPS < 30) {
+      ctx.fillStyle = "#f00";
+    }
+    ctx.font = "12px sans-serif";
+
+    ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
+  }
+}
+
+class Canvas2DLightsRenderer extends LightsRenderer {
+  _draw(canvas: HTMLCanvasElement, layout: Layout, lights: Light[]) {
+    console.log(lights.length);
     const ctx = canvas.getContext("2d")!;
 
     ctx.globalCompositeOperation = "source-over";
@@ -141,10 +199,6 @@ class LightsRenderer {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.globalCompositeOperation = "lighter";
-
-    if (!this.enabled) {
-      return;
-    }
 
     // compute scaling factor based on canvas size
     const padding = 50;
@@ -194,28 +248,5 @@ class LightsRenderer {
       ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
       ctx.fill();
     }
-
-    this.frameCount++;
-    let now = performance.now();
-
-    let timeSinceLastFPS = now - this.lastFrameTime;
-    if (timeSinceLastFPS > 100) {
-      this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
-      this.frameCount = 0;
-      this.lastFrameTime = now;
-    }
-
-    this.debugInfo(ctx, drawStartTime)
-  }
-
-  debugInfo(ctx: CanvasRenderingContext2D, drawStartTime: number) {
-
-    ctx.fillStyle = "#999";
-    if(this.lastFPS < 30) {
-      ctx.fillStyle = "#f00";
-    }
-    ctx.font = "12px sans-serif";
-
-    ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
   }
 }

@@ -38,6 +38,8 @@ def encode(obj):
         return obj.tolist()
     if isinstance(obj, (np.float32, np.int64)):
         return obj.item()
+    if isinstance(obj, np.int32):
+        return obj.item()
     return obj
 
 

@@ -1,6 +1,8 @@
-const LightProgram = require("./../base-programs/LightProgram");
+const _ = require("lodash")
 
+const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const gradients = require("../utils/gradients");
 
 module.exports = class RadialSun extends LightProgram {
 
@@ -35,11 +37,20 @@ module.exports = class RadialSun extends LightProgram {
       );
 
       const v = distance;
-      colors[i] = ColorUtils.HSVtoRGB(
-        (this.baseHue + this.extraTime / 5000) % 1,
-        this.config.saturation,
-        Math.pow(v, power)
-      );
+
+      const gradient = gradients[this.config.colorMap];
+      const energy = Math.pow(v, power);
+
+      if(gradient) {
+        const {r, g, b, a} = gradient.rgbAt(1 - energy).toRgb();
+        colors[i] = [r,g,b,1]
+      } else {
+        colors[i] = ColorUtils.HSVtoRGB(
+            (this.baseHue + this.extraTime / 5000) % 1,
+            this.config.saturation,
+            energy
+        );
+      }
     }
     draw(colors);
   }
@@ -93,6 +104,11 @@ module.exports = class RadialSun extends LightProgram {
       default: "fastPeakDecay"
     };
     res.animatePower = { type: Boolean, default: false };
+    res.colorMap =  {
+      type: 'gradient',
+      values: _.keys(gradients),
+      default: '',
+    };
     return res;
   }
 };

@@ -79,7 +79,7 @@ module.exports = class Bombs extends LayerBasedProgram {
   static configSchema() {
     let res = super.configSchema();
     res.gradient = {
-      type: String,
+      type: 'gradient',
       values: _.keys(gradients),
       default: _.keys(gradients)[0],
     };

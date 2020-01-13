@@ -3,6 +3,7 @@ import { StringParam } from "./StringParam";
 import { BooleanParam } from "./BooleanParam";
 import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue } from "./types";
+import { GradientParam } from "./GradientParam";
 
 interface Props {
   program: Program | null;
@@ -48,37 +49,53 @@ export class ProgramConfig extends React.Component<Props> {
       let configDef = currentProgram.config[paramName] as any;
       let value = currentConfig[paramName];
 
-      if (typeof configDef.default === "boolean") {
-        configOptions.push(
-          <BooleanParam
-            key={paramName}
-            name={paramName}
-            value={value as boolean}
-            onChange={this.handleParamChange}
-          />
-        );
-      } else if (typeof configDef.default === "string") {
-        configOptions.push(
-          <StringParam
-            key={paramName}
-            name={paramName}
-            value={value as string}
-            options={configDef.values}
-            onChange={this.handleParamChange}
-          />
-        );
-      } else {
-        configOptions.push(
-          <NumberParam
-            key={paramName}
-            name={paramName}
-            value={value as number}
-            step={configDef.step}
-            min={configDef.min}
-            max={configDef.max}
-            onChange={this.handleParamChange}
-          />
-        );
+      let typeName = configDef.type || typeof configDef.default;
+
+      switch (typeName) {
+        case "boolean":
+          configOptions.push(
+            <BooleanParam
+              key={paramName}
+              name={paramName}
+              value={value as boolean}
+              onChange={this.handleParamChange}
+            />
+          );
+          break;
+        case "string":
+          configOptions.push(
+            <StringParam
+              key={paramName}
+              name={paramName}
+              value={value as string}
+              options={configDef.values}
+              onChange={this.handleParamChange}
+            />
+          );
+          break;
+        case "gradient":
+          configOptions.push(
+            <GradientParam
+              key={paramName}
+              name={paramName}
+              value={value as string}
+              options={configDef.values}
+              onChange={this.handleParamChange}
+            />
+          );
+          break;
+        default:
+          configOptions.push(
+            <NumberParam
+              key={paramName}
+              name={paramName}
+              value={value as number}
+              step={configDef.step}
+              min={configDef.min}
+              max={configDef.max}
+              onChange={this.handleParamChange}
+            />
+          );
       }
     }
 

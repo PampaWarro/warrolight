@@ -30,6 +30,10 @@ module.exports = function createMultiProgram(
             this.shapeMapping
           ))
       );
+
+      this.previous = null;
+      this.current = null;
+      this.nextStartChange = null;
     }
 
     init() {
@@ -37,11 +41,8 @@ module.exports = function createMultiProgram(
         scheduleItem.programInstance.init();
       }
 
-      // choose a random program from the schedule
-      this.position = Math.trunc(Math.random() * this.programSchedule.length);
+      this.position = this.position || 0; // So that in case of restart it continues where it was left
       this.nextStartChange = null;
-      this.previous = null;
-      this.current = null;
     }
 
     drawFrame(draw, audio) {
@@ -80,30 +81,32 @@ module.exports = function createMultiProgram(
       }
 
       if (this.crossFadeFinish && Date.now() >= this.crossFadeFinish) {
-        console.log("Current program: ", this.current.toString())
         this.crossFadeStart = null;
         this.crossFadeFinish = null;
         this.previous = null;
       }
 
       if (Date.now() >= this.nextStartChange) {
-        // start crossfade
-        this.crossFadeStart = Date.now();
-        this.crossFadeFinish = Date.now() + crossFade;
-        this.previous = this.current;
-
-        if (random) {
-          this.position = Math.floor(
-            Math.random() * this.programSchedule.length
-          ) % this.programSchedule.length;
-        } else {
-          this.position = (this.position + 1) % this.programSchedule.length;
-        }
-
-        let scheduleItem = this.programSchedule[this.position]
-        this.current = scheduleItem.programInstance;
-        this.nextStartChange = Date.now() + scheduleItem.duration;
+        this.startNextProgram();
       }
+    }
+
+    startNextProgram() {
+      // start crossfade of random duration between 0 and [crossFade]ms
+      const randomCrossFadeDuration = crossFade * Math.random();
+      this.crossFadeStart = Date.now();
+      this.crossFadeFinish = Date.now() + randomCrossFadeDuration;
+
+      if (random) {
+        this.position = Math.floor(Math.random() * this.programSchedule.length) % this.programSchedule.length;
+      } else {
+        this.position = (this.position + 1) % this.programSchedule.length;
+      }
+
+      const {programInstance, duration} = this.programSchedule[this.position]
+      this.previous = this.current;
+      this.current = programInstance;
+      this.nextStartChange = Date.now() + duration;
     }
 
     updateConfig(config) {

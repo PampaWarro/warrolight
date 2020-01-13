@@ -29,7 +29,7 @@ module.exports = class LightProgram {
         min: 0,
         max: 1,
         step: 0.01,
-        default: 0.5
+        default: 1
       },
       fps: { type: Number, min: 2, max: 60, default: 60 }
     };

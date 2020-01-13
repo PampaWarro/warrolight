@@ -5,9 +5,9 @@ export interface Program {
 }
 
 export type ConfigDefinition =
-  | { default: string; values: string[] }
-  | { default: boolean }
-  | { default: number; min: number; max: number; step: number };
+  | { type: string, default: string; values: string[] }
+  | { type: string, default: boolean }
+  | { type: string, default: number; min: number; max: number; step: number };
 
 export type ConfigValue = string | number | boolean;
 

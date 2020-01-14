@@ -36,9 +36,7 @@ logger = logging.getLogger(__name__)
 def encode(obj):
     if isinstance(obj, np.ndarray):
         return obj.tolist()
-    if isinstance(obj, (np.float32, np.int64)):
-        return obj.item()
-    if isinstance(obj, np.int32):
+    if isinstance(obj, (np.float32, np.int64, np.int32)):
         return obj.item()
     return obj
 

@@ -18,7 +18,21 @@ git clone https://github.com/federicobond/warrolight
 cd warrolight/
 ```
 
-3. Instalar dependencias y levantar el servidor:
+3. Instalar las dependencias del backend de audio:
+
+```
+cd audio/
+yarn
+pipenv install
+```
+
+If you don't have pipenv installed install it first with:
+
+```
+pip3 install pipenv
+```
+
+4. Instalar dependencias y levantar el servidor:
 
 ```
 cd server/
@@ -26,7 +40,7 @@ yarn
 yarn start
 ```
 
-4. (En otra consola) instalar dependencias y levantar el frontend web:
+5. (En otra consola) instalar dependencias y levantar el frontend web:
 
 ```
 cd web/
@@ -34,7 +48,7 @@ yarn
 yarn start
 ```
 
-5. Debería abrirse un browser en `http://localhost:3000` automáticamente. En caso contrario, podés visitar manualmente esa URL.
+6. Debería abrirse un browser en `http://localhost:3000` automáticamente. En caso contrario, podés visitar manualmente esa URL.
 
 
 ## Añadir programa de luces

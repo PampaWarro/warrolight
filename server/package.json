@@ -19,8 +19,6 @@
     "cli-table2": "^0.2.0",
     "colors": "^1.4.0",
     "dgram": "^1.0.1",
-    "fft.js": "^4.0.3",
-    "fili": "^2.0.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "performance-now": "^2.1.0",

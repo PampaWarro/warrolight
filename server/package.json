@@ -23,7 +23,6 @@
     "fili": "^2.0.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "naudiodon": "federicobond/naudiodon#master",
     "performance-now": "^2.1.0",
     "pino": "^5.15.0",
     "pino-pretty": "^3.5.0",

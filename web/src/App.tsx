@@ -104,18 +104,31 @@ export class App extends React.Component<Props, State> {
         that.pendingAnimationFrame = null;
         const lights = decodeLedsColorsFromString(encodedLights);
         this.lightsSim.current!.drawCanvas(lights);
-      })
+      });
     });
 
     api.on("layout", (layout: RemoteLayout) => {
       let geometryX = layout.geometry.x;
       let geometryY = layout.geometry.y;
+      let geometryZ = layout.geometry.z;
       let minX = _.min(geometryX)!;
       let minY = _.min(geometryY)!;
+      let minZ = _.min(geometryZ)!;
       let maxX = _.max(geometryX)!;
       let maxY = _.max(geometryY)!;
+      let maxZ = _.max(geometryZ)!;
 
-      const layoutObj = { geometryX, geometryY, minX, minY, maxX, maxY };
+      const layoutObj = {
+        geometryX,
+        geometryY,
+        geometryZ,
+        minX,
+        minY,
+        minZ,
+        maxX,
+        maxY,
+        maxZ
+      };
 
       this.lightsSim.current!.updateLayout(layoutObj);
     });
@@ -186,8 +199,8 @@ export class App extends React.Component<Props, State> {
           <div className="grid-container">
             <nav className="devicesbar bg-dark d-flex justify-content-between align-items-center p-2">
               <span className="navbar-brand">WarroLight</span>
-              <DevicesStatus devices={this.state.devices}/>
-              <ConnectionStatus status={this.state.connection}/>
+              <DevicesStatus devices={this.state.devices} />
+              <ConnectionStatus status={this.state.connection} />
             </nav>
             <nav className="programsbar overflow-auto py-2">
               <ProgramList
@@ -209,7 +222,7 @@ export class App extends React.Component<Props, State> {
             <div className="preview p-2">
               <LightsSimulator
                 ref={this.lightsSim}
-                height={400}
+                height={600}
                 width={800}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}

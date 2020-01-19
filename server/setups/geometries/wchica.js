@@ -30,13 +30,13 @@ const HALF_LEDS = LEDS_LONG / 2;
 
 module.exports = [
   // Led 1
-  new Stripe(WIDTH, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - 0, LEDS_LONG - 1),
+  Stripe.old2d(WIDTH, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - 0, LEDS_LONG - 1),
 
-  new Stripe(2 * PORTION, HEIGHT - 0, PORTION, HEIGHT - HEIGHT, LEDS_LONG),
+  Stripe.old2d(2 * PORTION, HEIGHT - 0, PORTION, HEIGHT - HEIGHT, LEDS_LONG),
 
-  new Stripe(PORTION, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - HEIGHT, HALF_LEDS),
-  new Stripe(2 * PORTION, HEIGHT - HEIGHT, PORTION, HEIGHT - 0, LEDS_LONG),
-  new Stripe(PORTION, HEIGHT - 0, 0, HEIGHT - HEIGHT, LEDS_LONG),
-  new Stripe(0, 0, 0, 0, 14),
-  new Stripe(0, 0, 0, 0, 1)
+  Stripe.old2d(PORTION, HEIGHT - HEIGHT, 2 * PORTION, HEIGHT - HEIGHT, HALF_LEDS),
+  Stripe.old2d(2 * PORTION, HEIGHT - HEIGHT, PORTION, HEIGHT - 0, LEDS_LONG),
+  Stripe.old2d(PORTION, HEIGHT - 0, 0, HEIGHT - HEIGHT, LEDS_LONG),
+  Stripe.old2d(0, 0, 0, 0, 14),
+  Stripe.old2d(0, 0, 0, 0, 1)
 ];

@@ -35,34 +35,34 @@ const HALF_LEDS = LEDS_LONG / 2;
 
 module.exports = [
   // Led 1
-  new Stripe(HALF_WIDTH, HEIGHT, PORTION, HEIGHT, HALF_LEDS / 2),
-  new Stripe(PORTION, HEIGHT - 0, 0, HEIGHT - HEIGHT, LEDS_LONG),
+  Stripe.old2d(HALF_WIDTH, HEIGHT, PORTION, HEIGHT, HALF_LEDS / 2),
+  Stripe.old2d(PORTION, HEIGHT - 0, 0, HEIGHT - HEIGHT, LEDS_LONG),
 
   // Led 2
-  new Stripe(PORTION, HEIGHT - 0, 2 * PORTION, 0, LEDS_LONG),
-  new Stripe(2 * PORTION, 0, HALF_WIDTH, HEIGHT - HEIGHT, HALF_LEDS / 2),
+  Stripe.old2d(PORTION, HEIGHT - 0, 2 * PORTION, 0, LEDS_LONG),
+  Stripe.old2d(2 * PORTION, 0, HALF_WIDTH, HEIGHT - HEIGHT, HALF_LEDS / 2),
 
   // Led 3
-  new Stripe(2 * PORTION, HEIGHT - 0, PORTION, 0, LEDS_LONG),
-  new Stripe(PORTION, 0, HALF_WIDTH, HEIGHT - HEIGHT, HALF_LEDS / 2),
+  Stripe.old2d(2 * PORTION, HEIGHT - 0, PORTION, 0, LEDS_LONG),
+  Stripe.old2d(PORTION, 0, HALF_WIDTH, HEIGHT - HEIGHT, HALF_LEDS / 2),
 
   //  Led 4
-  new Stripe(HALF_WIDTH, HEIGHT, 2 * PORTION, HEIGHT, HALF_LEDS / 2),
-  new Stripe(2 * PORTION, HEIGHT - 0, WIDTH, HEIGHT - HEIGHT, LEDS_LONG),
+  Stripe.old2d(HALF_WIDTH, HEIGHT, 2 * PORTION, HEIGHT, HALF_LEDS / 2),
+  Stripe.old2d(2 * PORTION, HEIGHT - 0, WIDTH, HEIGHT - HEIGHT, LEDS_LONG),
 
   // Left totems
-  new Stripe(
+  Stripe.old2d(
     -DISTANCE_TOTEMS,
     TOTEM_Y,
     -DISTANCE_TOTEMS - TOTEM_WIDTH,
     TOTEM_Y - TOTEM_HEIGHT,
     150
   ),
-  new Stripe(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+  Stripe.old2d(0, TOTEM_Y, -TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
 
   // Right totems
-  new Stripe(WIDTH, TOTEM_Y, WIDTH + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
-  new Stripe(
+  Stripe.old2d(WIDTH, TOTEM_Y, WIDTH + TOTEM_WIDTH, TOTEM_Y - TOTEM_HEIGHT, 150),
+  Stripe.old2d(
     WIDTH + DISTANCE_TOTEMS,
     TOTEM_Y,
     WIDTH + DISTANCE_TOTEMS + TOTEM_WIDTH,

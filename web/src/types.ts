@@ -38,5 +38,5 @@ export interface RemoteState {
 
 // TODO: fill complete layout object, also decide if we need to use all of it
 export interface RemoteLayout {
-  geometry: { x: number[]; y: number[] };
+  geometry: { x: number[]; y: number[], z: number[] };
 }

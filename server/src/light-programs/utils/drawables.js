@@ -1,5 +1,5 @@
 const ColorUtils = require("./ColorUtils");
-const gradients = require('./gradients');
+const gradients = require("./gradients");
 
 class Drawable {
   colorAtIndex(index, geometry) {}
@@ -10,22 +10,25 @@ class GradientColorize extends Drawable {
     options = options || {};
     super(options);
     this.drawable = options.drawable;
-    this.value = options.value || 'alphaluminance';
+    this.value = options.value || "alphaluminance";
     this.gradient = options.gradient;
     this.preserveAlpha = !!options.preserveAlpha;
     this.invert = !!options.invert;
   }
   set gradient(gradient) {
+    if (!gradient) {
+      return;
+    }
     this._gradient = gradients[gradient] || gradient;
   }
   set value(value) {
-    if (value == 'alpha') {
+    if (value == "alpha") {
       this.getValue = this._getAlpha;
-    } else if (value == 'luminance') {
+    } else if (value == "luminance") {
       this.getValue = color => ColorUtils.luminance(...color) / 255;
-    } else if (value == 'alphaluminance') {
+    } else if (value == "alphaluminance") {
       this.getValue = color => {
-        return this._getAlpha(color) * ColorUtils.luminance(...color) / 255;
+        return (this._getAlpha(color) * ColorUtils.luminance(...color)) / 255;
       };
     } else {
       this.getValue = value;
@@ -43,8 +46,8 @@ class GradientColorize extends Drawable {
     if (this.invert) {
       value = 1 - value;
     }
-    const {r, g, b, a} = this._gradient.rgbAt(value).toRgb();
-    const newColor = [r, g, b, this.preserveAlpha? color[3] : a];
+    const [r, g, b, a] = this._gradient.colorAt(value);
+    const newColor = [r, g, b, this.preserveAlpha ? color[3] : a];
     return newColor;
   }
 }

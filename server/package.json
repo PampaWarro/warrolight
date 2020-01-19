@@ -26,7 +26,6 @@
     "pino-pretty": "^3.5.0",
     "pngjs": "^3.4.0",
     "serialport": "^8.0.6",
-    "tinygradient": "^1.1.0",
     "ts-node": "^8.5.4",
     "tumult": "^3.0.14",
     "typescript": "^3.7.4",
@@ -36,7 +35,6 @@
     "@types/glob": "^7.1.1",
     "@types/node": "^13.1.4",
     "@types/pngjs": "^3.4.0",
-    "@types/tinycolor": "^1.1.27",
     "babel-cli": "^6.26.0",
     "eslint": "^6.8.0",
     "prettier": "^1.19.1"

@@ -1,10 +1,9 @@
 const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const { Grid, GradientColorize } = require("../utils/drawables");
-const _ = require('lodash');
+const _ = require("lodash");
 const gradients = require("../utils/gradients");
 
 module.exports = class Bombs extends LayerBasedProgram {
-
   init() {
     this.warpK = 1;
     this.bassWarpCenter = [this.xBounds.center, this.yBounds.center];
@@ -14,13 +13,13 @@ module.exports = class Bombs extends LayerBasedProgram {
     const grid = new Grid({ xyWarp: this.bassXYWarp.bind(this) });
     const colorizedGrid = new GradientColorize({
       drawable: grid,
-      gradient: 'tas04',
-      preserveAlpha: true,
-      invert: true,
+      gradient: "tas04",
+      preserveAlpha: false,
+      invert: true
     });
     return {
       grid: grid,
-      colorizedGrid: colorizedGrid,
+      colorizedGrid: colorizedGrid
     };
   }
   getLayers(drawables) {
@@ -79,9 +78,9 @@ module.exports = class Bombs extends LayerBasedProgram {
   static configSchema() {
     let res = super.configSchema();
     res.gradient = {
-      type: 'gradient',
+      type: "gradient",
       values: _.keys(gradients),
-      default: _.keys(gradients)[0],
+      default: _.keys(gradients)[0]
     };
     return res;
   }

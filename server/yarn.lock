@@ -1035,11 +1035,6 @@ fast-safe-stringify@^2.0.7:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.7.tgz#124aa885899261f68aedb42a7c080de9da608743"
   integrity sha512-Utm6CdzT+6xsDk2m8S6uL8VHxNwI6Jub+e9NYTcAms28T84pTa25GJQV9j0CY0N1rM8hK4x6grpF2BQf+2qwVA==
 
-fft.js@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/fft.js/-/fft.js-4.0.3.tgz#b0084efa94188febdd1cffe68691f4c85a0fb8cb"
-  integrity sha1-sAhO+pQYj+vdHP/mhpH0yFoPuMs=
-
 figures@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-3.1.0.tgz#4b198dd07d8d71530642864af2d45dd9e459c4ec"
@@ -1063,11 +1058,6 @@ filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
   integrity sha1-wcS5vuPglyXdsQa3XB4wH+LxiyY=
-
-fili@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/fili/-/fili-2.0.3.tgz#a2a62dd77f1f2b98e9afff173d24167f4221a83d"
-  integrity sha512-NW/EY++EMP9f4mSpVCjg5PJnAkkxzh170My+R18sh4CSXu3Puxw3Cs4aQmXoUtNg1EonZmvmR5TLcKEJtX5hQg==
 
 fill-range@^2.1.0:
   version "2.2.4"

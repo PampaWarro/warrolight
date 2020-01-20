@@ -59,14 +59,10 @@ function gradientFromPng(filename: string) {
     throw `Width or height must be 1, found: ${png.width}, ${png.height}.`;
   }
   const size = Math.max(png.width, png.height);
-
-  const colors: Color[] = new Array(size/3);
-  // png gradient library has gradients with 159px of width
-  // to make css gradient smaller, read 1 every 3 pixels
-  for (let i = 0; i < size; i+=3) {
+  const colors: Color[] = new Array(size);
+  for (let i = 0; i < size; i++) {
     const offset = 4 * i;
-
-    colors[i/3] = [
+    colors[i] = [
       png.data[offset],
       png.data[offset + 1],
       png.data[offset + 2],

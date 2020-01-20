@@ -1,7 +1,7 @@
 const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const { Grid, GradientColorize } = require("../utils/drawables");
 const _ = require("lodash");
-const gradients = require("../utils/gradients");
+const {getGradientsByName} = require("../utils/gradients");
 
 module.exports = class Bombs extends LayerBasedProgram {
   init() {
@@ -79,8 +79,7 @@ module.exports = class Bombs extends LayerBasedProgram {
     let res = super.configSchema();
     res.gradient = {
       type: "gradient",
-      values: _.keys(gradients),
-      default: _.keys(gradients)[0]
+      default: _.keys(getGradientsByName())[0]
     };
     return res;
   }

@@ -2,16 +2,17 @@ import fs from "fs";
 import glob from "glob";
 import path from "path";
 import { PNG } from "pngjs";
-import { rgbToHex } from "./ColorUtils";
-
-type Color = [number, number, number, number];
+import { hexToRgb, rgbToHex } from "./ColorUtils";
+import _ from "lodash"
+import { Color } from "../../types";
+import { mix } from "./ColorUtils"
 
 function interpolate(a: Color, b: Color, blend: number) {
   if (blend < 0 || blend > 1) {
     throw `blend out of bounds: ${blend}`;
   }
-  // TODO: implement interpolation.
-  return blend < 0.5 ? a : b;
+
+  return mix(a, b, blend);
 }
 
 abstract class Gradient {
@@ -58,17 +59,41 @@ function gradientFromPng(filename: string) {
     throw `Width or height must be 1, found: ${png.width}, ${png.height}.`;
   }
   const size = Math.max(png.width, png.height);
-  const colors: Color[] = new Array(size);
-  for (let i = 0; i < size; i++) {
+
+  const colors: Color[] = new Array(size/3);
+  // png gradient library has gradients with 159px of width
+  // to make css gradient smaller, read 1 every 3 pixels
+  for (let i = 0; i < size; i+=3) {
     const offset = 4 * i;
-    colors[i] = [
+
+    colors[i/3] = [
       png.data[offset],
       png.data[offset + 1],
       png.data[offset + 2],
       png.data[offset + 3]
     ];
   }
+
   return new EvenSpacedGradient(colors);
+}
+
+function loadGradient(gradientNameOrCssStops: string) {
+  if(!gradientNameOrCssStops)
+    return null;
+
+  if(!gradientsByName[gradientNameOrCssStops]) {
+    //TODO: Replace for more robust conversion, or serialize gradients in a different way
+    try {
+      const cssColorStrings = gradientNameOrCssStops.split(/,\s*/);
+      // Cache so that subsequent calls use the same gradient object
+      gradientsByName[gradientNameOrCssStops] = new EvenSpacedGradient(cssColorStrings.map(s => hexToRgb(s)));
+    } catch(err) {
+      console.error(`Invalid gradient string: ${gradientNameOrCssStops}`)
+      return null;
+    }
+  }
+
+  return gradientsByName[gradientNameOrCssStops]
 }
 
 const gradientFiles = glob.sync(path.join(__dirname, "gradientlib", "*"));
@@ -82,4 +107,8 @@ gradientFiles.forEach(filename => {
   }
 });
 
-module.exports = gradientsByName;
+module.exports = {
+  loadGradient,
+  getGradientsByName: () => gradientsByName,
+  getGradientsByNameCss: () => _.mapValues(gradientsByName, g => g.cssLinearGradientStops())
+};

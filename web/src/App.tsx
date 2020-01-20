@@ -23,6 +23,7 @@ interface State {
   selected: string | null;
   programs: { [name: string]: Program };
   currentConfig: { [param: string]: ConfigValue } | null;
+  globalConfig: { [param: string]: any };
   micConfig: MicConfig;
   remoteChange: boolean;
   devices: Device[];
@@ -42,6 +43,7 @@ export class App extends React.Component<Props, State> {
       selected: null,
       programs: {},
       currentConfig: null,
+      globalConfig: {},
       micConfig: {
         sendingMicData: false,
         metric: ""
@@ -60,6 +62,7 @@ export class App extends React.Component<Props, State> {
       programs: _.keyBy(state.programs, "name"),
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
+      globalConfig: state.globalConfig || {},
       micConfig: state.micConfig
     });
     console.log(state);
@@ -214,6 +217,7 @@ export class App extends React.Component<Props, State> {
                 program={currentProgram}
                 selected={this.state.selected}
                 config={this.state.currentConfig}
+                globalConfig={this.state.globalConfig}
                 onSelectPreset={this.selectPreset}
                 onRestartProgram={this.restartProgram}
                 onChangeProgramConfig={this.handleChangeProgramConfig}

@@ -33,14 +33,22 @@ class EvenSpacedGradient extends Gradient {
     this.colors = colors;
   }
   colorAt(pos: number): Color {
+    if (pos == null || Number.isNaN(pos)) {
+      throw `invalid pos: ${pos}`;
+    }
     if (pos < 0 || pos > 1) {
       throw `pos out of bounds: ${pos}`;
     }
     const scaledPos = pos * (this.colors.length - 1);
     const lowerIndex = Math.floor(scaledPos);
     const upperIndex = Math.ceil(scaledPos);
+    if (lowerIndex == upperIndex) {
+      return this.colors[lowerIndex];
+    }
+    const lowerColor = this.colors[lowerIndex];
+    const upperColor = this.colors[upperIndex];
     const blend = scaledPos - lowerIndex;
-    return interpolate(this.colors[lowerIndex], this.colors[upperIndex], blend);
+    return interpolate(lowerColor, upperColor, blend);
   }
   reverse() {
     return new EvenSpacedGradient(Array.from(this.colors).reverse());

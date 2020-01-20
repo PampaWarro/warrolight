@@ -29,7 +29,7 @@ module.exports = class Radial extends LightProgram {
       if (this.config.colorMap) {
         const gradient = loadGradient(this.config.colorMap);
         const [r, g, b, a] = gradient.colorAt(1 - v);
-        colors[i] = [r, g, b];
+        colors[i] = [r*v, g*v, b*v];
       } else {
         colors[i] = ColorUtils.HSVtoRGB(
           (distance / 5 + this.extraTime / 1000) % 1,

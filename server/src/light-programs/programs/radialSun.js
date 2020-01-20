@@ -18,7 +18,7 @@ module.exports = class RadialSun extends LightProgram {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 
-    const vol = audio[this.config.soundMetric] || 0;
+    const vol = audio[this.config.soundMetric] || Number.EPSILON;
     this.extraTime = (this.extraTime || 0) + vol * 5;
     let power = this.config.power;
     if (this.config.animatePower) {
@@ -43,7 +43,7 @@ module.exports = class RadialSun extends LightProgram {
 
       if(gradient) {
         const [r, g, b, a] = gradient.colorAt(1 - energy);
-        colors[i] = [r,g,b,1]
+        colors[i] = [energy*r,energy*g,energy*b,1]
       } else {
         colors[i] = ColorUtils.HSVtoRGB(
             (this.baseHue + this.extraTime / 5000) % 1,

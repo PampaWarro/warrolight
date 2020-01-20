@@ -124,6 +124,7 @@ hr {
   position: absolute;
   top: 48%;
   width: 100%;
+  pointer-events: none;
 }
 
 .lights-simulator {

@@ -28,7 +28,10 @@ interface State {
 }
 
 export class LightsSimulator extends React.Component<Props, State> {
-  lightsRenderer: LightsRenderer;
+  lightsRenderer: Canvas3DLightsRenderer;
+  mouseDownCoordinates: [number, number] | null = null;
+  mouseDownXAngle: number | null = null;
+  mouseDownYAngle: number | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -105,12 +108,45 @@ export class LightsSimulator extends React.Component<Props, State> {
     this.lightsRenderer.canvas = canvas;
   }
 
+  mouseDown(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+    this.mouseDownCoordinates = [e.clientX, e.clientY];
+    this.mouseDownXAngle = this.lightsRenderer.xAngle;
+    this.mouseDownYAngle = this.lightsRenderer.yAngle;
+  }
+
+  mouseUp(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+    const coordinates = [e.clientX, e.clientY];
+    if (_.isEqual(coordinates, this.mouseDownCoordinates)) {
+      this.toggleRenderPreview();
+    }
+    this.mouseDownCoordinates = null;
+    this.mouseDownXAngle = null;
+    this.mouseDownYAngle = null;
+  }
+
+  mouseMove(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+    if (!this.mouseDownCoordinates) {
+      return;
+    }
+    const coordinates = [e.clientX, e.clientY];
+    const diff = [
+      coordinates[0] - this.mouseDownCoordinates[0],
+      coordinates[1] - this.mouseDownCoordinates[1]
+    ];
+    const scale = 0.01;
+    this.lightsRenderer.yAngle = this.mouseDownYAngle! - scale * diff[0];
+    this.lightsRenderer.xAngle = this.mouseDownXAngle! + scale * diff[1];
+  }
+
   render() {
     return (
       <div className="lights-simulator">
         <div className="preview-area">
           <canvas
-            onClick={this.toggleRenderPreview.bind(this)}
+            onMouseDown={this.mouseDown.bind(this)}
+            onMouseUp={this.mouseUp.bind(this)}
+            onMouseLeave={this.mouseUp.bind(this)}
+            onMouseMove={this.mouseMove.bind(this)}
             ref={this.setCanvas.bind(this)}
             width={this.props.width}
             height={this.props.height}
@@ -197,78 +233,13 @@ abstract class LightsRenderer {
   }
 }
 
-// Classic renderer.
-class Canvas2DLightsRenderer extends LightsRenderer {
-  _draw(canvas: HTMLCanvasElement, lights: Light[]) {
-    if (!this.layout) {
-      return;
-    }
-    const layout = this.layout!;
-    const ctx = canvas.getContext("2d")!;
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.globalCompositeOperation = "lighter";
-
-    // compute scaling factor based on canvas size
-    const padding = 50;
-    const scaleX = (canvas.width - padding) / (layout.maxX - layout.minX);
-    const scaleY = (canvas.height - padding) / (layout.maxY - layout.minY);
-    const scale = Math.min(scaleX, scaleY);
-
-    // center layout in screen
-    const width = (layout.maxX - layout.minX) * scale;
-    const startX = canvas.width / 2 - width / 2;
-    const height = (layout.maxY - layout.minY) * scale;
-    const startY = canvas.height / 2 - height / 2;
-
-    const leds = layout.geometryX.length;
-    const X = layout.geometryX;
-    const Y = layout.geometryY;
-
-    for (let i = 0; i < leds; i++) {
-      const [r, g, b] = lights[i];
-
-      const x = X[i] * scale + startX;
-      const y = Y[i] * scale + startY;
-
-      let power = r + g + b;
-      if (power < 0) power = 0;
-
-      let m = 2;
-      if (power < 200) {
-        m = 4;
-      } else if (power < 100) {
-        m = 8;
-      } else if (power < 50) {
-        m = 16;
-      }
-
-      let [or, og, ob] = [r * m, g * m, b * m];
-      if (or > 255) or = 255;
-      if (og > 255) og = 255;
-      if (ob > 255) ob = 255;
-
-      ctx.beginPath();
-
-      let lightRadius = (40 + ((r + g + b) / (255 * 3)) * 80) / 24;
-
-      ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
-
-      ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
-      ctx.fill();
-    }
-  }
-}
-
 // 3D Renderer.
 class Canvas3DLightsRenderer extends LightsRenderer {
   _projectedLeds: vec3[] | null = null;
   _scale = 1;
   _xAngle = 0.3;
   _yAngle = 0;
+  _frontArrowPoints: vec3[] | null = null;
 
   setLayout(layout: Layout | null) {
     super.setLayout(layout);
@@ -314,6 +285,9 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     const canvas = this.canvas;
 
     let transform = mat4.create();
+    const width = layout.maxX - layout.minX;
+    const height = layout.maxY - layout.minY;
+    const depth = layout.maxZ - layout.minZ;
 
     // Screen projection.
     const padding = 20;
@@ -351,6 +325,16 @@ class Canvas3DLightsRenderer extends LightsRenderer {
       layout.geometryY,
       layout.geometryZ
     ).map(led => vec3.transformMat4(vec3.create(), led as number[], transform));
+
+    const arrowWidth = Math.max(width, height, depth) / 100;
+    const arrowLength = 4 * arrowWidth;
+    const arrowPoints = [
+      vec3.fromValues(centerX - arrowWidth / 2, layout.maxY, centerZ),
+      vec3.fromValues(centerX + arrowWidth / 2, layout.maxY, centerZ),
+      vec3.fromValues(centerX, layout.maxY, centerZ - arrowLength),
+    ];
+    this._frontArrowPoints = arrowPoints.map(
+        point => vec3.transformMat4(vec3.create(), point, transform));
   }
 
   get projectedLeds() {
@@ -366,6 +350,7 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     }
     const ctx = canvas.getContext("2d")!;
 
+    // Draw leds.
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -376,9 +361,7 @@ class Canvas3DLightsRenderer extends LightsRenderer {
 
     for (let i = 0; i < leds; i++) {
       const [r, g, b] = lights[i];
-
-      const projectedLed = this.projectedLeds[i];
-      const [x, y] = [projectedLed[0], projectedLed[1]];
+      const [x, y, z] = this.projectedLeds[i] as any;
 
       let power = r + g + b;
       if (power < 0) power = 0;
@@ -399,13 +382,22 @@ class Canvas3DLightsRenderer extends LightsRenderer {
 
       ctx.beginPath();
 
-      let lightRadius = (40 + ((r + g + b) / (255 * 3)) * 80) / 24;
+      let lightRadius =
+        (Math.exp(-0.0015 * z) * (40 + ((r + g + b) / (255 * 3)) * 80)) / 24;
 
       ctx.fillStyle = `rgba(${or}, ${og}, ${ob}, 1)`;
 
       ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
       ctx.fill();
     }
+
+    // Draw red arrow pointing front (to help with orientation).
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.moveTo(this._frontArrowPoints![0][0], this._frontArrowPoints![0][1]);
+    ctx.lineTo(this._frontArrowPoints![1][0], this._frontArrowPoints![1][1]);
+    ctx.lineTo(this._frontArrowPoints![2][0], this._frontArrowPoints![2][1]);
+    ctx.fill();
     // this.xAngle += 0.005;
     // this.yAngle += 0.01;
     // this.scale *= 0.999;

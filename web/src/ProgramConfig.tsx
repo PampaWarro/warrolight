@@ -9,6 +9,7 @@ interface Props {
   program: Program | null;
   selected: string | null;
   config: { [param: string]: ConfigValue } | null;
+  globalConfig: { [param: string]: any };
   onSelectPreset(name: string): void;
   onRestartProgram(): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
@@ -38,6 +39,7 @@ export class ProgramConfig extends React.Component<Props> {
   render() {
     const currentProgram = this.props.program;
     const currentConfig = this.props.config;
+    const globalConfig = this.props.globalConfig;
 
     if (!currentProgram || !currentConfig) {
       return null;
@@ -79,7 +81,7 @@ export class ProgramConfig extends React.Component<Props> {
               key={paramName}
               name={paramName}
               value={value as string}
-              options={configDef.values}
+              options={globalConfig.gradientsLibrary || {}}
               onChange={this.handleParamChange}
             />
           );

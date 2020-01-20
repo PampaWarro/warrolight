@@ -34,14 +34,13 @@ body {
 }
 
 .gradient-tas {
-  background-size: 100% 100%;
-  background-origin: border-box;
   width: 100px;
 }
 
 .gradient-dropdown {
-   max-height: 300px;
-    overflow-y: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .devicesbar {

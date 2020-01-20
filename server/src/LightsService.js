@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const SoundListener = require("./SoundListener");
 const audioEmitter = require("./audioEmitter");
+const {getGradientsByNameCss} = require('./light-programs/utils/gradients')
 
 function lightsToByteString(ledsColorArray) {
   let bytes = _.flatten(ledsColorArray);
@@ -34,6 +35,9 @@ module.exports = class LightsService {
       programs : controller.getProgramsSchema(),
       currentProgramName : controller.currentProgramName,
       currentConfig : controller.getCurrentConfig(),
+      globalConfig: {
+        gradientsLibrary: getGradientsByNameCss()
+      },
       micConfig : this.micConfig
     });
   }

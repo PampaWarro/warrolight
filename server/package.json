@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.149",
     "@types/node": "^13.1.4",
     "@types/pngjs": "^3.4.0",
     "babel-cli": "^6.26.0",

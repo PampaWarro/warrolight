@@ -2,10 +2,12 @@ import fs from "fs";
 import glob from "glob";
 import path from "path";
 import { PNG } from "pngjs";
-import { hexToRgb, rgbToHex } from "./ColorUtils";
 import _ from "lodash"
 import { Color } from "../../types";
-import { mix } from "./ColorUtils"
+import { mix, hexToRgb, rgbToHex } from "./ColorUtils"
+import xpath from "xpath";
+import { DOMParser } from "xmldom";
+import colorString from "color-string";
 
 function interpolate(a: Color, b: Color, blend: number) {
   if (blend < 0 || blend > 1) {
@@ -50,8 +52,6 @@ class EvenSpacedGradient extends Gradient {
   }
 }
 
-const gradientsByName: { [index: string]: Gradient } = {};
-
 function gradientFromPng(filename: string) {
   var data = fs.readFileSync(filename);
   var png = PNG.sync.read(data);
@@ -77,6 +77,21 @@ function gradientFromPng(filename: string) {
   return new EvenSpacedGradient(colors);
 }
 
+const svgXPath = xpath.useNamespaces({ svg: "http://www.w3.org/2000/svg" });
+function gradientFromSvg(filename: string) {
+  const data = fs.readFileSync(filename, { encoding: "utf8" });
+  const doc = new DOMParser().parseFromString(data);
+  const gradient = svgXPath("//svg:linearGradient", doc)[0] as XMLDocument;
+  const stops = svgXPath("./svg:stop", gradient);
+  const colors: Color[] = [];
+  stops.forEach((stop: Element, i) => {
+    const color: Color = colorString.get.rgb(stop.getAttribute("stop-color"));
+    // TODO: add support for uneven spaced gradients and stop "offset" attr.
+    colors.push(color);
+  });
+  return new EvenSpacedGradient(colors);
+}
+
 function loadGradient(gradientNameOrCssStops: string) {
   if(!gradientNameOrCssStops)
     return null;
@@ -96,19 +111,29 @@ function loadGradient(gradientNameOrCssStops: string) {
   return gradientsByName[gradientNameOrCssStops]
 }
 
+
+const gradientsByName: { [index: string]: Gradient } = {};
 const gradientFiles = glob.sync(path.join(__dirname, "gradientlib", "*"));
 gradientFiles.forEach(filename => {
-  const extension = path.extname(filename);
+  const extension = path.extname(filename).toLowerCase();
   const name = path.basename(filename, extension);
-  if (extension.toLowerCase() == ".png") {
+  if (extension == ".png") {
     const gradient = gradientFromPng(filename);
     gradientsByName[name] = gradient;
     gradientsByName[`${name}_r`] = gradient.reverse();
+  } else if (extension == ".svg") {
+    const gradient = gradientFromSvg(filename);
+    gradientsByName[name] = gradient;
+    gradientsByName[`${name}_r`] = gradient.reverse();
+  } else {
+    console.warn(
+      `Unknown file extension ${extension}: ${path.basename(filename)}`
+    );
   }
 });
 
 module.exports = {
   loadGradient,
   getGradientsByName: () => gradientsByName,
-  getGradientsByNameCss: () => _.mapValues(gradientsByName, g => g.cssLinearGradientStops())
+  getGradientsByNameCss: () => _.mapValues(gradientsByName, (g: Gradient) => g.cssLinearGradientStops())
 };

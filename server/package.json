@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "cli-table2": "^0.2.0",
+    "color-string": "^1.5.3",
     "colors": "^1.4.0",
     "dgram": "^1.0.1",
     "lodash": "^4.17.15",
@@ -29,13 +30,17 @@
     "ts-node": "^8.5.4",
     "tumult": "^3.0.14",
     "typescript": "^3.7.4",
-    "ws": "^7.2.1"
+    "ws": "^7.2.1",
+    "xmldom": "^0.2.1",
+    "xpath": "^0.0.27"
   },
   "devDependencies": {
+    "@types/color-string": "^1.5.0",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "^13.1.4",
     "@types/pngjs": "^3.4.0",
+    "@types/xmldom": "^0.1.29",
     "babel-cli": "^6.26.0",
     "eslint": "^6.8.0",
     "prettier": "^1.19.1"

@@ -31,7 +31,6 @@ module.exports = class BandParticles extends LayerBasedProgram {
   }
 
   populatePerBandParticles(audio) {
-    console.log(audio);
     _.forEach(['low', 'mid', 'high'], (bandName) => {
       const bandParticles = (this.particles[bandName] =
         this.particles[bandName] || []);

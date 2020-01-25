@@ -61,11 +61,12 @@ class EvenSpacedGradient extends Gradient {
 }
 
 function gradientFromPng(filename: string) {
-  var data = fs.readFileSync(filename);
-  var png = PNG.sync.read(data);
+  const data = fs.readFileSync(filename);
+  const png = PNG.sync.read(data);
   if (Math.min(png.width, png.height) != 1) {
     throw `Width or height must be 1, found: ${png.width}, ${png.height}.`;
   }
+  PNG.adjustGamma(png);
   const size = Math.max(png.width, png.height);
   const colors: Color[] = new Array(size);
   for (let i = 0; i < size; i++) {
@@ -74,7 +75,7 @@ function gradientFromPng(filename: string) {
       png.data[offset],
       png.data[offset + 1],
       png.data[offset + 2],
-      png.data[offset + 3]
+      png.data[offset + 3] / 255
     ];
   }
 
@@ -87,11 +88,11 @@ function gradientFromSvg(filename: string) {
   const doc = new DOMParser().parseFromString(data);
   const gradient = svgXPath("//svg:linearGradient", doc)[0] as XMLDocument;
   const stops = svgXPath("./svg:stop", gradient);
-  const colors: Color[] = [];
+  const colors: Color[] = new Array(stops.length);
   stops.forEach((stop: Element, i) => {
     const color: Color = colorString.get.rgb(stop.getAttribute("stop-color"));
     // TODO: add support for uneven spaced gradients and stop "offset" attr.
-    colors.push(color);
+    colors[i] = color;
   });
   return new EvenSpacedGradient(colors);
 }

@@ -350,13 +350,21 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     }
     const ctx = canvas.getContext("2d")!;
 
-    // Draw leds.
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.globalCompositeOperation = "lighter";
 
+    // Draw red arrow pointing front (to help with orientation).
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.moveTo(this._frontArrowPoints![0][0], this._frontArrowPoints![0][1]);
+    ctx.lineTo(this._frontArrowPoints![1][0], this._frontArrowPoints![1][1]);
+    ctx.lineTo(this._frontArrowPoints![2][0], this._frontArrowPoints![2][1]);
+    ctx.fill();
+
+    // Draw leds.
     const leds = this.projectedLeds.length;
 
     for (let i = 0; i < leds; i++) {
@@ -391,13 +399,6 @@ class Canvas3DLightsRenderer extends LightsRenderer {
       ctx.fill();
     }
 
-    // Draw red arrow pointing front (to help with orientation).
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-    ctx.moveTo(this._frontArrowPoints![0][0], this._frontArrowPoints![0][1]);
-    ctx.lineTo(this._frontArrowPoints![1][0], this._frontArrowPoints![1][1]);
-    ctx.lineTo(this._frontArrowPoints![2][0], this._frontArrowPoints![2][1]);
-    ctx.fill();
     // this.xAngle += 0.005;
     // this.yAngle += 0.01;
     // this.scale *= 0.999;

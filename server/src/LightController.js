@@ -19,6 +19,7 @@ const programNames = [
   "debugSetup",
   "debugShapes",
   "frequencyActivation",
+  "gradientSphere",
   "lineal",
   "musicFlow",
   "musicFrequencyDot",

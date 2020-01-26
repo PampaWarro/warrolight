@@ -26,6 +26,7 @@ module.exports = class LayerBasedProgram extends LightProgram {
     super(config, geometry);
     this.xBounds = findBounds(this.geometry.x);
     this.yBounds = findBounds(this.geometry.y);
+    this.zBounds = findBounds(this.geometry.z);
     this.drawables = this.getDrawables(config);
     this.layers = {};
     this.rootLayer = this.buildLayer(

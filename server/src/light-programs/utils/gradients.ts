@@ -60,6 +60,82 @@ class EvenSpacedGradient extends Gradient {
   }
 }
 
+class TimedMultiGradient extends Gradient {
+  gradients: Gradient[];
+  gradientTime: number;
+  transitionTime: number;
+  _currentTime: number = null;
+  _currentGradient: Gradient = null;
+  _currentGradientSetTime: number = null;
+  _nextGradient: Gradient = null;
+
+  constructor(gradients: Gradient[], gradientTime: number,
+              transitionTime: number) {
+    super();
+    if (gradients.length < 2) {
+      throw "Need at least 2 gradients";
+    }
+    this.gradients = gradients;
+    this.gradientTime = gradientTime || 20;
+    this.transitionTime = transitionTime || 5;
+  }
+
+  reverse(): Gradient {
+    throw "unimplemented";
+  }
+
+  cssLinearGradientStops(): string {
+    throw "unimplemented";
+  }
+
+  set currentTime(currentTime: number) {
+    this._currentTime = currentTime;
+  }
+
+  get currentTime() {
+    if (this._currentTime == null) {
+      throw "need to set currentTime first";
+    }
+    return this._currentTime;
+  }
+
+  get currentGradient() {
+    if (this._currentGradient == null ||
+        this.currentTime > this._currentGradientSetTime + this.gradientTime +
+                               this.transitionTime) {
+      if (this._nextGradient == null) {
+        this._currentGradient = _.sample(this.gradients);
+      } else {
+        this._currentGradient = this._nextGradient;
+        this._nextGradient = null;
+      }
+      this._currentGradientSetTime = this.currentTime;
+    }
+    return this._currentGradient;
+  }
+
+  get nextGradient() {
+    while (this._nextGradient == null ||
+           this._nextGradient == this.currentGradient) {
+      this._nextGradient = _.sample(this.gradients);
+    }
+    return this._nextGradient;
+  }
+
+  colorAt(pos: number) {
+    const dt = this.currentTime - this._currentGradientSetTime;
+    if (dt <= this.gradientTime) {
+      return this.currentGradient.colorAt(pos);
+    }
+    if (dt >= this.gradientTime + this.transitionTime) {
+      return this.nextGradient.colorAt(pos);
+    }
+    const blend = (dt - this.gradientTime) / this.transitionTime;
+    return interpolate(this.currentGradient.colorAt(pos),
+      this.nextGradient.colorAt(pos), blend);
+  }
+}
+
 function gradientFromPng(filename: string) {
   const data = fs.readFileSync(filename);
   const png = PNG.sync.read(data);
@@ -140,5 +216,7 @@ gradientFiles.forEach(filename => {
 module.exports = {
   loadGradient,
   getGradientsByName: () => gradientsByName,
-  getGradientsByNameCss: () => _.mapValues(gradientsByName, (g: Gradient) => g.cssLinearGradientStops())
+  getGradientsByNameCss: () => _.mapValues(gradientsByName, (g: Gradient) => g.cssLinearGradientStops()),
+  allGradients: () => _.values(gradientsByName),
+  TimedMultiGradient,
 };

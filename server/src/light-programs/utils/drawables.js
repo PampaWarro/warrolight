@@ -109,6 +109,15 @@ class XYDrawable extends Drawable {
   }
 }
 
+class XYZDrawable extends Drawable {
+  colorAtIndex(index, geometry) {
+    const x = geometry.x[index];
+    const y = geometry.y[index];
+    const z = geometry.z[index];
+    return this.colorAtXYZ(x, y, z);
+  }
+}
+
 class XYHue extends XYDrawable {
   constructor(options) {
     options = options || {};
@@ -288,9 +297,41 @@ class RadiusCosineBrightness extends PolarDrawable {
   }
 }
 
+class GradientSolidSphere extends XYZDrawable {
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.radius = options.radius != null? options.radius : 1;
+    this.center = options.center || [0, 0, 0];
+    this.gradient = options.gradient || "tas01";
+  }
+  get gradient() {
+    return this._gradient;
+  }
+  set gradient(gradient) {
+    if (!gradient) {
+      return;
+    }
+    this._gradient = gradient.colorAt? gradient : loadGradient(gradient);
+  }
+  colorAtXYZ(x, y, z) {
+    const dx = x - this.center[0];
+    const dy = y - this.center[1];
+    const dz = z - this.center[2];
+    const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    if (d > this.radius) {
+      return [0, 0, 0, 0];
+    }
+    const gradientPos = d / this.radius;
+    const color = this.gradient.colorAt(gradientPos);
+    return color;
+  }
+}
+
 module.exports = {
   Drawable,
   GradientColorize,
+  GradientSolidSphere,
   SingleLed,
   SolidColor,
   RandomPixels,

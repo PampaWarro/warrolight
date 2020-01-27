@@ -2,14 +2,22 @@ const _ = require("lodash");
 
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
-const {loadGradient} = require("../utils/gradients");
+const {
+  TimedMultiGradient,
+  loadGradient,
+  allGradients,
+} = require("../utils/gradients");
 
 module.exports = class Radial extends LightProgram {
+  timedMultiGradient = new TimedMultiGradient(allGradients());
   drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 
-    this.extraTime = (this.extraTime || 0) + Math.random() * 10;
+    const time = this.timeInMs / 1000;
+    this.timedMultiGradient.currentTime = time;
+    const gradient = this.config.colorMap ? loadGradient(this.config.colorMap)
+                                          : this.timedMultiGradient;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.geometry;
@@ -26,18 +34,8 @@ module.exports = class Radial extends LightProgram {
         this.config.power
       );
 
-
-      if (this.config.colorMap) {
-        const gradient = loadGradient(this.config.colorMap);
-        const [r, g, b, a] = gradient.colorAt(1 - v);
-        colors[i] = [r*v, g*v, b*v];
-      } else {
-        colors[i] = ColorUtils.HSVtoRGB(
-          (distance / 5 + this.extraTime / 1000) % 1,
-          1,
-          v
-        );
-      }
+      const [r, g, b, a] = gradient.colorAt(1 - v);
+      colors[i] = [r*v, g*v, b*v];
     }
     draw(colors);
   }

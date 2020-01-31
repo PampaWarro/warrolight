@@ -1,9 +1,10 @@
 module.exports = class LightProgram {
-  constructor(config, geometry, shapeMapping) {
+  constructor(config, geometry, shapeMapping, lightController) {
     this.config = config;
     this.geometry = geometry;
     this.shapeMapping = shapeMapping;
     this.numberOfLeds = geometry.leds;
+    this.lightController = lightController;
   }
 
   init() {}

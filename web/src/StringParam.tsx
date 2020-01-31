@@ -5,13 +5,13 @@ interface Props {
   name: string;
   value: string;
   options: string[];
-  onChange(e: React.SyntheticEvent, name: string, value: string): void;
+  onChange(name: string, value: string): void;
 }
 
 export class StringParam extends React.Component<Props> {
   handleChange = (event: React.SyntheticEvent, value: string) => {
     event.preventDefault();
-    this.props.onChange(event, this.props.name, value);
+    this.props.onChange(this.props.name, value);
   };
 
   render() {

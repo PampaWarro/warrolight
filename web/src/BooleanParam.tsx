@@ -3,12 +3,12 @@ import React from "react";
 interface Props {
   name: string;
   value: boolean;
-  onChange(e: React.SyntheticEvent, name: string, value: boolean): void;
+  onChange(name: string, value: boolean): void;
 }
 export class BooleanParam extends React.Component<Props> {
   handleChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
     let value = (event.target as any).checked as boolean;
-    this.props.onChange(event, this.props.name, value);
+    this.props.onChange(this.props.name, value);
   };
 
   render() {

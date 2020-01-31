@@ -6,13 +6,13 @@ interface Props {
   min: number;
   step: number;
   max: number;
-  onChange(e: React.SyntheticEvent, name: string, value: number): void;
+  onChange(name: string, value: number): void;
 }
 
 export class NumberParam extends React.Component<Props> {
   handleChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
     let value = (event.target as any).valueAsNumber;
-    this.props.onChange(event, this.props.name, value);
+    this.props.onChange(this.props.name, value);
   };
 
   render() {
@@ -22,7 +22,7 @@ export class NumberParam extends React.Component<Props> {
           <div className="float-left">{this.props.name}</div>
           <div className="float-right font-weight-bold">{this.props.value}</div>
         </div>
-        <div>
+        <div style={{marginTop: '-8px'}}>
           <input
             type="range"
             min={this.props.min}

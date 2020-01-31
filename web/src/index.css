@@ -37,10 +37,23 @@ body {
   width: 100px;
 }
 
+.dropdown-menu {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .gradient-dropdown {
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.bg-lighter {
+  background: rgba(255, 255, 255, 0.05);
+}
+.bg-lighter-info {
+  background: rgba(23, 162, 184, 0.11);
 }
 
 .devicesbar {

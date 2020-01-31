@@ -93,94 +93,31 @@ module.exports = class SoundWaves extends LightProgram {
 
   static presets() {
     return {
-      hexagono: {
-        initialDistance: 69,
-        haciaAfuera: false,
-        waveSpeed: 1,
-        waveWidth: 2
-      },
-      default: { waveCenterY: 0 },
-      deLasPuntas: {
-        waveSpeed: 1,
-        waveWidth: 2,
-        initialDistance: 40,
-        haciaAfuera: false,
-        brilloWave: 0.5
-      },
-      centroLento: { waveSpeed: 0.1 },
-      centroLentoDark: { waveSpeed: 0.1, brilloWave: 0.25 },
-      centroFast: { waveSpeed: 3 },
-      centroDots: { waveSpeed: 2, waveWidth: 0.5 },
-      centroBrightFast: {
-        waveSpeed: 0.7,
-        brilloWave: 2,
-        waveWidth: 1,
-        waveCenterY: -17.3
-      },
-      abajoFast: { waveCenterY: -17.3, waveSpeed: 3, waveWidth: 3 },
-      xInvertida: { initialDistance: 15, haciaAfuera: false },
-      deArribaAbajo: {
-        initialDistance: 67,
-        waveCenterY: -40,
-        haciaAfuera: false,
-        waveSpeed: 2
-      }
+      hexagono: {initialDistance: 69, haciaAfuera: false, waveSpeed: 1, waveWidth: 2},
+      default: {waveCenterY: 0},
+      deLasPuntas: {waveSpeed: 1, waveWidth: 2, initialDistance: 40, haciaAfuera: false, brilloWave: 0.5},
+      centroLento: {waveSpeed: 0.1},
+      centroLentoDark: {waveSpeed: 0.1, brilloWave: 0.25},
+      centroFast: {waveSpeed: 3},
+      centroDots: {waveSpeed: 2, waveWidth: 0.5},
+      centroBrightFast: {waveSpeed: 0.7, brilloWave: 2, waveWidth: 1, waveCenterY: -17.3},
+      abajoFast: {waveCenterY: -17.3, waveSpeed: 3, waveWidth: 3},
+      xInvertida: {initialDistance: 15, haciaAfuera: false},
+      deArribaAbajo: {initialDistance: 67, waveCenterY: -40, haciaAfuera: false, waveSpeed: 2}
     };
   }
 
   static configSchema() {
     let config = super.configSchema();
 
-    config.brilloWave = {
-      type: Number,
-      min: 0,
-      max: 3,
-      step: 0.01,
-      default: 0.5
-    };
-    config.initialDistance = {
-      type: Number,
-      min: 0,
-      max: 100,
-      step: 0.1,
-      default: 0
-    };
-    config.waveCenterY = {
-      type: Number,
-      min: -40,
-      max: 40,
-      step: 1,
-      default: 0
-    };
-    config.waveCenterX = {
-      type: Number,
-      min: -60,
-      max: 60,
-      step: 1,
-      default: 0
-    };
-    config.waveWidth = {
-      type: Number,
-      min: 0,
-      max: 10,
-      step: 0.1,
-      default: 2.5
-    };
-    config.waveSpeed = {
-      type: Number,
-      min: 0.1,
-      max: 10,
-      step: 0.1,
-      default: 1
-    };
-    config.haciaAfuera = { type: Boolean, default: true };
-    config.wavePower = {
-      type: Number,
-      min: 0.5,
-      max: 10,
-      step: 0.5,
-      default: 1.2
-    };
+    config.brilloWave = {type: Number, min: 0, max: 3, step: 0.01, default: 0.5};
+    config.initialDistance = {type: Number, min: 0, max: 100, step: 0.1, default: 0};
+    config.waveCenterY = {type: Number, min: -40, max: 40, step: 1, default: 0};
+    config.waveCenterX = {type: Number, min: -60, max: 60, step: 1, default: 0};
+    config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5};
+    config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1};
+    config.haciaAfuera = {type: Boolean, default: true};
+    config.wavePower = {type: Number, min: 0.5, max: 10, step: 0.5, default: 1.2};
     // config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
 
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}

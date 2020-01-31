@@ -1,10 +1,17 @@
-const EventEmitter = require("events");
-const moment = require("moment");
 const _ = require("lodash");
+const EventEmitter = require("events");
+const fs = require("fs");
+const moment = require("moment");
+
 const ProgramScheduler = require("./ProgramScheduler");
+
+const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
+
+const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
+  "mix",
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",
   "PROGRAM_Main_fuego2019",
@@ -61,30 +68,46 @@ module.exports = class LightController extends EventEmitter {
       return {
         name: p.name,
         config: p.configSchema,
-        presets: p.generator.presets ? _.keys(p.generator.presets()) : []
+        presets: _.keys(this.getProgramPresets(p.name))
       };
     });
   }
 
   getCurrentConfig() {
-    return this.currentProgram ? this.currentProgram.config : {};
+    if (this.currentProgram) {
+      return this.currentConfig
+    } else {
+      return {}
+    }
+  }
+
+  getProgramPresets(programName) {
+    const program = this.programs[programName];
+    if(program) {
+      let presets = savedPresets[programName] || {};
+
+      if(program.generator.presets) {
+        presets = { ... program.generator.presets(), ... presets };
+      }
+      return presets;
+    } else {
+      return {}
+    }
   }
 
   getCurrentPresets() {
-    if (
-      this.currentProgram &&
-      this.programs[this.currentProgramName].generator.presets
-    ) {
-      return this.programs[this.currentProgramName].generator.presets();
+    if (this.currentProgram) {
+      return this.getProgramPresets(this.currentProgramName);
     } else {
-      return [];
+      return {};
     }
   }
 
   start() {
     if (this.currentProgram) {
+      this.currentConfig = this.buildParameters(this.programs[this.currentProgramName].configSchema);
       this.currentProgram.start(
-        this.getConfig(this.programs[this.currentProgramName].configSchema),
+        this.getConfig(this.currentConfig),
         leds => this.updateLeds(leds)
       );
       this.running = true;
@@ -106,22 +129,65 @@ module.exports = class LightController extends EventEmitter {
     this.multiplexer.setLights(colorArray);
   }
 
-  getConfig(configSchema) {
-    let config = {};
+  getConfig({defaults, presetOverrides, overrides, currentPreset}) {
+    return {... defaults, ... presetOverrides, ... overrides};
+  }
 
-    if (!configSchema) {
-      configSchema = this.programs[this.currentProgramName].configSchema;
-    }
+  buildParameters(configSchema, presetOverrides = {}, presetName = null, overrides = {}) {
+    let defaults = {};
 
     for (let paramName in configSchema) {
-      if (
-        config[paramName] === undefined &&
-        configSchema[paramName].default !== undefined
-      ) {
-        config[paramName] = configSchema[paramName].default;
+      if (defaults[paramName] === undefined && configSchema[paramName].default !== undefined) {
+        defaults[paramName] = configSchema[paramName].default;
       }
     }
-    return config;
+    return {defaults, presetOverrides, currentPreset: presetName, overrides};
+  }
+
+  updateConfigOverride(config) {
+    let configSchema = this.programs[this.currentProgramName].configSchema;
+    let { presetOverrides, currentPreset, overrides } = this.currentConfig;
+    this.currentConfig = this.buildParameters(configSchema, presetOverrides, currentPreset, {... overrides, ... config})
+    this.currentProgram.updateConfig(this.getConfig(this.currentConfig));
+  }
+
+  setPreset(presetName) {
+    const presets = this.getCurrentPresets();
+
+    const presetOverrides = presets[presetName];
+    if (!presetOverrides) {
+      console.warn(`Selected preset ${presetName} not found.`)
+      return;
+    }
+
+    let configSchema = this.programs[this.currentProgramName].configSchema;
+
+    this.currentConfig = this.buildParameters(configSchema, presetOverrides, presetName, {})
+    this.currentProgram.updateConfig(this.getConfig(this.currentConfig));
+  }
+
+  savePreset(programName, presetName, config) {
+    savedPresets[programName] = savedPresets[programName] || {}
+    savedPresets[programName][presetName] = config;
+
+    fs.writeFile(savedPresetsFilePath, JSON.stringify(savedPresets, true, 4), (err) => {
+      if(err) {
+        console.error(err);
+      } else {
+        console.log(`Updated presets file ${savedPresetsFilePath}`)
+      }
+    });
+  }
+
+  instanciateProgram(name, extraConfig) {
+    let program = this.programs[name];
+    let config = this.getConfig(this.buildParameters(program.configSchema, {}, null, extraConfig));
+    return  new program.generator(
+        config,
+        this.geometry,
+        this.shapeMapping,
+        this
+    )
   }
 
   setCurrentProgram(name) {
@@ -136,12 +202,16 @@ module.exports = class LightController extends EventEmitter {
     }
     this.currentProgramName = name;
     let program = this.programs[name];
-    let config = this.getConfig(program.configSchema);
+
+    this.currentConfig = this.buildParameters(program.configSchema)
+    let config = this.getConfig(this.currentConfig);
+
     this.currentProgram = new ProgramScheduler(
       new program.generator(
         config,
         this.geometry,
-        this.shapeMapping
+        this.shapeMapping,
+        this
       )
     );
     if (this.running) {

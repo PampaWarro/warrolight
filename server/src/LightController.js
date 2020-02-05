@@ -7,6 +7,10 @@ const ProgramScheduler = require("./ProgramScheduler");
 
 const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
 
+if (!fs.existsSync(savedPresetsFilePath)) {
+  fs.writeFileSync(savedPresetsFilePath, "{}");
+}
+
 const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file

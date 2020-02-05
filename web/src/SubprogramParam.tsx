@@ -54,8 +54,8 @@ export class SubprogramParam extends React.Component<Props,any> {
 
     if(value) {
       if(!this.state.collapsed) {
-        programConfig = <div className={'p-2 my-1 bg-lighter rounded'} style={{ zoom: '0.9' }}>
-          <span onClick={() => this.setState({collapsed: true})} className={'btn btn-sm btn-link mb-2'}>➖ Parameters {name}</span>
+        programConfig = <div className="p-2 mt-1 mb-2 bg-lighter rounded" style={{ zoom: '0.9' }}>
+          <div onClick={() => this.setState({collapsed: true})} className="config-group-header mb-2">➖ Parameters {name}</div>
 
           <ProgramConfig
             program={currentProgram}
@@ -68,8 +68,8 @@ export class SubprogramParam extends React.Component<Props,any> {
         </div>
       } else {
         programConfig =
-          <div className={'p-0 my-1 bg-lighter rounded'} style={{ zoom: '0.9' }}>
-            <span onClick={() => this.setState({collapsed: false})} className={'btn btn-sm btn-link'}>➕ Parameters {name}</span>
+          <div className="p-2 my-1 bg-lighter rounded" style={{ zoom: '0.9' }}>
+            <div onClick={() => this.setState({collapsed: false})} className="config-group-header">➕ Parameters {name}</div>
           </div>
       }
     }
@@ -100,7 +100,7 @@ export class SubprogramParam extends React.Component<Props,any> {
             </div>
           </div>
         </div>
-        <div className={'clearfix'}></div>
+        <div className="clearfix"></div>
         {programConfig}
       </div>
     );

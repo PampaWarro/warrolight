@@ -115,6 +115,11 @@ hr {
   font-size: 0.8rem;
 }
 
+.config-group-header {
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .mic-client {
   background-color: #1a1b1d;
   position: relative;

@@ -5,13 +5,13 @@ interface Props {
   name: string;
   value: string;
   options: { [key: string]: string };
-  onChange(e: React.SyntheticEvent, name: string, value: string): void;
+  onChange(name: string, value: string): void;
 }
 
 export class GradientParam extends React.Component<Props> {
   handleChange = (event: React.SyntheticEvent, value: string) => {
     event.preventDefault();
-    this.props.onChange(event, this.props.name, value);
+    this.props.onChange(this.props.name, value);
   };
 
   render() {
@@ -26,7 +26,7 @@ export class GradientParam extends React.Component<Props> {
       // Assume value was a string with css stops
       stops = stops || value;
     } else {
-      stops = "#00000000,#00000000"
+      stops = "#000000,#000000"
       name = "None"
     }
 
@@ -38,8 +38,10 @@ export class GradientParam extends React.Component<Props> {
           <div className="float-right font-weight-bold">
             <div className="dropdown">
               <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-boundary={"window"}>
-                {name} <span className={`gradient-tas mr-2 d-inline-block`} style={gradientCss(stops)}>&nbsp;</span>
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span className={`gradient-tas mr-2 d-inline-block`} style={gradientCss(stops)}>&nbsp;</span>
+                <br/>
+                <span className={'small'}>{name}</span>
               </button>
               <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
 
@@ -48,7 +50,7 @@ export class GradientParam extends React.Component<Props> {
                   None
                 </button>
 
-                {_.map(_.toPairs(options).sort(), ([gradientName,gradientStops]) => (
+                {_.map(_.toPairs(options).sort(), ([gradientName, gradientStops]) => (
                   <button
                     key={gradientName}
                     className={`small dropdown-item ${gradientName === value ? "active" : ""}`}
@@ -63,6 +65,7 @@ export class GradientParam extends React.Component<Props> {
             </div>
           </div>
         </div>
+        <div className={'clearfix'}></div>
       </div>
     );
   }

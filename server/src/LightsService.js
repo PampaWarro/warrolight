@@ -71,18 +71,14 @@ module.exports = class LightsService {
   }
 
   setPreset(presetName) {
-    const controller = this.controller;
-    const presets = controller.getCurrentPresets();
-
-    if (!presets[presetName]) {
-      console.warn(`Selected preset ${presetName} not found.`)
-      return;
-    }
-
-    controller.currentProgram.updateConfig(
-        _.extend(controller.getConfig(), presets[presetName]));
-
+    this.controller.setPreset(presetName);
     this.broadcastStateChange();
+  }
+
+  savePreset({programName, presetName, currentConfig}) {
+    this.controller.savePreset(programName, presetName, currentConfig);
+    this.setPreset(presetName)
+    console.log("Saved new preset", programName, presetName, currentConfig)
   }
 
   setCurrentProgram(programKey) {
@@ -92,7 +88,8 @@ module.exports = class LightsService {
 
   updateConfigParam(config) {
     const controller = this.controller;
-    controller.currentProgram.updateConfig(config);
+
+    controller.updateConfigOverride(config);
 
     this.send("stateChange", {
       currentProgramName : controller.currentProgramName,

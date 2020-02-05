@@ -9,7 +9,14 @@ export type ConfigDefinition =
   | { type: string, default: boolean }
   | { type: string, default: number; min: number; max: number; step: number };
 
-export type ConfigValue = string | number | boolean;
+export type ConfigValue = any;
+
+export type CurrentProgramParameters = {
+  defaults?: { [param: string]: ConfigValue },
+  presetOverrides?: { [param: string]: ConfigValue },
+  overrides?: { [param: string]: ConfigValue }
+  currentPreset?: string | null
+}
 
 export interface Device {
   deviceId: string;

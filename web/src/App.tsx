@@ -5,7 +5,6 @@ import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
 import { MicrophoneViewer } from "./MicrophoneViewer";
 import { ProgramList } from "./ProgramList";
-import { ProgramConfig } from "./ProgramConfig";
 import {
   Program,
   ConfigValue,
@@ -13,16 +12,18 @@ import {
   MicSample,
   RemoteState,
   RemoteLayout,
-  Device
+  Device,
+  CurrentProgramParameters
 } from "./types";
 import { API } from "./api";
+import { TopProgramConfig } from "./TopProgramConfig";
 
 interface Props {}
 
 interface State {
   selected: string | null;
   programs: { [name: string]: Program };
-  currentConfig: { [param: string]: ConfigValue } | null;
+  currentConfig: CurrentProgramParameters;
   globalConfig: { [param: string]: any };
   micConfig: MicConfig;
   remoteChange: boolean;
@@ -42,7 +43,7 @@ export class App extends React.Component<Props, State> {
     this.state = {
       selected: null,
       programs: {},
-      currentConfig: null,
+      currentConfig: {},
       globalConfig: {},
       micConfig: {
         sendingMicData: false,
@@ -76,7 +77,7 @@ export class App extends React.Component<Props, State> {
       remoteChange: true
     });
 
-    console.log(state.currentProgramName, state);
+    // console.log(state.currentProgramName, state);
   }
 
   componentDidMount() {
@@ -149,7 +150,7 @@ export class App extends React.Component<Props, State> {
       // TODO: added to typecheck, check if it's right
       if (newState.currentConfig) {
         console.log("ENTIRE CHANGING TO", newState.currentConfig);
-        this.api.updateConfigParam(newState.currentConfig);
+        this.api.updateConfigParam(newState.currentConfig.overrides || {});
       }
     }
   }
@@ -193,6 +194,10 @@ export class App extends React.Component<Props, State> {
     this.api.stopSamplingLights();
   };
 
+  handleSaveNewPreset = (programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }) => {
+    this.api.savePreset(programName, presetName, presetConfig);
+  }
+
   render() {
     let currentProgram = this.getCurrentProgram();
 
@@ -213,12 +218,14 @@ export class App extends React.Component<Props, State> {
               />
             </nav>
             <div className="controlsbar overflow-auto p-3">
-              <ProgramConfig
+              <TopProgramConfig
                 program={currentProgram}
                 selected={this.state.selected}
                 config={this.state.currentConfig}
                 globalConfig={this.state.globalConfig}
+                programs={this.state.programs}
                 onSelectPreset={this.selectPreset}
+                onSaveNewPreset={this.handleSaveNewPreset}
                 onRestartProgram={this.restartProgram}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
               />

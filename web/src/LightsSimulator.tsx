@@ -237,7 +237,7 @@ abstract class LightsRenderer {
 class Canvas3DLightsRenderer extends LightsRenderer {
   _projectedLeds: vec3[] | null = null;
   _scale = 1;
-  _xAngle = 0.3;
+  _xAngle = 0;
   _yAngle = 0;
   _frontArrowPoints: vec3[] | null = null;
 
@@ -326,12 +326,13 @@ class Canvas3DLightsRenderer extends LightsRenderer {
       layout.geometryZ
     ).map(led => vec3.transformMat4(vec3.create(), led as number[], transform));
 
-    const arrowWidth = Math.max(width, height, depth) / 100;
-    const arrowLength = 4 * arrowWidth;
+    const arrowLength = Math.max(width, height, depth) / 30;
+    const [cX, cY, cZ] = [layout.maxX - arrowLength, layout.maxY, centerZ];
     const arrowPoints = [
-      vec3.fromValues(centerX - arrowWidth / 2, layout.maxY, centerZ),
-      vec3.fromValues(centerX + arrowWidth / 2, layout.maxY, centerZ),
-      vec3.fromValues(centerX, layout.maxY, centerZ - arrowLength),
+      vec3.fromValues(cX, cY, cZ),
+      vec3.fromValues(cX + arrowLength, cY, cZ),
+      vec3.fromValues(cX, cY - arrowLength, cZ),
+      vec3.fromValues(cX, cY, cZ - arrowLength),
     ];
     this._frontArrowPoints = arrowPoints.map(
         point => vec3.transformMat4(vec3.create(), point, transform));
@@ -350,21 +351,13 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     }
     const ctx = canvas.getContext("2d")!;
 
+    // Draw leds.
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.globalCompositeOperation = "lighter";
 
-    // Draw red arrow pointing front (to help with orientation).
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-    ctx.moveTo(this._frontArrowPoints![0][0], this._frontArrowPoints![0][1]);
-    ctx.lineTo(this._frontArrowPoints![1][0], this._frontArrowPoints![1][1]);
-    ctx.lineTo(this._frontArrowPoints![2][0], this._frontArrowPoints![2][1]);
-    ctx.fill();
-
-    // Draw leds.
     const leds = this.projectedLeds.length;
 
     for (let i = 0; i < leds; i++) {
@@ -398,6 +391,29 @@ class Canvas3DLightsRenderer extends LightsRenderer {
       ctx.arc(x, y, lightRadius, 0, Math.PI * 2, false);
       ctx.fill();
     }
+
+    // Draw red arrow pointing front (to help with orientation).
+    let [center, x, y,z] = this._frontArrowPoints!;
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "red";
+    ctx.beginPath();
+    ctx.moveTo(center[0], center[1]);
+    ctx.lineTo(x[0], x[1]);
+    ctx.stroke();
+
+    ctx.strokeStyle = "green";
+    ctx.beginPath();
+    ctx.moveTo(center[0], center[1]);
+    ctx.lineTo(y[0], y[1]);
+    ctx.stroke();
+
+    ctx.strokeStyle = "blue";
+    ctx.beginPath();
+    ctx.moveTo(center[0], center[1]);
+    ctx.lineTo(z[0], z[1]);
+    ctx.stroke();
+
 
     // this.xAngle += 0.005;
     // this.yAngle += 0.01;

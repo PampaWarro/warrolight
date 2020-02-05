@@ -18,7 +18,7 @@ module.exports = class Rays extends LightProgram {
     let speed = ray.speed * this.config.globalSpeed * ray.direction;
     if (this.config.useSoundSpeed) {
       // let vol = Math.max(0.1, audio.averageRelativeVolume - 0.2);
-      speed *= (audio.bassFastPeakDecay || 0) * 3;
+      speed *= (audio.bassPeakDecay || 0) * 3;
     }
     ray.pos += speed;
   }

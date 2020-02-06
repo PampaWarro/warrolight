@@ -14,11 +14,11 @@ module.exports = class Rays extends LightProgram {
     );
   }
 
-  updateRay(ray, audio) {
+  updateRay(ray, currentAudioFrame) {
     let speed = ray.speed * this.config.globalSpeed * ray.direction;
     if (this.config.useSoundSpeed) {
       // let vol = Math.max(0.1, audio.averageRelativeVolume - 0.2);
-      speed *= (audio.bassPeakDecay || 0) * 3;
+      speed *= (currentAudioFrame[this.config.soundMetric] || 0) * 3;
     }
     ray.pos += speed;
   }
@@ -54,7 +54,7 @@ module.exports = class Rays extends LightProgram {
 
     for (let ray of this.rays) {
       let from = ray.pos;
-      this.updateRay(ray, audio);
+      this.updateRay(ray, audio.currentFrame);
       let to = ray.pos;
 
       if (to < from) {
@@ -99,18 +99,8 @@ module.exports = class Rays extends LightProgram {
   static presets() {
     return {
       normal: {},
-      normalSound: {
-        globalSpeed: 3,
-        useSoundSpeed: true,
-        singleDirection: true
-      },
-      rainbowSmoke: {
-        decay: 0.9,
-        globalSpeed: 2,
-        colorSaturationRange: 0,
-        numberOfParticles: 15,
-        colorHueAmplitude: 1
-      },
+      normalSound: {globalSpeed: 3, useSoundSpeed: true, singleDirection: true},
+      rainbowSmoke: {decay: 0.9, globalSpeed: 2, colorSaturationRange: 0, numberOfParticles: 15, colorHueAmplitude: 1},
       colorSmoke: {
         brillo: 0.5,
         decay: 0.9,
@@ -189,45 +179,16 @@ module.exports = class Rays extends LightProgram {
 
   static configSchema() {
     let config = super.configSchema();
-    config.decay = { type: Number, min: 0, max: 1, step: 0.005, default: 0.8 };
-    config.globalSpeed = {
-      type: Number,
-      min: 0,
-      max: 7,
-      step: 0.005,
-      default: 1
-    };
-    config.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
-    config.numberOfParticles = {
-      type: Number,
-      min: 1,
-      max: 150,
-      step: 1,
-      default: 15
-    };
-    config.colorHueAmplitude = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 1
-    };
-    config.colorHueOffset = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0.05
-    };
-    config.colorSaturationRange = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0.2
-    };
+    config.decay = {type: Number, min: 0, max: 1, step: 0.005, default: 0.8};
+    config.globalSpeed = {type: Number, min: 0, max: 7, step: 0.005, default: 1};
+    config.brillo = {type: Number, min: 0, max: 1, step: 0.01, default: 1};
+    config.numberOfParticles = {type: Number, min: 1, max: 150, step: 1, default: 15};
+    config.colorHueAmplitude = {type: Number, min: 0, max: 1, step: 0.01, default: 1};
+    config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0.05};
+    config.colorSaturationRange = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2};
     config.singleDirection = { type: Boolean, default: false };
     config.useSoundSpeed = { type: Boolean, default: false };
+    config.soundMetric = { type: 'soundMetric', default: 'rms' };
     return config;
   }
 };

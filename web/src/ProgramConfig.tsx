@@ -72,6 +72,19 @@ export class ProgramConfig extends React.PureComponent<Props> {
             options={configDef.values}
             onChange={this.handleParamChange}/>
           break;
+        case "soundMetric":
+          parameterEditor = <StringParam
+            key={paramName}
+            name={paramName}
+            value={value as string}
+            options={[
+              'rms', 'fastPeakDecay', 'peakDecay',
+              'bassRms', 'bassFastPeakDecay', 'bassPeakDecay',
+              'midRms', 'midFastPeakDecay', 'midPeakDecay',
+              'highRms', 'highFastPeakDecay', 'highPeakDecay'
+            ]}
+            onChange={this.handleParamChange}/>
+          break;
         case "gradient":
           parameterEditor = <GradientParam
             key={paramName}

@@ -57,31 +57,10 @@ module.exports = class RadialSun extends LightProgram {
 
   static presets() {
     return {
-      fromBottom: {
-        escala: 70,
-        centerY: -20,
-        soundMetric: "bassPeakDecay",
-        power: 2
-      },
-      fromTop: {
-        escala: 70,
-        centerY: 62,
-        soundMetric: "bassPeakDecay",
-        power: 2
-      },
-      bassCenter: {
-        escala: 70,
-        centerY: 35.4,
-        power: 10,
-        soundMetric: "bassFastPeakDecay"
-      },
-      fromBottomAnimatedPower: {
-        escala: 70,
-        centerY: -20,
-        soundMetric: "bassPeakDecay",
-        power: 2,
-        animatePower: true
-      }
+      fromBottom: {escala: 70, centerY: -20, soundMetric: "bassPeakDecay", power: 2},
+      fromTop: {escala: 70, centerY: 62, soundMetric: "bassPeakDecay", power: 2},
+      bassCenter: {escala: 70, centerY: 35.4, power: 10, soundMetric: "bassFastPeakDecay"},
+      fromBottomAnimatedPower: {escala: 70, centerY: -20, soundMetric: "bassPeakDecay", power: 2, animatePower: true}
     };
   }
 
@@ -93,16 +72,7 @@ module.exports = class RadialSun extends LightProgram {
     res.centerX = { type: Number, min: -50, max: 50, step: 0.1, default: 0 };
     res.power = { type: Number, min: 0, max: 10, step: 0.1, default: 3 };
     res.saturation = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
-    res.soundMetric = {
-      type: String,
-      values: [
-        "fastPeakDecay",
-        "bassFastPeakDecay",
-        "midFastPeakDecay",
-        "highFastPeakDecay"
-      ],
-      default: "fastPeakDecay"
-    };
+    res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     res.animatePower = { type: Boolean, default: false };
     res.colorMap =  {
       type: 'gradient',

@@ -15,29 +15,30 @@ export class StringParam extends React.Component<Props> {
   };
 
   render() {
+    const {name, value, options} = this.props;
     return (
       <div className="config-item">
-        <div className="overflow-auto">
-          <div className="float-left">{this.props.name}&nbsp;</div>
-          <div className="float-right font-weight-bold">{this.props.value}</div>
-        </div>
-        <div>
-          <br />
-          <div className="list-group">
-            {_.map(this.props.options, v => (
-              <button
-                key={v}
-                className={
-                  "list-group-item list-group-item-action " +
-                  (this.props.value === v ? "active" : "")
-                }
-                onClick={e => this.handleChange(e, v)}
-              >
-                {v}
-              </button>
-            ))}
+        <div className="float-left">{name}&nbsp;</div>
+        <div className="float-right font-weight-bold">
+          <div className="dropdown">
+            <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {value}
+            </button>
+            <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
+              {_.map(options, option => (
+                <button
+                  key={option}
+                  className={`small dropdown-item ${option === value ? "active" : ""}`}
+                  onClick={e => this.handleChange(e, option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+        <div className={'clearfix'}></div>
       </div>
     );
   }

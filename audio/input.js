@@ -15,6 +15,7 @@ class AudioInput extends EventEmitter {
     // this._sampleRate = options._sampleRate || 48000;
     const deviceIndex = options.deviceIndex || null;
     const profile = options.profile || null;
+    const fakeAudio = !!options.fakeAudio;
     this._args = [ '-u' ];
     if (!profile) {
       this._args.push(mainScript);
@@ -24,6 +25,9 @@ class AudioInput extends EventEmitter {
     }
     if (deviceIndex) {
       this._args.push('-d', deviceIndex.toString());
+    }
+    if (fakeAudio) {
+      this._args.push('-f');
     }
     this._subprocess = null;
     this._stopping = false;

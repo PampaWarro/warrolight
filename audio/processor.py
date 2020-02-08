@@ -241,6 +241,7 @@ class Summarize:
             'high_rms_no_bass': high_rms_no_bass,
             'mid_rms_no_bass': mid_rms_no_bass,
             'max': slow_max,
+            'mid_max': mid_max,
             'rms': normalized_rms,
             'slow_rms': np.divide(fast_avg, slow_max),
             'peak_decay': np.divide(mid_max - mid_avg, slow_max - mid_avg),
@@ -249,8 +250,45 @@ class Summarize:
         }
 
 
+class FakeAudio:
+    SKIP_ATTRS = frozenset([
+        'sample_rate',
+        'samples',
+        'fft',
+        'slow_fft',
+    ])
+
+    def __init__(self):
+        self.last = {}
+        self.speeds = {}
+        self.count = 0
+
+    def __call__(self, frame):
+        fake_mix = self._need_for_fake(frame)
+        for attr, value in frame.items():
+            if attr in self.SKIP_ATTRS:
+                continue
+            frame[attr] = (1.0 - fake_mix) * value + fake_mix * self._fake(attr)
+        self.count += 1
+        return frame
+
+    def _need_for_fake(self, frame):
+        return pow(1.0 - frame['mid_max'], 25)
+
+    def _fake(self, attr):
+        return 0.5 + 0.4 * np.sin(self._speed(attr) * self.count)
+
+    def _speed(self, attr):
+        try:
+            return self.speeds[attr]
+        except KeyError:
+            speed = 0.01 + 0.05 * np.random.random()
+            self.speeds[attr] = speed
+            return speed
+
+
 class RawAudioProcessor:
-    def __init__(self, sample_rate):
+    def __init__(self, sample_rate, fake_audio):
         self._sample_rate = sample_rate
         self._frame_processors = [
             fft,
@@ -271,6 +309,8 @@ class RawAudioProcessor:
             }, ['fft'], skip_bands=True),
             Summarize(),
         ]
+        if fake_audio:
+            self._frame_processors.append(FakeAudio())
 
     def process_raw_audio(self, data):
         frame = {

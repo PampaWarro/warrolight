@@ -15,6 +15,7 @@ controller.start();
 console.log('Available audio devices:\n', listDevices());
 const audioInput = new AudioInput({
   deviceIndex: null,  // TODO: allow overriding device.
+  fakeAudio: true,
 });
 audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
 audioInput.start();

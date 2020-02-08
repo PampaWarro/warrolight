@@ -68,8 +68,9 @@ def write_output_frame(frame):
     sys.stdout.buffer.flush()
 
 
-def audio_loop(device=None, sample_rate=48000, frame_size=512):
-    processor = RawAudioProcessor(sample_rate)
+def audio_loop(device=None, sample_rate=48000, frame_size=512, fake_audio=False):
+    logger.info('Fake audio: %s.', fake_audio)
+    processor = RawAudioProcessor(sample_rate=sample_rate, fake_audio=fake_audio)
     with sd.InputStream(device=device,
                         samplerate=sample_rate,
                         blocksize=frame_size,
@@ -91,6 +92,10 @@ def main():
                         type=int,
                         help='Index of the input device',
                         default=None)
+    parser.add_argument('-f',
+                        '--fake_audio',
+                        action='store_true',
+                        help='Enable fake audio values generation')
     parser.add_argument('-l',
                         '--list_devices',
                         action='store_true',
@@ -105,7 +110,7 @@ def main():
         device = sd.query_devices(args.device)
     logger.info('Using device "%s".', device['name'])
     try:
-        audio_loop(args.device)
+        audio_loop(device=args.device, fake_audio=args.fake_audio)
     except (KeyboardInterrupt, BrokenPipeError):
         pass
 

@@ -10,6 +10,7 @@ const io = SocketIO(server);
 
 const audio = new AudioInput({
   // profile : true,
+  fakeAudio: true,
 });
 console.log('Audio devices:\n', listDevices());
 audio.start();

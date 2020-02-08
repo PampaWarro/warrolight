@@ -15,11 +15,12 @@ class AudioInput extends EventEmitter {
     // this._sampleRate = options._sampleRate || 48000;
     const deviceIndex = options.deviceIndex || null;
     const profile = options.profile || null;
+    this._args = [ '-u' ];
     if (!profile) {
-      this._args = [ mainScript ];
+      this._args.push(mainScript);
     } else {
       const profilePath = options.profilePath || 'audioprofile.pstats';
-      this._args = [ '-m', 'cProfile', '-o', profilePath, mainScript ]
+      this._args.push('-m', 'cProfile', '-o', profilePath, mainScript);
     }
     if (deviceIndex) {
       this._args.push('-d', deviceIndex.toString());

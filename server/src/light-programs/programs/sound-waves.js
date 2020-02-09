@@ -25,9 +25,9 @@ module.exports = class SoundWaves extends LightProgram {
   }
 
   updateWave(wave) {
-    wave.distance +=
-      (this.config.haciaAfuera ? 1 : -1) * wave.speed * this.config.waveSpeed;
-    wave.intensity = (wave.intensity * (3 + Math.sqrt(wave.intensity))) / 4;
+    let intensityDecay = this.config.waveDecay;
+    wave.distance += (this.config.haciaAfuera ? 1 : -1) * wave.speed * this.config.waveSpeed;
+    wave.intensity = wave.intensity * (intensityDecay + ((1 - intensityDecay) * Math.sqrt(wave.intensity)));
   }
 
   drawFrame(draw, audio) {
@@ -37,7 +37,7 @@ module.exports = class SoundWaves extends LightProgram {
     audio = audio.currentFrame;
     let timeSinceLastCreation = new Date() - this.lastCreation;
     const audioValue = audio[this.config.soundMetric];
-    if ((timeSinceLastCreation > 50 && audioValue > 0.3) || (timeSinceLastCreation > 350 && audioValue > 0.1)) {
+    if ((timeSinceLastCreation > 50 && audioValue > 0.5) || (timeSinceLastCreation > 350 && audioValue > 0.15)) {
       this.dots.push(new Dot(this.config, audioValue));
       this.lastCreation = new Date();
 
@@ -114,6 +114,7 @@ module.exports = class SoundWaves extends LightProgram {
     config.waveCenterX = {type: Number, min: -60, max: 60, step: 1, default: 0};
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5};
     config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1};
+    config.waveDecay = {type: Number, min: 0.01, max: 0.99, step: 0.01, default: 0.9};
     config.haciaAfuera = {type: Boolean, default: true};
     config.wavePower = {type: Number, min: 0.5, max: 10, step: 0.5, default: 1.2};
     config.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};

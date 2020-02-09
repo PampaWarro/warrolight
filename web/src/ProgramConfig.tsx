@@ -5,6 +5,7 @@ import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue, CurrentProgramParameters } from "./types";
 import { GradientParam } from "./GradientParam";
 import { SubprogramParam } from "./SubprogramParam";
+import { SubprogramsListParam } from "./SubprogramsListParam";
 
 interface Props {
   program: Program | null;
@@ -12,7 +13,7 @@ interface Props {
   config: CurrentProgramParameters;
   globalConfig: { [param: string]: any };
   onSelectPreset(name: string): void;
-  onSaveNewPreset(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }): void;
+  onSaveNewPreset?(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 }
 
@@ -27,7 +28,7 @@ export class ProgramConfig extends React.PureComponent<Props> {
   handleSavePreset = (presetName: string | null | undefined) => {
     if(this.props.config.presetOverrides && this.props.program) {
       let newPresetName = presetName || prompt("Enter preset name");
-      if (newPresetName) {
+      if (newPresetName && this.props.onSaveNewPreset) {
         let combinedParams = { ...this.props.config.presetOverrides, ...this.props.config.overrides };
         this.props.onSaveNewPreset(this.props.program.name, newPresetName, combinedParams)
       }
@@ -72,6 +73,19 @@ export class ProgramConfig extends React.PureComponent<Props> {
             options={configDef.values}
             onChange={this.handleParamChange}/>
           break;
+        case "soundMetric":
+          parameterEditor = <StringParam
+            key={paramName}
+            name={paramName}
+            value={value as string}
+            options={[
+              'rms', 'fastPeakDecay', 'peakDecay',
+              'bassRms', 'bassFastPeakDecay', 'bassPeakDecay',
+              'midRms', 'midFastPeakDecay', 'midPeakDecay',
+              'highRms', 'highFastPeakDecay', 'highPeakDecay'
+            ]}
+            onChange={this.handleParamChange}/>
+          break;
         case "gradient":
           parameterEditor = <GradientParam
             key={paramName}
@@ -83,6 +97,15 @@ export class ProgramConfig extends React.PureComponent<Props> {
           break;
         case "program":
           parameterEditor = <SubprogramParam
+            key={paramName}
+            name={paramName}
+            value={value}
+            globalConfig={globalConfig}
+            options={this.props.programs}
+            onChange={this.handleParamChange}/>
+          break;
+        case "programs":
+          parameterEditor = <SubprogramsListParam
             key={paramName}
             name={paramName}
             value={value}
@@ -108,26 +131,30 @@ export class ProgramConfig extends React.PureComponent<Props> {
 
     const presets = currentProgram.presets || [];
 
-    const addNewBtn = <button className="btn btn-sm btn-link mt-2" onClick={() => this.handleSavePreset(null)}>
-      Save as preset...
-    </button>
-
-    let overridePresetBtn = null;
-    if(currentPreset) {
-      overridePresetBtn = <button className="btn btn-sm btn-link mt-2 ml-3"
-                                  onClick={() => this.handleSavePreset(currentPreset)}>
-        Save to <span className={'text-info'}>'{currentPreset}'</span>
+    let savePresets = null;
+    if (this.props.onSaveNewPreset) {
+      const addNewBtn = <button className="btn btn-sm btn-link mt-2" onClick={() => this.handleSavePreset(null)}>
+        Save as preset...
       </button>
+
+      let overridePresetBtn = null;
+      if (currentPreset) {
+        overridePresetBtn = <button className="btn btn-sm btn-link mt-2 ml-3"
+                                    onClick={() => this.handleSavePreset(currentPreset)}>
+          Save to <span className={'text-info'}>'{currentPreset}'</span>
+        </button>
+      }
+      savePresets = <div className={'text-center'}>
+        {addNewBtn}
+        {overridePresetBtn}
+      </div>
     }
 
     return (
       <div>
-        <Presets presets={presets} selected={currentPreset} onSelect={this.props.onSelectPreset} />
+        <Presets presets={presets} selected={currentPreset} onSelect={this.props.onSelectPreset}/>
         <div>{configOptions}</div>
-        <div className={'text-center'}>
-         { addNewBtn }
-         { overridePresetBtn }
-        </div>
+        {savePresets}
       </div>
     );
   }

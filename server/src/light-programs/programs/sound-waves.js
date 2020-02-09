@@ -36,11 +36,9 @@ module.exports = class SoundWaves extends LightProgram {
     }
     audio = audio.currentFrame;
     let timeSinceLastCreation = new Date() - this.lastCreation;
-    if (
-      (timeSinceLastCreation > 50 && audio.peakDecay > 0.3) ||
-      (timeSinceLastCreation > 350 && audio.peakDecay > 0.1)
-    ) {
-      this.dots.push(new Dot(this.config, audio.peakDecay));
+    const audioValue = audio[this.config.soundMetric];
+    if ((timeSinceLastCreation > 50 && audioValue > 0.3) || (timeSinceLastCreation > 350 && audioValue > 0.1)) {
+      this.dots.push(new Dot(this.config, audioValue));
       this.lastCreation = new Date();
 
       this.dots = _.filter(
@@ -118,6 +116,7 @@ module.exports = class SoundWaves extends LightProgram {
     config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1};
     config.haciaAfuera = {type: Boolean, default: true};
     config.wavePower = {type: Number, min: 0.5, max: 10, step: 0.5, default: 1.2};
+    config.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     // config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
 
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}

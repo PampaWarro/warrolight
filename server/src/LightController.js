@@ -39,6 +39,7 @@ const programNames = [
   "musicVolumeDotRandom",
   "noise",
   "radial",
+  "radial3d",
   "radialSun",
   "radialWarp",
   "rainbow",
@@ -97,6 +98,11 @@ module.exports = class LightController extends EventEmitter {
     } else {
       return {}
     }
+  }
+
+  getProgramDefaultParams(programName) {
+    let configSchema = this.programs[programName].configSchema;
+    return _.mapValues(configSchema, 'default')
   }
 
   getCurrentPresets() {

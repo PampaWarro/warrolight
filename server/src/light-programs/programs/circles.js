@@ -35,7 +35,7 @@ module.exports = class Circles extends LightProgram {
     if (!frame) {
       return;
     }
-    const normalizedBass = frame.bassPeakDecay;
+    const normalizedAudio = frame[this.config.soundMetric];
     const centerX =
       this.xBounds.center +
       0.25 *
@@ -63,7 +63,7 @@ module.exports = class Circles extends LightProgram {
       const h = (r * 0.1 + (this.timeInMs * this.config.velocidad) / 10000) % 1;
       const s = 1 / (1 + normalizedR);
       const v =
-        (0.01 + 0.99 * Math.pow(normalizedBass, 8)) *
+        (0.01 + 0.99 * Math.pow(normalizedAudio, 8)) *
         Math.pow(Math.sin(r * radiusFactor + theta), 10); ///Math.pow(r, 1);
       const color = ColorUtils.HSVtoRGB(h, s, v);
       colors[i] = color;
@@ -84,6 +84,7 @@ module.exports = class Circles extends LightProgram {
     let res = super.configSchema();
     res.escala = { type: Number, min: 0.01, max: 5, step: 0.01, default: 1 };
     res.velocidad = { type: Number, min: 0, max: 3, step: 0.01, default: 0.6 };
+    res.soundMetric = {type: 'soundMetric', default: "bassPeakDecay"};
     return res;
   }
 };

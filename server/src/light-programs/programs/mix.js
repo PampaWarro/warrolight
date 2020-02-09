@@ -56,6 +56,7 @@ module.exports = class Mix extends LightProgram {
 
         let subprogram = null;
 
+        // Detect if the selected program type is the same or it changed
         if (oldProgDef && oldProgDef.programName === newProgDef.programName) {
           subprogram = this.subprograms[i]
           subprogram.updateConfig({ ... subprogram.config, ... newProgDef.config })
@@ -63,11 +64,12 @@ module.exports = class Mix extends LightProgram {
           subprogram = this.getProgramInstanceFromParam(newProgDef)
         }
 
-        if(oldProgDef.presetName !== newProgDef.presetName) {
+        // Detect if a different preset was selected and apply the default+preset program config
+        if(oldProgDef.presetName !== newProgDef.presetName && newProgDef.presetName) {
           const presets = this.lightController.getProgramPresets(newProgDef.programName);
-          const defaults = {}
+          const defaults = this.lightController.getProgramDefaultParams(newProgDef.programName);
           newProgDef.config = presets[newProgDef.presetName];
-          subprogram.updateConfig({ ... defaults, ... subprogram.config, ... presets[newProgDef.presetName] })
+          subprogram.updateConfig({ ... defaults, ... presets[newProgDef.presetName] })
         }
 
         return subprogram

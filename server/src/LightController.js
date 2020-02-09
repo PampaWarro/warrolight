@@ -100,6 +100,11 @@ module.exports = class LightController extends EventEmitter {
     }
   }
 
+  getProgramDefaultParams(programName) {
+    let configSchema = this.programs[programName].configSchema;
+    return _.mapValues(configSchema, 'default')
+  }
+
   getCurrentPresets() {
     if (this.currentProgram) {
       return this.getProgramPresets(this.currentProgramName);

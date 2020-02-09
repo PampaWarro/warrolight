@@ -218,6 +218,9 @@
     renderers.push(new HistoryRenderer(addVizCanvas('rms', 600, 100),
                                        (frame) => { return frame.rms; }, 300));
     renderers.push(
+        new HistoryRenderer(addVizCanvas('max', 600, 100),
+                            (frame) => { return frame.max; }, 300));
+    renderers.push(
         new HistoryRenderer(addVizCanvas('bass', 600, 100),
                             (frame) => { return frame.bassFastPeakDecay; }, 300));
     renderers.push(

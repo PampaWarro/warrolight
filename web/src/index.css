@@ -11,7 +11,7 @@ body {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 300px 300px 1fr;
+  grid-template-columns: 250px 400px 1fr;
   grid-template-rows: auto 1fr auto;
   grid-template-areas: "devicesbar devicesbar devicesbar" "programsbar controlsbar preview" "programsbar controlsbar sound";
   position: fixed;

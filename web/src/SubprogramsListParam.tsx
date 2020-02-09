@@ -50,6 +50,7 @@ export class SubprogramsListParam extends React.Component<Props, any> {
           name={`#${index + 1}`}
           value={subprogramConfig}
           globalConfig={globalConfig}
+          includeShapeParameter={true}
           options={options}
           onChange={(name, config) => this.handleSubprogramChange(index, name, config)}
           onRemoveProgram={() => this.removeSubprogram(index)}

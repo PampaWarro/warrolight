@@ -1,17 +1,25 @@
-const LightProgram = require("./../base-programs/LightProgram");
-const ColorUtils = require("./../utils/ColorUtils");
 const _ = require('lodash');
 
-const {loadGradient} = require("../utils/gradients");
+const LightProgram = require('./../base-programs/LightProgram');
+const programsByShape = require('./../base-programs/ProgramsByShape');
 
 module.exports = class Mix extends LightProgram {
   init() {
     this.subprograms = _.map(this.config.programs, config => this.getProgramInstanceFromParam(config));
   }
 
-  getProgramInstanceFromParam({programName, config}) {
-    let p = this.lightController.instanciateProgram(programName);
-    p.updateConfig({...p.config, ...config})
+  getProgramInstanceFromParam({programName, config, shape}) {
+    let p = null;
+    // For performance, only use programsByShape if there is a shape
+    if(shape) {
+      const programClass = this.lightController.programs[programName].generator;
+      const byShapeClass = programsByShape({[shape]: [programClass, config || {}]});
+      p = new byShapeClass(this.config, this.geometry, this.shapeMapping);
+    } else {
+      p = this.lightController.instanciateProgram(programName);
+      p.updateConfig({...p.config, ...config})
+    }
+
     p.init();
     return p;
   }
@@ -58,7 +66,7 @@ module.exports = class Mix extends LightProgram {
         let subprogram = null;
 
         // Detect if the selected program type is the same or it changed
-        if (oldProgDef && oldProgDef.programName === newProgDef.programName) {
+        if (oldProgDef && oldProgDef.programName === newProgDef.programName && oldProgDef.shape === newProgDef.shape) {
           subprogram = this.subprograms[i]
           subprogram.updateConfig({ ... subprogram.config, ... newProgDef.config })
         } else {

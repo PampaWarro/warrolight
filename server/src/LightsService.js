@@ -36,7 +36,8 @@ module.exports = class LightsService {
       currentProgramName : controller.currentProgramName,
       currentConfig : controller.getCurrentConfig(),
       globalConfig: {
-        gradientsLibrary: getGradientsByNameCss()
+        gradientsLibrary: getGradientsByNameCss(),
+        shapes: _.keys(controller.shapeMapping())
       },
       micConfig : this.micConfig
     });

@@ -7,6 +7,7 @@ interface Props {
   name: string;
   value: any;
   options: any;
+  includeShapeParameter?: boolean;
   globalConfig: { [param: string]: any };
 
   onChange(name: string, value: ConfigValue): void;
@@ -23,28 +24,33 @@ export class SubprogramParam extends React.Component<Props, any> {
   }
 
   handleChange(newConfig: { [name: string]: ConfigValue }) {
-    const { programName, presetName, config } = this.props.value;
-    this.props.onChange(this.props.name, { programName, config: { ...config, presetName, ...newConfig } });
+    const { programName, presetName, config, shape } = this.props.value;
+    this.props.onChange(this.props.name, { programName, shape, config: { ...config, presetName, ...newConfig } });
   }
 
   handleProgramChange(programName: string) {
-    this.props.onChange(this.props.name, { programName });
+    this.props.onChange(this.props.name, { programName, shape: this.props.value.shape });
   }
 
   handleSelectPreset(presetName: string) {
-    const { programName } = this.props.value;
+    const { programName, shape } = this.props.value;
     // Setting a preset discards previous config
-    this.props.onChange(this.props.name, { programName, presetName, config: {} });
+    this.props.onChange(this.props.name, { programName, shape, presetName, config: {} });
   }
 
-  handleSavePreset(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }) {
+  handleShapeChange(selectedShapeName: string) {
+    const updatedConfig = { ...this.props.value, shape: selectedShapeName };
+    // To be consistent with the default no shape
+    if(!selectedShapeName)
+      delete updatedConfig.shape;
 
+    this.props.onChange(this.props.name, updatedConfig);
   }
 
   render() {
-    const { name, value, options, globalConfig, onRemoveProgram } = this.props;
+    const { name, value, options, globalConfig, includeShapeParameter, onRemoveProgram } = this.props;
 
-    const { programName, presetName, config } = value || {};
+    const { programName, presetName, config, shape } = value || {};
 
     const currentProgram = options[programName]
 
@@ -68,7 +74,6 @@ export class SubprogramParam extends React.Component<Props, any> {
             config={currentConfig}
             globalConfig={globalConfig}
             onSelectPreset={this.handleSelectPreset.bind(this)}
-            onSaveNewPreset={this.handleSavePreset.bind(this)}
             onChangeProgramConfig={this.handleChange.bind(this)}/>
         </div>
 
@@ -91,8 +96,38 @@ export class SubprogramParam extends React.Component<Props, any> {
       deleteBtn = <span className={'btn btn-sm btn-link text-danger p-1'}
                         onClick={() => onRemoveProgram(programName)}
                         title={'Remove program'}
-      role={'img'} aria-label={'Remove program'}>
-        ❌
+                        role={'img'}
+                        aria-label={'Remove program'}>❌</span>
+    }
+
+    let shapeSelector = null;
+    if (includeShapeParameter) {
+      const options = globalConfig.shapes
+
+      shapeSelector = <span className="dropdown mr-1" style={{zoom: '0.8'}}>
+        <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {shape || 'ALL'}
+        </button>
+
+        <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
+          <button
+            key={'no shape'}
+            className={`small dropdown-item ${!shape ? "active" : ""}`}
+            onClick={() => this.handleShapeChange('')}
+          >
+              ALL
+            </button>
+          {_.map(options, option => (
+            <button
+              key={option}
+              className={`small dropdown-item ${option === shape ? "active" : ""}`}
+              onClick={() => this.handleShapeChange(option)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </span>
     }
 
@@ -102,6 +137,8 @@ export class SubprogramParam extends React.Component<Props, any> {
           <div className={'flex-fill'}>
             {collapsableName}
           </div>
+
+          {shapeSelector}
 
           <div>
             <div className="dropdown">

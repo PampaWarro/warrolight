@@ -264,7 +264,9 @@ class RawAudioProcessor:
                 {
                     'fast': (0.06, ),
                     'mid': (0.02, ),
-                    'slow': (0.00005, ),
+                    # Slow alpha below controls global normalization.
+                    # Larger value => faster adaptation.
+                    'slow': (0.0002, ),
                 }, ['rms']),
             MovingStats({
                 'slow': (0.2, ),

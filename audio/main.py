@@ -29,6 +29,7 @@ import sys
 from processor import RawAudioProcessor
 import msgpack
 import stringcase
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +96,11 @@ def main():
                         '--list_devices',
                         action='store_true',
                         help='Show list of audio devices and exit')
+    parser.add_argument('-r',
+                        '--retry_interval',
+                        type=float,
+                        help='Time in seconds between retries on audio errors',
+                        default=1.)
     args = parser.parse_args()
     if args.list_devices:
         print(sd.query_devices())
@@ -103,12 +109,18 @@ def main():
         device = sd.query_devices(kind='input')
     else:
         device = sd.query_devices(args.device)
-    logger.info('Using device "%s".', device['name'])
-    try:
-        audio_loop(args.device)
-    except (KeyboardInterrupt, BrokenPipeError):
-        pass
+    while True:
+        logger.info('Using device "%s".', device['name'])
+        try:
+            audio_loop(args.device)
+        except sd.PortAudioError:
+            logger.exception('Audio error, retrying...')
+            time.sleep(args.retry_interval)
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, BrokenPipeError):
+        # User pressed ^C or parent process closed pipe, this is expected.
+        pass

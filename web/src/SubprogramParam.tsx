@@ -8,16 +8,20 @@ interface Props {
   value: any;
   options: any;
   globalConfig: { [param: string]: any };
+
   onChange(name: string, value: ConfigValue): void;
+
+  onRemoveProgram?(name: string): void;
 }
 
-export class SubprogramParam extends React.Component<Props,any> {
+export class SubprogramParam extends React.Component<Props, any> {
   constructor(props: Props) {
     super(props)
     this.state = {
       collapsed: true
     }
   }
+
   handleChange(newConfig: { [name: string]: ConfigValue }) {
     const { programName, presetName, config } = this.props.value;
     this.props.onChange(this.props.name, { programName, config: { ...config, presetName, ...newConfig } });
@@ -38,9 +42,9 @@ export class SubprogramParam extends React.Component<Props,any> {
   }
 
   render() {
-    const { name, value, options, globalConfig } = this.props;
+    const { name, value, options, globalConfig, onRemoveProgram } = this.props;
 
-    const { programName, presetName } = value || {};
+    const { programName, presetName, config } = value || {};
 
     const currentProgram = options[programName]
 
@@ -48,14 +52,15 @@ export class SubprogramParam extends React.Component<Props,any> {
 
     let currentConfig = {
       defaults: _.mapValues(currentProgram.config, 'default'),
-      overrides: value.config,
+      overrides: config,
       currentPreset: presetName
     }
 
-    if(value) {
-      if(!this.state.collapsed) {
+    let collapsableName: any = name;
+
+    if (value) {
+      if (!this.state.collapsed) {
         programConfig = <div className="p-2 mt-1 mb-2 bg-lighter rounded" style={{ zoom: '0.9' }}>
-          <div onClick={() => this.setState({collapsed: true})} className="config-group-header mb-2">➖ Parameters {name}</div>
 
           <ProgramConfig
             program={currentProgram}
@@ -66,22 +71,39 @@ export class SubprogramParam extends React.Component<Props,any> {
             onSaveNewPreset={this.handleSavePreset.bind(this)}
             onChangeProgramConfig={this.handleChange.bind(this)}/>
         </div>
+
+        collapsableName =
+          <div onClick={() => this.setState({ collapsed: true })} className="config-group-header ml-1">
+            <span role={'img'} aria-label={'Hide parameters'}>➖</span> {name}
+          </div>
       } else {
-        programConfig =
-          <div className="p-2 my-1 bg-lighter rounded" style={{ zoom: '0.9' }}>
-            <div onClick={() => this.setState({collapsed: false})} className="config-group-header">➕ Parameters {name}</div>
+        programConfig = null
+        collapsableName =
+          <div onClick={() => this.setState({ collapsed: false })} className="config-group-header ml-1">
+            <span role={'img'} aria-label={'Hide parameters'}>➕</span> {name}
           </div>
       }
     }
 
+    // Convinience UI functionality for components that use SubprogramParams
+    let deleteBtn = null;
+    if (onRemoveProgram) {
+      deleteBtn = <span className={'btn btn-sm btn-link text-danger p-1'}
+                        onClick={() => onRemoveProgram(programName)}
+                        title={'Remove program'}
+      role={'img'} aria-label={'Remove program'}>
+        ❌
+      </span>
+    }
+
     return (
       <div className="config-item">
-        <div className="">
-          <div className="float-left">
-            {name}&nbsp;
+        <div className="d-flex justify-content-between align-items-center bg-lighter rounded">
+          <div className={'flex-fill'}>
+            {collapsableName}
           </div>
 
-          <div className="float-right font-weight-bold">
+          <div>
             <div className="dropdown">
               <button className="btn btn-sm btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -99,8 +121,10 @@ export class SubprogramParam extends React.Component<Props,any> {
               </div>
             </div>
           </div>
+
+          {deleteBtn}
         </div>
-        <div className="clearfix"></div>
+
         {programConfig}
       </div>
     );

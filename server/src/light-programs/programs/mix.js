@@ -6,12 +6,7 @@ const {loadGradient} = require("../utils/gradients");
 
 module.exports = class Mix extends LightProgram {
   init() {
-    let {a, b} = this.config;
-
-    this.subprograms = [
-      this.getProgramInstanceFromParam(a),
-      this.getProgramInstanceFromParam(b)
-    ]
+    this.subprograms = _.map(this.config.programs, config => this.getProgramInstanceFromParam(config));
   }
 
   getProgramInstanceFromParam({programName, config}) {
@@ -22,7 +17,7 @@ module.exports = class Mix extends LightProgram {
   }
 
   drawFrame(draw, audio) {
-    const combinedColors = new Array(this.numberOfLeds);
+    const combinedColors = new Array(this.numberOfLeds).fill([0,0,0,0]);
 
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
 
@@ -46,10 +41,16 @@ module.exports = class Mix extends LightProgram {
   }
 
   updateConfig(newConfig) {
+    // TODO: backwards compatibility with previous version of mix
+    if(newConfig.a && newConfig.b) {
+      let {a, b, ... other} = newConfig;
+      newConfig = {... other, programs: [a, b]}
+    }
+
     // Override LightProgram version to decide when a program init needs to be called
     if (this.subprograms) {
-      let updated = [newConfig.a, newConfig.b];
-      let oldConfigs = [this.config.a, this.config.b]
+      let updated = newConfig.programs;
+      let oldConfigs = this.config.programs;
 
       this.subprograms = _.map(updated, (newProgDef, i) => {
         let oldProgDef = oldConfigs[i];
@@ -65,7 +66,7 @@ module.exports = class Mix extends LightProgram {
         }
 
         // Detect if a different preset was selected and apply the default+preset program config
-        if(oldProgDef.presetName !== newProgDef.presetName && newProgDef.presetName) {
+        if(oldProgDef && oldProgDef.presetName !== newProgDef.presetName && newProgDef.presetName) {
           const presets = this.lightController.getProgramPresets(newProgDef.programName);
           const defaults = this.lightController.getProgramDefaultParams(newProgDef.programName);
           newProgDef.config = presets[newProgDef.presetName];
@@ -73,7 +74,7 @@ module.exports = class Mix extends LightProgram {
         }
 
         return subprogram
-      })
+      });
     }
 
     super.updateConfig(newConfig)
@@ -96,8 +97,7 @@ module.exports = class Mix extends LightProgram {
   static configSchema() {
     let res = super.configSchema();
 
-    res.a = {type: 'program', default: {programName: 'all-off'}};
-    res.b = {type: 'program', default: {programName: 'all-off'}};
+    res.programs = {type: 'programs', default: [{programName: 'all-off'}]};
 
     return res;
   }

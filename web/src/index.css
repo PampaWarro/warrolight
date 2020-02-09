@@ -110,6 +110,9 @@ hr {
   background-color: #007bff;
 }
 
+.config-item {
+  user-select: none;
+}
 .config-item .list-group-item {
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;

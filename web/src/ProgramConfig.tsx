@@ -5,6 +5,7 @@ import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue, CurrentProgramParameters } from "./types";
 import { GradientParam } from "./GradientParam";
 import { SubprogramParam } from "./SubprogramParam";
+import { SubprogramsListParam } from "./SubprogramsListParam";
 
 interface Props {
   program: Program | null;
@@ -96,6 +97,15 @@ export class ProgramConfig extends React.PureComponent<Props> {
           break;
         case "program":
           parameterEditor = <SubprogramParam
+            key={paramName}
+            name={paramName}
+            value={value}
+            globalConfig={globalConfig}
+            options={this.props.programs}
+            onChange={this.handleParamChange}/>
+          break;
+        case "programs":
+          parameterEditor = <SubprogramsListParam
             key={paramName}
             name={paramName}
             value={value}

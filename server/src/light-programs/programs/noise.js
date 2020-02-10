@@ -1,51 +1,83 @@
 const tumult = require("tumult");
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("../utils/ColorUtils");
+const {
+  TimedMultiGradient,
+  loadGradient,
+  allGradients
+} = require("../utils/gradients");
 
-function rescale(x, min, max) {
-  return Math.floor((x + 1) * (max - min) + min);
+function rescale(value) {
+  return 0.5 + 0.5 * Math.sin(value);
 }
 
 // A simple program based on Simplex noise to generate
 // a random cloud of colors.
 module.exports = class Noise extends LightProgram {
+  timedMultiGradient = new TimedMultiGradient(allGradients());
   constructor(config, geometry) {
     super(config, geometry);
   }
 
   init() {
     this.time = 0;
-    this.noise = new tumult[this.config.noise]()
+    this.noise = new tumult[this.config.noise]();
   }
 
   drawFrame(draw) {
+    this.timedMultiGradient.currentTime = this.timeInMs / 1000;
     this.time += this.config.speed;
+
+    const gradient = this.config.colorMap
+      ? loadGradient(this.config.colorMap)
+      : this.timedMultiGradient;
 
     const noise = this.noise;
     const { x, y } = this.geometry;
-    const offset = this.config.offset;
     const t = this.time / 1000;
 
     var colors = new Array(this.numberOfLeds);
     for (let i = 0; i < colors.length; i++) {
-        const r = noise.gen(x[i] / 32 + t, y[i] / 32 + t)
-        const g = noise.gen(x[i] / 32 + t, y[i] / 32 + t + 100)
-        const b = noise.gen(x[i] / 32 + t, y[i] / 32 + t + 200)
-        colors[i] = [r, g, b].map(v => rescale(v, 0, 255));
+      const v = rescale(
+        this.config.colorScale * noise.gen(x[i] / 32 + t, y[i] / 32 + t)
+      );
+      const brightness = rescale(
+        this.config.brightnessScale *
+          noise.gen(x[i] / 32 + t + 100, y[i] / 32 + t)
+      );
+      colors[i] = gradient.colorAt(v).map(x => Math.floor(x * brightness));
     }
     draw(colors);
   }
 
   updateConfig(config) {
     super.updateConfig(config);
-    this.noise = new tumult[this.config.noise]()
+    this.noise = new tumult[this.config.noise]();
   }
 
   static configSchema() {
     let config = super.configSchema();
-    config.speed = { type: Number, min: 1, max: 30, default: 5 };
-    config.offset = { type: Number, min: 1, max: 100, default: 13 };
-    config.noise = { type: String, values: ["Simplex2", "Perlin2"], default: "Simplex2" };
+    config.speed = { type: Number, min: 1, max: 30, default: 5, step: 0.01 };
+    config.colorScale = {
+      type: Number,
+      min: 1,
+      max: 30,
+      default: 5,
+      step: 0.01
+    };
+    config.brightnessScale = {
+      type: Number,
+      min: 0,
+      max: 30,
+      default: 5,
+      step: 0.01
+    };
+    config.noise = {
+      type: String,
+      values: ["Simplex2", "Perlin2"],
+      default: "Simplex2"
+    };
+    config.colorMap = { type: "gradient", default: "" };
     return config;
   }
 };

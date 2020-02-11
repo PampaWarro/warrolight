@@ -45,7 +45,7 @@ module.exports = function programsByShape(mapping) {
           );
           specificConfig = _.extend({}, config, defaultConfig, specificConfig);
         }
-        this.instances[shapeName] = new Program(specificConfig, shape);
+        this.instances[shapeName] = new Program(specificConfig, shape, shapeMapping);
         this.instances[shapeName].specificConfig = specificConfig;
       });
       this.state = new Array(this.numberOfLeds).fill([0, 0, 0]);

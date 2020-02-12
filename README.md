@@ -26,7 +26,7 @@ yarn
 pipenv install
 ```
 
-If you don't have pipenv installed install it first with:
+Si no tenés `pipenv` instalalo primero con:
 
 ```
 pip3 install pipenv

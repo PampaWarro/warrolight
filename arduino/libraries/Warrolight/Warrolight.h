@@ -80,6 +80,7 @@ class MultiProgram
 {
 public:
   void setup();
+  void setProgram(int program);
   void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
 
 private:

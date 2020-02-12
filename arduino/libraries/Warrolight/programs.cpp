@@ -132,6 +132,10 @@ void MultiProgram::setup()
   m_init = true;
 }
 
+void MultiProgram::setProgram(int program) {
+  m_program = program % MULTIPROGRAM_NUM_PROGRAMS;
+}
+
 void MultiProgram::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
 {
   if (!m_init)

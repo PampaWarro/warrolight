@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {
-  if (withIp) {
+  if (!withIp) {
     return;
   }
 

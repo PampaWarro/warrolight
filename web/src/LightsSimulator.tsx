@@ -21,6 +21,7 @@ interface Props {
   height: number;
   onStart(): void;
   onStop(): void;
+  receivingData: boolean;
 }
 
 interface State {
@@ -39,6 +40,7 @@ export class LightsSimulator extends React.Component<Props, State> {
     this.state = { layout: null };
 
     this.lightsRenderer = new Canvas3DLightsRenderer();
+    this.lightsRenderer.enabled = this.props.receivingData;
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
   }
@@ -171,7 +173,7 @@ abstract class LightsRenderer {
   private _layout: Layout | null = null;
 
   constructor() {
-    this.enabled = true;
+    this.enabled = false;
     this.lastFrameTime = performance.now();
     this.lastFPS = 0;
     this.frameCount = 0;

@@ -31,6 +31,9 @@ interface State {
   connection: string;
 }
 
+// Quick and dirty User agent sniffing for desktop detection
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 export class App extends React.Component<Props, State> {
   api!: API;
   lightsSim: React.RefObject<LightsSimulator>;
@@ -87,7 +90,10 @@ export class App extends React.Component<Props, State> {
     api.on("connecting", () => this.setState({ connection: "connecting" }));
     api.on("connect", () => {
       this.setState({ connection: "connected" });
-      setTimeout(() => api.startSamplingLights(), 500);
+
+      if(!isMobile) {
+        setTimeout(() => api.startSamplingLights(), 500);
+      }
     });
     api.on("disconnect", () => this.setState({ connection: "disconnected" }));
     api.on("error", () => this.setState({ connection: "error" }));
@@ -235,6 +241,7 @@ export class App extends React.Component<Props, State> {
                 ref={this.lightsSim}
                 height={600}
                 width={800}
+                receivingData={!isMobile}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}
               />

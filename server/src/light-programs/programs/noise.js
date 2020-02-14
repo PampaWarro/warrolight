@@ -60,7 +60,7 @@ module.exports = class Noise extends LightProgram {
     config.speed = { type: Number, min: 1, max: 30, default: 5, step: 0.01 };
     config.colorScale = {
       type: Number,
-      min: 1,
+      min: 0.01,
       max: 30,
       default: 5,
       step: 0.01

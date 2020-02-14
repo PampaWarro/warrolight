@@ -25,7 +25,7 @@ module.exports = class Mix extends LightProgram {
   }
 
   drawFrame(draw, audio) {
-    const combinedColors = new Array(this.numberOfLeds).fill([0,0,0,0]);
+    const combinedColors = new Array(this.numberOfLeds).fill(this.config.multiply ? [255, 255, 255, 0] : [0, 0, 0, 0]);
 
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
 
@@ -35,12 +35,20 @@ module.exports = class Mix extends LightProgram {
       let globalBrightness = prog.config.globalBrightness || 0;
       prog.drawFrame((colors) => {
         for (let i = 0; i < this.numberOfLeds; i++) {
-          let [r, g, b, a] = combinedColors[i] || [0, 0, 0, 0];
+          let [r, g, b, a] = combinedColors[i]
           const [r2, g2, b2, a2] = colors[i];
-          r += (r2 || 0)*globalBrightness;
-          g += (g2 || 0)*globalBrightness;
-          b += (b2 || 0)*globalBrightness;
-          a += a2 || 0;
+          if (this.config.multiply) {
+            // globalBrightness of 0 means "the layer does not darken the other layer"
+            r = r * ((r2+(255-r2)*(1-globalBrightness)) || 0) / 255;
+            g = g * ((g2+(255-g2)*(1-globalBrightness)) || 0) / 255;
+            b = b * ((b2+(255-b2)*(1-globalBrightness)) || 0) / 255;
+            a = a + (a2 || 0)
+          } else {
+            r += (r2 || 0) * globalBrightness;
+            g += (g2 || 0) * globalBrightness;
+            b += (b2 || 0) * globalBrightness;
+            a += a2 || 0;
+          }
           combinedColors[i] = [r, g, b, a];
         }
       }, audio)
@@ -106,6 +114,7 @@ module.exports = class Mix extends LightProgram {
     let res = super.configSchema();
 
     res.programs = {type: 'programs', default: [{programName: 'all-off'}]};
+    res.multiply = {type: Boolean, default: false};
 
     return res;
   }

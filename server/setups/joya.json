@@ -3,49 +3,35 @@
   "shapeMapping": "joya",
   "lights": 900,
   "outputDevices": {
-    "ether1": {
-      "type": "udp",
+    "serial1": {
+      "type": "serial",
       "params": {
-        "numberOfLights": 300,
-        "ip": "192.168.1.2",
-        "udpPort": 2222
+        "numberOfLights": 450,
+        "devicePortWindows": "COM10",
+        "devicePortUnix": "/dev/ttyACM0"
       }
     },
-    "ether2": {
-      "type": "udp",
+    "serial2": {
+      "type": "serial",
       "params": {
-        "numberOfLights": 300,
-        "ip": "192.168.1.4",
-        "udpPort": 4444
-      }
-    },
-    "ether3": {
-      "type": "udp",
-      "params": {
-        "numberOfLights": 300,
-        "ip": "192.168.1.6",
-        "udpPort": 6666
+        "numberOfLights": 450,
+        "devicePortWindows": "COM12",
+        "devicePortUnix": "/dev/ttyACM0"
       }
     }
   },
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 300,
+      "to": 450,
       "baseIndex": 0,
-      "deviceName": "ether1"
+      "deviceName": "serial1"
     },
     {
-      "from": 300,
-      "to": 600,
-      "baseIndex": 0,
-      "deviceName": "ether2"
-    },
-    {
-      "from": 600,
+      "from": 450,
       "to": 900,
       "baseIndex": 0,
-      "deviceName": "ether3"
+      "deviceName": "serial2"
     }
   ]
 }

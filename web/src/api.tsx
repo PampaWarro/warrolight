@@ -8,7 +8,8 @@ export class API extends EventEmitter {
   constructor() {
     super();
 
-    const ws = new ReconnectingWebSocket("ws://localhost:8080/", "warro");
+    // Grab host from current page, so that it works from other devices
+    const ws = new ReconnectingWebSocket(`ws://${window.location.hostname}:8080/`, "warro");
     this.emit("connecting");
 
     ws.addEventListener("open", () => {

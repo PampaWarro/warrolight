@@ -64,6 +64,8 @@ module.exports = class LightController extends EventEmitter {
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
     this.setCurrentProgram(programNames[0]);
 
+    this.multiplexer.onDeviceStatus((... args) => this.emit('deviceStatus', ... args));
+
     this.lastLightsUpdate = Date.now();
     this.lastDroppedFrame = Date.now();
   }
@@ -227,10 +229,6 @@ module.exports = class LightController extends EventEmitter {
     if (this.running) {
       this.start();
     }
-  }
-
-  onDeviceStatus(cbk) {
-    this.multiplexer.onDeviceStatus(cbk);
   }
 
   loadProgram(name) {

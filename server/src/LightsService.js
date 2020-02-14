@@ -8,67 +8,78 @@ function lightsToByteString(ledsColorArray) {
   return Buffer.from(bytes).toString("base64");
 }
 
+let lightServicesCounter = 0;
+
 module.exports = class LightsService {
-  constructor(controller, send) {
+  constructor(controller, send, broadcast) {
     this.controller = controller;
-    this.micConfig = {sendingMicData : true, metric : "Rms"};
+    this.micConfig = {sendingMicData: false, metric: "Rms"};
+    this.broadcast = broadcast;
     this.send = send;
     this.simulating = false;
-
-    const soundListener = new SoundListener(audioEmitter, this.micConfig);
-    soundListener.start(lastVolumes => send("micSample", lastVolumes));
+    this.id = `${lightServicesCounter++}`;
+    this.soundListener = new SoundListener(audioEmitter, this.micConfig);
+    this.soundListener.start(lastVolumes => {
+      if (this.micConfig.sendingMicData) {
+        this.send("micSample", lastVolumes);
+      }
+    });
 
     this.sendLightsSample = this.sendLightsSample.bind(this);
 
-    controller.on("lights", this.sendLightsSample);
+    this.sendDeviceStatus =  devicesStatus => this.send("devicesStatus", devicesStatus);
 
-    controller.onDeviceStatus(devicesStatus =>
-                                  this.send("devicesStatus", devicesStatus));
+    controller.on("lights", this.sendLightsSample);
+    controller.on('deviceStatus', this.sendDeviceStatus);
   }
 
   connect() {
-    console.log("[ON] Remote control connnected".green);
+    console.log(`[ON] Remote control ${this.id} connnected`.green);
 
     const controller = this.controller;
 
     this.send("completeState", {
-      programs : controller.getProgramsSchema(),
-      currentProgramName : controller.currentProgramName,
-      currentConfig : controller.getCurrentConfig(),
+      programs: controller.getProgramsSchema(),
+      currentProgramName: controller.currentProgramName,
+      currentConfig: controller.getCurrentConfig(),
       globalConfig: {
         gradientsLibrary: getGradientsByNameCss(),
         shapes: _.keys(controller.shapeMapping())
       },
-      micConfig : this.micConfig
+      micConfig: this.micConfig
     });
   }
 
   sendLightsSample(lights) {
     if (this.simulating) {
-      let encodedColors = lightsToByteString(lights);
-      this.send("lightsSample", encodedColors);
+      this.send("lightsSample", lightsToByteString(lights));
     }
   }
 
   broadcastStateChange() {
-    const controller = this.controller;
-    this.send("stateChange", {
-      currentProgramName : controller.currentProgramName,
-      currentConfig : controller.getCurrentConfig(),
-      micConfig : this.micConfig
+    this.broadcast("stateChange", {
+      currentProgramName: this.controller.currentProgramName,
+      currentConfig: this.controller.getCurrentConfig(),
+      micConfig: this.micConfig
     });
   }
 
+
+
   setMicConfig(newMicConfig) {
     if (newMicConfig.sendingMicData === true) {
-      console.log("[ON] Web client receiving MIC data".green);
+      console.log(`[ON] Web client ${this.id} receiving MIC data`.green);
     } else if (newMicConfig.sendingMicData === false) {
-      console.log("[OFF] Web client stopped receiving MIC data".gray);
+      console.log(`[OFF] Web client ${this.id} stopped receiving MIC data`.gray);
     }
 
     Object.assign(this.micConfig, newMicConfig);
 
-    this.broadcastStateChange();
+    this.send("stateChange", {
+      currentProgramName: this.controller.currentProgramName,
+      currentConfig: this.controller.getCurrentConfig(),
+      micConfig: this.micConfig
+    });
   }
 
   setPreset(presetName) {
@@ -88,32 +99,34 @@ module.exports = class LightsService {
   }
 
   updateConfigParam(config) {
-    const controller = this.controller;
+    this.controller.updateConfigOverride(config);
 
-    controller.updateConfigOverride(config);
-
-    this.send("stateChange", {
-      currentProgramName : controller.currentProgramName,
-      currentConfig : controller.getCurrentConfig(),
-      micConfig : this.micConfig
+    this.broadcast("stateChange", {
+      currentProgramName: this.controller.currentProgramName,
+      currentConfig: this.controller.getCurrentConfig(),
+      micConfig: this.micConfig
     });
   }
 
   startSamplingLights() {
-    console.log("[ON] Web client sampling lights data".green);
+    console.log(`[ON] Web client ${this.id} sampling lights data`.green);
     this.simulating = true;
-    this.send("layout", {geometry : this.controller.geometry});
+    this.send("layout", {geometry: this.controller.geometry});
   }
 
   stopSamplingLights() {
-    console.log("[OFF] Web client stopped sampling lights".gray);
+    console.log(`[OFF] Web client ${this.id} stopped sampling lights`.gray);
     this.simulating = false;
   }
 
-  restartProgram() { this.controller.restart(); }
+  restartProgram() {
+    this.controller.restart();
+  }
 
   disconnect() {
-    console.log("[OFF] Remote control DISCONNNECTED".gray);
+    console.log(`[OFF] Remote control ${this.id} DISCONNNECTED`.gray);
     this.controller.off("lights", this.sendLightsSample);
+    this.controller.off('deviceStatus', this.sendDeviceStatus);
+    this.soundListener.stop();
   }
 };

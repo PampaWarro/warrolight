@@ -5,7 +5,7 @@ exports.startServer = function startServer(controller) {
   const wss = new WebSocket.Server({ port: 8080 });
 
   // Broadcast to all connected clients
-  function send(event, data) {
+  function broadcast(event, data) {
     const message = JSON.stringify([event, data]);
     wss.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
@@ -14,9 +14,24 @@ exports.startServer = function startServer(controller) {
     });
   }
 
-  const service = new LightsService(controller, send);
+  let liveRemoteControls = 0;
+
+  const logConnectedClients = () => console.log(`There are ${liveRemoteControls} connected remote controls`.cyan);
+
 
   wss.on("connection", function connection(ws) {
+    // Send to itself
+    liveRemoteControls++;
+    logConnectedClients();
+
+    function send(event, data) {
+      const message = JSON.stringify([event, data]);
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(message);
+        }
+    }
+
+    const service = new LightsService(controller, send, broadcast);
 
     ws.on("message", function incoming(message) {
       const [event, data] = JSON.parse(message);
@@ -30,8 +45,10 @@ exports.startServer = function startServer(controller) {
 
     service.connect();
 
-    ws.on("disconnect", () => {
+    ws.on("close", () => {
       service.disconnect();
+      liveRemoteControls--;
+      logConnectedClients();
     });
   });
 };

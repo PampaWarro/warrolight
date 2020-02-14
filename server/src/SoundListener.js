@@ -13,20 +13,18 @@ module.exports = class SoundListener {
     let lastRawVolumes = [];
 
     const flushVolume = _.throttle(() => {
-      if (this.micConfig.sendingMicData) {
-        callback(lastVolumes);
-      }
+      callback(lastVolumes);
       lastVolumes = [];
     }, 100);
 
     let avg = 1;
 
-    this.audioEmitter.on("audioframe", frame => {
+    this.audioFrameHandler = frame => {
       const summary = {
         ..._.fromPairs(_.map(
-            [ 'bass', 'mid', 'high' ],
-            (bandName) => [bandName, frame[bandName + micConfig.metric]],
-            )),
+          [ 'bass', 'mid', 'high' ],
+          (bandName) => [bandName, frame[bandName + micConfig.metric]],
+        )),
         all : frame.fastPeakDecay,
       };
 
@@ -45,6 +43,12 @@ module.exports = class SoundListener {
 
         lastRawVolumes.shift();
       }
-    });
+    }
+
+    this.audioEmitter.on("audioframe", this.audioFrameHandler);
+  }
+
+  stop() {
+    this.audioEmitter.off("audioframe", this.audioFrameHandler)
   }
 }

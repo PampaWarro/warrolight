@@ -7,6 +7,7 @@ body {
   margin-top: 56px;
   background-color: black;
   color: #aaa;
+  user-select: none;
 }
 
 .grid-container {
@@ -19,18 +20,6 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-}
-
-@media (max-width: 640px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: 100px 100px 1fr auto 1fr;
-    grid-template-areas: "devicesbar" "programsbar" "preview" "sound" "controlsbar";
-  }
-
-  .mic-client canvas {
-    height: 100px;
-  }
 }
 
 .gradient-tas {
@@ -65,9 +54,11 @@ body {
   grid-area: programsbar;
   background-color: #1a1b1d;
   border-right: 8px solid black;
+  user-select: none;
 
   .nav-link {
     cursor: pointer;
+
 
     &.active {
       color: white;
@@ -78,6 +69,7 @@ body {
 
 .controlsbar {
   grid-area: controlsbar;
+  user-select: none;
   background-color: #1a1b1d;
 }
 
@@ -118,8 +110,6 @@ hr {
 }
 
 .config-item {
-  user-select: none;
-
   .list-group-item {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
@@ -154,6 +144,7 @@ hr {
   top: 48%;
   width: 100%;
   pointer-events: none;
+  user-select: none;
 }
 
 .lights-simulator {
@@ -203,5 +194,46 @@ input[type=range] {
 
   &:focus::-webkit-slider-runnable-track {
     background: #CCC;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-container {
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 80px 0.3fr 80px 1fr;
+    grid-template-areas: "devicesbar devicesbar" "programsbar preview" "programsbar sound" "controlsbar controlsbar";
+  }
+
+  .mic-client canvas {
+    height: 100px;
+  }
+
+  .devicesbar {
+    zoom: 0.8;
+
+    .btn-sm {
+      padding: 0rem 0.2rem;
+    }
+  }
+
+  .soundbar {
+    zoom: 0.7;
+  }
+
+  .programsbar {
+    border-right: solid 2px gray;
+    .nav-link {
+      font-size: 0.8em;
+    }
+  }
+
+  .controlsbar {
+    border-top: solid 2px gray;
+    // Space fot the finger to scroll with changing a param by accident
+    padding-right: 50px !important;
+  }
+
+  .preview-btn {
+    font-size: 0.7em;
   }
 }

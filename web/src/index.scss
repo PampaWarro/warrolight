@@ -52,6 +52,7 @@ body {
 .bg-lighter {
   background: rgba(255, 255, 255, 0.05);
 }
+
 .bg-lighter-info {
   background: rgba(23, 162, 184, 0.11);
 }
@@ -64,15 +65,15 @@ body {
   grid-area: programsbar;
   background-color: #1a1b1d;
   border-right: 8px solid black;
-}
 
-.programsbar .nav-link {
-  cursor: pointer;
-}
+  .nav-link {
+    cursor: pointer;
 
-.programsbar .nav-link.active {
-  color: white;
-  background-color: #343a40;
+    &.active {
+      color: white;
+      background-color: #343a40;
+    }
+  }
 }
 
 .controlsbar {
@@ -105,23 +106,24 @@ hr {
 .list-group-item {
   color: #CCC;
   background-color: #343a40;
-}
 
-.list-group-item:hover {
-  color: #CCC;
-  background-color: #42484e;
-}
+  &:hover {
+    color: #CCC;
+    background-color: #42484e;
+  }
 
-.list-group-item.active:hover {
-  background-color: #007bff;
+  &.active:hover {
+    background-color: #007bff;
+  }
 }
 
 .config-item {
   user-select: none;
-}
-.config-item .list-group-item {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
+
+  .list-group-item {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }
 
 .config-group-header {
@@ -132,10 +134,10 @@ hr {
 .mic-client {
   background-color: #1a1b1d;
   position: relative;
-}
 
-.mic-client canvas {
-  width: auto;
+  canvas {
+    width: auto;
+  }
 }
 
 .mic-btns {
@@ -160,12 +162,13 @@ hr {
 
 .preview-area {
   position: relative;
+
   /* background-color: #1a1b1d; */
   text-align: center;
-}
 
-.preview-area canvas {
-  max-width: 100%;
+  canvas {
+    max-width: 100%;
+  }
 }
 
 input[type=range] {
@@ -173,32 +176,32 @@ input[type=range] {
   margin: 10px 0px;
   width: 100%;
   background-color: transparent;
-}
 
-input[type=range]::-webkit-slider-runnable-track {
-  /*width: 150px;*/
-  height: 3px;
-  background: #343a40;
-  border: none;
-  border-radius: 3px;
-}
+  &::-webkit-slider-runnable-track {
+    /*width: 150px;*/
+    height: 3px;
+    background: #343a40;
+    border: none;
+    border-radius: 3px;
+  }
 
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: #007bff;
-  margin-top: -8px;
-  cursor: pointer;
-}
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    margin-top: -8px;
+    cursor: pointer;
+  }
 
-input[type=range]:hover::-webkit-slider-thumb, input[type=range]:active, input[type=range]:focus::-webkit-slider-thumb, input[type=range]::-webkit-slider-thumb:hover, input[type=range]:active::-webkit-slider-thumb {
-  outline: none;
-  background: #ffdf10;
-}
+  &:hover::-webkit-slider-thumb, &:active, &:focus::-webkit-slider-thumb, &::-webkit-slider-thumb:hover, &:active::-webkit-slider-thumb {
+    outline: none;
+    background: #ffdf10;
+  }
 
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #CCC;
+  &:focus::-webkit-slider-runnable-track {
+    background: #CCC;
+  }
 }

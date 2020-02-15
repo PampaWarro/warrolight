@@ -550,6 +550,22 @@ camelcase@5.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.0.0.tgz#03295527d58bd3cd4aa75363f35b2e8d97be2f42"
   integrity sha512-faqwZqnWxbxn+F1d399ygeamQNy3lPp/H9H6rNrqYh4FSVCtcY+3cub1MxA8o9mDd55mM8Aghuu/kuyYA6VTsA==
 
+cellular-automata-rule-parser@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/cellular-automata-rule-parser/-/cellular-automata-rule-parser-3.0.1.tgz#17145876f2c9502d7ad01cc3284d43b375333653"
+  integrity sha512-luDYoTsY28apxfp1oZ6ZOYaYqazn49k7lv1+zDpHcmmwGgWBZRW73BNQ6uPer4eujcuYucF72XUwvkOQjqREZA==
+
+cellular-automata@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/cellular-automata/-/cellular-automata-2.0.1.tgz#ae39cc77d69d2f91cb3a6b9840a0042720b7545c"
+  integrity sha512-WtivwZEgqHHrziVvPdQdOtTrPo8NQxxXwAwh5GlZRpTPvJrB4vT5hKGsJj/lfhT85wtMj1bzaBt+YhZVpqcZSA==
+  dependencies:
+    cellular-automata-rule-parser "^3.0.1"
+    moore "1.0.0"
+    ndarray "^1.0.18"
+    unconventional-neighbours "^1.0.0"
+    von-neumann "^1.0.1"
+
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.1.0, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -1378,6 +1394,11 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
+iota-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/iota-array/-/iota-array-1.0.0.tgz#81ef57fe5d05814cd58c2483632a99c30a0e8087"
+  integrity sha1-ge9X/l0FgUzVjCSDYyqZwwoOgIc=
+
 is-accessor-descriptor@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/is-accessor-descriptor/-/is-accessor-descriptor-0.1.6.tgz#a9e12cb3ae8d876727eeef3843f8a0897b5c98d6"
@@ -1404,7 +1425,7 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-buffer@^1.1.5:
+is-buffer@^1.0.2, is-buffer@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
@@ -1810,6 +1831,11 @@ moment@^2.24.0:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
+moore@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/moore/-/moore-1.0.0.tgz#1d2b298c32cfd330db0fe81a0b5bac319fd9eb65"
+  integrity sha1-HSspjDLP0zDbD+gaC1usMZ/Z62U=
+
 mri@1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/mri/-/mri-1.1.4.tgz#7cb1dd1b9b40905f1fac053abe25b6720f44744a"
@@ -1861,6 +1887,14 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+
+ndarray@^1.0.18:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/ndarray/-/ndarray-1.0.19.tgz#6785b5f5dfa58b83e31ae5b2a058cfd1ab3f694e"
+  integrity sha512-B4JHA4vdyZU30ELBw3g7/p9bZupyew5a7tX1Y/gGeF2hafrPaQZhgrGQfsvgfYbgdFZjYwuEcnaobeM/WMW+HQ==
+  dependencies:
+    iota-array "^1.0.0"
+    is-buffer "^1.0.2"
 
 needle@^2.2.1:
   version "2.4.0"
@@ -2813,6 +2847,11 @@ typescript@^3.7.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
   integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
 
+unconventional-neighbours@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/unconventional-neighbours/-/unconventional-neighbours-1.0.0.tgz#5ad3211646423930ec041ef600585a52f655b548"
+  integrity sha1-WtMhFkZCOTDsBB72AFhaUvZVtUg=
+
 union-value@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/union-value/-/union-value-1.0.1.tgz#0b6fe7b835aecda61c6ea4d4f02c14221e109847"
@@ -2869,6 +2908,11 @@ v8flags@^2.1.1:
   integrity sha1-qrGh+jDUX4jdMhFIh1rALAtV5bQ=
   dependencies:
     user-home "^1.1.1"
+
+von-neumann@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/von-neumann/-/von-neumann-1.0.1.tgz#3fc5e4ffd50e21ad8b93bd167f0f8a4e79927616"
+  integrity sha1-P8Xk/9UOIa2Lk70Wfw+KTnmSdhY=
 
 which-pm-runs@^1.0.0:
   version "1.0.0"

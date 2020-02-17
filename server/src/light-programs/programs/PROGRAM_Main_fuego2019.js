@@ -24,6 +24,7 @@ const AliveDotsSpeed = require("./aliveDotsSpeed");
 const BassWarpGrid = require("./bassWarpGrid");
 const Bombs = require("./bombs");
 const Shapes = require("./shapes");
+const Mix = require("./mix");
 const WarroBass = require("./warroBass");
 
 const MusicFrequencyDot = require("./musicFrequencyDot");
@@ -32,7 +33,7 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
-const baseTime = 1 * 1000;
+const baseTime = 1 * 100;
 
 function getAllPresets(funcClass, time, shape = "Warro") {
   return _.map(funcClass.presets(), preset => {
@@ -175,6 +176,10 @@ let starsSunrise = mixPrograms(
 );
 
 const schedule = [
+  ...getAllPresets(Mix, 60),
+
+  ...getAllPresets(Rays, 60),
+
   ...getAllPresets(Circles, 30, "allOfIt"),
 
   ...getAllPresets(StripePatterns, 30, "allOfIt"),
@@ -451,7 +456,6 @@ const schedule = [
       ]
     })
   },
-  ...getAllPresets(Rays, 60),
 
   ...getAllPresets(Lineal, 30),
 
@@ -597,4 +601,4 @@ const schedule = [
 
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, true);
+module.exports = createMultiProgram(schedule, false);

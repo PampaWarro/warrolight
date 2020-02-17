@@ -53,7 +53,7 @@ module.exports = function getShapes() {
   ]);
 
   // Una permutación random de todas las luces. PSYCHO MIND FUCK
-  const shuffle = _.shuffle(_.range(0, 600));
+  const shuffle = _.shuffle(_.range(0, 1200));
 
   const mini_w = _.flatten([
     _.range(quiebre_abajo, 150),

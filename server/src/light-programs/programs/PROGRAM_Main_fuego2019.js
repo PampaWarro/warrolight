@@ -601,4 +601,4 @@ const schedule = [
 
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, false);
+module.exports = createMultiProgram(schedule, true);

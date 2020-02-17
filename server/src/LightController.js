@@ -26,6 +26,7 @@ const programNames = [
   "bandParticles",
   "bassWarpGrid",
   "bombs",
+  "ca",
   "circles",
   "debugSetup",
   "debugShapes",

@@ -16,6 +16,7 @@
   "author": "Pampa Warro",
   "license": "MIT",
   "dependencies": {
+    "cellular-automata": "^2.0.1",
     "cli-table2": "^0.2.0",
     "color-string": "^1.5.3",
     "colors": "^1.4.0",

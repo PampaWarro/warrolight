@@ -14,7 +14,7 @@ module.exports = class Mix extends LightProgram {
     if(shape) {
       const programClass = this.lightController.programs[programName].generator;
       const byShapeClass = programsByShape({[shape]: [programClass, config || {}]});
-      p = new byShapeClass(this.config, this.geometry, this.shapeMapping);
+      p = new byShapeClass(this.config, this.geometry, this.shapeMapping, this.lightController);
     } else {
       p = this.lightController.instanciateProgram(programName);
       p.updateConfig({...p.config, ...config})

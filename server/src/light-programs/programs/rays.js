@@ -6,6 +6,10 @@ module.exports = class Rays extends LightProgram {
 
   init() {
     this.time = 0;
+    this.buildRays();
+  }
+
+  buildRays() {
     this.rays = [];
     this.stars = [];
     this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
@@ -33,6 +37,15 @@ module.exports = class Rays extends LightProgram {
         ? 1
         : Math.sign(Math.random() - 0.5)
     };
+  }
+
+  updateConfig(newConfig) {
+    if(newConfig.numberOfParticles !== this.config.numberOfParticles || newConfig.singleDirection !== this.config.singleDirection) {
+      super.updateConfig(newConfig);
+      this.buildRays();
+    } else {
+      super.updateConfig(newConfig);
+    }
   }
 
   drawFrame(draw, audio) {
@@ -188,7 +201,7 @@ module.exports = class Rays extends LightProgram {
     config.colorSaturationRange = {type: Number, min: 0, max: 1, step: 0.01, default: 0.2};
     config.singleDirection = { type: Boolean, default: false };
     config.useSoundSpeed = { type: Boolean, default: false };
-    config.soundMetric = { type: 'soundMetric', default: 'rms' };
+    config.soundMetric = { type: 'soundMetric', default: 'fastPeakDecay' };
     return config;
   }
 };

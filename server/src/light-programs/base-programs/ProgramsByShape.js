@@ -4,7 +4,7 @@ const LightProgram = require("./LightProgram");
 
 module.exports = function programsByShape(mapping) {
   return class ProgramsByShape extends LightProgram {
-    constructor(config, geometry, shapeMapping) {
+    constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry)
       this.instances = {};
       this.knownMappings = shapeMapping();
@@ -37,7 +37,7 @@ module.exports = function programsByShape(mapping) {
         }
 
         // Support specific configs
-        let specificConfig = config;
+        let specificConfig = {... config};
         if (_.isArray(Program)) {
           [Program, specificConfig] = Program;
           let defaultConfig = this.extractDefault(
@@ -45,7 +45,7 @@ module.exports = function programsByShape(mapping) {
           );
           specificConfig = _.extend({}, config, defaultConfig, specificConfig);
         }
-        this.instances[shapeName] = new Program(specificConfig, shape, shapeMapping);
+        this.instances[shapeName] = new Program(specificConfig, shape, shapeMapping, lightController);
         this.instances[shapeName].specificConfig = specificConfig;
       });
       this.state = new Array(this.numberOfLeds).fill([0, 0, 0]);
@@ -101,7 +101,7 @@ module.exports = function programsByShape(mapping) {
     }
 
     toString() {
-      return `${super.toString()}(${util.inspect(this.instances)})`;
+      return _.map(this.instances, (p,shape) => `[${shape.cyan}] ${p.toString().green} ${JSON.stringify(p.specificConfig).gray}`).join('\n');
     }
 
     static configSchema() {

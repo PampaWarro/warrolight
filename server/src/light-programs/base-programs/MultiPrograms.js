@@ -12,8 +12,8 @@ module.exports = function createMultiProgram(
   crossFade = 20000
 ) {
   return class MultiProgram extends LightProgram {
-    constructor(config, geometry, shapeMapping) {
-      super(config, geometry, shapeMapping);
+    constructor(config, geometry, shapeMapping, lightController) {
+      super(config, geometry, shapeMapping, lightController);
 
       // Shallow copy of schedule
       this.programSchedule = []
@@ -21,14 +21,14 @@ module.exports = function createMultiProgram(
         .map(item => _.extend({}, item));
 
       // instantiate each program
-      _.each(
-        this.programSchedule,
-        scheduleItem =>
-          (scheduleItem.programInstance = new scheduleItem.program(
+      _.each(this.programSchedule, scheduleItem => {
+          return (scheduleItem.programInstance = new scheduleItem.program(
             this.config,
             this.geometry,
-            this.shapeMapping
-          ))
+            this.shapeMapping,
+            this.lightController
+          ));
+        }
       );
 
       this.previous = null;
@@ -69,7 +69,12 @@ module.exports = function createMultiProgram(
 
         let colors = new Array(currentColors.length);
         for (let i = 0; i < currentColors.length; i++) {
-          colors[i] = ColorUtils.mix(previousColors[i], currentColors[i], alpha);
+          if(previousColors[i] && currentColors[i]) {
+            colors[i] = ColorUtils.mix(previousColors[i], currentColors[i], alpha);
+          } else {
+            console.warn("Cannot do color crossfade between ", previousColors[i], currentColors[i])
+            colors[i] = [0,0,0,0]
+          }
         }
 
         draw(colors)
@@ -107,20 +112,16 @@ module.exports = function createMultiProgram(
       this.previous = this.current;
       this.current = programInstance;
       this.nextStartChange = Date.now() + duration;
+
+      console.log("Playing", programInstance.toString())
     }
 
     updateConfig(config) {
       this.config = config;
-      for (let item of this.programSchedule) {
-        item.programInstance.updateConfig(config);
-      }
     }
 
     static configSchema() {
-      let schema = {};
-      _.each(programSchedule, ({ program }) => {
-        schema = _.extend(schema, program.configSchema());
-      });
+      let schema = super.configSchema();
       return schema;
     }
   };

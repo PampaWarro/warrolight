@@ -43,7 +43,7 @@ module.exports = class Noise extends LightProgram {
       );
       const brightness = rescale(
         this.config.brightnessScale *
-          noise.gen(x[i] / 32 + t + 100, y[i] / 32 + t)
+          noise.gen((x[i] / 32 + t + 100) % 256, (y[i] / 32 + t) % 256)
       );
       colors[i] = gradient.colorAt(v).map(x => Math.floor(x * brightness));
     }

@@ -2,7 +2,7 @@ const _ = require("lodash");
 const util = require("util");
 const LightProgram = require("./LightProgram");
 
-module.exports = function programsByShape(mapping) {
+module.exports = function programsByShape(mapping, name) {
   return class ProgramsByShape extends LightProgram {
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry)
@@ -101,7 +101,7 @@ module.exports = function programsByShape(mapping) {
     }
 
     toString() {
-      return _.map(this.instances, (p,shape) => `[${shape.cyan}] ${p.toString().green} ${JSON.stringify(p.specificConfig).gray}`).join('\n');
+      return _.map(this.instances, (p,shape) => `${name ? name.yellow+' ' : ''}[${shape.cyan}] ${p.toString().green} ${JSON.stringify(p.specificConfig).gray}`).join('\n');
     }
 
     static configSchema() {

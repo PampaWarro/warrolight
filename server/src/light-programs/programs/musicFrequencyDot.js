@@ -38,7 +38,11 @@ module.exports = class MusicFrequencyDot extends LightProgram {
 
       let [h, s, br] = ColorUtils.RGBtoHSV(r, g, b);
       h = (h + this.hueOffset) % 1;
-      [r, g, b] = ColorUtils.HSVtoRGB(h, Math.sqrt(s), br);
+      if(this.config.blackAndWhite) {
+        [r, g, b] = ColorUtils.HSVtoRGB(h, 0, br);
+      } else {
+        [r, g, b] = ColorUtils.HSVtoRGB(h, Math.sqrt(s), br);
+      }
 
       let width = Math.round(this.numberOfLeds / this.config.numberOfOnLeds);
 
@@ -79,7 +83,8 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     let res = super.configSchema();
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
     res.move = { type: Boolean, default: false };
-    res.power = { type: Number, min: 1, max: 20, step: 1, default: 2 };
+    res.blackAndWhite = { type: Boolean, default: false };
+    res.power = { type: Number, min: 1, max: 20, step: 0.1, default: 2 };
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     return res;

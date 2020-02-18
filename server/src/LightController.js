@@ -15,10 +15,9 @@ const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
-  "mix",
+  "PROGRAM_Main_fuego2019",
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",
-  "PROGRAM_Main_fuego2019",
   "aliveDots",
   "aliveDotsSpeed",
   "all-off",
@@ -33,7 +32,9 @@ const programNames = [
   "frequencyActivation",
   "gradientSphere",
   "lineal",
+  "mix",
   "musicFlow",
+  "musicFlash",
   "musicFrequencyDot",
   "musicVolumeBars",
   "musicVolumeDot",

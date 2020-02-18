@@ -39,13 +39,22 @@ export class SubprogramsListParam extends React.Component<Props, any> {
     this.props.onChange(this.props.name, changedConfig);
   }
 
+  handleClick(e:any, index: string) {
+    // Clone subprogram
+    if(e.ctrlKey) {
+      const subCopy = _.cloneDeep(this.props.value[index])
+      const changedConfig = [...this.props.value, subCopy];
+      this.props.onChange(this.props.name, changedConfig);
+    }
+  }
+
   render() {
     const { name, value, options, globalConfig } = this.props;
 
     const subprogramsConfig = value || [];
 
     const subprograms = _.map(subprogramsConfig, (subprogramConfig, index) => {
-      return <div className={'mb-2'} key={index}>
+      return <div className={'mb-2'} key={index} onDoubleClick={(e)=>this.handleClick(e, index)}>
         <SubprogramParam
           name={`#${index + 1}`}
           value={subprogramConfig}

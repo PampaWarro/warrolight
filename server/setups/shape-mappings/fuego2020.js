@@ -1,6 +1,9 @@
 const _ = require("lodash");
 
 module.exports = function getShapes() {
+  // no mapping, needed to import presets in PROGRAM_Main
+  const all = _.range(0,1200)
+
   const inv = arr => [].concat(arr).reverse();
 
   const quiebre_abajo = 30;
@@ -145,6 +148,7 @@ module.exports = function getShapes() {
     Warro,
     WarroOnly,
     allOfIt,
+    all,
     mini_w,
     pataLeft,
     pataRight,

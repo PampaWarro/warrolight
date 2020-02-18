@@ -36,12 +36,26 @@ const Circles = require("./circles");
 const baseTime = 1 * 100;
 
 function getAllPresets(funcClass, time, shape = "Warro") {
-  return _.map(funcClass.presets(), preset => {
+  return _.map(funcClass.presets(), (preset, name) => {
     return {
       duration: time * baseTime,
-      program: programsByShape({ [shape]: [funcClass, preset] })
+      program: programsByShape({ [shape]: [funcClass, preset] }, name)
     };
   });
+}
+
+function getFilePresets(presetFileName, duration = 30) {
+  const presetsByProgram = require(`../../../setups/program-presets/${presetFileName}`);
+  const presets = [];
+  _.each(presetsByProgram, (presetsByName, programName) => {
+    const ProgramClass = require(`./${programName}.js`);
+
+    _.each(presetsByName, (config, name) => {
+      presets.push({duration: duration * baseTime, program: programsByShape({all: [ProgramClass, config]}, name)});
+      console.log(`Loaded preset ${programName.green} ${name.yellow} from ${presetFileName}`)
+    })
+  })
+  return presets;
 }
 
 function sineScale(s) {
@@ -178,6 +192,11 @@ let starsSunrise = mixPrograms(
 const schedule = [
   ...getAllPresets(Mix, 60),
 
+  { duration: 60 * baseTime, program: FrequencyActivation },
+
+  ...getFilePresets('default.json', 60),
+
+
   ...getAllPresets(Rays, 60),
 
   ...getAllPresets(Circles, 30, "allOfIt"),
@@ -186,7 +205,6 @@ const schedule = [
 
   ...getAllPresets(MusicFrequencyDot, 30, "allOfIt"),
 
-  { duration: 60 * baseTime, program: FrequencyActivation },
 
   { duration: 60 * baseTime, program: BandParticles },
   { duration: 60 * baseTime, program: BandParticles },

@@ -28,13 +28,19 @@ module.exports = class RadialSun extends LightProgram {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.geometry;
 
-      const dx = 0 * (geometry.x[i] - geometry.width / 2 - this.config.centerX);
-      const dy = geometry.y[i] - geometry.height + this.config.centerY; // 18 is the offset
 
-      const distance = Math.max(
-        0,
-        1 - Math.sqrt(dx * dx + dy * dy) / (this.config.escala * vol)
-      );
+      let distance = 0;
+      if(this.config.radialDistance) {
+        const dx = geometry.x[i] - geometry.width/2 + this.config.centerX;
+        const dy = geometry.y[i] - geometry.height + this.config.centerY; // 18 is the offset
+
+        distance = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / (this.config.escala * vol));
+      } else {
+        const dx = 0 * (geometry.x[i] - geometry.width / 2 - this.config.centerX);
+        const dy = geometry.y[i] - geometry.height + this.config.centerY; // 18 is the offset
+
+        distance = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / (this.config.escala * vol));
+      }
 
       const v = distance;
 
@@ -74,6 +80,7 @@ module.exports = class RadialSun extends LightProgram {
     res.saturation = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
     res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     res.animatePower = { type: Boolean, default: false };
+    res.radialDistance = { type: Boolean, default: false };
     res.colorMap =  {
       type: 'gradient',
       default: '',

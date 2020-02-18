@@ -1,6 +1,7 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
+const {loadGradient} = require("../utils/gradients");
 
 class Dot {
   constructor(config, relativeVolume) {
@@ -68,17 +69,25 @@ module.exports = class SoundWaves extends LightProgram {
         let distance = Math.abs(dot.distance - d);
         let maxDis = this.config.waveWidth;
         if (distance < maxDis) {
-          let [r2, g2, b2] = ColorUtils.HSVtoRGB(
-            dot.color,
-            dot.saturation,
-            1 *
-              Math.pow(1 - distance / maxDis, this.config.wavePower) *
-              dot.intensity *
-              1
-          );
-          r = r + r2;
-          g = g + g2;
-          b = b + b2;
+          const finalintensity = Math.pow(1 - distance / maxDis, this.config.wavePower);
+
+          if (this.config.colorMap) {
+            const gradient = loadGradient(this.config.colorMap);
+            const v = dot.intensity * finalintensity
+            const [r2, g2, b2, a2] = gradient.colorAt(1-v);
+            r = r + r2;
+            g = g + g2;
+            b = b + b2;
+          } else {
+            let [r2, g2, b2] = ColorUtils.HSVtoRGB(
+              dot.color,
+              dot.saturation,
+              finalintensity* dot.intensity
+            );
+            r = r + r2;
+            g = g + g2;
+            b = b + b2;
+          }
         }
       });
       colors[i] = ColorUtils.dim([r, g, b], this.config.brilloWave);
@@ -118,6 +127,7 @@ module.exports = class SoundWaves extends LightProgram {
     config.haciaAfuera = {type: Boolean, default: true};
     config.wavePower = {type: Number, min: 0.5, max: 10, step: 0.5, default: 1.2};
     config.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
+    config.colorMap = { type: "gradient", default: "" };
     // config.colorHueOffset = {type: Number, min: 0, max: 1, step: 0.01, default: 0}
 
     // config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1}

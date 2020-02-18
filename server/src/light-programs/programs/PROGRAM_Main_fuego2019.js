@@ -33,7 +33,7 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
-const baseTime = 1 * 100;
+const baseTime = 1 * 1000;
 
 function getAllPresets(funcClass, time, shape = "Warro") {
   return _.map(funcClass.presets(), (preset, name) => {
@@ -194,7 +194,7 @@ const schedule = [
 
   { duration: 60 * baseTime, program: FrequencyActivation },
 
-  ...getFilePresets('default.json', 60),
+  ...getFilePresets('javier.json', 60),
 
 
   ...getAllPresets(Rays, 60),

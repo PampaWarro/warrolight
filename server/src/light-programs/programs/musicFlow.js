@@ -19,7 +19,7 @@ module.exports = class MusicFlow extends LightProgram {
     this.time += this.config.speed;
     this.realTime += 1;
 
-    let vol = audio.rms * this.config.multiplier;
+    let vol = audio[this.config.soundMetric] * this.config.multiplier;
 
     // Como las luces tenues son MUY fuertes igual, a partir de cierto valor "las bajamos"
     if (vol < this.config.cutThreshold) {
@@ -92,6 +92,7 @@ module.exports = class MusicFlow extends LightProgram {
     };
     res.doble = { type: Boolean, default: true };
     res.haciaAfuera = { type: Boolean, default: false };
+    res.soundMetric = {type: 'soundMetric', default: "rms"};
     return res;
   }
 };

@@ -30,6 +30,7 @@ module.exports = class LightsService {
     this.sendDeviceStatus =  devicesStatus => this.send("devicesStatus", devicesStatus);
 
     controller.on("lights", this.sendLightsSample);
+    controller.on("configChange", this.broadcastStateChange.bind(this))
     controller.on('deviceStatus', this.sendDeviceStatus);
   }
 
@@ -64,8 +65,6 @@ module.exports = class LightsService {
     });
   }
 
-
-
   setMicConfig(newMicConfig) {
     if (newMicConfig.sendingMicData === true) {
       console.log(`[ON] Web client ${this.id} receiving MIC data`.green);
@@ -84,7 +83,6 @@ module.exports = class LightsService {
 
   setPreset(presetName) {
     this.controller.setPreset(presetName);
-    this.broadcastStateChange();
   }
 
   savePreset({programName, presetName, currentConfig}) {
@@ -95,7 +93,6 @@ module.exports = class LightsService {
 
   setCurrentProgram(programKey) {
     this.controller.setCurrentProgram(programKey);
-    this.broadcastStateChange();
   }
 
   updateConfigParam(config) {

@@ -4,6 +4,7 @@ const fs = require("fs");
 const moment = require("moment");
 
 const ProgramScheduler = require("./ProgramScheduler");
+const createLeapListener = require("./leaplisten");
 
 const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
 
@@ -53,12 +54,44 @@ const programNames = [
   "water-flood"
 ];
 
+function clampAndRescale(v, min, max, targetMin, targetMax) {
+  // clamp value first
+  v = Math.min(Math.max(v, min), max)
+  // then rescale
+  return (targetMax - targetMin) * (v - min) / (max - min) + targetMin;
+
+}
+
 module.exports = class LightController extends EventEmitter {
   constructor(multiplexer, geometry, shapeMapping) {
     super();
     this.multiplexer = multiplexer;
     this.geometry = geometry;
     this.shapeMapping = shapeMapping;
+    this.leapListener = createLeapListener((frame) => {
+      const cfg = {}
+      const configSchema = this.programs[this.currentProgramName].configSchema;
+
+      // map global brightless to left hand
+      const { min, max } = configSchema.globalBrightness;
+      if (frame[0] === 0) {
+        cfg.globalBrightness = configSchema.globalBrightness.default
+      } else {
+        cfg.globalBrightness = clampAndRescale(frame[0], 5, 500, min, max);
+      }
+
+      // map something else to right hand
+      if (configSchema.power) {
+        if (frame[1] === 0) {
+          cfg.power = configSchema.power.default;
+        } else {
+          const { min, max } = configSchema.power;
+          cfg.power = clampAndRescale(frame[1], 5, 500, min, max);
+        }
+      }
+
+      this.updateConfigOverride(cfg);
+    });
 
     this.leds = [];
 
@@ -162,6 +195,8 @@ module.exports = class LightController extends EventEmitter {
     let { presetOverrides, currentPreset, overrides } = this.currentConfig;
     this.currentConfig = this.buildParameters(configSchema, presetOverrides, currentPreset, {... overrides, ... config})
     this.currentProgram.updateConfig(this.getConfig(this.currentConfig));
+
+    this.emit('configChange');
   }
 
   setPreset(presetName) {
@@ -177,6 +212,8 @@ module.exports = class LightController extends EventEmitter {
 
     this.currentConfig = this.buildParameters(configSchema, presetOverrides, presetName, {})
     this.currentProgram.updateConfig(this.getConfig(this.currentConfig));
+
+    this.emit('configChange');
   }
 
   savePreset(programName, presetName, config) {
@@ -230,6 +267,8 @@ module.exports = class LightController extends EventEmitter {
     if (this.running) {
       this.start();
     }
+
+    this.emit('configChange');
   }
 
   loadProgram(name) {

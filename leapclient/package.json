@@ -1,0 +1,13 @@
+{
+  "name": "leapclient",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "leapjs": "^0.6.4",
+    "lodash": "^4.17.15"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

@@ -1,8 +1,9 @@
 const dgram = require('dgram');
+const debounce = require('lodash/debounce');
 const Leap = require("leapjs");
 
 const HOST = '127.0.0.1'
-const PORT = '12222'
+const PORT = 12222
 
 const client = dgram.createSocket('udp4');
 
@@ -11,10 +12,24 @@ function buildUDPPacket(frame) {
     return null;
   }
 
-  const buf = Buffer.from("LEAP")
+  const values = [0, 0]
+
+  for (let hand of frame.hands) {
+    if (hand.type === "left") {
+      values[0] = hand.palmPosition[1]; // y coordinate
+    } else {
+      values[1] = hand.palmPosition[1]; // y coordinate
+    }
+  }
+
+
+  const buf = Buffer.alloc(4 + 4 * values.length)
   buf.write("LEAP")
-  // palm position y
-  buf.writeIntLE(frame.hands[0].palmPosition[1], 0, 4)
+
+  let off = 4
+  for (let value of values) {
+    off = buf.writeInt32LE(value, off);
+  }
 
   return buf;
 }
@@ -32,4 +47,4 @@ function sendFrame(frame) {
   });
 }
 
-Leap.loop(sendFrame);
+Leap.loop(debounce(sendFrame, 10));

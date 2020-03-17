@@ -18,6 +18,14 @@
         "devicePortWindows": "COM12",
         "devicePortUnix": "/dev/ttyACM0"
       }
+    },
+    "serial3": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 450,
+        "devicePortWindows": "COM14",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
     }
   },
   "lightsToDevicesMapping": [
@@ -32,6 +40,12 @@
       "to": 900,
       "baseIndex": 0,
       "deviceName": "serial2"
+    },
+    {
+      "from": 900,
+      "to": 1350,
+      "baseIndex": 0,
+      "deviceName": "serial3"
     }
   ]
 }

@@ -244,6 +244,7 @@ export class App extends React.Component<Props, State> {
                 receivingData={!isMobile}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}
+                real3d={true}
               />
             </div>
             <div className="soundbar p-2">

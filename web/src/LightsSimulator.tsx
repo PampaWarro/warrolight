@@ -1,6 +1,8 @@
 import React from "react";
 import { mat4, vec3 } from "gl-matrix";
 import _ from "lodash";
+import glow from "./glow.png";
+import * as THREE from "three";
 
 interface Layout {
   geometryX: number[];
@@ -22,6 +24,7 @@ interface Props {
   onStart(): void;
   onStop(): void;
   receivingData: boolean;
+  real3d?: boolean;
 }
 
 interface State {
@@ -29,7 +32,7 @@ interface State {
 }
 
 export class LightsSimulator extends React.Component<Props, State> {
-  lightsRenderer: Canvas3DLightsRenderer;
+  lightsRenderer: LightsRenderer;
   mouseDownCoordinates: [number, number] | null = null;
   mouseDownXAngle: number | null = null;
   mouseDownYAngle: number | null = null;
@@ -39,7 +42,8 @@ export class LightsSimulator extends React.Component<Props, State> {
 
     this.state = { layout: null };
 
-    this.lightsRenderer = new Canvas3DLightsRenderer();
+    const Renderer = props.real3d? Real3DLightsRenderer : Fake3DLightsRenderer;
+    this.lightsRenderer = new Renderer();
     this.lightsRenderer.enabled = this.props.receivingData;
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
@@ -89,8 +93,6 @@ export class LightsSimulator extends React.Component<Props, State> {
     }
 
     this.lightsRenderer.draw(lights);
-
-    this.lightsRenderer.drawDebugInfo();
   }
 
   updateLayout(layout: Layout) {
@@ -107,7 +109,7 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 
   setCanvas(canvas: HTMLCanvasElement | null) {
-    this.lightsRenderer.canvas = canvas;
+    this.lightsRenderer.setCanvas(canvas);
   }
 
   mouseDown(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
@@ -136,8 +138,8 @@ export class LightsSimulator extends React.Component<Props, State> {
       coordinates[1] - this.mouseDownCoordinates[1]
     ];
     const scale = 0.01;
-    this.lightsRenderer.yAngle = this.mouseDownYAngle! - scale * diff[0];
-    this.lightsRenderer.xAngle = this.mouseDownXAngle! + scale * diff[1];
+    this.lightsRenderer.setYAngle(this.mouseDownYAngle! - scale * diff[0]);
+    this.lightsRenderer.setXAngle(this.mouseDownXAngle! + scale * diff[1]);
   }
 
   render() {
@@ -166,24 +168,20 @@ export class LightsSimulator extends React.Component<Props, State> {
 
 abstract class LightsRenderer {
   enabled: boolean;
-  lastFrameTime: number;
-  lastFPS: number;
-  frameCount: number;
   _canvas: HTMLCanvasElement | null = null;
   private _layout: Layout | null = null;
+  _xAngle = 0;
+  _yAngle = 0;
 
   constructor() {
     this.enabled = false;
-    this.lastFrameTime = performance.now();
-    this.lastFPS = 0;
-    this.frameCount = 0;
   }
 
   get canvas() {
     return this._canvas;
   }
 
-  set canvas(canvas: HTMLCanvasElement | null) {
+  setCanvas(canvas: HTMLCanvasElement | null) {
     this._canvas = canvas;
   }
 
@@ -202,45 +200,31 @@ abstract class LightsRenderer {
     if (this.canvas == null) {
       return;
     }
-
     this._draw(this.canvas!, lights);
-
-    this.frameCount++;
-    let now = performance.now();
-
-    let timeSinceLastFPS = now - this.lastFrameTime;
-    if (timeSinceLastFPS > 100) {
-      this.lastFPS = (1000 * this.frameCount) / timeSinceLastFPS;
-      this.frameCount = 0;
-      this.lastFrameTime = now;
-    }
   }
 
   protected abstract _draw(canvas: HTMLCanvasElement, lights: Light[]): void;
 
-  drawDebugInfo() {
-    const canvas = this.canvas;
-    if (canvas == null) {
-      return;
-    }
-    const ctx = canvas.getContext("2d")!;
+  get xAngle() {
+    return this._xAngle;
+  }
 
-    ctx.fillStyle = "#999";
-    if (this.lastFPS < 30) {
-      ctx.fillStyle = "#f00";
-    }
-    ctx.font = "12px sans-serif";
+  setXAngle(rad: number) {
+    this._xAngle = rad;
+  }
 
-    ctx.fillText(`FPS: ${this.lastFPS.toFixed(1)}`, 10, 20);
+  get yAngle() {
+    return this._yAngle;
+  }
+
+  setYAngle(rad: number) {
+    this._yAngle = rad;
   }
 }
 
-// 3D Renderer.
-class Canvas3DLightsRenderer extends LightsRenderer {
+// Fake Canvas 2d renderer.
+class Fake3DLightsRenderer extends LightsRenderer {
   _projectedLeds: vec3[] | null = null;
-  _scale = 1;
-  _xAngle = 0;
-  _yAngle = 0;
   _frontArrowPoints: vec3[] | null = null;
 
   setLayout(layout: Layout | null) {
@@ -248,30 +232,13 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     this.invalidateProjection();
   }
 
-  get scale() {
-    return this._scale;
-  }
-
-  set scale(scale: number) {
-    this._scale = scale;
+  setXAngle(rad: number) {
+    super.setXAngle(rad);
     this.invalidateProjection();
   }
 
-  get xAngle() {
-    return this._xAngle;
-  }
-
-  set xAngle(rad: number) {
-    this._xAngle = rad;
-    this.invalidateProjection();
-  }
-
-  get yAngle() {
-    return this._yAngle;
-  }
-
-  set yAngle(rad: number) {
-    this._yAngle = rad;
+  setYAngle(rad: number) {
+    super.setYAngle(rad);
     this.invalidateProjection();
   }
 
@@ -310,11 +277,6 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     ]);
     transform = mat4.rotateX(mat4.create(), transform, this.xAngle);
     transform = mat4.rotateY(mat4.create(), transform, this.yAngle);
-    transform = mat4.scale(mat4.create(), transform, [
-      this.scale,
-      this.scale,
-      this.scale
-    ]);
     transform = mat4.translate(mat4.create(), transform, [
       -centerX,
       -centerY,
@@ -415,10 +377,190 @@ class Canvas3DLightsRenderer extends LightsRenderer {
     ctx.moveTo(center[0], center[1]);
     ctx.lineTo(z[0], z[1]);
     ctx.stroke();
+  }
+}
+
+// Three.js based renderer.
+class Real3DLightsRenderer extends LightsRenderer {
+  private renderer?: THREE.WebGLRenderer;
+  private camera: THREE.PerspectiveCamera;
+  private scene: THREE.Scene;
+  private axes: THREE.AxesHelper;
+  private bufferGeometry: THREE.BufferGeometry;
+
+  constructor() {
+    super();
+    this.camera = new THREE.PerspectiveCamera(
+      /*fov=*/ 13,
+      /*aspect=*/ 1,
+      /*near=*/ 1,
+      /*far=*/ 2000
+    );
+    this.camera.position.z = 7;
+    this.scene = new THREE.Scene();
+    this.scene.scale.y = -1;
+    this.camera.lookAt(this.scene.position);
+    this.bufferGeometry = new THREE.BufferGeometry();
+    this.resetPositionBuffer(new Float32Array());
+    this.resetColorBuffer(new Float32Array());
+    this.resetSizeBuffer(new Float32Array());
+    const loader = new THREE.TextureLoader();
+    const sprite = loader.load(glow);
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        baseColor: { value: new THREE.Color(0xffffff) },
+        pointTexture: {
+          value: sprite
+        }
+      },
+      vertexShader: `
+        attribute float size;
+        attribute vec3 color;
+        varying vec3 vColor;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+          gl_PointSize = size * ( 300.0 / -mvPosition.z );
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 baseColor;
+        uniform sampler2D pointTexture;
+        varying vec3 vColor;
+        void main() {
+          vec4 textureValue = texture2D( pointTexture, gl_PointCoord );
+          gl_FragColor = vec4( baseColor * vColor, 1.0 );
+          gl_FragColor = gl_FragColor * textureValue * textureValue * textureValue;
+        }
+      `,
+      blending: THREE.AdditiveBlending,
+      depthTest: false,
+      transparent: true
+    });
+    const leds = new THREE.Points(this.bufferGeometry, material);
+    this.scene.add(leds);
+    this.axes = new THREE.AxesHelper(.05);
+    this.axes.scale.y = -1;
+    this.scene.add(this.axes);
+  }
 
 
-    // this.xAngle += 0.005;
-    // this.yAngle += 0.01;
-    // this.scale *= 0.999;
+  private resetPositionBuffer(buffer: Float32Array) {
+    this.bufferGeometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(buffer, 3)
+    );
+  }
+
+  private resetColorBuffer(buffer: Float32Array) {
+    this.bufferGeometry.setAttribute(
+      "color",
+      new THREE.Float32BufferAttribute(buffer, 3)
+    );
+  }
+
+  private resetSizeBuffer(buffer: Float32Array) {
+    this.bufferGeometry.setAttribute(
+      "size",
+      new THREE.Float32BufferAttribute(buffer, 1)
+    );
+  }
+
+  setCanvas(canvas: HTMLCanvasElement | null) {
+    super.setCanvas(canvas);
+    if (!canvas) {
+      this.camera.aspect = 1;
+      delete this.renderer;
+      return;
+    }
+    this.camera.aspect = canvas.width / canvas.height;
+    this.camera.updateProjectionMatrix();
+    this.renderer = new THREE.WebGLRenderer({ canvas: canvas });
+  }
+
+  setLayout(layout: Layout | null) {
+    super.setLayout(layout);
+    const points = layout? _.zip(
+      layout.geometryX,
+      layout.geometryY,
+      layout.geometryZ
+    ) : [];
+    if (this.bufferGeometry.attributes.position.count !== points.length) {
+      this.resetPositionBuffer(new Float32Array(points.length * 3));
+    }
+    const width = layout? layout.maxX - layout.minX : 0;
+    const height = layout? layout.maxY - layout.minY : 0;
+    const depth = layout? layout.maxZ - layout.minZ : 0;
+    const centerX = layout? (layout.minX + layout.maxX) / 2 : 0;
+    const centerY = layout? (layout.minY + layout.maxY) / 2 : 0;
+    const centerZ = layout? (layout.minZ + layout.maxZ) / 2 : 0;
+    const maxDim = Math.max(width, height, depth) ?? 1;
+    const position = this.bufferGeometry.attributes
+      .position as THREE.BufferAttribute;
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      let [x, y, z] = point as [number, number, number];
+      x -= centerX;
+      y -= centerY;
+      z -= centerZ;
+      x /= maxDim / 2;
+      y /= maxDim / 2;
+      z /= maxDim / 2;
+      (position.array as any)[3 * i] = x;
+      (position.array as any)[3 * i + 1] = y;
+      (position.array as any)[3 * i + 2] = z;
+    }
+    this.axes.position.x = (layout?.maxX ?? 0) / maxDim;
+    this.axes.position.y = (layout?.maxY ?? 0) / maxDim;
+    position.needsUpdate = true;
+    this.bufferGeometry.computeBoundingBox();
+  }
+
+  setColors(colors: Light[]) {
+    if (this.bufferGeometry.attributes.color.count !== colors.length) {
+      this.resetColorBuffer(new Float32Array(colors.length * 3));
+    }
+    if (this.bufferGeometry.attributes.size.count !== colors.length) {
+      this.resetSizeBuffer(new Float32Array(colors.length));
+    }
+    const color = this.bufferGeometry.attributes.color as THREE.BufferAttribute;
+    const size = this.bufferGeometry.attributes.size as THREE.BufferAttribute;
+    // const pixelRatio = window.devicePixelRatio ?? 1;
+    for (let i = 0; i < colors.length; i++) {
+      let [r, g, b] = colors[i];
+      r /= 255;
+      g /= 255;
+      b /= 255;
+
+      const power = (r + g + b) / 3;
+      const adjustedPower = Math.pow(power, 4);
+      const norm = 0.0001 + 0.9999 * adjustedPower;
+      let [or, og, ob] = [r / norm, g / norm, b / norm];
+
+      (color.array as any)[3 * i] = or;
+      (color.array as any)[3 * i + 1] = og;
+      (color.array as any)[3 * i + 2] = ob;
+      (size.array as any)[i] = 4 * (0.2 + 0.8 * power);
+    }
+    color.needsUpdate = true;
+    size.needsUpdate = true;
+  }
+
+  setXAngle(rad: number) {
+    super.setXAngle(rad);
+    this.scene.rotation.x = rad;
+  }
+
+  setYAngle(rad: number) {
+    super.setYAngle(rad);
+    this.scene.rotation.y = -rad;
+  }
+
+  _draw(canvas: HTMLCanvasElement, lights: Light[]) {
+    this.setColors(lights);
+    if (this.renderer) {
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 }

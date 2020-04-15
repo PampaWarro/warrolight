@@ -1,8 +1,9 @@
 import React from "react";
 import { mat4, vec3 } from "gl-matrix";
 import _ from "lodash";
-import glow from "./glow.png";
 import * as THREE from "three";
+import Stats from "stats.js";
+import glow from "./glow.png";
 
 interface Layout {
   geometryX: number[];
@@ -25,6 +26,7 @@ interface Props {
   onStop(): void;
   receivingData: boolean;
   real3d?: boolean;
+  stats?: boolean;
 }
 
 interface State {
@@ -36,6 +38,8 @@ export class LightsSimulator extends React.Component<Props, State> {
   mouseDownCoordinates: [number, number] | null = null;
   mouseDownXAngle: number | null = null;
   mouseDownYAngle: number | null = null;
+  container?: HTMLDivElement;
+  stats?: Stats;
 
   constructor(props: Props) {
     super(props);
@@ -47,6 +51,13 @@ export class LightsSimulator extends React.Component<Props, State> {
     this.lightsRenderer.enabled = this.props.receivingData;
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.onFocusChange = this.onFocusChange.bind(this);
+    if (this.props.stats) {
+      this.stats = new Stats();
+      this.stats.dom.style.cssText = "";
+      this.stats.dom.style.position = "absolute";
+      this.stats.dom.style.top = "0";
+      this.stats.dom.style.opacity = "0.4";
+    }
   }
 
   turnOnSimulation() {
@@ -92,7 +103,9 @@ export class LightsSimulator extends React.Component<Props, State> {
       return;
     }
 
+    this.stats?.begin();
     this.lightsRenderer.draw(lights);
+    this.stats?.end();
   }
 
   updateLayout(layout: Layout) {
@@ -110,6 +123,16 @@ export class LightsSimulator extends React.Component<Props, State> {
 
   setCanvas(canvas: HTMLCanvasElement | null) {
     this.lightsRenderer.setCanvas(canvas);
+  }
+
+  private setContainer(container: HTMLDivElement | null) {
+    if (container === this.container) {
+      return;
+    }
+    this.container = container ?? undefined;
+    if (container && this.stats) {
+      container.appendChild(this.stats.dom);
+    }
   }
 
   mouseDown(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
@@ -145,7 +168,7 @@ export class LightsSimulator extends React.Component<Props, State> {
   render() {
     return (
       <div className="lights-simulator">
-        <div className="preview-area">
+        <div className="preview-area" ref={this.setContainer.bind(this)}>
           <canvas
             onMouseDown={this.mouseDown.bind(this)}
             onMouseUp={this.mouseUp.bind(this)}

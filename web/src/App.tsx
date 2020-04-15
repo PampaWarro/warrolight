@@ -38,7 +38,7 @@ export class App extends React.Component<Props, State> {
   api!: API;
   lightsSim: React.RefObject<LightsSimulator>;
   micViewer: React.RefObject<MicrophoneViewer>;
-  private pendingAnimationFrame: number | null = null;
+  private pendingAnimationFrame?: number;
 
   constructor(props: Props) {
     super(props);
@@ -106,12 +106,10 @@ export class App extends React.Component<Props, State> {
 
     api.on("lightsSample", (encodedLights: string) => {
       if (this.pendingAnimationFrame) {
-        window.cancelAnimationFrame(this.pendingAnimationFrame);
-        this.pendingAnimationFrame = null;
+        return;
       }
-      const that = this;
       this.pendingAnimationFrame = window.requestAnimationFrame(() => {
-        that.pendingAnimationFrame = null;
+        delete this.pendingAnimationFrame;
         const lights = decodeLedsColorsFromString(encodedLights);
         this.lightsSim.current!.drawCanvas(lights);
       });
@@ -245,6 +243,7 @@ export class App extends React.Component<Props, State> {
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}
                 real3d={true}
+                stats={true}
               />
             </div>
             <div className="soundbar p-2">

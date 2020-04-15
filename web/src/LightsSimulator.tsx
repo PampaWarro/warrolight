@@ -557,14 +557,14 @@ class Real3DLightsRenderer extends LightsRenderer {
       b /= 255;
 
       const power = (r + g + b) / 3;
-      const adjustedPower = Math.pow(power, 4);
+      const adjustedPower = Math.pow(power, 0.9);
       const norm = 0.0001 + 0.9999 * adjustedPower;
       let [or, og, ob] = [r / norm, g / norm, b / norm];
 
       (color.array as any)[3 * i] = or;
       (color.array as any)[3 * i + 1] = og;
       (color.array as any)[3 * i + 2] = ob;
-      (size.array as any)[i] = 4 * (0.2 + 0.8 * power);
+      (size.array as any)[i] = 4 * (0.4 + 0.6 * power);
     }
     color.needsUpdate = true;
     size.needsUpdate = true;

@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "fuego-2019"
+    "setup": "mate"
   },
   "keywords": [],
   "author": "Pampa Warro",

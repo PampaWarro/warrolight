@@ -1,0 +1,51 @@
+{
+  "geometry": "mate",
+  "shapeMapping": "mate",
+  "lights": 1350,
+  "outputDevices": {
+    "serial1": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 450,
+        "devicePortWindows": "COM10",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
+    },
+    "serial2": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 450,
+        "devicePortWindows": "COM12",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
+    },
+    "serial3": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 450,
+        "devicePortWindows": "COM14",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 450,
+      "baseIndex": 0,
+      "deviceName": "serial1"
+    },
+    {
+      "from": 450,
+      "to": 900,
+      "baseIndex": 0,
+      "deviceName": "serial2"
+    },
+    {
+      "from": 900,
+      "to": 1350,
+      "baseIndex": 0,
+      "deviceName": "serial3"
+    }
+  ]
+}

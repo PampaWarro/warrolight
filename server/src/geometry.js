@@ -17,7 +17,7 @@ exports.Stripe = class Stripe {
   }
   // Convenience for CAD software that displays xzy and y points upward.
   static fromXZUpwardY([x1, z1, y1], [x2, z2, y2], numberOfLeds) {
-    return new Stripe([x1, -y1, z1], [x2, -y2, z2], numberOfLeds);
+    return new Stripe([x1, -y1, -z1], [x2, -y2, -z2], numberOfLeds);
   }
 };
 

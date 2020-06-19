@@ -518,7 +518,7 @@ class Real3DLightsRenderer extends LightsRenderer {
     const centerX = layout? (layout.minX + layout.maxX) / 2 : 0;
     const centerY = layout? (layout.minY + layout.maxY) / 2 : 0;
     const centerZ = layout? (layout.minZ + layout.maxZ) / 2 : 0;
-    const maxDim = Math.max(width, height, depth) ?? 1;
+    const maxDim = 1.5 * Math.max(width, height, depth) ?? 1;
     const position = this.bufferGeometry.attributes
       .position as THREE.BufferAttribute;
     for (let i = 0; i < points.length; i++) {

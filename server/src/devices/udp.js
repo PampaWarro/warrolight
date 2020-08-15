@@ -1,3 +1,4 @@
+const dns = require('dns');
 const dgram = require("dgram");
 const now = require("performance-now");
 const logger = require("pino")({ prettyPrint: true });
@@ -8,10 +9,21 @@ const { RGBEncoder } = require("./encodings");
 const RECONNECT_TIME = 3000;
 
 module.exports = class LightDeviceUDP extends LightDevice {
-  constructor({ numberOfLights, ip, udpPort }) {
-    super(numberOfLights, "E " + ip);
+  constructor({ numberOfLights, ip, name, udpPort }) {
+    super(numberOfLights, "E " + (name || ip));
 
     this.expectedIp = ip;
+    this.name = name;
+    if (name && !ip) {
+      dns.lookup(name, (err, address) => {
+        if (err) {
+          logger.info(`failed to resolve ${name}`);
+        } else {
+          logger.info(`resolved ${name} to ${address}`);
+          this.expectedIp = address;
+        }
+      });
+    }
     this.udpPort = udpPort;
 
     this.encoder = new RGBEncoder();
@@ -39,7 +51,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
     if (data) {
       data = data.replace(/[^\w]+/gi, "");
 
-      if (data === "YEAH") {
+      if (data.startsWith("YEAH")) {
         logger.info("Reconnected");
         this.updateStatus(this.STATUS_RUNNING);
       } else if (data.startsWith("PERF")) {
@@ -71,6 +83,10 @@ module.exports = class LightDeviceUDP extends LightDevice {
         this.lastPrint = now();
       }
     }
+  }
+
+  name() {
+    return this.name || this.ip;
   }
 
   flush(data) {
@@ -117,8 +133,14 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
   handleMessage(message, remote) {
     // logger.info(message.toString(), remote.address)
-    if (remote.address !== this.expectedIp) {
-      logger.warn("UDP message came from %s, expected %s", remote.address, this.expectedIp);
+    if (message.toString().startsWith("YEAH") &&
+        !message.toString().endsWith(this.name)) {
+      logger.warn("UDP message came from %s, expected %s",
+                  message.toString().substr(4), this.name);
+      return;
+    } else if (this.expectedIp && remote.address !== this.expectedIp) {
+      logger.warn("UDP message came from %s, expected %s", remote.address,
+                  this.expectedIp);
       return;
     }
 

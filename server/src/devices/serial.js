@@ -37,7 +37,6 @@ module.exports = class LightDeviceSerial extends LightDevice {
   handleArduinoData(data) {
     if (data) {
       data = data.toString().replace(/[^\w]+/gi, "");
-
       if (data === "YEAH") {
         logger.info("Reconnected");
         this.updateStatus(this.STATUS_RUNNING);
@@ -112,7 +111,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
     this.updateStatus(this.STATUS_CONNECTING);
 
     this.port = new SerialPort(this.devicePort, {
-      baudRate: 1152000 / 2
+      baudRate: 500000
     });
 
     this.port.on("open", this.handleOpen.bind(this));

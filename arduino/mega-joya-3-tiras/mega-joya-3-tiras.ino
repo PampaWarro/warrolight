@@ -57,11 +57,10 @@ void setup() {
    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
    FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds2, NUM_LEDS);
    FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds3, NUM_LEDS);
-      
+
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
-  Serial.begin(576000);           // set up Serial library at 1152000 bps, the same than in Node.js
-  //Serial.begin(230400/4);           // set up Serial library at 1152000 bps, the same than in Node.js
+  Serial.begin(500000);           // set up Serial library at 500000 bps, the same than in Node.js
 
   //Serial.println("Hello world!");  // prints hello with ending line break
 
@@ -73,7 +72,7 @@ void setup() {
   leds[1] = CRGB::Red;
   leds[2] = CRGB::Green;
   leds[3] = CRGB::Blue;
-  
+
   leds2[1] = CRGB::Red;
   leds2[2] = CRGB::Green;
   leds2[3] = CRGB::Blue;
@@ -178,7 +177,7 @@ void readLedsFromSerial() {
     return;
   }
 
-  if (Serial.available() < 2) {   
+  if (Serial.available() < 2) {
     if ((millis() - lastConnectionTime) > 2000) {
       lastConnectionTime = millis();
       delay(500);
@@ -259,7 +258,7 @@ void arduinoProgram() {
   if (program == 0) {
     programRainbow();
   //} else if (program == 1){
-    
+
   } else {
     programStars();
   }
@@ -342,7 +341,7 @@ void programRainbow() {
     //PARAM_SPEED = random(1, 1);
     programInitialized = true;
   }
-  
+
   for (int i = 0; i < NUM_LEDS; i++) {
     int pixelOff = ((i + time) % 50) > 0 ? 0 : 1;
     writeLedsHSB(i, (i * 2 + time * 3 * PARAM_SPEED) % 255, 255, sines[(i*6 + time * PARAM_SPEED) % 150]);

@@ -32,7 +32,7 @@ void setup()
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
-  Serial.begin(576000);
+  Serial.begin(500000);
 
   for (int i = 0; i < NUM_LEDS; i++)
   {

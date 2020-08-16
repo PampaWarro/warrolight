@@ -13,7 +13,7 @@
 RF24 radio(7, 8); // CE, CSN
 
 void setup() {
-  Serial.begin(1152000 / 2);
+  Serial.begin(500000);
   Serial.println("ARDUINOSTART");
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0F0);

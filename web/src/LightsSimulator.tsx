@@ -454,7 +454,7 @@ class Real3DLightsRenderer extends LightsRenderer {
         void main() {
           vec4 textureValue = texture2D( pointTexture, gl_PointCoord );
           gl_FragColor = vec4( baseColor * vColor, 1.0 );
-          gl_FragColor = gl_FragColor * textureValue * textureValue * textureValue;
+          gl_FragColor = gl_FragColor * textureValue;
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -556,15 +556,22 @@ class Real3DLightsRenderer extends LightsRenderer {
       g /= 255;
       b /= 255;
 
-      const power = (r + g + b) / 3;
-      const adjustedPower = Math.pow(power, 0.9);
-      const norm = 0.0001 + 0.9999 * adjustedPower;
-      let [or, og, ob] = [r / norm, g / norm, b / norm];
+      // The goal is to create a preview as close as how then the human eye sees a LED strip.
+      // Tuned experimentally, inspired on https://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/
+      const gamma = 2.2;
+      const invGamma = 1/ gamma;
+      const gammaPower = (r**gamma+g**gamma+b**gamma)**invGamma;
+
+      // on real life, the color brightness is almost always "maxed out", what changes is the perceived size
+      // of the lit led. That's why size is the main variable reflecting brightness changes
+      const power = (r+g+b)/3;
+      let [or, og, ob] = [r/power, g/power, b/power];
 
       (color.array as any)[3 * i] = or;
       (color.array as any)[3 * i + 1] = og;
       (color.array as any)[3 * i + 2] = ob;
-      (size.array as any)[i] = 4 * (0.4 + 0.6 * power);
+
+      (size.array as any)[i] = (0.02+0.98*gammaPower**invGamma);
     }
     color.needsUpdate = true;
     size.needsUpdate = true;

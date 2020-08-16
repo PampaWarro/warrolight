@@ -13,18 +13,40 @@ command -v arduino-cli > /dev/null || die "arduino-cli not installed."
 export ARDUINO_SKETCHBOOK_DIR=.
 
 code=0
+fqbn=arduino:avr:uno
 
-for sketch in */ ; do
-  if [ "$sketch" == "libraries/" ]; then
-    continue
-  fi
+optionalFile=$1
 
-  echo "${GREEN}Compiling sketch in $sketch${RESET}"
-  arduino-cli compile --fqbn arduino:avr:uno "$sketch"
+if [ "$optionalFile" == "NANO" ]; then
+  # Set Arduino Nano fqbn
+  fqbn=arduino:avr:nano:cpu=atmega328old
+
+  # remove parameters from rest of arguments, which will be used as folders to compile
+  optionalFile=$2
+  echo "${GREEN}Compiling for Arduino $optionalFile${RESET}"
+fi
+
+
+if [ "$optionalFile" ]; then
+  echo "${GREEN}Compiling ONLY $optionalFile${RESET}"
+
+  arduino-cli compile --fqbn $fqbn "$optionalFile"
   if [ $? -ne 0 ]; then
     code=1
   fi
-done
+else
+  for sketch in */ ; do
+    if [ "$sketch" == "libraries/" ]; then
+      continue
+    fi
+
+    echo "${GREEN}Compiling sketch in $sketch${RESET}"
+    arduino-cli compile --fqbn $fqbn "$sketch"
+    if [ $? -ne 0 ]; then
+      code=1
+    fi
+  done
+fi
 
 if [ $code -ne 0 ]; then
   echo "${RED}Failed to compile some programs :(${RESET}"

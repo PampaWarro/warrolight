@@ -3,17 +3,25 @@
 
 set -e
 
-if [ $# -ne 1 ]; then
-  >&2 echo "usage: $0 <sketch>"
+if [ $# == 0 ]; then
+  >&2 echo "usage: $0 <sketch> [<port> [NANO]]"
   exit 1
 fi
 
 sketch=$1
-port=$(arduino-cli board list | grep "arduino:avr" | awk '{ print $1 }')
+port=$2 || $(arduino-cli board list | grep "arduino:avr" | awk '{ print $1 }')
+fqbn=arduino:avr:uno
+
+if [ "$3" == "NANO" ]; then
+  echo "Uploading to Arduino NANO"
+  fqbn=arduino:avr:nano:cpu=atmega328old
+fi
 
 if [ "$port" == "" ]; then
   >&2 echo "No Arduino board connected."
-  >&2 echo "Connect one and check with the arduino-cli board list command"
+  >&2 echo "Connect one and check with the 'arduino-cli board list' command. Current output:"
+  echo ""
+  arduino-cli board list
   exit 1
 fi
 
@@ -23,6 +31,6 @@ echo "Found Arduino connected at port $port"
 
 printf "Uploading $sketch to board... "
 
-arduino-cli compile --upload --port "$port" --fqbn arduino:avr:uno "$sketch"
+arduino-cli compile --upload --port "$port" --fqbn "$fqbn" "$sketch"
 
 echo "Done!"

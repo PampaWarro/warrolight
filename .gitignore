@@ -6,6 +6,7 @@ node_modules
 npm-debug.log
 arduino/**/*.hex
 arduino/**/*.elf
+arduino/**/build/
 
 __pycache__/
 .DS_Store

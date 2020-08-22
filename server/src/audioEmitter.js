@@ -1,8 +1,13 @@
 const {EventEmitter} = require('events');
 
 class AudioEmitter extends EventEmitter {
-  currentFrame = null;
-  ready = false;
+  constructor(){
+    super();
+    this.currentFrame = null;
+    this.ready = false;
+  }
+  
+  
   updateFrame(frame) {
     this.currentFrame = frame;
     this.ready = true;

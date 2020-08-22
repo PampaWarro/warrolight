@@ -14,9 +14,9 @@ function rescale(value) {
 // A simple program based on Simplex noise to generate
 // a random cloud of colors.
 module.exports = class Noise extends LightProgram {
-  timedMultiGradient = new TimedMultiGradient(allGradients());
   constructor(config, geometry) {
     super(config, geometry);
+    this.timedMultiGradient = new TimedMultiGradient(allGradients());
   }
 
   init() {

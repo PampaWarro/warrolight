@@ -8,9 +8,9 @@ const {
 const _ = require('lodash');
 
 module.exports = class CA extends LightProgram {
-  timedMultiGradient = new TimedMultiGradient(allGradients());
   constructor(config, geometry) {
     super(config, geometry);
+    this.timedMultiGradient = new TimedMultiGradient(allGradients());
     this.cellularAutomata = new CellularAutomata([this.numberOfLeds])
       .fillWithDistribution([
         [0, 95],

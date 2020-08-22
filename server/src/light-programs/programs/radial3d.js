@@ -9,7 +9,11 @@ const {
 } = require("../utils/gradients");
 
 module.exports = class Radial3D extends LightProgram {
-  timedMultiGradient = new TimedMultiGradient(allGradients());
+  constructor(config, geometry) {
+    super(config, geometry);
+    this.timedMultiGradient = new TimedMultiGradient(allGradients());
+  }
+  
   drawFrame(draw) {
     const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;

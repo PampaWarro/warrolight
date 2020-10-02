@@ -14,7 +14,7 @@ brew install node
 2. Clonar el repo de warrolight: 
 
 ```
-git clone https://github.com/federicobond/warrolight
+git clone https://github.com/PampaWarro/warrolight.git
 cd warrolight/
 ```
 

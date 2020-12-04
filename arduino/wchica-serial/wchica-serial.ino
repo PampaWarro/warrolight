@@ -19,14 +19,18 @@ __attribute__((section(".noinit"))) unsigned int program;
 
 Stars starsProgram;
 Rainbow rainbowProgram;
-
+Sines sinesProgram;
+Explosion explosionsProgram;
+MultiProgram multiProgram;
 WSerial wserial;
+
+int NUMBER_OF_PROGRAMS = 4;
 
 void setup()
 {
   randomSeed(analogRead(0));
 
-  program = (program + 1) % 2;
+  program = (program + 1) % NUMBER_OF_PROGRAMS;
   // program = 0;
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
@@ -58,17 +62,32 @@ void loop()
 unsigned long time = 0;
 void arduinoProgram()
 {
-  if (program == 0)
-    rainbowProgram.draw(leds, NUM_LEDS, time);
-  else
-    starsProgram.draw(leds, NUM_LEDS, time);
+   
+  switch (program) {
+    case 0:
+      multiProgram.draw(leds, NUM_LEDS, time);
+      break;
+    case 1:
+      starsProgram.draw(leds, NUM_LEDS, time);
+      break;
+    case 2:
+      sinesProgram.draw(leds, NUM_LEDS, time);
+      break;
+    case 3:
+      explosionsProgram.draw(leds, NUM_LEDS, time);
+      break;
+  }
+  
+  if(time < 100) {
+    for (int i = 0; i < NUMBER_OF_PROGRAMS; i++) {
+      if(i == program){
+        leds[i].setRGB(10, 0, 20);
+      } else {
+        leds[i].setRGB(0, 0, 0);
 
-  // TODO: remove or add a comment about this
-  byte debugCycle = (time / 10) % 3;
-  if (debugCycle == 0)
-    leds[0].setRGB(10, 0, 20);
-  else
-    leds[0].setRGB(0, 0, 0);
+      }
+    }
+  }
 
   FastLED.show();
   time++;

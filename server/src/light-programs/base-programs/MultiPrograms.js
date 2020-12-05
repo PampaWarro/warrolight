@@ -6,6 +6,20 @@ function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
+function extractDefault(program) {
+  if (!program || !program.configSchema) {
+    return {};
+  }
+  let configSchema = program.configSchema();
+  let config = {};
+  for (let paramName in configSchema) {
+    if (configSchema[paramName].default !== undefined) {
+      config[paramName] = configSchema[paramName].default;
+    }
+  }
+  return config;
+}
+
 module.exports = function createMultiProgram(
   programSchedule,
   random = false,
@@ -23,7 +37,7 @@ module.exports = function createMultiProgram(
       // instantiate each program
       _.each(this.programSchedule, scheduleItem => {
           return (scheduleItem.programInstance = new scheduleItem.program(
-            this.config,
+            extractDefault(scheduleItem.program),
             this.geometry,
             this.shapeMapping,
             this.lightController

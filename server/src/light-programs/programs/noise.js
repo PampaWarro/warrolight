@@ -32,22 +32,29 @@ module.exports = class Noise extends LightProgram {
       ? loadGradient(this.config.colorMap)
       : this.timedMultiGradient;
 
-    const noise = this.noise;
     const { x, y } = this.geometry;
     const t = this.time / 1000;
 
     var colors = new Array(this.numberOfLeds);
     for (let i = 0; i < colors.length; i++) {
       const v = rescale(
-        this.config.colorScale * noise.gen(x[i] / 32 + t, y[i] / 32 + t)
+        this.config.colorScale * this.gen(x[i] / 32 + t, y[i] / 32 + t)
       );
       const brightness = rescale(
         this.config.brightnessScale *
-          noise.gen(x[i] / 32 + t + 100, y[i] / 32 + t)
+          this.gen(x[i] / 32 + t + 100, y[i] / 32 + t)
       );
       colors[i] = gradient.colorAt(v).map(x => Math.floor(x * brightness));
     }
     draw(colors);
+  }
+
+  gen(x, y) {
+    try {
+      return this.noise.gen(x, y);
+    } catch {
+      return 0;
+    }
   }
 
   updateConfig(config) {

@@ -14,7 +14,7 @@
     "react-scripts": "3.3.0",
     "reconnecting-websocket": "^4.2.0",
     "stats.js": "^0.17.0",
-    "three": "^0.115.0"
+    "three": "^0.125.0"
   },
   "scripts": {
     "start": "react-scripts start",

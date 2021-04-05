@@ -176,6 +176,14 @@ input[type=range] {
     border-radius: 3px;
   }
 
+  &::-moz-range-track {
+    /*width: 150px;*/
+    height: 3px;
+    background: #343a40;
+    border: none;
+    border-radius: 3px;
+  }
+
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;

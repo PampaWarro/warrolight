@@ -21,7 +21,7 @@ export class DevicesStatus extends React.Component<Props> {
     }
 
     return (
-      <div className="devices">
+      <div className="devices d-none d-md-block">
         {devices.map(device => (
           <span
             key={device.deviceId}

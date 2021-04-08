@@ -23,13 +23,13 @@ void Stars::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
   {
     if (random(0, m_chance) == 0)
     {
-      m_stars[i] = min(255, (int)m_stars[i] + random(20, 255));
+      m_stars[i] = min(255, (int)m_stars[i] + (int)random(20, 255));
       m_starsColors[i] = random(0, 10) + (time / 10 % 255);
       m_starsSaturation[i] = random(0, 150) + 50;
     }
     if (m_stars[i] > 0)
     {
-      m_stars[i] = max(0, (((long)m_stars[i]) * m_decay / 10000));
+      m_stars[i] = max(0, (int) (((long)m_stars[i]) * m_decay / 10000));
     }
 
     int h = ((int)m_starsColors[i] + m_tone) % 255;

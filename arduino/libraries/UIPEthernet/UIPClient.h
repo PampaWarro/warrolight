@@ -23,7 +23,7 @@
 #include "ethernet_comp.h"
 #if defined(ARDUINO)
   #include "Print.h"
-  #if defined(__STM32F3__) || defined(STM32F3) || defined(__RFduino__)
+  #if defined(__STM32F3__) || (!defined(ARDUINO_ARCH_STM32) && defined(STM32F3)) || defined(__RFduino__)
     #include "mbed/Client.h"
   #else
     #include "Client.h"
@@ -55,6 +55,7 @@ extern "C" {
 typedef uint8_t uip_socket_ptr;
 
 typedef struct {
+  uint8_t conn_index;
   uint8_t state;
   memhandle packets_in[UIP_SOCKET_NUMPACKETS];
   uint16_t lport;        /**< The local TCP port, in network byte order. */
@@ -71,10 +72,10 @@ typedef struct {
 #endif
 } uip_userdata_t;
 
-#if defined(ARDUINO) && !defined(STM32F3) && !defined(__RFduino__)
+#if defined(ARDUINO) && (defined(ARDUINO_ARCH_STM32) || !defined(STM32F3)) && !defined(__RFduino__)
   class UIPClient : public Client {
 #endif
-#if defined(__MBED__) || defined(STM32F3) || defined(__RFduino__)
+#if defined(__MBED__) || (!defined(ARDUINO_ARCH_STM32) && defined(STM32F3)) || defined(__RFduino__)
   class UIPClient : public Print, public Client {
 #endif
 public:
@@ -90,12 +91,17 @@ public:
 
   virtual size_t write(uint8_t);
   virtual size_t write(const uint8_t *buf, size_t size);
+  virtual int availableForWrite();
+
   virtual int available();
   virtual int read();
   virtual int peek();
   virtual void flush();
 
   using Print::write;
+
+  IPAddress remoteIP();
+  uint16_t remotePort();
 
 private:
   UIPClient(struct uip_conn *_conn);

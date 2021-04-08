@@ -205,7 +205,7 @@ extern uint8_t ENC28J60ControlCS;
 #endif
 
 #if defined(__MBED__) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD) || defined(__ARDUINO_ARC__) || defined(__STM32F1__) || defined(__STM32F3__) || defined(STM32F3) || defined(__STM32F4__) || defined(STM32F2) || defined(ESP8266) || defined(ARDUINO_ARCH_AMEBA) || defined(__MK20DX128__) || defined(__MKL26Z64__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__) || defined(__IMXRT1062__) || defined(__RFduino__) || defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_MEGAAVR)
-   #if defined(ARDUINO) && defined(STM32F3)
+   #if defined(ARDUINO) && (!defined(ARDUINO_ARCH_STM32) && defined(STM32F3))
       #include "HardwareSPI.h"
    #else
       #include <SPI.h>
@@ -214,6 +214,9 @@ extern uint8_t ENC28J60ControlCS;
 #endif
 
 #define UIP_RECEIVEBUFFERHANDLE 0xff
+
+#define UIP_SENDBUFFER_PADDING 7
+#define UIP_SENDBUFFER_OFFSET 1
 
 /*
  * Empfangen von ip-header, arp etc...
@@ -272,12 +275,11 @@ public:
   static memhandle receivePacket(void);
   static void freePacket(void);
   static memaddress blockSize(memhandle handle);
-  static void sendPacket(memhandle handle);
+  static bool sendPacket(memhandle handle);
   static uint16_t readPacket(memhandle handle, memaddress position, uint8_t* buffer, uint16_t len);
   static uint16_t writePacket(memhandle handle, memaddress position, uint8_t* buffer, uint16_t len);
   static void copyPacket(memhandle dest, memaddress dest_pos, memhandle src, memaddress src_pos, uint16_t len);
   static uint16_t chksum(uint16_t sum, memhandle handle, memaddress pos, uint16_t len);
 };
 
-extern Enc28J60Network Enc28J60;
 #endif /* Enc28J60NetworkClass_H_ */

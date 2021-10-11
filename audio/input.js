@@ -1,10 +1,9 @@
 const cp = require('child_process');
 const EventEmitter = require('events');
 const path = require('path');
-const msgpack = require('msgpack');
+const { decodeMultiStream } = require('@msgpack/msgpack');
 
-const venvPath =
-    cp.execSync('pipenv --venv', {encoding : 'utf8', cwd : __dirname}).trim();
+const venvPath = path.join(__dirname, 'env')
 const pythonBinaryFolder = /^win/.test(process.platform) ? 'Scripts' : 'bin';
 const python = path.join(venvPath, pythonBinaryFolder, 'python')
 const mainScript = path.join(__dirname, 'main.py')
@@ -34,12 +33,16 @@ class AudioInput extends EventEmitter {
       throw 'AudioInput already started';
     }
     this._stopping = false;
-    const that = this;
     this._subprocess = cp.spawn(python, this._args, {
       stdio : [ 'inherit', 'pipe', 'inherit' ],
     });
-    this._inputStream = new msgpack.Stream(this._subprocess.stdout);
-    this._inputStream.on('msg', (frame) => { that.emit('audioframe', frame); });
+
+    (async () => {
+      for await (const frame of decodeMultiStream(this._subprocess.stdout)) {
+        this.emit('audioframe', frame);
+      }
+    })();
+
     this.emit('start');
     this._subprocess.on('exit', (code, signal) => {
       if (!that._stopping) {
@@ -49,10 +52,10 @@ class AudioInput extends EventEmitter {
         } else {
           msg = `Audio subprocess terminated with signal ${signal}.`;
         }
-        that.emit('error', msg);
+        this.emit('error', msg);
       }
-      that._subprocess = null;
-      that.emit('stop');
+      this._subprocess = null;
+      this.emit('stop');
     });
   }
 

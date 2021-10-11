@@ -311,7 +311,7 @@ class Fake3DLightsRenderer extends LightsRenderer {
       layout.geometryX,
       layout.geometryY,
       layout.geometryZ
-    ).map(led => vec3.transformMat4(vec3.create(), led as number[], transform));
+    ).map(led => vec3.transformMat4(vec3.create(), led as [number, number, number], transform));
 
     const arrowLength = Math.max(width, height, depth) / 30;
     const [cX, cY, cZ] = [layout.maxX - arrowLength, layout.maxY, centerZ];

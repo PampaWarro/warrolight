@@ -17,6 +17,11 @@ if [ "$3" == "NANO" ]; then
   fqbn=arduino:avr:nano:cpu=atmega328old
 fi
 
+if [ "$3" == "MEGA" ]; then
+  echo "Uploading to Arduino MEGA"
+  fqbn=arduino:avr:mega
+fi
+
 if [ "$port" == "" ]; then
   >&2 echo "No Arduino board connected."
   >&2 echo "Connect one and check with the 'arduino-cli board list' command. Current output:"

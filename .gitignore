@@ -1,5 +1,6 @@
 *.sw[a-z]
 .idea
+.vscode
 
 node_modules
 

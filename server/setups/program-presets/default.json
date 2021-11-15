@@ -1,1 +1,12 @@
-{}
+{
+    "mix": {
+        "congaplayer1": {
+            "programs": [
+                {
+                    "programName": "all-white",
+                    "shape": "fullLinePlayer1"
+                }
+            ]
+        }
+    }
+}

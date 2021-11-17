@@ -13,10 +13,18 @@ const controller = loadSetup(setup);
 controller.start();
 
 console.log('Available audio devices:\n', listDevices());
+
 const audioInput = new AudioInput({
-  deviceIndex: null,  // TODO: allow overriding device.
+  deviceIndex: null,
 });
 audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
 audioInput.start();
+
+// Second audio input test
+// const audioInput2 = new AudioInput({
+//   deviceIndex: 2,
+// });
+// audioInput2.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
+// audioInput2.start();
 
 startServer(controller);

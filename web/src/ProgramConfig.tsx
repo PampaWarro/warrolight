@@ -82,7 +82,8 @@ export class ProgramConfig extends React.PureComponent<Props> {
               'rms', 'fastPeakDecay', 'peakDecay',
               'bassRms', 'bassFastPeakDecay', 'bassPeakDecay',
               'midRms', 'midFastPeakDecay', 'midPeakDecay',
-              'highRms', 'highFastPeakDecay', 'highPeakDecay'
+              'highRms', 'highFastPeakDecay', 'highPeakDecay',
+              'mic2_rms', 'mic2_fastPeakDecay', 'mic2_peakDecay'
             ]}
             onChange={this.handleParamChange}/>
           break;

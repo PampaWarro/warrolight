@@ -2,6 +2,7 @@ const { startServer } = require("./server");
 const { loadSetup } = require("./setup");
 const audioEmitter = require("./audioEmitter");
 const {AudioInput, listDevices} = require("../../audio/input");
+const _ = require('lodash');
 
 const setupFile = process.argv[2] || "sample.json";
 const setupPath = `../setups/${setupFile}`;
@@ -14,17 +15,23 @@ controller.start();
 
 console.log('Available audio devices:\n', listDevices());
 
-const audioInput = new AudioInput({
-  deviceIndex: null,
+const audioInput = new AudioInput({deviceIndex: null,});
+const audioInput2 = new AudioInput({deviceIndex: 2,});
+
+// audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
+audioInput2.on('audioframe', (frame) => {
+  audioEmitter.preCurrentFrame = {... frame};
 });
-audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
-audioInput.start();
 
 // Second audio input test
-// const audioInput2 = new AudioInput({
-//   deviceIndex: 2,
-// });
-// audioInput2.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
-// audioInput2.start();
+audioInput.on('audioframe', (frame) => {
+  audioEmitter.currentFrame = {... audioEmitter.preCurrentFrame, ... _.mapKeys(frame, (v,k) => 'mic2_'+k)};
+  audioEmitter.currentFrame.expanded = true;
+  audioEmitter.ready = true;
+  audioEmitter.emit('audioframe', frame);
+});
+
+audioInput.start();
+audioInput2.start();
 
 startServer(controller);

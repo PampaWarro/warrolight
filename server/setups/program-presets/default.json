@@ -7,6 +7,39 @@
                     "shape": "fullLinePlayer1"
                 }
             ]
+        },
+        "TwoMicsFlow": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "config": {
+                        "doble": false,
+                        "soundMetric": "fastPeakDecay"
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "config": {
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "haciaAfuera": true,
+                        "doble": false
+                    }
+                }
+            ]
+        },
+        "ShapeParticle": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "numberOfParticles": 1,
+                        "decay": 0.93,
+                        "singleDirection": true,
+                        "globalSpeed": 5.71,
+                        "colorSaturationRange": 1
+                    }
+                }
+            ]
         }
     }
 }

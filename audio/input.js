@@ -2,11 +2,11 @@ const cp = require('child_process');
 const EventEmitter = require('events');
 const path = require('path');
 const { decodeMultiStream } = require('@msgpack/msgpack');
-
+const pythonFromEnv = process.env.PYTHONPATH;
 const venvPath = path.join(__dirname, 'env')
 const pythonBinaryFolder = /^win/.test(process.platform) ? 'Scripts' : 'bin';
-// const python = path.join(venvPath, pythonBinaryFolder, 'python')
-const python = "C:\\Users\\Javier\\.virtualenvs\\audio-YY8igrWU\\Scripts\\python.exe"
+
+const python = pythonFromEnv ? pythonFromEnv : path.join(venvPath, pythonBinaryFolder, 'python');
 const mainScript = path.join(__dirname, 'main.py')
 
 class AudioInput extends EventEmitter {

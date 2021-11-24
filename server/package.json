@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": " node -r ts-node/register --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js conga",
-    "server": "node src/server.js fuego-2020",
+    "server": "node src/server.js conga",
     "prettier": "prettier --write src/*.js src/**/*.js",
     "lint": "eslint ."
   },

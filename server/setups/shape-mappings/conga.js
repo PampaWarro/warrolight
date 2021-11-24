@@ -39,7 +39,8 @@ module.exports = function getShapes() {
   const head = [... headLeft, ... headTop, ... headRight];
 
   const fullLinePlayer1 = _.range(0, D);
-  const fullLinePlayer2 = _.range(A2-D, A2);
+  const fullLinePlayer2 = _.range(A2-D, A2).reverse();
+  const fullArc = _.flatten([fullLinePlayer1, fullLinePlayer2.reverse()])
 
   const topRightSide = _.range(D, F2);
   const highestSide = _.range(F2, F);
@@ -69,6 +70,7 @@ module.exports = function getShapes() {
     allOfIt,
     fullLinePlayer1,
     fullLinePlayer2,
+    fullArc,
     arrowPlayer1,
     arrowPlayer2,
     topRightSide,

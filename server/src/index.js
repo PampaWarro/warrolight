@@ -11,6 +11,9 @@ console.log(`Loading setup from ${setupPath}`)
 const setup = require(setupPath);
 
 const controller = loadSetup(setup);
+
+require('./hackProgramReloadOnRestart')(controller);
+
 controller.start();
 
 console.log('Available audio devices:\n', listDevices());

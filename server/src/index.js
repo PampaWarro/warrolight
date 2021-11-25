@@ -12,6 +12,7 @@ const setup = require(setupPath);
 
 const controller = loadSetup(setup);
 
+// TODO: Development hack to reload programs module on restart
 require('./hackProgramReloadOnRestart')(controller);
 
 controller.start();
@@ -19,22 +20,20 @@ controller.start();
 console.log('Available audio devices:\n', listDevices());
 
 const audioInput = new AudioInput({deviceIndex: null,});
-const audioInput2 = new AudioInput({deviceIndex: 2,});
-
 // audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
+
+const audioInput2 = new AudioInput({deviceIndex: 2,});
 audioInput2.on('audioframe', (frame) => {
-  audioEmitter.preCurrentFrame = {... frame};
+  audioEmitter.frame2 = frame;
 });
+audioInput2.start();
 
 // Second audio input test
 audioInput.on('audioframe', (frame) => {
-  audioEmitter.currentFrame = {... audioEmitter.preCurrentFrame, ... _.mapKeys(frame, (v,k) => 'mic2_'+k)};
-  audioEmitter.currentFrame.expanded = true;
-  audioEmitter.ready = true;
+  audioEmitter.currentFrame = {... frame, ... _.mapKeys(audioEmitter.frame2, (v,k) => 'mic2_'+k)};
   audioEmitter.emit('audioframe', frame);
 });
-
 audioInput.start();
-audioInput2.start();
+
 
 startServer(controller);

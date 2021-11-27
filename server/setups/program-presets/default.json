@@ -4,26 +4,30 @@
             "programs": [
                 {
                     "programName": "musicFlow",
+                    "shape": "fullArc",
                     "config": {
                         "doble": false,
-                        "soundMetric": "fastPeakDecay",
-                        "cutThreshold": 0.1
-                    },
-                    "shape": "fullArc"
+                        "soundMetric": "rms",
+                        "cutThreshold": 0.1,
+                        "multiplier": 2,
+                        "speed": 14
+                    }
                 },
                 {
                     "programName": "musicFlow",
+                    "shape": "fullArc",
                     "config": {
-                        "soundMetric": "mic2_fastPeakDecay",
+                        "soundMetric": "mic2_rms",
                         "haciaAfuera": true,
                         "doble": false,
-                        "cutThreshold": 0.1
-                    },
-                    "shape": "fullArc"
+                        "cutThreshold": 0.1,
+                        "multiplier": 2,
+                        "speed": 14
+                    }
                 },
                 {
                     "programName": "radialSun",
-                    "shape": "topTriangle",
+                    "shape": "man",
                     "config": {
                         "relative": false,
                         "centerY": 1,
@@ -35,7 +39,7 @@
                 },
                 {
                     "programName": "radialSun",
-                    "shape": "bottomTriangle",
+                    "shape": "man",
                     "config": {
                         "relative": true,
                         "soundMetric": "mic2_fastPeakDecay",
@@ -51,7 +55,7 @@
                     "programName": "congaShooting2",
                     "shape": "fullArc",
                     "config": {
-                        "fireThreshold": 0.79
+                        "fireThreshold": 0.54
                     }
                 },
                 {
@@ -97,14 +101,15 @@
                     "programName": "sound-waves",
                     "config": {
                         "waveCenterX": 0,
-                        "waveCenterY": 17
+                        "waveCenterY": 17,
+                        "soundMetric": "rms"
                     }
                 },
                 {
                     "programName": "sound-waves",
                     "config": {
                         "waveCenterY": -17,
-                        "soundMetric": "mic2_fastPeakDecay"
+                        "soundMetric": "mic2_rms"
                     }
                 }
             ]
@@ -142,6 +147,93 @@
                         "singleDirection": true,
                         "globalSpeed": 5.71,
                         "colorSaturationRange": 1
+                    }
+                }
+            ]
+        },
+        "congaRope": {
+            "programs": [
+                {
+                    "programName": "congaRope",
+                    "shape": "fullArc"
+                }
+            ]
+        },
+        "Rope2": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "shape": "man",
+                    "config": {
+                        "relative": true,
+                        "fromTop": true,
+                        "radialDistance": false,
+                        "soundMetric": "mic2_rms",
+                        "animatePower": true,
+                        "escala": 3.091
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "man",
+                    "config": {
+                        "relative": true,
+                        "escala": 4.991,
+                        "soundMetric": "rms"
+                    }
+                },
+                {
+                    "programName": "congaRope",
+                    "shape": "fullArc"
+                }
+            ],
+            "multiply": false
+        },
+        "TwoFlowFast": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "shape": "fullArc",
+                    "config": {
+                        "doble": false,
+                        "soundMetric": "rms",
+                        "cutThreshold": 0.1,
+                        "multiplier": 2,
+                        "speed": 14
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "fullArc",
+                    "config": {
+                        "soundMetric": "mic2_rms",
+                        "haciaAfuera": true,
+                        "doble": false,
+                        "cutThreshold": 0.1,
+                        "multiplier": 2,
+                        "speed": 14
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "man",
+                    "config": {
+                        "relative": false,
+                        "centerY": 1,
+                        "soundMetric": "fastPeakDecay",
+                        "fromTop": true,
+                        "power": 3.3,
+                        "radialDistance": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "man",
+                    "config": {
+                        "relative": true,
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "centerY": -3.5,
+                        "radialDistance": true
                     }
                 }
             ]

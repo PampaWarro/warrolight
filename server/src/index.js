@@ -19,7 +19,7 @@ controller.start();
 
 console.log('Available audio devices:\n', listDevices());
 
-const audioInput = new AudioInput({deviceIndex: null,});
+const audioInput = new AudioInput({deviceIndex: 0,});
 // audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
 
 const audioInput2 = new AudioInput({deviceIndex: 2,});

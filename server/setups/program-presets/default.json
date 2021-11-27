@@ -1,33 +1,138 @@
 {
     "mix": {
-        "congaplayer1": {
-            "programs": [
-                {
-                    "programName": "all-white",
-                    "shape": "fullLinePlayer1"
-                }
-            ]
-        },
         "TwoMicsFlow": {
             "programs": [
                 {
                     "programName": "musicFlow",
                     "config": {
                         "doble": false,
-                        "soundMetric": "fastPeakDecay"
-                    }
+                        "soundMetric": "fastPeakDecay",
+                        "cutThreshold": 0.1
+                    },
+                    "shape": "fullArc"
                 },
                 {
                     "programName": "musicFlow",
                     "config": {
                         "soundMetric": "mic2_fastPeakDecay",
                         "haciaAfuera": true,
-                        "doble": false
+                        "doble": false,
+                        "cutThreshold": 0.1
+                    },
+                    "shape": "fullArc"
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "topTriangle",
+                    "config": {
+                        "relative": false,
+                        "centerY": 1,
+                        "soundMetric": "fastPeakDecay",
+                        "fromTop": true,
+                        "power": 3.3,
+                        "radialDistance": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "bottomTriangle",
+                    "config": {
+                        "relative": true,
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "centerY": -3.5,
+                        "radialDistance": true
                     }
                 }
             ]
         },
-        "ShapeParticle": {
+        "ShootingArc": {
+            "programs": [
+                {
+                    "programName": "congaShooting2",
+                    "shape": "fullArc",
+                    "config": {
+                        "fireThreshold": 0.79
+                    }
+                },
+                {
+                    "programName": "congaScore",
+                    "shape": "highestSide",
+                    "config": {
+                        "playerNumber": 1,
+                        "globalBrightness": 0.47,
+                        "reverse": true,
+                        "colorHue": 0.7,
+                        "colorSat": 0.7
+                    }
+                },
+                {
+                    "programName": "congaScore",
+                    "shape": "lowestSide",
+                    "config": {
+                        "globalBrightness": 1,
+                        "reverse": true,
+                        "playerNumber": "0",
+                        "colorHue": 0.71,
+                        "colorSat": 0.84
+                    }
+                },
+                {
+                    "programName": "rays",
+                    "shape": "head",
+                    "config": {
+                        "decay": 0.92,
+                        "brillo": 0.4,
+                        "globalSpeed": 1,
+                        "colorSaturationRange": 0.4,
+                        "numberOfParticles": 3,
+                        "colorHueAmplitude": 0.1,
+                        "colorHueOffset": 0.57
+                    }
+                }
+            ]
+        },
+        "TwoSoundWaves": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveCenterX": 0,
+                        "waveCenterY": 17
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveCenterY": -17,
+                        "soundMetric": "mic2_fastPeakDecay"
+                    }
+                }
+            ]
+        },
+        "TwoSuns": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "shape": "allOfIt",
+                    "config": {
+                        "relative": true,
+                        "fromTop": true,
+                        "radialDistance": true,
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "animatePower": false
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "allOfIt"
+                },
+                {
+                    "programName": "stars"
+                }
+            ],
+            "multiply": false
+        },
+        "DebugShapeParticle": {
             "programs": [
                 {
                     "programName": "rays",

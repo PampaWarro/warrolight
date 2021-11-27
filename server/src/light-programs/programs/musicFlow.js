@@ -54,8 +54,13 @@ module.exports = class MusicFlow extends LightProgram {
           this.lastVolume.push(newVal);
         }
       } else {
-        this.lastVolume.splice(this.numberOfLeds - 1, 1);
-        this.lastVolume.unshift(newVal);
+        if(this.config.haciaAfuera) {
+          this.lastVolume.splice(0, 1);
+          this.lastVolume.push(newVal);
+        } else {
+          this.lastVolume.splice(this.numberOfLeds - 1, 1);
+          this.lastVolume.unshift(newVal);
+        }
       }
     }
 

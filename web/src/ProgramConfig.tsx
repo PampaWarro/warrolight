@@ -127,7 +127,7 @@ export class ProgramConfig extends React.PureComponent<Props> {
 
       let paramStateClass = (overrides && overrides[paramName]) ? 'text-warning' : (presetOverrides && presetOverrides[paramName] ? 'text-info' : 'text-secondary');
 
-      configOptions.push(<div key={paramName} className={paramStateClass}>{parameterEditor}</div>);
+      configOptions.push(<span key={paramName} className={paramStateClass}>{parameterEditor}</span>);
     }
 
     const presets = currentProgram.presets || [];

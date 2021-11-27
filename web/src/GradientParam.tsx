@@ -33,7 +33,7 @@ export class GradientParam extends React.Component<Props> {
     return (
       <div className="config-item">
         <div className="">
-          <div className="float-left">{this.props.name}&nbsp;</div>
+          <div className="float-left small">{this.props.name}&nbsp;</div>
 
           <div className="float-right font-weight-bold">
             <div className="dropdown">

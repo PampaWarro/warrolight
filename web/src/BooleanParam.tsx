@@ -3,28 +3,22 @@ import React from "react";
 interface Props {
   name: string;
   value: boolean;
+
   onChange(name: string, value: boolean): void;
 }
-export class BooleanParam extends React.Component<Props> {
-  handleChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    let value = (event.target as any).checked as boolean;
-    this.props.onChange(this.props.name, value);
-  };
 
+export class BooleanParam extends React.Component<Props> {
   render() {
+    const { onChange, name, value } = this.props;
+
+    const toggle = () => onChange(name, !value);
+
     return (
-      <div className="config-item my-1">
-        <div className="overflow-auto">
-          <div className="float-left">{this.props.name}</div>
-          <input
-            className="float-right"
-            type="checkbox"
-            name={this.props.name}
-            checked={this.props.value}
-            onChange={this.handleChange}
-          />
-        </div>
-      </div>
+      <span className="inline-block mb-1 mr-1">
+        <span className={`btn btn-sm p-1 btn-${value ? 'success' : 'outline-secondary'}`} onClick={toggle}>
+          {value ? '✅' : '🔲'} {name}
+        </span>
+      </span>
     );
   }
 }

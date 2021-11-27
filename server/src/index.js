@@ -31,6 +31,7 @@ audioInput2.start();
 // Second audio input test
 audioInput.on('audioframe', (frame) => {
   audioEmitter.currentFrame = {... frame, ... _.mapKeys(audioEmitter.frame2, (v,k) => 'mic2_'+k)};
+  audioEmitter.ready = true;
   audioEmitter.emit('audioframe', frame);
 });
 audioInput.start();

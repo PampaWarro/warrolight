@@ -15,6 +15,9 @@ const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
+  "mix",
+  "congaShooting2",
+  "congaScore",
   "congaShooting",
   "PROGRAM_Main_fuego2019",
   "PROGRAM_Triangulo",
@@ -33,7 +36,6 @@ const programNames = [
   "frequencyActivation",
   "gradientSphere",
   "lineal",
-  "mix",
   "musicFlow",
   "musicFlash",
   "musicFrequencyDot",

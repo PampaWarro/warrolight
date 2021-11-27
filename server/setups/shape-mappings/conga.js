@@ -40,7 +40,7 @@ module.exports = function getShapes() {
 
   const fullLinePlayer1 = _.range(0, D);
   const fullLinePlayer2 = _.range(A2-D, A2).reverse();
-  const fullArc = _.flatten([fullLinePlayer1, fullLinePlayer2.reverse()])
+  const fullArc = _.flatten([fullLinePlayer1, [... fullLinePlayer2].reverse()]) // Dont mutate original fullLinePLayer2
 
   const topRightSide = _.range(D, F2);
   const highestSide = _.range(F2, F);

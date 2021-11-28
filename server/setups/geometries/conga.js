@@ -14,8 +14,8 @@ const { Stripe } = require("../../src/geometry");
  */
 const scale = 0.1;
 
-const headSideLeds = 20;
-const domeStickLeds = (600 - headSideLeds * 3) / 12;
+const headSideLeds = 15;
+const domeStickLeds = 43 //(645 - headSideLeds * 3) / 14;
 
 /**
  * Handmade planar projection based on figma drawing (extracted from gross real 3d shape)
@@ -42,7 +42,7 @@ let [a2,b2,c2,e2,f2] = [a,b,c,e,f].map(([x,y]) => [(2*d[0] - x), y]);
 
 module.exports = [
   // Left and bottom triangle
-  Stripe.old2d(... a, ... b, domeStickLeds),
+  Stripe.old2d(... a, ... b, domeStickLeds*2 -1),
   Stripe.old2d(... b, ... c, domeStickLeds),
   Stripe.old2d(... c, ... d, domeStickLeds),
   Stripe.old2d(... d, ... f2, domeStickLeds),
@@ -60,5 +60,5 @@ module.exports = [
   Stripe.old2d(... e, ... d, domeStickLeds),
   Stripe.old2d(... d, ... c2, domeStickLeds),
   Stripe.old2d(... c2, ... b2, domeStickLeds),
-  Stripe.old2d(... b2, ... a2, domeStickLeds),
+  Stripe.old2d(... b2, ... a2, domeStickLeds*2 -1),
 ];

@@ -55,7 +55,7 @@
                     "programName": "congaShooting2",
                     "shape": "fullArc",
                     "config": {
-                        "fireThreshold": 0.54
+                        "fireThreshold": 0.31
                     }
                 },
                 {
@@ -93,7 +93,8 @@
                         "colorHueOffset": 0.57
                     }
                 }
-            ]
+            ],
+            "fps": 60
         },
         "TwoSoundWaves": {
             "programs": [
@@ -237,6 +238,167 @@
                     }
                 }
             ]
+        },
+        "fIREWORKS": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "presetName": "centroDots",
+                    "config": {
+                        "waveSpeed": 2,
+                        "waveWidth": 0.5,
+                        "brilloWave": 1.75
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveSpeed": 3.7,
+                        "waveWidth": 1,
+                        "initialDistance": 40,
+                        "haciaAfuera": false,
+                        "brilloWave": 1.25,
+                        "soundMetric": "mic2_fastPeakDecay"
+                    }
+                }
+            ]
+        },
+        "ManWave": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveSpeed": 2.9,
+                        "waveWidth": 3.5,
+                        "brilloWave": 1,
+                        "waveDecay": 0.5
+                    },
+                    "shape": "fullArc"
+                },
+                {
+                    "programName": "sound-waves",
+                    "shape": "man",
+                    "config": {
+                        "waveSpeed": 3.4,
+                        "waveWidth": 3.6,
+                        "initialDistance": 0,
+                        "haciaAfuera": true,
+                        "brilloWave": 1.25,
+                        "soundMetric": "mic2_rms",
+                        "colorMap": "",
+                        "waveDecay": 0.8
+                    }
+                }
+            ]
+        },
+        "TwoArrows": {
+            "programs": [
+                {
+                    "programName": "circles",
+                    "config": {
+                        "soundMetric": "fastPeakDecay"
+                    },
+                    "shape": "arrowPlayer2"
+                },
+                {
+                    "programName": "circles",
+                    "config": {
+                        "soundMetric": "mic2_fastPeakDecay"
+                    },
+                    "shape": "arrowPlayer1"
+                }
+            ]
+        },
+        "VolumeBars": {
+            "programs": [
+                {
+                    "programName": "musicVolumeBars",
+                    "shape": "fullLinePlayer1",
+                    "config": {
+                        "soundMetric": "peakDecay"
+                    }
+                },
+                {
+                    "programName": "musicVolumeBars",
+                    "shape": "fullLinePlayer2",
+                    "config": {
+                        "soundMetric": "mic2_peakDecay"
+                    }
+                }
+            ]
+        },
+        "StarFlash": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "starsColor": 1,
+                        "move": true,
+                        "decay": 0.965
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "multiplier": 2
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "StarRadial2P": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "presetName": "StarFlash",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 1,
+                                    "move": true,
+                                    "decay": 0.965
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "mic2_fastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radial"
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "fastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        }
+    },
+    "sound-waves": {
+        "centroDots": {
+            "waveSpeed": 2,
+            "waveWidth": 0.5,
+            "brilloWave": 1.75
         }
     }
 }

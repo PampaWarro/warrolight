@@ -16,7 +16,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
 
     // let vol = audio.averageRelativeVolume * this.config.multiplier * 1.5;
     // this.volPromedio = (vol+2*this.volPromedio)/3
-    this.volPromedio = audio.peakDecay;
+    this.volPromedio = audio[this.config.soundMetric]
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let newColor = [0, 0, 0];
@@ -34,7 +34,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
         newColor = ColorUtils.HSVtoRGB(
           tone,
           1,
-          Math.min(1, audio.peakDecay * audio.peakDecay)
+          Math.min(1, audio[this.config.soundMetric] * audio[this.config.soundMetric])
         );
       }
       this.lastVolume[i] = newColor;
@@ -51,6 +51,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
   static configSchema() {
     let res = super.configSchema();
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
+    res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     return res;
   }
 };

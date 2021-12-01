@@ -61,6 +61,15 @@ class RGBEncoder extends Encoder {
   }
 }
 
+class WLEDRGBEncoder extends RGBEncoder {
+  writeHeader(lights) {
+    // See https://kno.wled.ge/interfaces/udp-realtime/
+    // 4 =	DNRGB	489/packet
+    // 2 = seconds until WLED returns to normal functioning
+    this.write([2, 2]);
+  }
+}
+
 class RGB565Encoder extends Encoder {
   writeHeader(lights) {
     this.write([5]);
@@ -89,5 +98,6 @@ module.exports = {
   PosVGAEncoder,
   RGBEncoder,
   VGAEncoder,
-  RGB565Encoder
+  RGB565Encoder,
+  WLEDRGBEncoder
 }

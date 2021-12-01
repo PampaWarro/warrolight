@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const DeviceSerial = require('./devices/serial');
 const DeviceUDP = require('./devices/udp');
+const DeviceUDPWLED = require('./devices/udp-wled');
 
 function initDevicesFromConfig(outputDevices) {
   let devices = {};
@@ -14,6 +15,9 @@ function initDevicesFromConfig(outputDevices) {
         break;
       case 'udp':
         device = new DeviceUDP(params);
+        break;
+      case 'udp-wled':
+        device = new DeviceUDPWLED(params);
         break;
       default:
         throw new Error(`Invalid device type: ${type}`);

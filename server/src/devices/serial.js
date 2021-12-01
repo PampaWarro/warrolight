@@ -7,7 +7,7 @@ const { RGBEncoder } = require("./encodings");
 const RECONNECT_TIME = 3000;
 
 module.exports = class LightDeviceSerial extends LightDevice {
-  constructor({ numberOfLights, devicePortWindows, devicePortUnix }) {
+  constructor({ numberOfLights, devicePortWindows, devicePortUnix, baudRate }) {
     const port = /^win/.test(process.platform)
       ? devicePortWindows
       : devicePortUnix;
@@ -16,6 +16,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
 
     this.devicePort = port;
     this.encoder = new RGBEncoder();
+    this.baudRate = baudRate || 500000;
 
     this.protocolRetries = 0;
 
@@ -111,7 +112,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
     this.updateStatus(this.STATUS_CONNECTING);
 
     this.port = new SerialPort(this.devicePort, {
-      baudRate: 500000
+      baudRate: this.baudRate
     });
 
     this.port.on("open", this.handleOpen.bind(this));

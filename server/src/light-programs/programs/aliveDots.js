@@ -62,7 +62,7 @@ module.exports = class AliveDots extends LightProgram {
       this.stars[roundPosNext] = [ru, gu, bu];
     });
 
-    this.lastVolume = audio.currentFrame.bassRms || 0;
+    this.lastVolume = audio.currentFrame[this.config.soundMetric] || 0;
     draw(
       this.stars.map(([r, g, b]) =>
         ColorUtils.dim([r, g, b], this.config.brillo)
@@ -75,7 +75,7 @@ module.exports = class AliveDots extends LightProgram {
       dot.val += 0.05;
     }
 
-    let vol = audio.currentFrame.bassRms;
+    let vol = audio.currentFrame[this.config.soundMetric] || 0;
     let volDiff = vol - this.lastVolume;
     dot.pos =
       dot.pos +
@@ -125,35 +125,12 @@ module.exports = class AliveDots extends LightProgram {
   static configSchema() {
     let config = super.configSchema();
     config.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
-    config.musicWeight = {
-      type: Number,
-      min: 0,
-      max: 5,
-      step: 0.1,
-      default: 1
-    };
-    config.speedWeight = {
-      type: Number,
-      min: 0,
-      max: 5,
-      step: 0.1,
-      default: 0.1
-    };
-    config.numberOfParticles = {
-      type: Number,
-      min: 1,
-      max: 600,
-      step: 1,
-      default: 10
-    };
-    config.doble = { type: Boolean, default: true };
-    config.toneColor = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0.5
-    };
+    config.musicWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 1};
+    config.speedWeight = {type: Number, min: 0, max: 5, step: 0.1, default: 0.1};
+    config.numberOfParticles = {type: Number, min: 1, max: 600, step: 1, default: 10};
+    config.doble = {type: Boolean, default: true};
+    config.toneColor = {type: Number, min: 0, max: 1, step: 0.01, default: 0.5};
+    config.soundMetric = {type: 'soundMetric', default: "bassRms"};
     return config;
   }
 };

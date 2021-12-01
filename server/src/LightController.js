@@ -19,6 +19,7 @@ const programNames = [
   "congaShooting2",
   "congaScore",
   "congaShooting",
+  "congaRope",
   "PROGRAM_Main_fuego2019",
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",

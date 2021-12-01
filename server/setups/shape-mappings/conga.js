@@ -1,7 +1,7 @@
 const _ = require("lodash");
 
-const headSideLeds = 20;
-const n = (600 - headSideLeds * 3) / 12;
+const headSideLeds = 15;
+const n = 43 //(600 - headSideLeds * 3) / 12;
 
 /**
  *
@@ -22,8 +22,8 @@ const n = (600 - headSideLeds * 3) / 12;
 
 module.exports = function getShapes() {
   // There is D, D2, D3 and D4 because its a point passed 4 times when "drawing" the shapes
-  const allOfIt = _.range(0, 600);
-  const D = 3*n;
+  const allOfIt = _.range(0, 645);
+  const D = 4*n - 1;
   const F2 = D+n;
   const F = F2+n;
   const D2 = F+n;
@@ -31,7 +31,7 @@ module.exports = function getShapes() {
   const E2 = D3+n;
   const E = E2+n;
   const D4 = E+n;
-  const A2 = 600;
+  const A2 = 645;
 
   const headLeft = _.range(D2, D2+headSideLeds);
   const headTop = _.range(D2+headSideLeds, D2+2*headSideLeds);

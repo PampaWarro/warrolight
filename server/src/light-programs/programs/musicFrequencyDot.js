@@ -1,5 +1,6 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const _ = require('lodash');
 
 module.exports = class MusicFrequencyDot extends LightProgram {
 
@@ -13,27 +14,23 @@ module.exports = class MusicFrequencyDot extends LightProgram {
 
   drawFrame(draw, audio) {
     if (audio.ready) {
-      let {
-        bassRms,
-        bassPeakDecay,
-        bassMax,
-        midRms,
-        midPeakDecay,
-        midMax,
-        highRms,
-        highPeakDecay,
-        highMax
-      } = audio.currentFrame;
-      //let total = bassMax+midMax+highMax;
+      let [,mic,,metric] = (this.config.soundMetric || 'bassPeakDecay') .match(/(\w+_)?(bass|mid|high)?(.+)/);
+
+      metric = _.upperFirst(metric);
+      mic = mic || '';
+
+      let bassValue = audio.currentFrame[`${mic}bass${metric}`]
+      let midValue = audio.currentFrame[`${mic}mid${metric}`]
+      let highValue = audio.currentFrame[`${mic}high${metric}`]
 
       let power = this.config.power; // To create contrast
-      let bass = Math.pow(bassPeakDecay, power); //*(bassMax/total);
+      let bass = Math.pow(bassValue, power); //*(bassMax/total);
       let r = Math.round(255 * bass * this.config.multiplier);
 
-      let mid = Math.pow(midPeakDecay, power); //*(midMax/total);
+      let mid = Math.pow(midValue, power); //*(midMax/total);
       let g = Math.round(255 * mid * this.config.multiplier);
 
-      let high = Math.pow(highPeakDecay, power); //*(highMax/total);
+      let high = Math.pow(highValue, power); //*(highMax/total);
       let b = Math.round(255 * high * this.config.multiplier);
 
       let [h, s, br] = ColorUtils.RGBtoHSV(r, g, b);
@@ -47,8 +44,8 @@ module.exports = class MusicFrequencyDot extends LightProgram {
       let width = Math.round(this.numberOfLeds / this.config.numberOfOnLeds);
 
       for (let i = 0; i < this.numberOfLeds; i += 1) {
-        let rms = bassPeakDecay;
-        let explosionLength = Math.ceil((Math.pow(rms, power) * width) / 3);
+        let intensity = bassValue;
+        let explosionLength = Math.ceil((Math.pow(intensity, power) * width) / 3);
 
         let offsettedPosition = i % this.lastVolume.length;
         if (this.config.move) {
@@ -84,6 +81,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
     res.move = { type: Boolean, default: false };
     res.blackAndWhite = { type: Boolean, default: false };
+    res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     res.power = { type: Number, min: 1, max: 20, step: 0.1, default: 2 };
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};

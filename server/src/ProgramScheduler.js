@@ -42,8 +42,8 @@ module.exports = class ProgramScheduler {
         );
       }
       // Schedule next frame for the remaing time considering how long it took to do the drawing
-      // We wait at least 10ms in order to throttle CPU to give room for IO, serial and other critical stuff
-      this.nextTickTimeout = setTimeout(frame, Math.max(10, remainingTime));
+      // We wait at least 5ms in order to throttle CPU to give room for IO, serial and other critical stuff
+      this.nextTickTimeout = setTimeout(frame, Math.max(5, remainingTime));
     };
 
     this.nextTickTimeout = setTimeout(frame, 1);

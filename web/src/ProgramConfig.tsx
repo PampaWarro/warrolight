@@ -5,7 +5,9 @@ import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue, CurrentProgramParameters } from "./types";
 import { GradientParam } from "./GradientParam";
 import { SubprogramParam } from "./SubprogramParam";
+import { SoundMetricParam } from "./SoundMetricParam";
 import { SubprogramsListParam } from "./SubprogramsListParam";
+import _ from "lodash";
 
 interface Props {
   program: Program | null;
@@ -74,17 +76,10 @@ export class ProgramConfig extends React.PureComponent<Props> {
             onChange={this.handleParamChange}/>
           break;
         case "soundMetric":
-          parameterEditor = <StringParam
+          parameterEditor = <SoundMetricParam
             key={paramName}
             name={paramName}
             value={value as string}
-            options={[
-              'rms', 'fastPeakDecay', 'peakDecay',
-              'bassRms', 'bassFastPeakDecay', 'bassPeakDecay',
-              'midRms', 'midFastPeakDecay', 'midPeakDecay',
-              'highRms', 'highFastPeakDecay', 'highPeakDecay',
-              'mic2_rms', 'mic2_fastPeakDecay', 'mic2_peakDecay'
-            ]}
             onChange={this.handleParamChange}/>
           break;
         case "gradient":
@@ -172,17 +167,21 @@ const Presets: React.FC<PresetsProps> = ({ presets, selected, onSelect }) => {
     return null;
   }
 
-  return (
-    <div>
-      {presets.map(preset => (
+  return <div className="dropdown">
+    <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {selected || `${presets.length} presets...`}
+    </button>
+    <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
+      {_.map(presets, preset => (
         <button
-          className={`btn btn-sm ${selected === preset ? 'btn-info' : 'btn-outline-info'} mr-1 mb-1`}
           key={preset}
+          className={`small dropdown-item ${preset === selected ? "active" : ""}`}
           onClick={e => onSelect(preset)}
         >
           {preset}
         </button>
       ))}
     </div>
-  );
+  </div>
 };

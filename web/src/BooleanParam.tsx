@@ -15,7 +15,7 @@ export class BooleanParam extends React.Component<Props> {
 
     return (
       <span className="inline-block mb-1 mr-1">
-        <span className={`btn btn-sm p-1 btn-${value ? 'success' : 'outline-secondary'}`} onClick={toggle}>
+        <span className={`btn btn-sm p-0 px-1 btn-${value ? 'success' : 'link text-secondary'}`} onClick={toggle}>
           {value ? '✅' : '🔲'} {name}
         </span>
       </span>

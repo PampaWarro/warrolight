@@ -217,7 +217,9 @@ export class App extends React.Component<Props, State> {
             <nav className="programsbar overflow-auto py-2">
               <ProgramList
                 programs={this.state.programs}
+                config={this.state.currentConfig}
                 selected={this.state.selected}
+                onSelectPreset={this.selectPreset}
                 onProgramChange={this.handleProgramChange}
               />
             </nav>

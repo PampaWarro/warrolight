@@ -56,7 +56,7 @@ export class SubprogramsListParam extends React.Component<Props, any> {
     const subprograms = _.map(subprogramsConfig, (subprogramConfig, index) => {
       return <div className={'mb-2'} key={index} onDoubleClick={(e)=>this.handleClick(e, index)}>
         <SubprogramParam
-          name={`#${index + 1}`}
+          name={`${index + 1}`}
           value={subprogramConfig}
           globalConfig={globalConfig}
           includeShapeParameter={true}
@@ -69,16 +69,16 @@ export class SubprogramsListParam extends React.Component<Props, any> {
 
     return (
       <div className="config-item">
-        <div className="">
-          <div>
+        <div className="small">
             {name}
-          </div>
         </div>
         <div>
           {subprograms}
-          <span className={'btn btn-sm btn-success'} onClick={() => this.addSubprogram()}>
-            Add subprogram
-          </span>
+          <div className={'text-right'}>
+            <span className={'btn btn-sm btn-success'} onClick={() => this.addSubprogram()}>
+              Add subprogram
+            </span>
+          </div>
         </div>
       </div>
     );

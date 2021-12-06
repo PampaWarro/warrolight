@@ -17,9 +17,9 @@ export class StringParam extends React.Component<Props> {
   render() {
     const {name, value, options} = this.props;
     return (
-      <div className="config-item">
-        <div className="float-left small">{name}&nbsp;</div>
-        <div className="float-right font-weight-bold">
+      <div className="config-item d-flex justify-content-between align-items-center">
+        <div className="small">{name}&nbsp;</div>
+        <div className="font-weight-bold">
           <div className="dropdown">
             <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,7 +38,6 @@ export class StringParam extends React.Component<Props> {
             </div>
           </div>
         </div>
-        <div className={'clearfix'}></div>
       </div>
     );
   }

@@ -56,12 +56,25 @@ module.exports = class LightsService {
     }
   }
 
-  broadcastStateChange() {
-    this.broadcast("stateChange", {
-      currentProgramName: this.controller.currentProgramName,
-      currentConfig: this.controller.getCurrentConfig(),
-      micConfig: this.micConfig
-    });
+  broadcastStateChange(completeState = false) {
+    if(completeState) {
+      this.send("completeState", {
+        programs: this.controller.getProgramsSchema(),
+        currentProgramName: this.controller.currentProgramName,
+        currentConfig: this.controller.getCurrentConfig(),
+        globalConfig: {
+          gradientsLibrary: getGradientsByNameCss(),
+          shapes: _.keys(this.controller.shapeMapping())
+        },
+        micConfig: this.micConfig
+      });
+    } else {
+      this.broadcast("stateChange", {
+        currentProgramName: this.controller.currentProgramName,
+        currentConfig: this.controller.getCurrentConfig(),
+        micConfig: this.micConfig
+      });
+    }
   }
 
 
@@ -90,6 +103,7 @@ module.exports = class LightsService {
   savePreset({programName, presetName, currentConfig}) {
     this.controller.savePreset(programName, presetName, currentConfig);
     this.setPreset(presetName)
+    this.broadcastStateChange(true);
     console.log("Saved new preset", programName, presetName, currentConfig)
   }
 

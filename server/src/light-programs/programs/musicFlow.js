@@ -86,7 +86,7 @@ module.exports = class MusicFlow extends LightProgram {
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-    res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
+    res.multiplier = { type: Number, min: 0, max: 4, step: 0.01, default: 1 };
     res.speed = { type: Number, min: 1, max: 30, step: 1, default: 3 };
     res.cutThreshold = {
       type: Number,

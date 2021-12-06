@@ -392,6 +392,354 @@
                     }
                 }
             ]
+        },
+        "TwoFlowSlow": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "shape": "fullArc",
+                    "config": {
+                        "doble": false,
+                        "soundMetric": "rms",
+                        "cutThreshold": 0.15,
+                        "multiplier": 2,
+                        "speed": 2
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "fullArc",
+                    "config": {
+                        "soundMetric": "mic2_rms",
+                        "haciaAfuera": true,
+                        "doble": false,
+                        "cutThreshold": 0.15,
+                        "multiplier": 2,
+                        "speed": 2
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "topTriangle",
+                    "config": {
+                        "cutThreshold": 0,
+                        "haciaAfuera": true,
+                        "doble": false,
+                        "speed": 1,
+                        "soundMetric": "fastPeakDecay",
+                        "multiplier": 2
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "bottomTriangle",
+                    "config": {
+                        "soundMetric": "mic2_fastPeakDecay",
+                        "doble": false,
+                        "speed": 1,
+                        "multiplier": 2
+                    }
+                }
+            ]
+        },
+        "WaveRays": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "sound-waves",
+                                "config": {
+                                    "waveSpeed": 3,
+                                    "presetName": "centroFast",
+                                    "soundMetric": "mic2_fastPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "mic2_rms",
+                                    "multiplier": 2,
+                                    "globalBrightness": 1
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "rays",
+                                "config": {
+                                    "brillo": 0.91,
+                                    "decay": 0.8,
+                                    "globalSpeed": 0.865,
+                                    "colorSaturationRange": 0.18,
+                                    "numberOfParticles": 33,
+                                    "colorHueAmplitude": 0.12,
+                                    "colorHueOffset": 0.98,
+                                    "singleDirection": true,
+                                    "useSoundSpeed": true
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "fastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "AliveDotsResplandor": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "mix",
+                                "config": {
+                                    "programs": [
+                                        {
+                                            "programName": "aliveDots",
+                                            "shape": "fullArc",
+                                            "config": {
+                                                "numberOfParticles": 25,
+                                                "soundMetric": "rms"
+                                            }
+                                        },
+                                        {
+                                            "programName": "aliveDots",
+                                            "shape": "man",
+                                            "config": {
+                                                "numberOfParticles": 38,
+                                                "speedWeight": 0.2,
+                                                "toneColor": 0.74,
+                                                "soundMetric": "rms"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "lineal",
+                                "config": {
+                                    "escala": 6,
+                                    "saturation": 0.28,
+                                    "horizontal": true
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "mic2_peakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "maskSuns": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "saturation": 0,
+                        "fromTop": true,
+                        "centerY": -15.6,
+                        "radialDistance": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "saturation": 0,
+                        "escala": 3.621
+                    }
+                }
+            ],
+            "multiply": false
+        },
+        "Fueguitos": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "brillo": 1,
+                        "decay": 0.53,
+                        "globalSpeed": 2.985,
+                        "colorSaturationRange": 0.07,
+                        "numberOfParticles": 90,
+                        "colorHueAmplitude": 0.12,
+                        "colorHueOffset": 0.98,
+                        "singleDirection": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "shape": "man",
+                                "config": {
+                                    "saturation": 0,
+                                    "fromTop": true,
+                                    "centerY": -15.6,
+                                    "radialDistance": true,
+                                    "soundMetric": "mic2_rms",
+                                    "escala": 3.451,
+                                    "power": 3
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "shape": "fullArc",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 2.641,
+                                    "soundMetric": "rms"
+                                }
+                            }
+                        ],
+                        "multiply": false
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "StarsBlue": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 1,
+                                    "move": true,
+                                    "decay": 0.965,
+                                    "brillo": 1,
+                                    "probability": 0.0005
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "mic2_fastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 0.41
+                                },
+                                "shape": "man"
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 3.801
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "shape": "head",
+                                "config": {
+                                    "soundMetric": "mic2_fastPeakDecay",
+                                    "relative": true,
+                                    "fromTop": false,
+                                    "centerY": -0.9,
+                                    "escala": 2.171
+                                }
+                            },
+                            {
+                                "programName": "sound-waves",
+                                "shape": "man",
+                                "config": {
+                                    "colorMap": "tas05"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "WaveFlow": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "config": {
+                        "soundMetric": "mic2_rms",
+                        "multiplier": 2.18,
+                        "cutThreshold": 0.34
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "sound-waves",
+                                "config": {
+                                    "colorMap": "pm3d05_r",
+                                    "brilloWave": 2.03,
+                                    "waveWidth": 2.8,
+                                    "waveSpeed": 2.4
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 3.511,
+                                    "power": 2.3
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "multiply": true
         }
     },
     "sound-waves": {
@@ -400,5 +748,6 @@
             "waveWidth": 0.5,
             "brilloWave": 1.75
         }
-    }
+    },
+    "radial": {}
 }

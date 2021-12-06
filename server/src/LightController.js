@@ -18,6 +18,7 @@ const programNames = [
   "mix",
   "congaShooting2",
   "congaScore",
+  "congaCelebration",
   "congaShooting",
   "congaRope",
   "PROGRAM_Main_fuego2019",

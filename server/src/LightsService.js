@@ -13,7 +13,7 @@ let lightServicesCounter = 0;
 module.exports = class LightsService {
   constructor(controller, send, broadcast) {
     this.controller = controller;
-    this.micConfig = {sendingMicData: false, metric: "Rms"};
+    this.micConfig = {sendingMicData: false, metric: "rms", input: ''};
     this.broadcast = broadcast;
     this.send = send;
     this.simulating = false;

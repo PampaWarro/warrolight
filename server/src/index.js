@@ -32,7 +32,7 @@ audioInput2.start();
 audioInput.on('audioframe', (frame) => {
   audioEmitter.currentFrame = {... frame, ... _.mapKeys(audioEmitter.frame2, (v,k) => 'mic2_'+k)};
   audioEmitter.ready = true;
-  audioEmitter.emit('audioframe', frame);
+  audioEmitter.emit('audioframe', audioEmitter.currentFrame);
 });
 audioInput.start();
 

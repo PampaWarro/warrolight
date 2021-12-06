@@ -50,7 +50,8 @@ export class App extends React.Component<Props, State> {
       globalConfig: {},
       micConfig: {
         sendingMicData: false,
-        metric: ""
+        metric: "",
+        input: ""
       },
       remoteChange: false,
       devices: [],

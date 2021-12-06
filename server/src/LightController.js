@@ -188,6 +188,18 @@ module.exports = class LightController extends EventEmitter {
     savedPresets[programName] = savedPresets[programName] || {}
     savedPresets[programName][presetName] = config;
 
+    this.savePresetsToDisk();
+  }
+
+  deletePreset(programName, presetName) {
+    savedPresets[programName] = savedPresets[programName] || {}
+    delete savedPresets[programName][presetName];
+    this.savePresetsToDisk();
+
+    this.currentConfig.currentPreset = null;
+  }
+
+  savePresetsToDisk() {
     fs.writeFile(savedPresetsFilePath, JSON.stringify(savedPresets, true, 4), (err) => {
       if(err) {
         console.error(err);

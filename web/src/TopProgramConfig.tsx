@@ -10,6 +10,7 @@ interface Props {
   globalConfig: { [param: string]: any };
   onSelectPreset(name: string): void;
   onSaveNewPreset(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }): void;
+  onDeletePreset(programName: string, presetName: string): void;
   onRestartProgram(): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 }
@@ -52,6 +53,7 @@ export class TopProgramConfig extends React.PureComponent<Props> {
         globalConfig={this.props.globalConfig}
         onSelectPreset={this.props.onSelectPreset}
         onSaveNewPreset={this.props.onSaveNewPreset}
+        onDeletePreset={this.props.onDeletePreset}
         onChangeProgramConfig={this.handleParamChange}/>
       </div>
     );

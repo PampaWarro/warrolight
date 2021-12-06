@@ -202,6 +202,10 @@ export class App extends React.Component<Props, State> {
     this.api.savePreset(programName, presetName, presetConfig);
   }
 
+  handleDeletePreset = (programName: string, presetName: string) => {
+    this.api.deletePreset(programName, presetName);
+  }
+
   render() {
     let currentProgram = this.getCurrentProgram();
 
@@ -232,6 +236,7 @@ export class App extends React.Component<Props, State> {
                 programs={this.state.programs}
                 onSelectPreset={this.selectPreset}
                 onSaveNewPreset={this.handleSaveNewPreset}
+                onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
               />

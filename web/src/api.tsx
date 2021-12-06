@@ -40,6 +40,10 @@ export class API extends EventEmitter {
     this.send("savePreset", {programName, presetName, currentConfig});
   }
 
+  deletePreset(programName: string, presetName: string) {
+    this.send("deletePreset", {programName, presetName});
+  }
+
   restartProgram() {
     this.send("restartProgram");
   }

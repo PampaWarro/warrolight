@@ -107,6 +107,12 @@ module.exports = class LightsService {
     console.log("Saved new preset", programName, presetName, currentConfig)
   }
 
+  deletePreset({programName, presetName}) {
+    this.controller.deletePreset(programName, presetName);
+    this.broadcastStateChange(true);
+    console.log("Deleted preset", programName, presetName)
+  }
+
   setCurrentProgram(programKey) {
     this.controller.setCurrentProgram(programKey);
     this.broadcastStateChange();

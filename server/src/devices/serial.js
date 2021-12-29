@@ -43,6 +43,10 @@ module.exports = class LightDeviceSerial extends LightDevice {
         this.updateStatus(this.STATUS_RUNNING);
       } else if (data === "OK") {
         //logger.info(`ACK`);
+      } else if (data === "RECONNECT") {
+        logger.info("RECONNECT request")
+        this.sendInitialKick();
+        return;
       } else if (data === "ARDUINOSTART") {
         logger.info("ARDUINOSTART");
         return;

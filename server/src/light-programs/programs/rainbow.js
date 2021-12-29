@@ -19,10 +19,13 @@ module.exports = class Rainbow extends LightProgram {
 
   init() {
     this.time = 0;
+    this.frame = 0;
   }
 
   drawFrame(draw) {
     this.time += this.config.speed;
+    this.frame ++;
+
     const newColors = new Array(this.numberOfLeds);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
@@ -31,8 +34,16 @@ module.exports = class Rainbow extends LightProgram {
         this.colorSet.length;
 
       let col = ColorUtils.hexToRgb(this.colorSet[colIndex]);
-      if (colIndex === 6) newColors[i] = col;
-      else newColors[i] = ColorUtils.dim(col, this.config.brillo);
+      if (colIndex === 6) {
+        if(this.frame % 2) {
+          newColors[i] = col;
+        } else {
+          newColors[i] = ColorUtils.hexToRgb('#FF0000');
+        }
+      } else {
+        newColors[i] = ColorUtils.dim(col, this.config.brillo)
+      }
+      ;
     }
     draw(newColors);
   }

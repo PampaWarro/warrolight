@@ -2,13 +2,14 @@ const dns = require('dns');
 const dgram = require("dgram");
 const now = require("performance-now");
 const logger = require("pino")({ prettyPrint: true });
+const fetch = require('node-fetch');
 
 const { LightDevice } = require("./base");
 const { WLEDRGBEncoder } = require("./encodings");
 
 module.exports = class LightDeviceUDPWLED extends LightDevice {
   constructor({ numberOfLights, ip, name, udpPort }) {
-    super(numberOfLights, "E " + (name || ip));
+    super(numberOfLights, "WLED " + (name || ip));
 
     this.expectedIp = ip;
     this.name = name;
@@ -33,7 +34,20 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
 
     this.packageCount = 0;
 
+    this.updateStatus(this.STATUS_CONNECTING);
     this.setupCommunication();
+  }
+
+  async fetchDeviceInfo() {
+    try {
+      let res = await (await fetch(`http://${this.expectedIp}/json/info`, {timeout: 2000})).json()
+      this.updateStatus(this.STATUS_RUNNING);
+      this.connected = true;
+      this.lastFps = res.leds.fps;
+    } catch(err) {
+      this.updateStatus(this.STATUS_ERROR);
+    }
+    setTimeout(() => this.fetchDeviceInfo(), 1000);
   }
 
   sendNextFrame() {
@@ -121,6 +135,8 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
         this.sendNextFrame();
       }
     }, 16);
+
+    this.fetchDeviceInfo();
   }
 
   // handleListening() {
@@ -171,23 +187,23 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
 };
 //
 //
-var client = dgram.createSocket('udp4');
-const _ = require('lodash')
-let i = 0;
-let send = () => {
-  i = (i+1) % 120;
-  let payload = Buffer.from([
-    2, 5,
-    100, 50, 50,
-    ... _.flatten(new Array(i*1).fill([0,0,0])),
-    // 0, 0, 50,
-    // 0, 255, Math.floor(Math.random()*255),
-    255, 0, 255,
-    255, 0, 255,
-    255, 0, 255,
-    255, 0, 255,
-  ]);
-  client.send(payload, 0, payload.length, 21666, '192.168.0.255');
-}
-
-setTimeout(send, 20);
+// var client = dgram.createSocket('udp4');
+// const _ = require('lodash')
+// let i = 0;
+// let send = () => {
+//   i = (i+1) % 120;
+//   let payload = Buffer.from([
+//     2, 5,
+//     100, 50, 50,
+//     ... _.flatten(new Array(i*1).fill([0,0,0])),
+//     // 0, 0, 50,
+//     // 0, 255, Math.floor(Math.random()*255),
+//     255, 0, 255,
+//     255, 0, 255,
+//     255, 0, 255,
+//     255, 0, 255,
+//   ]);
+//   client.send(payload, 0, payload.length, 21666, '192.168.0.255');
+// }
+//
+// setTimeout(send, 20);

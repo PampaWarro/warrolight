@@ -6,7 +6,8 @@
     "serial1": {
       "type": "serial",
       "params": {
-        "numberOfLights": 345,
+        "numberOfLights": 45,
+        "baudRate": 1500000,
         "devicePortWindows": "COM3",
         "devicePortUnix": "/dev/ttyACM0"
       }
@@ -15,23 +16,35 @@
       "type": "serial",
       "params": {
         "numberOfLights": 300,
+        "baudRate": 1500000,
         "devicePortWindows": "COM4",
         "devicePortUnix": "/dev/ttyACM0"
+      }
+    },
+    "serialTest": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 600,
+        "baudRate": 1500000,
+        "devicePortWindows": "COM5",
+        "devicePortUnix": "/dev/ttyACM0"
+      }
+    },
+    "udp": {
+      "type": "udp-wled",
+      "params": {
+        "numberOfLights": 300,
+        "ip": "192.168.0.177",
+        "udpPort": 21324
       }
     }
   },
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 345,
+      "to":600,
       "baseIndex": 0,
-      "deviceName": "serial1"
-    },
-    {
-      "from": 345,
-      "to":645,
-      "baseIndex": -300,
-      "deviceName": "serial2"
+      "deviceName": "serialTest"
     }
   ]
 }

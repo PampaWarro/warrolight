@@ -22,6 +22,7 @@ exports.LightDevice = class LightDevice {
 
     this.STATUS_OFF = "off";
     this.STATUS_CONNECTING = "connecting";
+    this.STATUS_WAITING = "waiting";
     this.STATUS_RUNNING = "running";
     this.STATUS_ERROR = "error";
 

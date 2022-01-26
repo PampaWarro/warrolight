@@ -19,6 +19,7 @@ export type CurrentProgramParameters = {
 }
 
 export interface Device {
+  metadata: any;
   deviceId: string;
   status: string;
   lastFps: number;

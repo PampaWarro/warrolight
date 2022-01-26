@@ -4,6 +4,8 @@
 
 node_modules
 
+audio/venv
+
 npm-debug.log
 arduino/**/*.hex
 arduino/**/*.elf

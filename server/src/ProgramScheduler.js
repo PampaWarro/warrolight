@@ -2,6 +2,10 @@ const _ = require("lodash");
 const ColorUtils = require("./light-programs/utils/ColorUtils");
 const audioEmitter = require("./audioEmitter");
 
+let lastFlushTime = new Date().valueOf();
+
+const NanoTimer = require('nanotimer');
+
 module.exports = class ProgramScheduler {
 
   constructor(program) {
@@ -16,6 +20,7 @@ module.exports = class ProgramScheduler {
     this.startTime = Date.now();
     this.config = config;
     this.draw = draw;
+    this.timer = new NanoTimer();
 
     this.program.init();
 
@@ -25,32 +30,42 @@ module.exports = class ProgramScheduler {
       // TODO: find a way to remove this
       this.program.timeInMs = this.timeInMs;
 
-      let start = Date.now();
 
-      this.program.drawFrame(
-        colorsArray => draw(_.map(colorsArray, col =>
-          ColorUtils.dim(col, this.config.globalBrightness))),
-        audioEmitter,
-      );
+      let startFrameTime = Date.now();
 
-      let drawingTimeMs = Date.now() - start;
-      let remainingTime = 1000 / this.config.fps - drawingTimeMs;
+      const flushFrameData = colorsArray => {
+        const endFrameTime = Date.now();
+        let drawingTimeMs = endFrameTime - startFrameTime;
+        let frameLength = Math.round(1000 / this.config.fps);
+        let remainingTime = frameLength - (endFrameTime - lastFlushTime);
 
-      if (drawingTimeMs > 20) {
-        console.log(
-          `Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`
-        );
-      }
-      // Schedule next frame for the remaing time considering how long it took to do the drawing
-      // We wait at least 5ms in order to throttle CPU to give room for IO, serial and other critical stuff
-      this.nextTickTimeout = setTimeout(frame, Math.max(5, remainingTime));
+        if (drawingTimeMs > 10) {
+          console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
+        }
+        // Schedule next frame for the remaing time considering how long it took to do the drawing
+        // We wait at least 3ms in order to throttle CPU to give room for IO, serial and other critical stuff
+        this.timer.setTimeout(() => {
+          const now = Date.now().valueOf();
+          if (Math.abs(now - lastFlushTime - frameLength) > 3) {
+            console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
+          }
+
+          clearInterval(this.nextTickTimeout);
+          lastFlushTime = now;
+          draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness)));
+
+          frame();
+        }, '', remainingTime + 'm');
+      };
+
+      this.program.drawFrame(flushFrameData, audioEmitter);
     };
 
     this.nextTickTimeout = setTimeout(frame, 1);
   }
 
   stop() {
-    clearTimeout(this.nextTickTimeout);
+    this.timer.clearTimeout();
   }
 
   restart() {
@@ -60,7 +75,7 @@ module.exports = class ProgramScheduler {
   }
 
   get config() {
-      return this.program.config;
+    return this.program.config;
   }
 
   set config(config) {
@@ -72,3 +87,14 @@ module.exports = class ProgramScheduler {
   }
 
 }
+
+// var NanoTimer = require('nanotimer');
+// timer = new NanoTimer();
+// c = new Date().valueOf();
+// var log = () => {
+//   let now = new Date().valueOf();
+//   let diff = now - c;
+//   console.log(diff);
+//   c = now;
+// };
+// timer.setInterval(log,null, '16m')

@@ -2,6 +2,7 @@ const _ = require('lodash');
 const DeviceSerial = require('./devices/serial');
 const DeviceUDP = require('./devices/udp');
 const DeviceUDPWLED = require('./devices/udp-wled');
+const LightDeviceUDPChunked = require("./devices/udp-chunked");
 
 function initDevicesFromConfig(outputDevices) {
   let devices = {};
@@ -18,6 +19,9 @@ function initDevicesFromConfig(outputDevices) {
         break;
       case 'udp-wled':
         device = new DeviceUDPWLED(params);
+        break;
+      case 'udp-chunked':
+        device = new LightDeviceUDPChunked(params);
         break;
       default:
         throw new Error(`Invalid device type: ${type}`);
@@ -91,7 +95,8 @@ module.exports = class DeviceMultiplexer {
           return {
             status: d.status,
             deviceId: d.deviceId,
-            lastFps: d.lastFps
+            lastFps: d.lastFps,
+            metadata: d.metadata || {}
           };
         })
       );

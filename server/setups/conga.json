@@ -3,39 +3,13 @@
   "shapeMapping": "conga",
   "lights": 645,
   "outputDevices": {
-    "serial1": {
-      "type": "serial",
-      "params": {
-        "numberOfLights": 45,
-        "baudRate": 1500000,
-        "devicePortWindows": "COM3",
-        "devicePortUnix": "/dev/ttyACM0"
-      }
-    },
-    "serial2": {
-      "type": "serial",
-      "params": {
-        "numberOfLights": 300,
-        "baudRate": 1500000,
-        "devicePortWindows": "COM4",
-        "devicePortUnix": "/dev/ttyACM0"
-      }
-    },
-    "serialTest": {
-      "type": "serial",
-      "params": {
-        "numberOfLights": 600,
-        "baudRate": 1500000,
-        "devicePortWindows": "COM5",
-        "devicePortUnix": "/dev/ttyACM0"
-      }
-    },
     "udp": {
-      "type": "udp-wled",
+      "type": "udp-chunked",
       "params": {
         "numberOfLights": 300,
-        "ip": "192.168.0.177",
-        "udpPort": 21324
+        "name": "",
+        "ip": "192.168.2.101",
+        "udpPort": 2222
       }
     }
   },
@@ -44,7 +18,7 @@
       "from": 0,
       "to":600,
       "baseIndex": 0,
-      "deviceName": "serialTest"
+      "deviceName": "udp"
     }
   ]
 }

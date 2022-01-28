@@ -1,14 +1,14 @@
 {
   "geometry": "conga",
   "shapeMapping": "conga",
-  "lights": 645,
+  "lights": 1290,
   "outputDevices": {
     "udp": {
       "type": "udp-chunked",
       "params": {
-        "numberOfLights": 300,
+        "numberOfLights": 600,
         "name": "",
-        "ip": "192.168.2.101",
+        "ip": "192.168.0.17",
         "udpPort": 2222
       }
     }

@@ -1,10 +1,10 @@
-// This is needed to prevent horrible crashes of esp32 probably caused by ethernet interrupts when data arrives
-#define FASTLED_ALLOW_INTERRUPTS 0
+// In older version of FastLED This is needed to prevent horrible crashes of esp32 probably caused by ethernet interrupts when data arrives
+//#define FASTLED_ALLOW_INTERRUPTS 0
 //#define FASTLED_INTERRUPT_RETRY_COUNT 1
 
 #include <ETH.h>
 #include <WiFiUdp.h>
-#include <FastLED.h>
+#include <FastLED.h> // Expecting FastLED 3.4.x
 
 
 // Ethernet and connection protocol stuff
@@ -30,9 +30,12 @@ char  StringAlive[] = "YEAH";
 // COMPILE TIME CONFIG GOES HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #define STRIP_NUM_LEDS 300 // EACH ONE of the two strips will have that many leds
+#define NUM_STRIPS 2
 
 #define DATA_PIN 2
 #define DATA_PIN2 16
+#define DATA_PIN3 3
+#define DATA_PIN4 17
 
 #define POWER_MILLIAMPS 1000 // Max combined mah power consumption by all the strips
 
@@ -45,11 +48,11 @@ unsigned int localUdpPort = 2222; // Local port number
 
 constexpr byte ENCODING_RGB = 4; // The only supported encoding by this device
 
-int NUM_LEDS = STRIP_NUM_LEDS*2; // Total number of leds in all strips
-char ledsBuffer[2 * 3 * 150 + 2]; // buffer to hold incoming packet
+int NUM_LEDS = STRIP_NUM_LEDS * NUM_STRIPS; // Total number of leds in all strips
+char ledsBuffer[STRIP_NUM_LEDS * NUM_STRIPS * 3 + 2]; // buffer to hold incoming packet
 
 // Define the array of leds
-CRGB leds[STRIP_NUM_LEDS * 2];
+CRGB leds[STRIP_NUM_LEDS * NUM_STRIPS];
 
 void setup() {
   Serial.begin(250000);
@@ -62,15 +65,15 @@ void setup() {
   ETH.begin();
   
   // Static ethernet config. Comment out for automatic DHCP
-  ETH.config(
-    IPAddress(192, 168, 2, 101),
-    IPAddress(192, 168, 2, 1),
+  /*ETH.config(
+    IPAddress(192, 168, 1, 101),
+    IPAddress(192, 168, 1, 1),
     IPAddress(255, 255, 255, 0),
-    IPAddress(192, 168, 2, 1), 
-    IPAddress(192, 168, 2, 1)
-  );
+    IPAddress(192, 168, 1, 1), 
+    IPAddress(192, 168, 1, 1)
+  );*/
 
-  setupLeds(600, 2, 16);
+  setupLeds(NUM_LEDS, 2, 16);
 }
 
 
@@ -83,7 +86,7 @@ void broadcastAlive() {
   udp.beginPacket(remoteIp, localUdpPort);
   udp.print(StringAlive);
   udp.print(" leds=");
-  udp.print(STRIP_NUM_LEDS*2);
+  udp.print(STRIP_NUM_LEDS*NUM_STRIPS);
   udp.print(" datapin1=");
   udp.print(DATA_PIN);
   udp.print(" datapin2=");
@@ -187,12 +190,14 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, 0, STRIP_NUM_LEDS);
   FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, STRIP_NUM_LEDS, STRIP_NUM_LEDS);
+  //FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds, STRIP_NUM_LEDS*2, STRIP_NUM_LEDS);
+  //FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(leds, STRIP_NUM_LEDS*3, STRIP_NUM_LEDS);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, POWER_MILLIAMPS);
 
   FastLED.showColor(CRGB::Black);
 
-  for (int i = 0; i < 2; i++)
+  for (int i = 0; i < NUM_STRIPS; i++)
   {
     leds[0 + i * STRIP_NUM_LEDS] = CRGB::Black;
     leds[1 + i * STRIP_NUM_LEDS] = CRGB::Red;

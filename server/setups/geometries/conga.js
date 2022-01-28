@@ -14,8 +14,8 @@ const { Stripe } = require("../../src/geometry");
  */
 const scale = 0.1;
 
-const headSideLeds = 15;
-const domeStickLeds = 43 //(645 - headSideLeds * 3) / 14;
+const headSideLeds = 30;
+const domeStickLeds = 86 //(645 - headSideLeds * 3) / 14;
 
 /**
  * Handmade planar projection based on figma drawing (extracted from gross real 3d shape)

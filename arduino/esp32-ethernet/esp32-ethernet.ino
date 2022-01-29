@@ -1,6 +1,7 @@
 // In older version of FastLED This is needed to prevent horrible crashes of esp32 probably caused by ethernet interrupts when data arrives
 //#define FASTLED_ALLOW_INTERRUPTS 0
 //#define FASTLED_INTERRUPT_RETRY_COUNT 1
+#define FASTLED_ESP32_I2S true
 
 #include <ETH.h>
 #include <WiFiUdp.h>
@@ -30,14 +31,14 @@ char  StringAlive[] = "YEAH";
 // COMPILE TIME CONFIG GOES HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #define STRIP_NUM_LEDS 300 // EACH ONE of the two strips will have that many leds
-#define NUM_STRIPS 2
+#define NUM_STRIPS 4
 
 #define DATA_PIN 2
 #define DATA_PIN2 16
 #define DATA_PIN3 3
-#define DATA_PIN4 17
+#define DATA_PIN4 15
 
-#define POWER_MILLIAMPS 1000 // Max combined mah power consumption by all the strips
+#define POWER_MILLIAMPS (2000*NUM_STRIPS) // Max combined mah power consumption by all the strips
 
 unsigned int localUdpPort = 2222; // Local port number
 
@@ -190,8 +191,8 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, 0, STRIP_NUM_LEDS);
   FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, STRIP_NUM_LEDS, STRIP_NUM_LEDS);
-  //FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds, STRIP_NUM_LEDS*2, STRIP_NUM_LEDS);
-  //FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(leds, STRIP_NUM_LEDS*3, STRIP_NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds, STRIP_NUM_LEDS*2, STRIP_NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(leds, STRIP_NUM_LEDS*3, STRIP_NUM_LEDS);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, POWER_MILLIAMPS);
 

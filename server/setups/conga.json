@@ -6,7 +6,7 @@
     "udp": {
       "type": "udp-chunked",
       "params": {
-        "numberOfLights": 600,
+        "numberOfLights": 1200,
         "name": "",
         "ip": "192.168.0.17",
         "udpPort": 2222
@@ -16,7 +16,7 @@
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to":600,
+      "to":1200,
       "baseIndex": 0,
       "deviceName": "udp"
     }

@@ -80,7 +80,13 @@ class RGBChunkedEncoder extends Encoder {
 
 
 class RGBEncoder extends Encoder {
+  writeHeader(lights) {
+    this.write([4]);
+  }
 
+  writePixel(pos, r, g, b) {
+    this.write([r, g, b])
+  }
 }
 
 class WLEDRGBEncoder extends RGBEncoder {

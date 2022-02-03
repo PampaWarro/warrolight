@@ -740,6 +740,25 @@
                 }
             ],
             "multiply": true
+        },
+        "Thunder": {
+            "programs": [
+                {
+                    "programName": "lineal",
+                    "config": {
+                        "saturation": 0,
+                        "velocidad": -38.9
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0.21,
+                        "soundMetric": "bassRms"
+                    }
+                }
+            ],
+            "multiply": true
         }
     },
     "sound-waves": {

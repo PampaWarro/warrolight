@@ -33,10 +33,10 @@ char  StringAlive[] = "YEAH";
 #define STRIP_NUM_LEDS 300 // EACH ONE of the two strips will have that many leds
 #define NUM_STRIPS 4
 
-#define DATA_PIN 2
-#define DATA_PIN2 16
-#define DATA_PIN3 3
-#define DATA_PIN4 15
+#define DATA_PIN 4
+#define DATA_PIN2 14
+#define DATA_PIN3 15
+#define DATA_PIN4 16
 
 #define POWER_MILLIAMPS (2000*NUM_STRIPS) // Max combined mah power consumption by all the strips
 

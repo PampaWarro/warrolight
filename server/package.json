@@ -4,7 +4,7 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": " node -r ts-node/register --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js conga",
+    "start": " node -r ts-node/register --expose-gc --max-old-space-size=4000 --max-semi-space-size=2048 --noconcurrent_sweeping src/index.js fuego-2021",
     "server": "node src/server.js conga",
     "prettier": "prettier --write src/*.js src/**/*.js",
     "lint": "eslint ."

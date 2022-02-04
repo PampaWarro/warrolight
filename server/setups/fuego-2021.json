@@ -1,15 +1,22 @@
 {
-  "geometry": "fuego19",
+  "geometry": "fuego22",
   "shapeMapping": "fuego2020",
-  "lights": 1200,
+  "lights": 1800,
   "outputDevices": {
-
+    "esp32": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "",
+        "ip": "192.168.0.146",
+        "udpPort": 2222
+      }
+    },
     "rf1": {
       "type": "serial",
       "params": {
         "numberOfLights": 300,
-        "devicePortWindows": "COM7",
-        "baudRate": 576000,
+        "devicePortWindows": "COM6",
         "devicePortUnix": "/dev/ttyACM0"
       }
     },
@@ -17,7 +24,7 @@
       "type": "serial",
       "params": {
         "numberOfLights": 300,
-        "devicePortWindows": "COM666",
+        "devicePortWindows": "COM7",
         "devicePortUnix": "/dev/ttyACM1"
       }
     }
@@ -25,19 +32,19 @@
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 600,
+      "to": 1200,
       "baseIndex": 0,
       "deviceName": "esp32"
     },
     {
-      "from": 600,
-      "to": 900,
+      "from": 1200,
+      "to": 1500,
       "baseIndex": 0,
       "deviceName": "rf1"
     },
     {
-      "from": 900,
-      "to": 1200,
+      "from": 1500,
+      "to": 1800,
       "baseIndex": 0,
       "deviceName": "rf2"
     }

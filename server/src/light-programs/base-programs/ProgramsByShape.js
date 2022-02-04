@@ -25,6 +25,7 @@ module.exports = function programsByShape(mapping, name) {
           x: [...Array(map.length)],
           y: [...Array(map.length)],
           z: [...Array(map.length)],
+          density: [...Array(map.length)],
           height: geometry.height,
           width: geometry.width,
           leds: map.length
@@ -34,6 +35,7 @@ module.exports = function programsByShape(mapping, name) {
           shape.x[i] = geometry.x[map[i]];
           shape.y[i] = geometry.y[map[i]];
           shape.z[i] = geometry.z[map[i]];
+          shape.density[i] = geometry.density[map[i]];
         }
 
         // Support specific configs

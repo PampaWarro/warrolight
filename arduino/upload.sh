@@ -14,7 +14,7 @@ fqbn=arduino:avr:uno
 
 if [ "$3" == "NANO" ]; then
   echo "Uploading to Arduino NANO"
-  fqbn=arduino:avr:nano:cpu=atmega328old
+  fqbn=arduino:avr:nano:cpu=atmega328
 fi
 
 if [ "$3" == "MEGA" ]; then

@@ -8,11 +8,12 @@ module.exports = class DebugSetup extends LightProgram {
 
     draw(
       colors.map((v, i) => {
-        let s = 1;
+        let s = 1
+        let scale = i > 1200 ? 150 : 300;
         return ColorUtils.HSVtoRGB(
-          (Math.floor(i / 150) / 4) * s,
+          (Math.floor(i / scale) / 4)+(i%scale)/(scale*4),
           0.9 * s,
-          Math.max(1 - s, this.config.brillo)
+          Math.min(1, this.config.brillo)
         );
       })
     );

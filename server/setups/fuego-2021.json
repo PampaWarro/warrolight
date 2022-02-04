@@ -1,6 +1,6 @@
 {
-  "geometry": "fuego22",
-  "shapeMapping": "fuego2020",
+  "geometry": "geometryFuego2022",
+  "shapeMapping": "fuego2022",
   "lights": 1800,
   "outputDevices": {
     "esp32": {

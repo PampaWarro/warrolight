@@ -38,7 +38,7 @@ char  StringAlive[] = "YEAH";
 #define DATA_PIN3 15
 #define DATA_PIN4 16
 
-#define POWER_MILLIAMPS (2000*NUM_STRIPS) // Max combined mah power consumption by all the strips
+#define POWER_MILLIAMPS (8000*NUM_STRIPS) // Max combined mah power consumption by all the strips
 
 unsigned int localUdpPort = 2222; // Local port number
 

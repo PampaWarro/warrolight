@@ -30,7 +30,7 @@ char  StringAlive[] = "YEAH";
 // ============================================================================
 // COMPILE TIME CONFIG GOES HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#define STRIP_NUM_LEDS 300 // EACH ONE of the two strips will have that many leds
+#define STRIP_NUM_LEDS 300 // EACH ONE of the two strips will have that many leds. ONE EXTRA LED FOR THE VOLTAJE REGULATOR LEDS
 #define NUM_STRIPS 4
 
 #define DATA_PIN 4
@@ -52,8 +52,8 @@ constexpr byte ENCODING_RGB = 4; // The only supported encoding by this device
 int NUM_LEDS = STRIP_NUM_LEDS * NUM_STRIPS; // Total number of leds in all strips
 char ledsBuffer[STRIP_NUM_LEDS * NUM_STRIPS * 3 + 2]; // buffer to hold incoming packet
 
-// Define the array of leds
-CRGB leds[STRIP_NUM_LEDS * NUM_STRIPS];
+// Define the array of leds. One extra led for voltage regulator
+CRGB leds[(STRIP_NUM_LEDS+1) * NUM_STRIPS];
 
 void setup() {
   Serial.begin(250000);
@@ -189,10 +189,11 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
 {
   NUM_LEDS = numLeds;
 
-  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, 0, STRIP_NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, STRIP_NUM_LEDS, STRIP_NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds, STRIP_NUM_LEDS*2, STRIP_NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(leds, STRIP_NUM_LEDS*3, STRIP_NUM_LEDS);
+  int realLength = STRIP_NUM_LEDS + 1;
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, 0, realLength);
+  FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(leds, realLength, realLength);
+  FastLED.addLeds<WS2812B, DATA_PIN3, GRB>(leds, realLength*2, realLength);
+  FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(leds, realLength*3, realLength);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5, POWER_MILLIAMPS);
 
@@ -214,7 +215,7 @@ void writeLedFrame(char data[], int offset)
   int chunk = data[0 + offset];
   int encoding = data[1 + offset];
   
-  int chunkOffset = chunk*300;
+  int chunkOffset = 1+chunk*(300+1); // Add one extra to account for the voltage regulators leds
   int ledsInPacket = NUM_LEDS;
   if(ledsInPacket > 300) {
     ledsInPacket = min(NUM_LEDS, chunkOffset + 300) - chunkOffset;
@@ -237,6 +238,11 @@ void writeLedFrame(char data[], int offset)
   }
   
   if(chunk == ceil(NUM_LEDS/300) - 1) {
+    leds[0] = CRGB::Red;
+    leds[301] = CRGB::Green;
+    leds[602] = CRGB::Blue;
+    leds[903] = CRGB::Yellow;
+    
     FastLED.show();
     frameCount++;   
     lastFrame = millis();;

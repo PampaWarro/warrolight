@@ -10,6 +10,10 @@ module.exports = class DebugSetup extends LightProgram {
       colors.map((v, i) => {
         let s = 1
         let scale = i > 1200 ? 150 : 300;
+
+        if(i % 20 === 0)
+          return [255,255,255,255];
+        else
         return ColorUtils.HSVtoRGB(
           (Math.floor(i / scale) / 4)+(i%scale)/(scale*4),
           0.9 * s,

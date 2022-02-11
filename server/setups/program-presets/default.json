@@ -446,23 +446,43 @@
             "programs": [
                 {
                     "programName": "mix",
+                    "shape": "V1",
                     "config": {
                         "programs": [
                             {
-                                "programName": "sound-waves",
-                                "config": {
-                                    "waveSpeed": 3,
-                                    "presetName": "centroFast",
-                                    "soundMetric": "mic2_fastPeakDecay"
-                                }
-                            },
-                            {
                                 "programName": "musicFlash",
                                 "config": {
-                                    "soundMetric": "mic2_rms",
+                                    "soundMetric": "bassFastPeakDecay",
                                     "multiplier": 2,
                                     "globalBrightness": 1
                                 }
+                            },
+                            {
+                                "programName": "radial",
+                                "config": {
+                                    "velocidad": 6.3
+                                }
+                            }
+                        ],
+                        "multiply": true,
+                        "globalBrightness": 0.22
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "shape": "V2",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "highFastPeakDecay",
+                                    "multiplier": 2,
+                                    "globalBrightness": 0.26
+                                }
+                            },
+                            {
+                                "programName": "radial"
                             }
                         ],
                         "multiply": true
@@ -473,24 +493,18 @@
                     "config": {
                         "programs": [
                             {
-                                "programName": "rays",
+                                "programName": "musicFlash",
                                 "config": {
-                                    "brillo": 0.91,
-                                    "decay": 0.8,
-                                    "globalSpeed": 0.865,
-                                    "colorSaturationRange": 0.18,
-                                    "numberOfParticles": 33,
-                                    "colorHueAmplitude": 0.12,
-                                    "colorHueOffset": 0.98,
-                                    "singleDirection": true,
-                                    "useSoundSpeed": true
+                                    "cutThreshold": 0.88,
+                                    "multiplier": 1.4
                                 }
                             },
                             {
-                                "programName": "musicFlash",
+                                "programName": "lineal",
                                 "config": {
-                                    "soundMetric": "fastPeakDecay",
-                                    "multiplier": 2
+                                    "horizontal": false,
+                                    "saturation": 0,
+                                    "escala": 37.2
                                 }
                             }
                         ],
@@ -759,6 +773,85 @@
                 }
             ],
             "multiply": true
+        },
+        "StarStream": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "decay": 0.93,
+                        "probability": 0.0008,
+                        "move": true,
+                        "brillo": 1,
+                        "starsColor": 0.82
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0,
+                        "multiplier": 1.39,
+                        "soundMetric": "fastPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "MultiStarStream": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "decay": 0.93,
+                                    "probability": 0.0008,
+                                    "move": true,
+                                    "brillo": 1,
+                                    "starsColor": 0.82
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0,
+                                    "multiplier": 1.69,
+                                    "soundMetric": "bassFastPeakDecay"
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "decay": 0.965,
+                                    "probability": 0.008,
+                                    "move": true,
+                                    "brillo": 0.2,
+                                    "starsColor": 0
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0,
+                                    "multiplier": 0.85,
+                                    "soundMetric": "highFastPeakDecay"
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
         }
     },
     "sound-waves": {
@@ -768,5 +861,33 @@
             "brilloWave": 1.75
         }
     },
-    "radial": {}
+    "radial": {},
+    "stars": {
+        "pocasFast": {
+            "decay": 0.88,
+            "probability": 0.0025
+        },
+        "muchasFast": {
+            "decay": 0.88,
+            "probability": 0.0112
+        },
+        "muchasSlow": {
+            "decay": 0.95,
+            "probability": 0.005
+        },
+        "pinkStream": {
+            "decay": 0.93,
+            "probability": 0.0008,
+            "move": true,
+            "brillo": 0.22,
+            "starsColor": 0.82
+        }
+    },
+    "rainbow": {
+        "Debug RF": {
+            "brillo": 0,
+            "globalBrightness": 0.04,
+            "speed": 5
+        }
+    }
 }

@@ -62,7 +62,7 @@ module.exports = class SoundWaves extends LightProgram {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0];
       _.each(this.dots, dot => {
-        let y = geometry.y[i] - geometry.height + 25.3 + dot.waveCenterY;
+        let y = geometry.y[i] - (geometry.height - 18) / 2 + dot.waveCenterY;
         let x = geometry.x[i] - geometry.width / 2 - dot.waveCenterX;
         let d = Math.sqrt(x * x + y * y);
 

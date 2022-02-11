@@ -16,6 +16,8 @@
       "type": "serial",
       "params": {
         "numberOfLights": 300,
+        "baudRate": 1000000,
+        "debugMode": false,
         "devicePortWindows": "COM6",
         "devicePortUnix": "/dev/ttyACM0"
       }
@@ -24,7 +26,9 @@
       "type": "serial",
       "params": {
         "numberOfLights": 300,
-        "devicePortWindows": "COM7",
+        "baudRate": 1000000,
+        "debugMode": true,
+        "devicePortWindows": "COM4",
         "devicePortUnix": "/dev/ttyACM1"
       }
     }

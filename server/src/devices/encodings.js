@@ -80,8 +80,12 @@ class RGBChunkedEncoder extends Encoder {
 
 
 class RGBEncoder extends Encoder {
+  constructor(debugMode = false) {
+    super();
+    this.debugMode = debugMode;
+  }
   writeHeader(lights) {
-    this.write([4]);
+    this.write([this.debugMode ? 6 : 4]);
   }
 
   writePixel(pos, r, g, b) {

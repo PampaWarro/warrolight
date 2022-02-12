@@ -31,7 +31,7 @@ exports.LightDevice = class LightDevice {
     this.lastPrint = 0;
     this.framesCount = 0;
 
-    setInterval(() => this.logDeviceState(), 250);
+    setInterval(() => this.logDeviceState(), 10000);
   }
 
   updateStatus(status) {

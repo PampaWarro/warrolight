@@ -85,7 +85,7 @@ module.exports = class LightDeviceUDPChunked extends LightDevice {
   // Override parent
   logDeviceState() {
     if (this.status === this.STATUS_RUNNING) {
-      if (now() - this.lastPrint > 250) {
+      if (now() - this.lastPrint > 10000) {
         logger.info(`FPS: ${this.lastFps}`.green);
         this.lastPrint = now();
       }

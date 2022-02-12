@@ -852,6 +852,43 @@
                     }
                 }
             ]
+        },
+        "Explosiooons": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "soundMetric": "midRms"
+                    }
+                },
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.45,
+                        "cutThreshold": 0.68,
+                        "soundMetric": "bassRms",
+                        "energy": 1.5,
+                        "colorMap": "a_pink",
+                        "multiplier": 1.11,
+                        "power": 5,
+                        "depowering": 0.12
+                    }
+                }
+            ]
+        },
+        "NoiseRelampejo": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "blackAndWhite": true
+                    }
+                },
+                {
+                    "programName": "noise"
+                }
+            ],
+            "multiply": true
         }
     },
     "sound-waves": {
@@ -888,6 +925,70 @@
             "brillo": 0,
             "globalBrightness": 0.04,
             "speed": 5
+        }
+    },
+    "musicExplosions": {
+        "PinkPunches": {
+            "blastSpeed": 0.45,
+            "cutThreshold": 0.68,
+            "soundMetric": "bassRms",
+            "energy": 0.8,
+            "colorMap": "a_pink",
+            "multiplier": 1.42,
+            "power": 0.2,
+            "depowering": 0.12
+        },
+        "EstroboFlashes": {
+            "blackAndWhite": true,
+            "power": 0.5,
+            "energy": 5.4,
+            "soundMetric": "bassRms",
+            "depowering": 0.29,
+            "blastSpeed": 0.73,
+            "cutThreshold": 0.5
+        },
+        "FlashBeat": {
+            "colorMap": "",
+            "blackAndWhite": true,
+            "depowering": 0.2
+        },
+        "OneSpotlight": {
+            "colorMap": "",
+            "blackAndWhite": false,
+            "depowering": 0.51,
+            "soundMetric": "bassFastPeakDecay",
+            "cutThreshold": 0.24,
+            "blastSpeed": 2,
+            "energy": 3.1
+        },
+        "EstroboIntenso": {
+            "blackAndWhite": true,
+            "power": 3.2,
+            "energy": 2.2,
+            "soundMetric": "bassRms",
+            "depowering": 0.49,
+            "blastSpeed": 0.36,
+            "cutThreshold": 0.44,
+            "multiplier": 1.27,
+            "allowMultiple": false
+        },
+        "RandomColorPunches": {
+            "blastSpeed": 0.45,
+            "cutThreshold": 0.68,
+            "soundMetric": "bassRms",
+            "energy": 0.8,
+            "colorMap": "",
+            "multiplier": 1.08,
+            "power": 0.2,
+            "depowering": 0.12,
+            "allowMultiple": true,
+            "blackAndWhite": false
+        }
+    },
+    "relampejo": {
+        "MusicBW": {
+            "blackAndWhite": true,
+            "ignoreSound": false
         }
     }
 }

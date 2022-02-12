@@ -240,6 +240,7 @@ export class App extends React.Component<Props, State> {
                 onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
+                onProgramChange={this.handleProgramChange}
               />
             </div>
             <div className="preview p-2">

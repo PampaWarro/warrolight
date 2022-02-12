@@ -39,12 +39,16 @@ export class SubprogramsListParam extends React.Component<Props, any> {
     this.props.onChange(this.props.name, changedConfig);
   }
 
-  handleClick(e:any, index: string) {
-    // Clone subprogram
-    if(e.ctrlKey) {
+  cloneProgram(index: string) {
       const subCopy = _.cloneDeep(this.props.value[index])
       const changedConfig = [...this.props.value, subCopy];
       this.props.onChange(this.props.name, changedConfig);
+  }
+
+  handleClick(e:any, index: string) {
+    // Clone subprogram
+    if(e.ctrlKey) {
+      this.cloneProgram(index);
     }
   }
 
@@ -63,6 +67,7 @@ export class SubprogramsListParam extends React.Component<Props, any> {
           options={options}
           onChange={(name, config) => this.handleSubprogramChange(index, name, config)}
           onRemoveProgram={() => this.removeSubprogram(index)}
+          onDuplicateProgram={() => this.cloneProgram(index)}
         />
       </div>;
     })

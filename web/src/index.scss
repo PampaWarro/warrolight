@@ -60,6 +60,10 @@ body {
     cursor: pointer;
 
 
+    &:hover {
+      background-color: #222;
+    }
+
     &.active {
       color: white;
       background-color: #343a40;

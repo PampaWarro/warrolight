@@ -13,6 +13,7 @@ interface Props {
   onChange(name: string, value: ConfigValue): void;
 
   onRemoveProgram?(name: string): void;
+  onDuplicateProgram?(subprogram: any): void;
 }
 
 export class SubprogramParam extends React.Component<Props, any> {
@@ -48,7 +49,7 @@ export class SubprogramParam extends React.Component<Props, any> {
   }
 
   render() {
-    const { name, value, options, globalConfig, includeShapeParameter, onRemoveProgram } = this.props;
+    const { name, value, options, globalConfig, includeShapeParameter, onRemoveProgram, onDuplicateProgram } = this.props;
 
     const { programName, presetName, config, shape } = value || {};
 
@@ -93,13 +94,21 @@ export class SubprogramParam extends React.Component<Props, any> {
     }
 
     // Convinience UI functionality for components that use SubprogramParams
-    let deleteBtn = null;
+    let deleteBtn,duplicateBtn;
     if (onRemoveProgram) {
       deleteBtn = <span className={'btn btn-sm btn-link text-danger p-1'}
                         onClick={() => onRemoveProgram(programName)}
                         title={'Remove program'}
                         role={'img'}
                         aria-label={'Remove program'}>❌</span>
+    }
+
+    if(onDuplicateProgram) {
+        duplicateBtn = <span className={'btn btn-sm btn-link text-primary p-1'}
+                             onClick={() => onDuplicateProgram(value)}
+                             title={'Duplicate program'}
+                             role={'img'}
+                             aria-label={'Duplicate program'}>↪</span>;
     }
 
     let shapeSelector = null;
@@ -162,6 +171,7 @@ export class SubprogramParam extends React.Component<Props, any> {
           </div>
 
           {deleteBtn}
+          {duplicateBtn}
         </div>
 
         {programConfig}

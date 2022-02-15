@@ -198,13 +198,13 @@ void setupLeds(int numLeds, int dataPin1, int dataPin2)
   FastLED.setMaxPowerInVoltsAndMilliamps(5, POWER_MILLIAMPS);
 
   FastLED.showColor(CRGB::Black);
-
+  delay(50);
   for (int i = 0; i < NUM_STRIPS; i++)
   {
-    leds[0 + i * STRIP_NUM_LEDS] = CRGB::Black;
-    leds[1 + i * STRIP_NUM_LEDS] = CRGB::Red;
-    leds[2 + i * STRIP_NUM_LEDS] = CRGB::Green;
-    leds[3 + i * STRIP_NUM_LEDS] = CRGB::Blue;
+    leds[0 + i * (STRIP_NUM_LEDS+1)] = CRGB::Purple;
+    leds[1 + i * (STRIP_NUM_LEDS+1)] = CRGB::Red;
+    leds[2 + i * (STRIP_NUM_LEDS+1)] = CRGB::Green;
+    leds[3 + i * (STRIP_NUM_LEDS+1)] = CRGB::Blue;
   }
 
   FastLED.show();
@@ -238,10 +238,11 @@ void writeLedFrame(char data[], int offset)
   }
   
   if(chunk == ceil(NUM_LEDS/300) - 1) {
-    leds[0] = CRGB::Red;
-    leds[301] = CRGB::Green;
-    leds[602] = CRGB::Blue;
-    leds[903] = CRGB::Yellow;
+    int v = (((int)frameCount/3) % 2) == 0 ? 10 : 50;
+    leds[0].setRGB( v,0,0);
+    leds[301].setRGB(0, v,0);
+    leds[602].setRGB( 0, 0, v);
+    leds[903].setRGB( v, v,0);
     
     FastLED.show();
     frameCount++;   

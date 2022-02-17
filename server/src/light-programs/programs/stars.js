@@ -29,7 +29,7 @@ module.exports = class Stars extends LightProgram {
 
       this.stars[i] = [r, g, b];
     }
-    if (this.config.move && this.time % 5 == 0) {
+    if (this.config.move && (Math.floor((this.time*2)*this.config.moveSpeed) % 2 == 0)) {
       let first = this.stars.shift();
       this.stars.push(first);
     }
@@ -60,21 +60,10 @@ module.exports = class Stars extends LightProgram {
     let config = super.configSchema();
     config.decay = { type: Number, min: 0, max: 1, step: 0.005, default: 0.9 };
     config.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
-    config.probability = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.0001,
-      default: 0.001
-    };
+    config.probability = {type: Number, min: 0, max: 1, step: 0.0001, default: 0.001};
     config.move = { type: Boolean, default: false };
-    config.starsColor = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0
-    };
+    config.moveSpeed = { type: Number, min: 0, step: 0.01, max: 1, default: 0.2 };
+    config.starsColor = {type: Number, min: 0, max: 1, step: 0.01, default: 0};
     return config;
   }
 };

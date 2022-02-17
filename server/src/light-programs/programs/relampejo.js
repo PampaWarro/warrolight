@@ -10,9 +10,12 @@ module.exports = class Stars extends LightProgram {
   }
 
   addFlash() {
+    let pos = Math.floor(Math.random() * this.numberOfLeds);
+    let retina = this.geometry.density[pos];
+    let size = this.numberOfLeds * this.config.lightingSize * retina;
     this.flashes.push({
-      location:  Math.floor(Math.random() * this.numberOfLeds),
-      size: Math.ceil(Math.random()*this.numberOfLeds*this.config.lightingSize),
+      location:  pos,
+      size: Math.ceil(Math.random()*size*0.7+size*0.3),
       flashes: Math.ceil(1+Math.random()*this.config.lightingDuration),
       color: Math.random(),
       sat: 0.75+Math.random()/4
@@ -38,7 +41,8 @@ module.exports = class Stars extends LightProgram {
 
         let range = (i-f.location)/(f.size);
 
-        let [r2,g2,b2] = ColorUtils.HSVtoRGB(f.color+ range/5,this.config.blackAndWhite ? 0 : f.sat,range*range*vol);
+        let segmentDecay = this.config.decay ? range*range : 1;
+        let [r2,g2,b2] = ColorUtils.HSVtoRGB(f.color+ range/5,this.config.blackAndWhite ? 0 : f.sat,segmentDecay*vol);
 
         if(f.flashes < 3 || Math.floor(f.flashes/this.config.blinkSpeed) % 2 !== 0) {
           [r, g, b] = [r + r2, g + g2, b + b2];
@@ -81,6 +85,7 @@ module.exports = class Stars extends LightProgram {
     config.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     config.soundMetric = {type: 'soundMetric', default: "bassFastPeakDecay"};
     config.blackAndWhite = { type: Boolean, default: false };
+    config.decay = { type: Boolean, default: true };
     config.ignoreSound = { type: Boolean, default: true };
     // config.starsColor = {type: Number, min: 0, max: 1, step: 0.01, default: 0};
     return config;

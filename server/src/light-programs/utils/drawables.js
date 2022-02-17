@@ -288,7 +288,7 @@ class RadiusCosineBrightness extends PolarDrawable {
   }
   colorAtPolar(radius, angle) {
     radius = this.radiusWarp(this.scale * (radius + this.radiusOffset));
-    const v = 0.5 + 0.5 * Math.cos(radius / Math.PI);
+    const v = 0.02 + 0.98 * (Math.cos(radius / Math.PI)**2);
     return ColorUtils.clamp(
       v * this.color[0],
       v * this.color[1],

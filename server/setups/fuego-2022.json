@@ -17,8 +17,8 @@
       "params": {
         "numberOfLights": 300,
         "baudRate": 1000000,
-        "debugMode": false,
-        "devicePortWindows": "COM6",
+        "debugMode": true,
+        "devicePortWindows": "COM17",
         "devicePortUnix": "/dev/ttyACM0"
       }
     },
@@ -42,14 +42,26 @@
     },
     {
       "from": 1200,
+      "to": 1350,
+      "baseIndex": -149,
+      "deviceName": "rf1"
+    },
+    {
+      "from": 1350,
       "to": 1500,
-      "baseIndex": 0,
+      "baseIndex": -299,
       "deviceName": "rf1"
     },
     {
       "from": 1500,
+      "to": 1650,
+      "baseIndex": -149,
+      "deviceName": "rf2"
+    },
+    {
+      "from": 1650,
       "to": 1800,
-      "baseIndex": 0,
+      "baseIndex": -299,
       "deviceName": "rf2"
     }
   ]

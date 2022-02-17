@@ -11,7 +11,7 @@ module.exports = class DebugSetup extends LightProgram {
         let s = 1
         let scale = i > 1200 ? 150 : 300;
 
-        if(i % 20 === 0)
+        if(i % 10 === 0)
           return [255,255,255,255];
         else
         return ColorUtils.HSVtoRGB(

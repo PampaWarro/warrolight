@@ -40,14 +40,14 @@ module.exports = class ProgramScheduler {
         let remainingTime = frameLength - (endFrameTime - lastFlushTime);
 
         if (drawingTimeMs > 10) {
-          console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
+          // console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
         }
         // Schedule next frame for the remaing time considering how long it took to do the drawing
         // We wait at least 3ms in order to throttle CPU to give room for IO, serial and other critical stuff
         this.timer.setTimeout(() => {
           const now = Date.now().valueOf();
           if (Math.abs(now - lastFlushTime - frameLength) > 3) {
-            console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
+            // console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
           }
 
           clearInterval(this.nextTickTimeout);

@@ -31,7 +31,7 @@ exports.LightDevice = class LightDevice {
     this.lastPrint = 0;
     this.framesCount = 0;
 
-    setInterval(() => this.logDeviceState(), 10000);
+    setInterval(() => this.logDeviceState(), 250);
   }
 
   updateStatus(status) {
@@ -51,6 +51,7 @@ exports.LightDevice = class LightDevice {
     this.framesCount = 0;
     this.lastFps = FPS;
     this.lastPrint = now();
+
     logger.info(`FPS: ${FPS}`);
   }
 

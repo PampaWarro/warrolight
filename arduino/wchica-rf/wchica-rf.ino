@@ -19,15 +19,16 @@ constexpr byte ENCODING_RGB_DEBUG = 6;
 RF24 radio(7, 8); // CE, CSN
 
 
-int channels[] = {81, 114};
-// int channels[] = {92, 103};
+// int channels[] = {121, 114};
+int channels[] = {72, 103};
 
 void setup() {
   Serial.begin(1000000);
   Serial.println("ARDUINOSTART");
 
   radio.begin();
-  radio.openWritingPipe(0xF0F0F0F0F0);
+  radio.openWritingPipe(0xF0F0F0F0F5); // 72 103
+//   radio.openWritingPipe(0xF0F0F0F0F0); // 114 121
   radio.setPALevel(RF24_PA_MAX);
   radio.setPayloadSize(RADIO_PAYLOAD_SIZE);
   radio.setDataRate(RF24_1MBPS);

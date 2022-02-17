@@ -49,14 +49,13 @@ void setup()
   FastLED.show();
   // Serial.begin(9600);
   radio.begin();
+
+//   radio.openReadingPipe(0, 0xF0F0F0F0F5);
+//   radio.setChannel(72);
+//   radio.setChannel(103);
+
   radio.openReadingPipe(0, 0xF0F0F0F0F0);
-
-  // Max power 1000 mah
-  // radio.setChannel(92);
-  // radio.setChannel(103);
-
-  // Max power 700 mah
-  // radio.setChannel(81);
+//   radio.setChannel(121);
   radio.setChannel(114);
 
   radio.setPALevel(RF24_PA_HIGH);

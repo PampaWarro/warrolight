@@ -15,7 +15,7 @@ module.exports = class MusicVolumeDotRandom extends LightProgram {
   assignLights() {
     let p = this.config.numberOfOnLeds / this.numberOfLeds;
     for (let i = 0; i < this.onLeds.length; i++) {
-      this.onLeds[i] = Math.random() < p;
+      this.onLeds[i] = Math.random() < p/this.geometry.density[i];
     }
     this.needingReshuffle = false;
   }

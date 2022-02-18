@@ -10,6 +10,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     this.maxVolume = 0;
     this.hueOffset = Math.random();
     this.frameNumber = 0; // TODO: frameNumber is an antipattern, use time-dependent variables
+    this.densityInvariantLength = _.sumBy(this.geometry.density, v => 1/v);
   }
 
   drawFrame(draw, audio) {
@@ -38,13 +39,16 @@ module.exports = class MusicFrequencyDot extends LightProgram {
       if(this.config.blackAndWhite) {
         [r, g, b] = ColorUtils.HSVtoRGB(h, 0, br);
       } else {
-        [r, g, b] = ColorUtils.HSVtoRGB(h, Math.sqrt(s), br);
+        [r, g, b] = ColorUtils.HSVtoRGB(h,s**0.5, br);
       }
 
-      let width = Math.round(this.numberOfLeds / this.config.numberOfOnLeds);
 
+      let intensity = audio.currentFrame[this.config.soundMetric || 'bassPeakDecay'];
+
+      let densityInvariantLength = 0;
       for (let i = 0; i < this.numberOfLeds; i += 1) {
-        let intensity = bassValue;
+        let width = Math.round(this.densityInvariantLength / (this.config.numberOfOnLeds));
+
         let explosionLength = Math.ceil((Math.pow(intensity, power) * width) / 3);
 
         let offsettedPosition = i % this.lastVolume.length;
@@ -52,11 +56,12 @@ module.exports = class MusicFrequencyDot extends LightProgram {
           offsettedPosition = (i + this.frameNumber) % this.lastVolume.length;
         }
 
-        if (Math.abs((i % width) - width / 2) < explosionLength) {
+        if (Math.abs(((densityInvariantLength % width) - width / 2)) < explosionLength) {
           this.lastVolume[offsettedPosition] = [r, g, b];
         } else {
           this.lastVolume[offsettedPosition] = [0, 0, 0];
         }
+        densityInvariantLength += 1/this.geometry.density[i];
       }
     }
 
@@ -81,7 +86,7 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
     res.move = { type: Boolean, default: false };
     res.blackAndWhite = { type: Boolean, default: false };
-    res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
+    res.soundMetric = {type: 'soundMetric', default: "bassFastPeakDecay"};
     res.power = { type: Number, min: 1, max: 20, step: 0.1, default: 2 };
     res.numberOfOnLeds = {type: Number, min: 1, max: 100, step: 1, default: 40};
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};

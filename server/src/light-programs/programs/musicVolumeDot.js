@@ -1,5 +1,6 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const _ = require("lodash");
 
 module.exports = class MusicVolumeDot extends LightProgram {
 
@@ -7,6 +8,7 @@ module.exports = class MusicVolumeDot extends LightProgram {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
+    this.densityInvariantLength = _.sumBy(this.geometry.density, v => 1/v);
   }
 
   drawFrame(draw, audio) {
@@ -24,15 +26,14 @@ module.exports = class MusicVolumeDot extends LightProgram {
 
     let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol * vol, 1));
 
+    let densityInvariantPos = 0;
     for (let i = 0; i < this.numberOfLeds; i++) {
-      if (
-        i % Math.round(this.numberOfLeds / this.config.numberOfOnLeds) ===
-        0
-      ) {
+      if (densityInvariantPos % Math.round(this.densityInvariantLength / this.config.numberOfOnLeds) === 0) {
         this.lastVolume[i] = newVal;
       } else {
         this.lastVolume[i] = [0, 0, 0];
       }
+      densityInvariantPos += 1/this.geometry.density[i];
     }
 
     draw(this.lastVolume);

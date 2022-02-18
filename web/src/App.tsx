@@ -27,6 +27,7 @@ interface State {
   globalConfig: { [param: string]: any };
   micConfig: MicConfig;
   remoteChange: boolean;
+  receivingLights: boolean;
   devices: Device[];
   connection: string;
 }
@@ -54,6 +55,7 @@ export class App extends React.Component<Props, State> {
         input: ""
       },
       remoteChange: false,
+      receivingLights: !isMobile,
       devices: [],
       connection: "connecting"
     };
@@ -92,7 +94,7 @@ export class App extends React.Component<Props, State> {
     api.on("connect", () => {
       this.setState({ connection: "connected" });
 
-      if(!isMobile) {
+      if(this.state.receivingLights) {
         setTimeout(() => api.startSamplingLights(), 500);
       }
     });
@@ -192,10 +194,12 @@ export class App extends React.Component<Props, State> {
   };
 
   handleStartLights = () => {
+    this.setState({receivingLights: true});
     this.api.startSamplingLights();
   };
 
   handleStopLights = () => {
+    this.setState({receivingLights: false});
     this.api.stopSamplingLights();
   };
 
@@ -248,7 +252,7 @@ export class App extends React.Component<Props, State> {
                 ref={this.lightsSim}
                 height={600}
                 width={800}
-                receivingData={!isMobile}
+                receivingData={this.state.receivingLights}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}
                 real3d={true}

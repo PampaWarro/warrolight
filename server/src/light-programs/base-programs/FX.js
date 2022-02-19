@@ -26,6 +26,10 @@ function makeBaseFXProgram(WrappedProgram) {
     }
 
     toString() { return this.wrapped.toString(); }
+
+    static presets() {
+      return WrappedProgram.presets ? WrappedProgram.presets() : {};
+    }
   }
 }
 
@@ -101,23 +105,24 @@ function makeSlowFade(WrappedProgram) {
 
     processFrame(frame, audio) {
       let alpha = this.config.FXSlowFadeAlpha;
-      if (this.lastFrame && alpha > 0) {
-        for (let i = 0; i < frame.length; i++) {
-          let oldColor = this.lastFrame[i];
-          let color = frame[i];
-          if (Math.max(...color) < Math.max(...oldColor)) {
-            // Less bright, slow fade.
-            frame[i] = ColorUtils.mix(color, oldColor, alpha);
+      if(alpha > 0) {
+        if (this.lastFrame) {
+          for (let i = 0; i < frame.length; i++) {
+            let oldColor = this.lastFrame[i];
+            let color = frame[i];
+            if (Math.max(...color) < Math.max(...oldColor)) {
+              // Less bright, slow fade.
+              frame[i] = ColorUtils.mix(color, oldColor, alpha);
+            }
           }
         }
+        this.lastFrame = _.clone(frame);
       }
-      this.lastFrame = _.clone(frame);
     }
 
     static configSchema() {
       let config = WrappedProgram.configSchema();
-      config.FXSlowFadeAlpha =
-          {type : Number, min : 0, max : 1, step : 0.005, default : 0};
+      config.FXSlowFadeAlpha = {type : Number, min : 0, max : 1, step : 0.005, default : 0};
       return config;
     }
   }

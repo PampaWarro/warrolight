@@ -3,7 +3,8 @@ const EventEmitter = require('events');
 const path = require('path');
 const { decodeMultiStream } = require('@msgpack/msgpack');
 const pythonFromEnv = process.env.PYTHONPATH;
-const venvPath = path.join(__dirname, 'env')
+const venvPath =
+    cp.execSync('pipenv --venv', {encoding : 'utf8', cwd : __dirname}).trim();
 const pythonBinaryFolder = /^win/.test(process.platform) ? 'Scripts' : 'bin';
 
 const python = pythonFromEnv ? pythonFromEnv : path.join(venvPath, pythonBinaryFolder, 'python');

@@ -20,7 +20,7 @@ const programNames = [
   "congaScore",
   "congaShooting",
   "congaRope",
-  "PROGRAM_Main_fuego2019",
+  "PROGRAM_Main_fuego2022",
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",
   "aliveDots",
@@ -279,7 +279,7 @@ module.exports = class LightController extends EventEmitter {
       );
       this.lastDroppedFrame = Date.now();
     } else if (lastUpdateLatency > 25) {
-      // console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
+      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
     }
   }
 };

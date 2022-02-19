@@ -33,7 +33,8 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
-const baseTime = 1 * 1000;
+// TODO: AJUSTAR ANTES  DE COMITEAR!!!
+const baseTime = 1 * 1000 * 1;
 
 function getAllPresets(funcClass, time, shape = "Warro") {
   return _.map(funcClass.presets(), (preset, name) => {
@@ -190,7 +191,6 @@ let starsSunrise = mixPrograms(
 );
 
 const schedule = [
-  /*
   ...getAllPresets(Mix, 60),
 
   ...getFilePresets('javier.json', 60),
@@ -559,7 +559,7 @@ const schedule = [
     program: programsByShape({
       trianguloTop: [SpeedingSpear, { spearLength: 10 }]
     })
-  },*/
+  },
 
   {
     duration: 30 * baseTime,

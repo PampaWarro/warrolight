@@ -4,6 +4,7 @@ const fs = require("fs");
 const moment = require("moment");
 
 const ProgramScheduler = require("./ProgramScheduler");
+const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
 
@@ -252,7 +253,7 @@ module.exports = class LightController extends EventEmitter {
   }
 
   loadProgram(name) {
-    const FunctionClass = require("./light-programs/programs/" + name);
+    const FunctionClass = makeFXProgram(require("./light-programs/programs/" + name));
     return {
       name: name,
       configSchema: FunctionClass.configSchema(),

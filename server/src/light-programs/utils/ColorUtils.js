@@ -129,6 +129,17 @@ function mod(x, m) {
   return ((x % m) + m) % m;
 }
 
+function max([r, g, b, a], [r2, g2, b2, a2]) {
+  a = a === undefined ? 1 : a;
+  a2 = a2 === undefined ? 1 : a2;
+  return [
+    Math.max(r, r2),
+    Math.max(g, g2),
+    Math.max(b, b2),
+    Math.max(a, a2),
+  ]
+}
+
 function luminance(r, g, b) { return 0.299 * r + 0.587 * g + 0.114 * b; }
 
 module.exports = {
@@ -142,4 +153,5 @@ module.exports = {
   dim,
   mod,
   luminance,
+  max,
 }

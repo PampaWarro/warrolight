@@ -3,26 +3,41 @@ const LightProgram = require("./LightProgram.js");
 const _ = require("lodash");
 
 function makeBaseFXProgram(WrappedProgram) {
-  return class BaseFXProgram extends WrappedProgram {
+  return class BaseFXProgram extends LightProgram {
+    constructor(config, geometry, shapeMapping, lightController) {
+      super(config, geometry, shapeMapping, lightController);
+      this.wrapped =
+          new WrappedProgram(config, geometry, shapeMapping, lightController);
+    }
+
+    init() { return this.wrapped.init(); }
+
     drawFrame(draw, audio) {
       let frame = null;
-      WrappedProgram.prototype.drawFrame.call(this, colors => frame = colors,
-                                              audio);
+      this.wrapped.timeInMs = this.timeInMs;
+      this.wrapped.drawFrame(colors => frame = colors, audio);
       this.processFrame(frame, audio);
       draw(frame);
     }
+
+    updateConfig(config) {
+      this.wrapped.updateConfig(config);
+      super.updateConfig(config);
+    }
+
+    toString() { return this.wrapped.toString(); }
   }
 }
 
 function makeDelay(WrappedProgram) {
-  return class DelayProgram extends makeBaseFXProgram(WrappedProgram) {
+  let Base = makeBaseFXProgram(WrappedProgram);
+  return class DelayProgram extends Base {
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry, shapeMapping, lightController);
       this.pastFrames = [];
     }
 
     processFrame(frame, audio) {
-      if (super.processFrame) super.processFrame(frame, audio);
       let ms = this.config.FXDelayMs;
       let dry = this.config.FXDelayDry;
       let wet = this.config.FXDelayWet;
@@ -32,7 +47,7 @@ function makeDelay(WrappedProgram) {
       let feedback = this.config.FXDelayFeedback;
 
       let savedFrame = _.clone(frame);
-      this.pastFrames.push([this.timeInMs, savedFrame]);
+      this.pastFrames.push([ this.timeInMs, savedFrame ]);
 
       let pastFrame = null;
       while (this.pastFrames.length > 0) {
@@ -45,12 +60,11 @@ function makeDelay(WrappedProgram) {
         break;
       }
 
-
       if (!pastFrame) {
         return;
       }
       for (let i = 0; i < frame.length; i++) {
-        let currentColor = _.map(frame[i], x=> x * dry);
+        let currentColor = _.map(frame[i], x => x * dry);
         let pastColor = _.map(pastFrame[i], x => x * wet);
         frame[i] = ColorUtils.max(currentColor, pastColor);
       }
@@ -63,11 +77,15 @@ function makeDelay(WrappedProgram) {
     }
 
     static configSchema() {
-      let config = super.configSchema();
-      config.FXDelayMs = {type: Number, min: 0, max: 3000, step: 1, default: 1000};
-      config.FXDelayDry = {type: Number, min: 0, max: 1, step: 0.005, default: 1};
-      config.FXDelayWet = {type: Number, min: 0, max: 1, step: 0.005, default: 0};
-      config.FXDelayFeedback = {type: Number, min: 0, max: 1, step: 0.005, default: 0};
+      let config = WrappedProgram.configSchema();
+      config.FXDelayMs =
+          {type : Number, min : 0, max : 3000, step : 1, default : 1000};
+      config.FXDelayDry =
+          {type : Number, min : 0, max : 1, step : 0.005, default : 1};
+      config.FXDelayWet =
+          {type : Number, min : 0, max : 1, step : 0.005, default : 0};
+      config.FXDelayFeedback =
+          {type : Number, min : 0, max : 1, step : 0.005, default : 0};
       return config;
     }
   }
@@ -82,7 +100,6 @@ function makeSlowFade(WrappedProgram) {
     }
 
     processFrame(frame, audio) {
-      if (super.processFrame) super.processFrame(frame, audio);
       let alpha = this.config.FXSlowFadeAlpha;
       if (this.lastFrame && alpha > 0) {
         for (let i = 0; i < frame.length; i++) {
@@ -98,8 +115,9 @@ function makeSlowFade(WrappedProgram) {
     }
 
     static configSchema() {
-      let config = super.configSchema();
-      config.FXSlowFadeAlpha = {type: Number, min: 0, max: 1, step: 0.005, default: 0};
+      let config = WrappedProgram.configSchema();
+      config.FXSlowFadeAlpha =
+          {type : Number, min : 0, max : 1, step : 0.005, default : 0};
       return config;
     }
   }

@@ -44,7 +44,7 @@ module.exports = class Stars extends LightProgram {
         let segmentDecay = this.config.decay ? range*range : 1;
         let [r2,g2,b2] = ColorUtils.HSVtoRGB(f.color+ range/5,this.config.blackAndWhite ? 0 : f.sat,segmentDecay*vol);
 
-        if(f.flashes < 3 || Math.floor(f.flashes/this.config.blinkSpeed) % 2 !== 0) {
+        if(f.flashes < 3 || !this.config.blinkSpeed || Math.floor(f.flashes/this.config.blinkSpeed) % 2 !== 0) {
           [r, g, b] = [r + r2, g + g2, b + b2];
         }
 
@@ -80,7 +80,7 @@ module.exports = class Stars extends LightProgram {
     config.flashes = {type: Number, min: 1, max: 50, step: 1, default: 2};
     config.lightingSize = {type: Number, min: 0.001, max: 1, step: 0.001, default: 0.15};
     config.lightingDuration = {type: Number, min: 1, max: 100, step: 1, default: 15};
-    config.blinkSpeed = {type: Number, min: 1, max: 20, step: 1, default: 6};
+    config.blinkSpeed = {type: Number, min: 0, max: 20, step: 1, default: 6};
     config.refillChance = {type: Number, min: 0.001, max: 1, step: 0.001, default: 0.2};
     config.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
     config.soundMetric = {type: 'soundMetric', default: "bassFastPeakDecay"};

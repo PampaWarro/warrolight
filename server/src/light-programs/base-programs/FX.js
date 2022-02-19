@@ -15,9 +15,10 @@ function makeBaseFXProgram(WrappedProgram) {
     drawFrame(draw, audio) {
       let frame = null;
       this.wrapped.timeInMs = this.timeInMs;
-      this.wrapped.drawFrame(colors => frame = colors, audio);
-      this.processFrame(frame, audio);
-      draw(frame);
+      this.wrapped.drawFrame(colors => {
+        this.processFrame(colors, audio);
+        draw(colors);
+      }, audio);
     }
 
     updateConfig(config) {
@@ -116,7 +117,7 @@ function makeSlowFade(WrappedProgram) {
             }
           }
         }
-        this.lastFrame = _.clone(frame);
+        this.lastFrame = frame;
       }
     }
 

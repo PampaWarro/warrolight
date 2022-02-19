@@ -8,11 +8,11 @@ const {
 } = require("../utils/gradients");
 
 module.exports = class GradientSphere extends LayerBasedProgram {
-  constructor(config, geometry) {
-    super(config, geometry);
+  init() {
     this.timedMultiGradient = new TimedMultiGradient(allGradients());
+    super.init();
   }
- 
+
   getDrawables() {
     return {
       sphere : new GradientSolidSphere({

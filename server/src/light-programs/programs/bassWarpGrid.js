@@ -1,19 +1,20 @@
 const LayerBasedProgram = require("../base-programs/LayerBasedProgram");
 const { Grid, GradientColorize } = require("../utils/drawables");
 const _ = require("lodash");
-const {getGradientsByName} = require("../utils/gradients");
+const {getGradientsByName, TimedMultiGradient, allGradients} = require("../utils/gradients");
 
 module.exports = class Bombs extends LayerBasedProgram {
   init() {
     this.warpK = 1;
     this.bassWarpCenter = [this.xBounds.center, this.yBounds.center];
+    super.init();
   }
 
   getDrawables() {
     const grid = new Grid({ xyWarp: this.bassXYWarp.bind(this) });
     const colorizedGrid = new GradientColorize({
       drawable: grid,
-      gradient: "tas04",
+      gradient: this.config.gradient,
       preserveAlpha: false,
       invert: true
     });
@@ -43,7 +44,10 @@ module.exports = class Bombs extends LayerBasedProgram {
 
   updateState(audio) {
     // Audio independent stuff.
-    this.drawables.colorizedGrid.gradient = this.config.gradient;
+    if(this.config.gradient) {
+      this.drawables.colorizedGrid.gradient = this.config.gradient;
+    }
+
     this.bassWarpCenter = [
       this.xBounds.center +
         0.35 * this.xBounds.scale * Math.cos((Math.PI * this.timeInMs) / 7000),
@@ -79,7 +83,7 @@ module.exports = class Bombs extends LayerBasedProgram {
     let res = super.configSchema();
     res.gradient = {
       type: "gradient",
-      default: _.keys(getGradientsByName())[0]
+      default: ""
     };
     return res;
   }

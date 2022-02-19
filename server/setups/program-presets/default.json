@@ -188,8 +188,10 @@
                 {
                     "programName": "musicFlash",
                     "config": {
-                        "soundMetric": "fastPeakDecay",
-                        "multiplier": 2
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 2,
+                        "cutThreshold": 0.2,
+                        "globalBrightness": 1
                     }
                 }
             ],
@@ -248,8 +250,8 @@
                     "shape": "totemsExt",
                     "config": {
                         "doble": true,
-                        "soundMetric": "bassRms",
-                        "cutThreshold": 0.15,
+                        "soundMetric": "midRms",
+                        "cutThreshold": 0.4,
                         "multiplier": 1,
                         "speed": 2,
                         "haciaAfuera": true
@@ -262,7 +264,7 @@
                         "soundMetric": "highRms",
                         "haciaAfuera": false,
                         "doble": true,
-                        "cutThreshold": 0.15,
+                        "cutThreshold": 0.21,
                         "multiplier": 1,
                         "speed": 2
                     }
@@ -283,7 +285,7 @@
                     "programName": "musicFlow",
                     "shape": "V1",
                     "config": {
-                        "soundMetric": "highFastPeakDecay",
+                        "soundMetric": "bassRms",
                         "doble": true,
                         "speed": 4,
                         "multiplier": 1,
@@ -560,8 +562,11 @@
                     "programName": "musicFlow",
                     "config": {
                         "soundMetric": "rms",
-                        "multiplier": 1,
-                        "cutThreshold": 0.34
+                        "multiplier": 1.1,
+                        "cutThreshold": 0,
+                        "speed": 3,
+                        "globalBrightness": 1,
+                        "doble": true
                     }
                 },
                 {
@@ -574,37 +579,59 @@
                                     "colorMap": "pm3d05_r",
                                     "brilloWave": 2.03,
                                     "waveWidth": 2.8,
-                                    "waveSpeed": 2.4
+                                    "waveSpeed": 2.4,
+                                    "soundMetric": "rms",
+                                    "globalBrightness": 1
                                 }
                             },
                             {
                                 "programName": "radialSun",
                                 "config": {
                                     "saturation": 0,
-                                    "escala": 3.511,
-                                    "power": 2.3
+                                    "escala": 2.321,
+                                    "power": 2.3,
+                                    "colorMap": "pm3d05_r",
+                                    "globalBrightness": 0.63,
+                                    "radialDistance": false,
+                                    "relative": true,
+                                    "fromTop": false
                                 }
                             }
-                        ]
+                        ],
+                        "globalBrightness": 0.99,
+                        "FXSlowFadeAlpha": 0,
+                        "multiply": false
                     }
                 }
             ],
-            "multiply": true
+            "multiply": true,
+            "globalBrightness": 1,
+            "FXSlowFadeAlpha": 0
         },
         "Thunder": {
             "programs": [
                 {
-                    "programName": "lineal",
+                    "programName": "sound-waves",
+                    "presetName": "whiteUp",
                     "config": {
-                        "saturation": 0,
-                        "velocidad": -38.9
-                    }
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 1.9,
+                        "waveSpeed": 3.3,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.83,
+                        "soundMetric": "bassRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.37,
+                        "initialDistance": 15.4
+                    },
+                    "shape": "Warro"
                 },
                 {
                     "programName": "musicFlash",
                     "config": {
-                        "cutThreshold": 0.21,
-                        "soundMetric": "bassRms"
+                        "cutThreshold": 0.18,
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 1.33
                     }
                 }
             ],
@@ -1015,6 +1042,140 @@
                 }
             ],
             "multiply": true
+        },
+        "TripleSoundwave": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_pink",
+                        "waveWidth": 3.6,
+                        "waveSpeed": 0.6,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.86,
+                        "soundMetric": "bassRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.31,
+                        "initialDistance": 8
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_deepblue",
+                        "waveWidth": 1.9,
+                        "waveSpeed": 1.3,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.75,
+                        "soundMetric": "midRms",
+                        "wavePower": 1,
+                        "brilloWave": 0.69,
+                        "initialDistance": 29.2,
+                        "globalBrightness": 0.28
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_fire",
+                        "waveWidth": 1.1,
+                        "waveSpeed": 1.9,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.92,
+                        "soundMetric": "highRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.13,
+                        "initialDistance": 33.3,
+                        "globalBrightness": 0.47
+                    }
+                }
+            ]
+        },
+        "FireDotsRelampejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 7,
+                        "ignoreSound": false,
+                        "refillChance": 0.617,
+                        "cutThreshold": 0.41,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076
+                    }
+                },
+                {
+                    "programName": "musicVolumeDot",
+                    "config": {
+                        "numberOfOnLeds": 160,
+                        "multiplier": 1.68,
+                        "cutThreshold": 0.15,
+                        "soundMetric": "bassPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0.145
+        },
+        "8BastonesRelampejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 24,
+                        "ignoreSound": false,
+                        "refillChance": 0.799,
+                        "cutThreshold": 0.09,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076,
+                        "lightingDuration": 100
+                    }
+                },
+                {
+                    "programName": "musicFrequencyDot",
+                    "config": {
+                        "blackAndWhite": true,
+                        "numberOfOnLeds": 8,
+                        "cutThreshold": 0,
+                        "soundMetric": "fastPeakDecay",
+                        "power": 1.5
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0
+        },
+        "MovingBastonpejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 9,
+                        "ignoreSound": false,
+                        "refillChance": 0.799,
+                        "cutThreshold": 0.09,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076,
+                        "lightingDuration": 100
+                    }
+                },
+                {
+                    "programName": "musicFrequencyDot",
+                    "config": {
+                        "blackAndWhite": true,
+                        "numberOfOnLeds": 24,
+                        "cutThreshold": 0,
+                        "soundMetric": "fastPeakDecay",
+                        "power": 1.5,
+                        "move": true
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0
         }
     },
     "sound-waves": {
@@ -1027,6 +1188,17 @@
             "waveSpeed": 0.1,
             "brilloWave": 0.12,
             "soundMetric": "bassFastPeakDecay"
+        },
+        "whiteUp": {
+            "colorMap": "pm3d05_r",
+            "waveWidth": 1.9,
+            "waveSpeed": 3.3,
+            "waveCenterY": -40,
+            "waveDecay": 0.83,
+            "soundMetric": "bassRms",
+            "wavePower": 1,
+            "brilloWave": 1.37,
+            "initialDistance": 15.4
         }
     },
     "radial": {

@@ -7,6 +7,8 @@ const ColorUtils = require("../utils/ColorUtils");
 module.exports = class BandParticles extends LayerBasedProgram {
 
   init() {
+    super.init();
+
     this.particles = {};
     this.offsets = {
       bass: 0,
@@ -32,8 +34,8 @@ module.exports = class BandParticles extends LayerBasedProgram {
 
   populatePerBandParticles(audio) {
     _.forEach(['low', 'mid', 'high'], (bandName) => {
-      const bandParticles = (this.particles[bandName] =
-        this.particles[bandName] || []);
+      const bandParticles = (this.particles[bandName] = this.particles[bandName] || []);
+
       while (bandParticles.length < this.config.particlesPerBand) {
         const drawable = new SingleLed({
           ledIndex: this.geometry.leds * Math.random()
@@ -47,6 +49,7 @@ module.exports = class BandParticles extends LayerBasedProgram {
           state: state
         });
       }
+
       while (bandParticles.length > this.config.particlesPerBand) {
         const particle = bandParticles.pop();
         _.remove(this.layers.particles.layers, particle.layer);

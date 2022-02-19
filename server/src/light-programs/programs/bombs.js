@@ -7,6 +7,8 @@ module.exports = class Bombs extends LayerBasedProgram {
     this.bassSum = Math.random() * 1000;
     this.midSum = Math.random() * 1000;
     this.highSum = Math.random() * 1000;
+
+    super.init();
   }
 
   getDrawables() {

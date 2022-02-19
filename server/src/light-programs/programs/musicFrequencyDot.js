@@ -5,7 +5,7 @@ const _ = require('lodash');
 module.exports = class MusicFrequencyDot extends LightProgram {
 
   init() {
-    this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
+    this.lastVolume = new Array(this.numberOfLeds).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
     this.hueOffset = Math.random();
@@ -47,21 +47,22 @@ module.exports = class MusicFrequencyDot extends LightProgram {
 
       let densityInvariantLength = 0;
       for (let i = 0; i < this.numberOfLeds; i += 1) {
+        let j = i;
+        if (this.config.move) {
+          j = (j + this.frameNumber) % this.lastVolume.length;
+        }
+
         let width = Math.round(this.densityInvariantLength / (this.config.numberOfOnLeds));
 
         let explosionLength = Math.ceil((Math.pow(intensity, power) * width) / 3);
 
-        let offsettedPosition = i % this.lastVolume.length;
-        if (this.config.move) {
-          offsettedPosition = (i + this.frameNumber) % this.lastVolume.length;
-        }
 
         if (Math.abs(((densityInvariantLength % width) - width / 2)) < explosionLength) {
-          this.lastVolume[offsettedPosition] = [r, g, b];
+          this.lastVolume[j] = [r, g, b];
         } else {
-          this.lastVolume[offsettedPosition] = [0, 0, 0];
+          this.lastVolume[j] = [0, 0, 0];
         }
-        densityInvariantLength += 1/this.geometry.density[i];
+        densityInvariantLength += 1/this.geometry.density[j];
       }
     }
 

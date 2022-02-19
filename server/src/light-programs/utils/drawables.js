@@ -1,5 +1,6 @@
 const ColorUtils = require("./ColorUtils");
-const {loadGradient} = require("./gradients");
+const {loadGradient, allGradients} = require("./gradients");
+const _ = require("lodash");
 
 class Drawable {
   colorAtIndex(index, geometry) {}
@@ -17,9 +18,10 @@ class GradientColorize extends Drawable {
   }
   set gradient(gradient) {
     if (!gradient) {
-      return;
+      this._gradient = _.shuffle(allGradients())[0];
+    } else {
+      this._gradient = loadGradient(gradient);
     }
-    this._gradient = loadGradient(gradient);
   }
   set value(value) {
     if (value == "alpha") {

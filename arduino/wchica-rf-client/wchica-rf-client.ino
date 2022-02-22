@@ -25,6 +25,7 @@ CRGB leds[NUM_LEDS];
 // __attribute__((section(".noinit"))) unsigned int program;
 
 RF24 radio(7, 8); // CE, CSN
+// RF24 radio(8, 7); // Para galeras invertidas
 
 bool debugMode = false;
 

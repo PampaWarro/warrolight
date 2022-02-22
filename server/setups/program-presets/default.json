@@ -449,7 +449,7 @@
                         "programs": [
                             {
                                 "programName": "radialSun",
-                                "shape": "man",
+                                "shape": "allOfIt",
                                 "config": {
                                     "saturation": 0,
                                     "fromTop": true,
@@ -464,7 +464,7 @@
                             },
                             {
                                 "programName": "radialSun",
-                                "shape": "fullArc",
+                                "shape": "allOfIt",
                                 "config": {
                                     "saturation": 0,
                                     "escala": 2.641,
@@ -516,7 +516,7 @@
                                 "config": {
                                     "starsColor": 0.41
                                 },
-                                "shape": "man"
+                                "shape": "allOfIt"
                             },
                             {
                                 "programName": "radialSun",
@@ -535,7 +535,7 @@
                         "programs": [
                             {
                                 "programName": "radialSun",
-                                "shape": "head",
+                                "shape": "allOfIt",
                                 "config": {
                                     "soundMetric": "mic2_fastPeakDecay",
                                     "relative": true,
@@ -546,7 +546,7 @@
                             },
                             {
                                 "programName": "sound-waves",
-                                "shape": "man",
+                                "shape": "allOfIt",
                                 "config": {
                                     "colorMap": "tas05"
                                 }

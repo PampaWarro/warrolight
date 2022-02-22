@@ -33,6 +33,10 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
+const MusicExplosions = require("./musicExplosions");
+const Relampejo = require("./relampejo");
+
+
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000 * 1;
 
@@ -191,10 +195,15 @@ let starsSunrise = mixPrograms(
 );
 
 const schedule = [
+  ...getAllPresets(Relampejo, 60),
+
+  ...getAllPresets(MusicExplosions, 60),
+
   ...getAllPresets(Mix, 60),
 
-  ...getFilePresets('javier.json', 60),
+  ...getFilePresets('default.json', 60),
 
+  ...getFilePresets('javier.json', 60),
 
   ...getAllPresets(Rays, 60),
 
@@ -605,4 +614,4 @@ const schedule = [
 
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, false, 1000);
+module.exports = createMultiProgram(schedule, true, 20000);

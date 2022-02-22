@@ -13,7 +13,7 @@ const setup = require(setupPath);
 const controller = loadSetup(setup);
 
 // TODO: Development hack to reload programs module on restart
-require('./hackProgramReloadOnRestart')(controller);
+// require('./hackProgramReloadOnRestart')(controller);
 
 controller.start();
 

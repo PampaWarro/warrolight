@@ -8,7 +8,7 @@
       "params": {
         "numberOfLights": 1200,
         "name": "",
-        "ip": "192.168.0.146",
+        "ip": "192.168.1.146",
         "udpPort": 2222
       }
     },
@@ -18,7 +18,7 @@
         "numberOfLights": 300,
         "baudRate": 1000000,
         "debugMode": true,
-        "devicePortWindows": "COM17",
+        "devicePortWindows": "COM10",
         "devicePortUnix": "/dev/ttyACM0"
       }
     },
@@ -28,7 +28,7 @@
         "numberOfLights": 300,
         "baudRate": 1000000,
         "debugMode": true,
-        "devicePortWindows": "COM4",
+        "devicePortWindows": "COM9",
         "devicePortUnix": "/dev/ttyACM1"
       }
     }

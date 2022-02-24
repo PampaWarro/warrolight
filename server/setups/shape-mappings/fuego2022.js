@@ -11,19 +11,19 @@ module.exports = function getShapes() {
   const SIDE_TRIANGULO = 120;
 
   const quiebre_abajo = 60;
-  const quiebre_abajo_left = quiebre_abajo + 3;
-  const quiebre_abajo_right = quiebre_abajo + 3;
+  const quiebre_abajo_left = quiebre_abajo + 4;
+  const quiebre_abajo_right = quiebre_abajo + 4;
 
-  const centroOffsetLeft = 4;
-  const centroOffsetRight = 3;
+  const centroOffsetLeft = 2;
+  const centroOffsetRight = 2;
 
-  const comienzoTira1 = 0 + 4;
+  const comienzoTira1 = 0;
   const T2 = TIRA_HD*1;
-  const comienzoTira2 = T2 + 5;
+  const comienzoTira2 = T2 + 4;
   const T3 = TIRA_HD*2;
   const comienzoTira3 = T3 + 4;
   const T4 = TIRA_HD*3;
-  const comienzoTira4 = T4 - 0;
+  const comienzoTira4 = T4 + 6;
 
   const quiebre_arriba = 60;
   const quiebre_arriba_left = quiebre_arriba;
@@ -47,7 +47,7 @@ module.exports = function getShapes() {
   ]);
 
   const trianguloTopLeft = _.range(
-    T3+SIDE_TRIANGULO + centroOffsetRight,
+    T3+SIDE_TRIANGULO + centroOffsetRight - 1,
     T4 - quiebre_arriba_right
   );
   const trianguloTopRight = _.range(

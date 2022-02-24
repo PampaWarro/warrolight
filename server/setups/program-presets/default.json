@@ -58,16 +58,10 @@
         "DebugShapeParticle": {
             "programs": [
                 {
-                    "programName": "rays",
-                    "config": {
-                        "numberOfParticles": 1,
-                        "decay": 0.93,
-                        "singleDirection": true,
-                        "globalSpeed": 5.71,
-                        "colorSaturationRange": 1
-                    }
+                    "programName": "all-white"
                 }
-            ]
+            ],
+            "globalBrightness": 0.07
         },
         "TwoFlowFast": {
             "programs": [

@@ -4,8 +4,8 @@
     "playground": "node playground.js"
   },
   "dependencies": {
+    "@msgpack/msgpack": "^2.7.2",
     "express": "^4.17.1",
-    "@msgpack/msgpack": "^2.7.1",
     "socket.io": "^2.3.0"
   }
 }

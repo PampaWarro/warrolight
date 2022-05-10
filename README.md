@@ -5,10 +5,10 @@ Software para simular y emitir programas audiorítmicos en tiras de luces LED. U
 
 ## Instalación
 
-1. Asegurate de tener nodejs instalado en la computadora. En macOS se puede instalar con Homebrew:
+1. Instalar dependencias. En macOS con Homebrew el comando es:
 
 ```
-brew install node
+brew install node yarn python pipenv
 ```
 
 2. Clonar el repo de warrolight: 

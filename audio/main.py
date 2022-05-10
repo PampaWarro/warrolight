@@ -71,6 +71,18 @@ def write_output_frame(frame):
 
 def audio_loop(device=None, sample_rate=48000, frame_size=512):
     processor = RawAudioProcessor(sample_rate)
+    try:
+        if device is None:
+            device_info = sd.query_devices(kind='input')
+        else:
+            device_info = sd.query_devices(device)
+    except sd.PortAudioError:
+        fake_data = np.zeros((frame_size, 1))
+        frame = processor.process_raw_audio(fake_data)
+        logger.error('Error querying devices, producing fake frame (silence).')
+        write_output_frame(frame)
+        raise
+    logger.info('Using device "%s".', device_info['name'])
     with sd.InputStream(device=device,
                         samplerate=sample_rate,
                         blocksize=frame_size,
@@ -101,18 +113,25 @@ def main():
                         type=float,
                         help='Time in seconds between retries on audio errors',
                         default=1.)
+    parser.add_argument('-s',
+                        '--sample_rate',
+                        type=float,
+                        help='Audio sampling frequency',
+                        default=48000.)
+    parser.add_argument('-f',
+                        '--frame_size',
+                        type=int,
+                        help='Audio frame size',
+                        default=512)
     args = parser.parse_args()
     if args.list_devices:
         print(sd.query_devices())
         return
-    if args.device is None:
-        device = sd.query_devices(kind='input')
-    else:
-        device = sd.query_devices(args.device)
     while True:
-        logger.info('Using device "%s".', device['name'])
         try:
-            audio_loop(args.device)
+            audio_loop(device=args.device,
+                       sample_rate=args.sample_rate,
+                       frame_size=args.frame_size)
         except sd.PortAudioError:
             logger.exception('Audio error, retrying...')
             time.sleep(args.retry_interval)

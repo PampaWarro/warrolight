@@ -7,11 +7,11 @@ verify_ssl = true
 snakeviz = "*"
 
 [packages]
-sounddevice = "*"
-numpy = "*"
-msgpack = "*"
-scipy = "*"
-stringcase = "*"
+msgpack = "1.0.3"
+numpy = "1.22.3"
+scipy = "1.8.0"
+sounddevice = "0.4.4"
+stringcase = "1.2.0"
 
 [requires]
 python_version = "3"

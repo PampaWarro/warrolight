@@ -69,7 +69,11 @@ def write_output_frame(frame):
     sys.stdout.buffer.flush()
 
 
-def audio_loop(device=None, sample_rate=48000, frame_size=512):
+class AudioTimeout(Exception):
+    pass
+
+
+def audio_loop(device=None, sample_rate=48000, frame_size=512, timeout=1):
     processor = RawAudioProcessor(sample_rate)
     try:
         if device is None:
@@ -88,7 +92,17 @@ def audio_loop(device=None, sample_rate=48000, frame_size=512):
                         blocksize=frame_size,
                         channels=1,
                         latency='low') as input_stream:
+        last_available = time.time()
         while True:
+            current_time = time.time()
+            if not input_stream.read_available:
+                elapsed_time = current_time - last_available
+                if elapsed_time > timeout:
+                    raise AudioTimeout(
+                        'No audio available for {:.3f} seconds.'.format(
+                            elapsed_time))
+                continue
+            last_available = current_time
             data, overflowed = input_stream.read(frame_size)
             if overflowed:
                 logger.error('Audio buffer overflowed.')
@@ -131,10 +145,13 @@ def main():
         try:
             audio_loop(device=args.device,
                        sample_rate=args.sample_rate,
-                       frame_size=args.frame_size)
-        except sd.PortAudioError:
+                       frame_size=args.frame_size,
+                       timeout=args.retry_interval)
+        except (sd.PortAudioError, AudioTimeout):
             logger.exception('Audio error, retrying...')
+            sd._terminate()
             time.sleep(args.retry_interval)
+            sd._initialize()
 
 
 if __name__ == '__main__':

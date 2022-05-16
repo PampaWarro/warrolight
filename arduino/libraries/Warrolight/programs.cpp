@@ -19,7 +19,7 @@ void Stars::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
     setup();
   }
 
-  for (int i = 0; i < numLeds; i++)
+  for (unsigned int i = 0; i < numLeds; i++)
   {
     if (random(0, m_chance) == 0)
     {
@@ -58,7 +58,7 @@ void Rainbow::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
     setup();
   }
 
-  for (int i = 0; i < numLeds; i++)
+  for (unsigned int i = 0; i < numLeds; i++)
   {
     int h = (i * 2 + time * 3 * m_speed) % 255;
     int s = 255;
@@ -85,7 +85,7 @@ void Explosion::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
     setup();
   }
 
-  for (int i = 0; i < numLeds; i++)
+  for (unsigned int i = 0; i < numLeds; i++)
   {
     int d = abs(i % 25 - m_center);
     if (d < (m_intensity - m_life))
@@ -120,7 +120,7 @@ void Pulse::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
   int pulse =
       (int)200 * (sin(time / 30.0 * m_speed * 2) + 1) / 2 + 50;
 
-  for (int i = 0; i < numLeds; i++)
+  for (unsigned int i = 0; i < numLeds; i++)
   {
     leds[i].setHSV(m_tone % 255, 200, pulse);
   }

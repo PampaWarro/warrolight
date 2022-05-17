@@ -1,0 +1,23 @@
+{
+  "geometry": "matehd",
+  "shapeMapping": "matehd",
+  "lights": 2700,
+  "outputDevices": {
+    "mate": {
+      "type": "udp",
+      "params": {
+        "numberOfLights": 2400,
+        "name": "undefined-mate",
+        "udpPort": 8886
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 2700,
+      "baseIndex": 0,
+      "deviceName": "mate"
+    }
+  ]
+}

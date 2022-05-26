@@ -51,7 +51,8 @@ const programNames = [
   "stars",
   "stripe-patterns",
   "warroBass",
-  "water-flood"
+  "water-flood",
+  "waveform",
 ];
 
 module.exports = class LightController extends EventEmitter {

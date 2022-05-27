@@ -8,7 +8,6 @@ module.exports = class SoundListener {
   }
 
   start(callback) {
-    let micConfig = this.micConfig;
     let lastVolumes = [];
     let lastRawVolumes = [];
 
@@ -20,12 +19,14 @@ module.exports = class SoundListener {
     let avg = 1;
 
     this.audioFrameHandler = frame => {
+      let micConfig = this.micConfig;
+      let micPrefix = micConfig.input || '';
       const summary = {
         ..._.fromPairs(_.map(
           [ 'bass', 'mid', 'high' ],
-          (bandName) => [bandName, frame[bandName + micConfig.metric]],
+          (bandName) => [bandName, frame[micPrefix+bandName + _.upperFirst(micConfig.metric)]],
         )),
-        all : frame.fastPeakDecay,
+        all : frame[micPrefix+micConfig.metric],
       };
 
       lastRawVolumes.push(summary);

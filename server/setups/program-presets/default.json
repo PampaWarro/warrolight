@@ -1,1 +1,1393 @@
-{}
+{
+    "mix": {
+        "TwoSoundWaves": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveCenterX": 0,
+                        "waveCenterY": 17,
+                        "soundMetric": "midRms"
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveCenterY": -17,
+                        "soundMetric": "bassRms"
+                    }
+                }
+            ]
+        },
+        "TwoSuns": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "shape": "allOfIt",
+                    "config": {
+                        "relative": true,
+                        "fromTop": true,
+                        "radialDistance": true,
+                        "soundMetric": "midFastPeakDecay",
+                        "animatePower": false,
+                        "globalBrightness": 1
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "shape": "allOfIt",
+                    "config": {
+                        "soundMetric": "bassFastPeakDecay",
+                        "relative": false,
+                        "escala": 1.091,
+                        "power": 2.3,
+                        "globalBrightness": 0.15
+                    }
+                },
+                {
+                    "programName": "stars",
+                    "config": {
+                        "move": true,
+                        "moveSpeed": 1,
+                        "starsColor": 0.5
+                    }
+                }
+            ],
+            "multiply": false
+        },
+        "DebugShapeParticle": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "numberOfParticles": 1,
+                        "decay": 0.93,
+                        "singleDirection": true,
+                        "globalSpeed": 5.71,
+                        "colorSaturationRange": 1
+                    }
+                }
+            ]
+        },
+        "TwoFlowFast": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "shape": "totemsInt",
+                    "config": {
+                        "doble": false,
+                        "soundMetric": "bassRms",
+                        "cutThreshold": 0.1,
+                        "multiplier": 1.29,
+                        "speed": 14
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "totemsExt",
+                    "config": {
+                        "soundMetric": "midRms",
+                        "haciaAfuera": true,
+                        "doble": false,
+                        "cutThreshold": 0.1,
+                        "multiplier": 1.34,
+                        "speed": 14
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "relative": true,
+                        "centerY": -1.3,
+                        "soundMetric": "bassFastPeakDecay",
+                        "fromTop": true,
+                        "power": 3.3,
+                        "radialDistance": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "relative": true,
+                        "soundMetric": "midFastPeakDecay",
+                        "centerY": 16.7,
+                        "radialDistance": false,
+                        "escala": 0.801
+                    }
+                }
+            ]
+        },
+        "fIREWORKS": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveSpeed": 2.3,
+                        "waveWidth": 0.5,
+                        "brilloWave": 1,
+                        "soundMetric": "highFastPeakDecay",
+                        "globalBrightness": 1,
+                        "waveCenterY": -40,
+                        "initialDistance": 61.9,
+                        "haciaAfuera": false
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveSpeed": 0.9,
+                        "waveWidth": 2.3,
+                        "initialDistance": 15.9,
+                        "haciaAfuera": true,
+                        "brilloWave": 1,
+                        "soundMetric": "bassFastPeakDecay",
+                        "waveCenterY": -40,
+                        "globalBrightness": 1
+                    }
+                }
+            ]
+        },
+        "ManWave": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "shape": "WarroOnly",
+                    "config": {
+                        "waveSpeed": 2.9,
+                        "waveWidth": 3.5,
+                        "brilloWave": 1,
+                        "waveDecay": 0.5,
+                        "soundMetric": "highFastPeakDecay"
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "waveSpeed": 3.4,
+                        "waveWidth": 3.6,
+                        "initialDistance": 67.6,
+                        "haciaAfuera": false,
+                        "brilloWave": 1,
+                        "soundMetric": "bassRms",
+                        "colorMap": "",
+                        "waveDecay": 0.8
+                    }
+                }
+            ]
+        },
+        "StarFlash": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "starsColor": 1,
+                        "move": true,
+                        "decay": 0.965
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 2,
+                        "cutThreshold": 0.2,
+                        "globalBrightness": 1
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "StarRadial2P": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 1,
+                                    "move": true,
+                                    "decay": 0.965,
+                                    "moveSpeed": 1
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "bassFastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radial"
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "highFastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "TwoFlowSlow": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "shape": "totemsExt",
+                    "config": {
+                        "doble": true,
+                        "soundMetric": "midRms",
+                        "cutThreshold": 0.4,
+                        "multiplier": 1,
+                        "speed": 2,
+                        "haciaAfuera": true
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "totemsInt",
+                    "config": {
+                        "soundMetric": "highRms",
+                        "haciaAfuera": false,
+                        "doble": true,
+                        "cutThreshold": 0.21,
+                        "multiplier": 1,
+                        "speed": 2
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "V2",
+                    "config": {
+                        "cutThreshold": 0,
+                        "haciaAfuera": true,
+                        "doble": true,
+                        "speed": 4,
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 1
+                    }
+                },
+                {
+                    "programName": "musicFlow",
+                    "shape": "V1",
+                    "config": {
+                        "soundMetric": "bassRms",
+                        "doble": true,
+                        "speed": 4,
+                        "multiplier": 1,
+                        "haciaAfuera": true
+                    }
+                }
+            ]
+        },
+        "WaveRays": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "shape": "V1",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "bassFastPeakDecay",
+                                    "multiplier": 2,
+                                    "globalBrightness": 1
+                                }
+                            },
+                            {
+                                "programName": "radial",
+                                "config": {
+                                    "velocidad": 6.3
+                                }
+                            }
+                        ],
+                        "multiply": true,
+                        "globalBrightness": 0
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "relampejo",
+                                "config": {
+                                    "blackAndWhite": true,
+                                    "ignoreSound": false,
+                                    "flashes": 6,
+                                    "lightingSize": 0.121,
+                                    "refillChance": 0.666
+                                }
+                            },
+                            {
+                                "programName": "radial"
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0.88,
+                                    "multiplier": 1.3
+                                }
+                            },
+                            {
+                                "programName": "lineal",
+                                "config": {
+                                    "horizontal": false,
+                                    "saturation": 0,
+                                    "escala": 17.7,
+                                    "power": 26.5,
+                                    "velocidad": -24.8
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "AliveDotsResplandor": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "mix",
+                                "config": {
+                                    "programs": [
+                                        {
+                                            "programName": "aliveDots",
+                                            "shape": "WarroOnly",
+                                            "config": {
+                                                "numberOfParticles": 25,
+                                                "soundMetric": "highRms"
+                                            }
+                                        },
+                                        {
+                                            "programName": "aliveDots",
+                                            "shape": "wings",
+                                            "config": {
+                                                "numberOfParticles": 38,
+                                                "speedWeight": 0.2,
+                                                "toneColor": 0.74,
+                                                "soundMetric": "highRms"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "lineal",
+                                "config": {
+                                    "escala": 6,
+                                    "saturation": 0.28,
+                                    "horizontal": true
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "bassFastPeakDecay",
+                                    "multiplier": 1
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "Fueguitos": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "brillo": 1,
+                        "decay": 0.53,
+                        "globalSpeed": 2.985,
+                        "colorSaturationRange": 0.07,
+                        "numberOfParticles": 90,
+                        "colorHueAmplitude": 0.12,
+                        "colorHueOffset": 0.98,
+                        "singleDirection": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "shape": "man",
+                                "config": {
+                                    "saturation": 0,
+                                    "fromTop": true,
+                                    "centerY": 6.5,
+                                    "radialDistance": true,
+                                    "soundMetric": "bassRms",
+                                    "escala": 3.451,
+                                    "power": 3,
+                                    "relative": true,
+                                    "colorMap": "pm3d05_r"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "shape": "fullArc",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 2.641,
+                                    "soundMetric": "highRms",
+                                    "relative": true,
+                                    "colorMap": "saga-03"
+                                }
+                            }
+                        ],
+                        "multiply": false
+                    }
+                }
+            ],
+            "multiply": false
+        },
+        "StarsBlue": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 1,
+                                    "move": true,
+                                    "decay": 0.965,
+                                    "brillo": 1,
+                                    "probability": 0.0005
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "mic2_fastPeakDecay",
+                                    "multiplier": 2
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 0.41
+                                },
+                                "shape": "man"
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 3.801
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "shape": "head",
+                                "config": {
+                                    "soundMetric": "mic2_fastPeakDecay",
+                                    "relative": true,
+                                    "fromTop": false,
+                                    "centerY": -0.9,
+                                    "escala": 2.171
+                                }
+                            },
+                            {
+                                "programName": "sound-waves",
+                                "shape": "man",
+                                "config": {
+                                    "colorMap": "tas05"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "WaveFlow": {
+            "programs": [
+                {
+                    "programName": "musicFlow",
+                    "config": {
+                        "soundMetric": "rms",
+                        "multiplier": 1.1,
+                        "cutThreshold": 0,
+                        "speed": 3,
+                        "globalBrightness": 1,
+                        "doble": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "sound-waves",
+                                "config": {
+                                    "colorMap": "pm3d05_r",
+                                    "brilloWave": 2.03,
+                                    "waveWidth": 2.8,
+                                    "waveSpeed": 2.4,
+                                    "soundMetric": "rms",
+                                    "globalBrightness": 1
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 2.321,
+                                    "power": 2.3,
+                                    "colorMap": "pm3d05_r",
+                                    "globalBrightness": 0.63,
+                                    "radialDistance": false,
+                                    "relative": true,
+                                    "fromTop": false
+                                }
+                            }
+                        ],
+                        "globalBrightness": 0.99,
+                        "FXSlowFadeAlpha": 0,
+                        "multiply": false
+                    }
+                }
+            ],
+            "multiply": true,
+            "globalBrightness": 1,
+            "FXSlowFadeAlpha": 0
+        },
+        "Thunder": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "presetName": "whiteUp",
+                    "config": {
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 1.9,
+                        "waveSpeed": 3.3,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.83,
+                        "soundMetric": "bassRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.37,
+                        "initialDistance": 15.4
+                    },
+                    "shape": "Warro"
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0.18,
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 1.33
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "StarStream": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "decay": 0.93,
+                        "probability": 0.0008,
+                        "move": true,
+                        "brillo": 1,
+                        "starsColor": 0.82
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0,
+                        "multiplier": 1.39,
+                        "soundMetric": "fastPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "MultiStarStream": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "decay": 0.93,
+                                    "probability": 0.0008,
+                                    "move": true,
+                                    "brillo": 1,
+                                    "starsColor": 0.82
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0,
+                                    "multiplier": 1.69,
+                                    "soundMetric": "bassFastPeakDecay"
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "decay": 0.965,
+                                    "probability": 0.008,
+                                    "move": true,
+                                    "brillo": 0.2,
+                                    "starsColor": 0
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0,
+                                    "multiplier": 0.85,
+                                    "soundMetric": "highFastPeakDecay"
+                                }
+                            }
+                        ],
+                        "multiply": true
+                    }
+                }
+            ]
+        },
+        "Explosiooons": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "soundMetric": "midRms"
+                    }
+                },
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.45,
+                        "cutThreshold": 0.68,
+                        "soundMetric": "bassRms",
+                        "energy": 1.5,
+                        "colorMap": "a_pink",
+                        "multiplier": 1.11,
+                        "power": 5,
+                        "depowering": 0.12
+                    }
+                }
+            ]
+        },
+        "NoiseRelampejo": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "blackAndWhite": true
+                    }
+                },
+                {
+                    "programName": "noise"
+                }
+            ],
+            "multiply": true
+        },
+        "maskedSunsGradient": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "fromTop": true,
+                                    "centerY": -15.6,
+                                    "radialDistance": true
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "saturation": 0,
+                                    "escala": 1.291
+                                }
+                            }
+                        ],
+                        "multiply": false
+                    }
+                },
+                {
+                    "programName": "radial3d"
+                }
+            ],
+            "multiply": true
+        },
+        "TriExplosions": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.45,
+                        "cutThreshold": 0.85,
+                        "soundMetric": "bassFastPeakDecay",
+                        "energy": 1.2,
+                        "colorMap": "",
+                        "multiplier": 1.11,
+                        "power": 1.4,
+                        "depowering": 0.15,
+                        "allowMultiple": true
+                    }
+                },
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.21,
+                        "cutThreshold": 0.69,
+                        "soundMetric": "midRms",
+                        "energy": 0.8,
+                        "colorMap": "",
+                        "multiplier": 1.42,
+                        "power": 0.2,
+                        "depowering": 0.19,
+                        "allowMultiple": false
+                    }
+                },
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.37,
+                        "cutThreshold": 0.69,
+                        "soundMetric": "highRms",
+                        "energy": 0.8,
+                        "colorMap": "",
+                        "multiplier": 1.42,
+                        "power": 0.2,
+                        "depowering": 0.2,
+                        "allowMultiple": false
+                    }
+                }
+            ]
+        },
+        "ReBandPejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "decay": false,
+                        "ignoreSound": false,
+                        "soundMetric": "bassFastPeakDecay",
+                        "globalBrightness": 0.09,
+                        "lightingDuration": 100,
+                        "lightingSize": 0.202,
+                        "flashes": 3
+                    }
+                },
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "decay": false,
+                        "ignoreSound": false,
+                        "soundMetric": "highFastPeakDecay",
+                        "lightingSize": 0.01,
+                        "blackAndWhite": true,
+                        "lightingDuration": 100,
+                        "cutThreshold": 0.37,
+                        "refillChance": 0.367,
+                        "flashes": 10,
+                        "globalBrightness": 1
+                    }
+                }
+            ]
+        },
+        "TotemsRave": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "decay": false,
+                        "ignoreSound": false,
+                        "soundMetric": "bassFastPeakDecay",
+                        "globalBrightness": 0.09,
+                        "lightingDuration": 100,
+                        "lightingSize": 0.202,
+                        "flashes": 3
+                    },
+                    "shape": "totems"
+                },
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "decay": false,
+                        "ignoreSound": false,
+                        "soundMetric": "highFastPeakDecay",
+                        "lightingSize": 0.01,
+                        "blackAndWhite": true,
+                        "lightingDuration": 100,
+                        "cutThreshold": 0.37,
+                        "refillChance": 0.367,
+                        "flashes": 10,
+                        "globalBrightness": 1
+                    },
+                    "shape": "WarroOnly"
+                }
+            ]
+        },
+        "WaveStars": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "depowering": 0,
+                        "blastSpeed": 0.98,
+                        "power": 0.3,
+                        "cutThreshold": 0.46,
+                        "colorMap": "a_deepblue",
+                        "globalBrightness": 0.32,
+                        "allowMultiple": true
+                    }
+                },
+                {
+                    "programName": "musicVolumeDotRandom",
+                    "config": {
+                        "soundMetric": "midPeakDecay",
+                        "cutThreshold": 0.15,
+                        "numberOfOnLeds": 60
+                    }
+                }
+            ]
+        },
+        "FireWaves": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "brillo": 0.57,
+                        "decay": 0.96,
+                        "globalSpeed": 1.795,
+                        "colorSaturationRange": 0.23,
+                        "numberOfParticles": 29,
+                        "colorHueAmplitude": 0.1,
+                        "colorHueOffset": 1,
+                        "useSoundSpeed": false,
+                        "soundMetric": "bassPeakDecay",
+                        "singleDirection": true
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 5.4,
+                        "brilloWave": 2.04,
+                        "waveSpeed": 1.9,
+                        "soundMetric": "bassFastPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "BlueWaves": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "brillo": 0.32,
+                        "decay": 0.945,
+                        "globalSpeed": 1.865,
+                        "colorSaturationRange": 0.29,
+                        "numberOfParticles": 50,
+                        "colorHueAmplitude": 0.1,
+                        "colorHueOffset": 0.6,
+                        "useSoundSpeed": true,
+                        "soundMetric": "bassPeakDecay",
+                        "singleDirection": true
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 2.8,
+                        "brilloWave": 1.56,
+                        "waveSpeed": 0.9,
+                        "soundMetric": "bassFastPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "FireWavesLow": {
+            "programs": [
+                {
+                    "programName": "rays",
+                    "config": {
+                        "brillo": 0.57,
+                        "decay": 0.96,
+                        "globalSpeed": 1.795,
+                        "colorSaturationRange": 0.23,
+                        "numberOfParticles": 29,
+                        "colorHueAmplitude": 0.1,
+                        "colorHueOffset": 1,
+                        "useSoundSpeed": false,
+                        "soundMetric": "bassPeakDecay",
+                        "singleDirection": true,
+                        "globalBrightness": 1
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 5.5,
+                        "brilloWave": 1.9,
+                        "waveSpeed": 1.8,
+                        "soundMetric": "fastPeakDecay",
+                        "waveCenterY": -40,
+                        "initialDistance": 25.9,
+                        "waveDecay": 0.91,
+                        "wavePower": 1
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "FireDotsExplosion": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.45,
+                        "cutThreshold": 0.2,
+                        "soundMetric": "rms",
+                        "energy": 1.9,
+                        "colorMap": "",
+                        "multiplier": 1.42,
+                        "power": 0.3,
+                        "depowering": 0.05,
+                        "blackAndWhite": false,
+                        "allowMultiple": true
+                    }
+                },
+                {
+                    "programName": "musicVolumeDot",
+                    "config": {
+                        "numberOfOnLeds": 160,
+                        "multiplier": 1.68,
+                        "cutThreshold": 0.15,
+                        "soundMetric": "bassPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "TripleSoundwave": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_pink",
+                        "waveWidth": 3.6,
+                        "waveSpeed": 0.6,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.86,
+                        "soundMetric": "bassRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.31,
+                        "initialDistance": 8
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_deepblue",
+                        "waveWidth": 1.9,
+                        "waveSpeed": 1.3,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.75,
+                        "soundMetric": "midRms",
+                        "wavePower": 1,
+                        "brilloWave": 0.69,
+                        "initialDistance": 29.2,
+                        "globalBrightness": 0.28
+                    }
+                },
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "colorMap": "a_fire",
+                        "waveWidth": 1.1,
+                        "waveSpeed": 1.9,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.92,
+                        "soundMetric": "highRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.13,
+                        "initialDistance": 33.3,
+                        "globalBrightness": 0.47
+                    }
+                }
+            ]
+        },
+        "FireDotsRelampejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 7,
+                        "ignoreSound": false,
+                        "refillChance": 0.617,
+                        "cutThreshold": 0.41,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076
+                    }
+                },
+                {
+                    "programName": "musicVolumeDot",
+                    "config": {
+                        "numberOfOnLeds": 160,
+                        "multiplier": 1.68,
+                        "cutThreshold": 0.15,
+                        "soundMetric": "bassPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0.145
+        },
+        "8BastonesRelampejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 24,
+                        "ignoreSound": false,
+                        "refillChance": 0.799,
+                        "cutThreshold": 0.09,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076,
+                        "lightingDuration": 100
+                    }
+                },
+                {
+                    "programName": "musicFrequencyDot",
+                    "config": {
+                        "blackAndWhite": true,
+                        "numberOfOnLeds": 8,
+                        "cutThreshold": 0,
+                        "soundMetric": "fastPeakDecay",
+                        "power": 1.5
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0
+        },
+        "MovingBastonpejos": {
+            "programs": [
+                {
+                    "programName": "relampejo",
+                    "config": {
+                        "flashes": 9,
+                        "ignoreSound": false,
+                        "refillChance": 0.799,
+                        "cutThreshold": 0.09,
+                        "decay": false,
+                        "blinkSpeed": 0,
+                        "lightingSize": 0.076,
+                        "lightingDuration": 100
+                    }
+                },
+                {
+                    "programName": "musicFrequencyDot",
+                    "config": {
+                        "blackAndWhite": true,
+                        "numberOfOnLeds": 24,
+                        "cutThreshold": 0,
+                        "soundMetric": "fastPeakDecay",
+                        "power": 1.5,
+                        "move": true
+                    }
+                }
+            ],
+            "multiply": true,
+            "FXSlowFadeAlpha": 0
+        }
+    },
+    "sound-waves": {
+        "centroDots": {
+            "waveSpeed": 2,
+            "waveWidth": 0.5,
+            "brilloWave": 1.75
+        },
+        "centroLentoDark": {
+            "waveSpeed": 0.1,
+            "brilloWave": 0.12,
+            "soundMetric": "bassFastPeakDecay"
+        },
+        "whiteUp": {
+            "colorMap": "pm3d05_r",
+            "waveWidth": 1.9,
+            "waveSpeed": 3.3,
+            "waveCenterY": -40,
+            "waveDecay": 0.83,
+            "soundMetric": "bassRms",
+            "wavePower": 1,
+            "brilloWave": 1.37,
+            "initialDistance": 15.4
+        }
+    },
+    "radial": {
+        "RadialCenter": {
+            "centerY": 18,
+            "velocidad": 4.7,
+            "escala": 20.1,
+            "power": 7.1
+        }
+    },
+    "stars": {
+        "pocasFast": {
+            "decay": 0.88,
+            "probability": 0.0025
+        },
+        "muchasFast": {
+            "decay": 0.88,
+            "probability": 0.0112
+        },
+        "muchasSlow": {
+            "decay": 0.95,
+            "probability": 0.005
+        },
+        "pinkStream": {
+            "decay": 0.93,
+            "probability": 0.0008,
+            "move": true,
+            "brillo": 0.22,
+            "starsColor": 0.82,
+            "moveSpeed": 1
+        },
+        "pocasMovingFast": {
+            "decay": 0.97,
+            "probability": 0.002,
+            "move": true,
+            "brillo": 1,
+            "moveSpeed": 1
+        },
+        "blueStream": {
+            "decay": 0.86,
+            "probability": 0.001,
+            "move": true,
+            "brillo": 1,
+            "moveSpeed": 1,
+            "starsColor": 0.54
+        }
+    },
+    "rainbow": {
+        "Debug RF": {
+            "brillo": 0,
+            "globalBrightness": 0.04,
+            "speed": 5
+        }
+    },
+    "musicExplosions": {
+        "PinkPunches": {
+            "blastSpeed": 0.45,
+            "cutThreshold": 0.68,
+            "soundMetric": "bassRms",
+            "energy": 0.8,
+            "colorMap": "a_pink",
+            "multiplier": 1.42,
+            "power": 0.2,
+            "depowering": 0.12
+        },
+        "EstroboFlashes": {
+            "blackAndWhite": true,
+            "power": 0.5,
+            "energy": 5.4,
+            "soundMetric": "bassRms",
+            "depowering": 0.29,
+            "blastSpeed": 0.73,
+            "cutThreshold": 0.5
+        },
+        "FlashBeat": {
+            "colorMap": "",
+            "blackAndWhite": true,
+            "depowering": 0.2
+        },
+        "OneSpotlight": {
+            "colorMap": "",
+            "blackAndWhite": false,
+            "depowering": 0.51,
+            "soundMetric": "bassFastPeakDecay",
+            "cutThreshold": 0.24,
+            "blastSpeed": 2,
+            "energy": 3.1
+        },
+        "EstroboIntenso": {
+            "blackAndWhite": true,
+            "power": 3.2,
+            "energy": 2.2,
+            "soundMetric": "bassRms",
+            "depowering": 0.49,
+            "blastSpeed": 0.36,
+            "cutThreshold": 0.44,
+            "multiplier": 1.27,
+            "allowMultiple": false
+        },
+        "RandomColorPunches": {
+            "blastSpeed": 0.45,
+            "cutThreshold": 0.62,
+            "soundMetric": "bassRms",
+            "energy": 0.8,
+            "colorMap": "",
+            "multiplier": 1.08,
+            "power": 0.2,
+            "depowering": 0.12,
+            "allowMultiple": true,
+            "blackAndWhite": false
+        },
+        "BluePunches": {
+            "blastSpeed": 0.45,
+            "cutThreshold": 0.68,
+            "soundMetric": "bassRms",
+            "energy": 0.8,
+            "colorMap": "a_deepblue",
+            "multiplier": 1.42,
+            "power": 0.2,
+            "depowering": 0.12,
+            "allowMultiple": true
+        },
+        "FirePunches": {
+            "blastSpeed": 0.75,
+            "cutThreshold": 0.4,
+            "soundMetric": "bassRms",
+            "energy": 0.5,
+            "colorMap": "a_fire",
+            "multiplier": 0.98,
+            "power": 0.6,
+            "depowering": 0.04,
+            "allowMultiple": true
+        },
+        "FireFlies": {
+            "blastSpeed": 0.75,
+            "cutThreshold": 0.22,
+            "soundMetric": "bassRms",
+            "energy": 1.8,
+            "colorMap": "a_fire",
+            "multiplier": 0.98,
+            "power": 0.6,
+            "depowering": 0.4,
+            "allowMultiple": true
+        },
+        "Olas": {
+            "depowering": 0,
+            "blastSpeed": 0.98,
+            "power": 0.6,
+            "cutThreshold": 0.21,
+            "colorMap": "a_deepblue"
+        }
+    },
+    "relampejo": {
+        "MusicBW": {
+            "blackAndWhite": true,
+            "ignoreSound": false
+        },
+        "BWEpilepsia": {
+            "flashes": 10,
+            "lightingSize": 0.034,
+            "lightingDuration": 45,
+            "ignoreSound": false,
+            "cutThreshold": 0.34,
+            "blackAndWhite": true,
+            "decay": false
+        },
+        "Candy": {
+            "flashes": 10,
+            "lightingSize": 0.034,
+            "lightingDuration": 45,
+            "ignoreSound": false,
+            "cutThreshold": 0.34,
+            "blackAndWhite": false,
+            "decay": false,
+            "soundMetric": "bassFastPeakDecay",
+            "brillo": 0.35
+        },
+        "CandyLong": {
+            "flashes": 6,
+            "lightingSize": 0.156,
+            "lightingDuration": 100,
+            "ignoreSound": false,
+            "cutThreshold": 0.45,
+            "blackAndWhite": false,
+            "decay": false,
+            "soundMetric": "bassFastPeakDecay",
+            "brillo": 0.29,
+            "blinkSpeed": 4,
+            "refillChance": 0.459
+        }
+    }
+}

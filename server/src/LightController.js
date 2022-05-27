@@ -4,6 +4,7 @@ const fs = require("fs");
 const moment = require("moment");
 
 const ProgramScheduler = require("./ProgramScheduler");
+const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
 
@@ -15,7 +16,12 @@ const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
-  "PROGRAM_Main_fuego2019",
+  "mix",
+  "congaShooting2",
+  "congaScore",
+  "congaShooting",
+  "congaRope",
+  "PROGRAM_Main_fuego2022",
   "PROGRAM_Triangulo",
   "PROGRAM_Transition",
   "aliveDots",
@@ -32,10 +38,10 @@ const programNames = [
   "frequencyActivation",
   "gradientSphere",
   "lineal",
-  "mix",
   "musicFlow",
   "musicFlash",
   "musicFrequencyDot",
+  "musicExplosions",
   "musicVolumeBars",
   "musicVolumeDot",
   "musicVolumeDotRandom",
@@ -46,6 +52,7 @@ const programNames = [
   "radialWarp",
   "rainbow",
   "rays",
+  "relampejo",
   "shapes",
   "sound-waves",
   "stars",
@@ -185,6 +192,18 @@ module.exports = class LightController extends EventEmitter {
     savedPresets[programName] = savedPresets[programName] || {}
     savedPresets[programName][presetName] = config;
 
+    this.savePresetsToDisk();
+  }
+
+  deletePreset(programName, presetName) {
+    savedPresets[programName] = savedPresets[programName] || {}
+    delete savedPresets[programName][presetName];
+    this.savePresetsToDisk();
+
+    this.currentConfig.currentPreset = null;
+  }
+
+  savePresetsToDisk() {
     fs.writeFile(savedPresetsFilePath, JSON.stringify(savedPresets, true, 4), (err) => {
       if(err) {
         console.error(err);
@@ -235,7 +254,7 @@ module.exports = class LightController extends EventEmitter {
   }
 
   loadProgram(name) {
-    const FunctionClass = require("./light-programs/programs/" + name);
+    const FunctionClass = makeFXProgram(require("./light-programs/programs/" + name));
     return {
       name: name,
       configSchema: FunctionClass.configSchema(),
@@ -262,7 +281,7 @@ module.exports = class LightController extends EventEmitter {
       );
       this.lastDroppedFrame = Date.now();
     } else if (lastUpdateLatency > 25) {
-      // console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
+      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
     }
   }
 };

@@ -69,15 +69,14 @@ class TimedMultiGradient extends Gradient {
   _currentGradientSetTime: number = null;
   _nextGradient: Gradient = null;
 
-  constructor(gradients: Gradient[], gradientTime: number,
-              transitionTime: number) {
+  constructor(gradients: Gradient[], gradientTime: number = 20, transitionTime: number = 5) {
     super();
     if (gradients.length < 2) {
       throw "Need at least 2 gradients";
     }
     this.gradients = gradients;
-    this.gradientTime = gradientTime || 20;
-    this.transitionTime = transitionTime || 5;
+    this.gradientTime = gradientTime;
+    this.transitionTime = transitionTime;
   }
 
   reverse(): Gradient {

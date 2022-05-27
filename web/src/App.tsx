@@ -27,6 +27,7 @@ interface State {
   globalConfig: { [param: string]: any };
   micConfig: MicConfig;
   remoteChange: boolean;
+  receivingLights: boolean;
   devices: Device[];
   connection: string;
 }
@@ -50,9 +51,11 @@ export class App extends React.Component<Props, State> {
       globalConfig: {},
       micConfig: {
         sendingMicData: false,
-        metric: ""
+        metric: "",
+        input: ""
       },
       remoteChange: false,
+      receivingLights: !isMobile,
       devices: [],
       connection: "connecting"
     };
@@ -91,7 +94,7 @@ export class App extends React.Component<Props, State> {
     api.on("connect", () => {
       this.setState({ connection: "connected" });
 
-      if(!isMobile) {
+      if(this.state.receivingLights) {
         setTimeout(() => api.startSamplingLights(), 500);
       }
     });
@@ -191,15 +194,21 @@ export class App extends React.Component<Props, State> {
   };
 
   handleStartLights = () => {
+    this.setState({receivingLights: true});
     this.api.startSamplingLights();
   };
 
   handleStopLights = () => {
+    this.setState({receivingLights: false});
     this.api.stopSamplingLights();
   };
 
   handleSaveNewPreset = (programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }) => {
     this.api.savePreset(programName, presetName, presetConfig);
+  }
+
+  handleDeletePreset = (programName: string, presetName: string) => {
+    this.api.deletePreset(programName, presetName);
   }
 
   render() {
@@ -217,7 +226,9 @@ export class App extends React.Component<Props, State> {
             <nav className="programsbar overflow-auto py-2">
               <ProgramList
                 programs={this.state.programs}
+                config={this.state.currentConfig}
                 selected={this.state.selected}
+                onSelectPreset={this.selectPreset}
                 onProgramChange={this.handleProgramChange}
               />
             </nav>
@@ -230,8 +241,10 @@ export class App extends React.Component<Props, State> {
                 programs={this.state.programs}
                 onSelectPreset={this.selectPreset}
                 onSaveNewPreset={this.handleSaveNewPreset}
+                onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
+                onProgramChange={this.handleProgramChange}
               />
             </div>
             <div className="preview p-2">
@@ -239,7 +252,7 @@ export class App extends React.Component<Props, State> {
                 ref={this.lightsSim}
                 height={600}
                 width={800}
-                receivingData={!isMobile}
+                receivingData={this.state.receivingLights}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}
                 real3d={true}

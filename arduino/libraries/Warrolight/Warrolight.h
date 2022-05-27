@@ -76,6 +76,25 @@ private:
   int m_speed;
 };
 
+class Sines
+{
+public:
+  void setup();
+  void draw(CRGB *leds, unsigned int numLeds, unsigned long time);
+
+private:
+  bool m_init = false;
+
+  int m_saturation;
+  int m_speed;
+  int m_scale;
+  int m_color_range;
+  int m_color_tone;
+  int m_contrast;
+  int m_relative_time;
+};
+
+
 class MultiProgram
 {
 public:
@@ -87,12 +106,13 @@ private:
   bool m_init = false;
   int m_program = 0;
 
-#define MULTIPROGRAM_INTERVAL 2000
-#define MULTIPROGRAM_NUM_PROGRAMS 4
+#define MULTIPROGRAM_INTERVAL 700
+#define MULTIPROGRAM_NUM_PROGRAMS 5
   Stars m_stars;
   Rainbow m_rainbow;
   Explosion m_explosion;
   Pulse m_pulse;
+  Sines m_sines;
 };
 
 // Warrolight serial communication protocol

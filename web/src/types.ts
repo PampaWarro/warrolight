@@ -19,6 +19,7 @@ export type CurrentProgramParameters = {
 }
 
 export interface Device {
+  metadata: any;
   deviceId: string;
   status: string;
   lastFps: number;
@@ -27,6 +28,7 @@ export interface Device {
 export interface MicConfig {
   sendingMicData: boolean;
   metric: string;
+  input: string;
 }
 
 export interface MicSample {

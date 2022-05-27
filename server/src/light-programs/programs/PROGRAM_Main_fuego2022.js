@@ -33,7 +33,8 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
-const baseTime = 1 * 1000;
+// TODO: AJUSTAR ANTES  DE COMITEAR!!!
+const baseTime = 1 * 1000 * 1;
 
 function getAllPresets(funcClass, time, shape = "Warro") {
   return _.map(funcClass.presets(), (preset, name) => {
@@ -74,7 +75,7 @@ let radialSunByBand = programsByShape({
     {
       soundMetric: "midFastPeakDecay",
       saturation: 0.95,
-      escala: 50,
+      escala: 20,
       power: 3,
       centerY: -2
     }
@@ -191,8 +192,6 @@ let starsSunrise = mixPrograms(
 
 const schedule = [
   ...getAllPresets(Mix, 60),
-
-  { duration: 60 * baseTime, program: FrequencyActivation },
 
   ...getFilePresets('javier.json', 60),
 
@@ -538,7 +537,7 @@ const schedule = [
       Warro: [
         animateParamProgram(VolumeDot, "numberOfOnLeds", 5, n => (n + 1) % 100),
         {
-          multiplier: 3,
+          multiplier: 1.5,
           numberOfOnLeds: 1
         }
       ]
@@ -586,19 +585,6 @@ const schedule = [
   {
     duration: 30 * baseTime,
     program: programsByShape({
-      Warro: [SpeedingSpear, { speed: 10, colorVariety: 1, spearLength: 3 }]
-    })
-  },
-
-  {
-    duration: 30 * baseTime,
-    program: programsByShape({
-      reloj: [ColorSpear, { spearLength: 15, speed: 8 }]
-    })
-  },
-  {
-    duration: 30 * baseTime,
-    program: programsByShape({
       Warro: [ColorSpear, { speed: 4, colorVariety: 1, spearLength: 6 }]
     })
   },
@@ -619,4 +605,4 @@ const schedule = [
 
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, true);
+module.exports = createMultiProgram(schedule, false, 1000);

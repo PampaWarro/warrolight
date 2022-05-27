@@ -22,6 +22,7 @@ exports.LightDevice = class LightDevice {
 
     this.STATUS_OFF = "off";
     this.STATUS_CONNECTING = "connecting";
+    this.STATUS_WAITING = "waiting";
     this.STATUS_RUNNING = "running";
     this.STATUS_ERROR = "error";
 
@@ -30,7 +31,7 @@ exports.LightDevice = class LightDevice {
     this.lastPrint = 0;
     this.framesCount = 0;
 
-    setInterval(() => this.logDeviceState(), 250);
+    setInterval(() => this.logDeviceState(), 1000);
   }
 
   updateStatus(status) {
@@ -50,6 +51,7 @@ exports.LightDevice = class LightDevice {
     this.framesCount = 0;
     this.lastFps = FPS;
     this.lastPrint = now();
+
     logger.info(`FPS: ${FPS}`);
   }
 

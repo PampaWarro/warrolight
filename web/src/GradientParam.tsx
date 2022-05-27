@@ -32,16 +32,15 @@ export class GradientParam extends React.Component<Props> {
 
     return (
       <div className="config-item">
-        <div className="">
-          <div className="float-left">{this.props.name}&nbsp;</div>
+        <div className="d-flex justify-content-between align-items-center">
+          <div className="small">{this.props.name}&nbsp;</div>
 
-          <div className="float-right font-weight-bold">
+          <div className="font-weight-bold">
             <div className="dropdown">
               <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span className={'small mr-1'}>{name}</span>
                 <span className={`gradient-tas mr-2 d-inline-block`} style={gradientCss(stops)}>&nbsp;</span>
-                <br/>
-                <span className={'small'}>{name}</span>
               </button>
               <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
 

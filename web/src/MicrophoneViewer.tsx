@@ -9,6 +9,7 @@ interface Props {
 
 interface State {
   perBand: boolean;
+  mic2: boolean;
 }
 
 export class MicrophoneViewer extends React.Component<Props, State> {
@@ -17,7 +18,7 @@ export class MicrophoneViewer extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { perBand: false };
+    this.state = { perBand: false, mic2: false };
     this.canvas = React.createRef();
     this.renderer = new HistogramRenderer();
   }
@@ -43,6 +44,17 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     return false;
   }
 
+  toggleInput(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    const mic2 = this.state.mic2;
+
+    this.setState({ mic2: !mic2 });
+    this.props.onSetConfig({input: !mic2 ? 'mic2_' : ''})
+    return false;
+  }
+
+
   toggleMetric(e: React.SyntheticEvent) {
     e.preventDefault();
 
@@ -50,14 +62,14 @@ export class MicrophoneViewer extends React.Component<Props, State> {
     let current = this.props.config.metric;
 
     switch (current) {
-      case "Rms":
-        onSetConfig({ metric: "FastPeakDecay" });
+      case "rms":
+        onSetConfig({ metric: "fastPeakDecay" });
         return;
-      case "FastPeakDecay":
-        onSetConfig({ metric: "PeakDecay" });
+      case "fastPeakDecay":
+        onSetConfig({ metric: "peakDecay" });
         return;
-      case "PeakDecay":
-        onSetConfig({ metric: "Rms" });
+      case "peakDecay":
+        onSetConfig({ metric: "rms" });
         return;
     }
   }
@@ -75,6 +87,10 @@ export class MicrophoneViewer extends React.Component<Props, State> {
         <br/>
         <button className="btn btn-sm btn-outline-secondary" onClick={e => this.togglePerBandMode(e)}>
           {this.state.perBand ? "Global" : "Per band"}
+        </button>
+        <br/>
+        <button className="btn btn-sm btn-outline-secondary" onClick={e => this.toggleInput(e)}>
+          {this.state.mic2 ? "Mic B" : "Mic A"}
         </button>
       </div>
     );

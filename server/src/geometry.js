@@ -1,9 +1,10 @@
 exports.Stripe = class Stripe {
-  constructor([x1, y1, z1], [x2, y2, z2], numberOfLeds) {
+  constructor([x1, y1, z1], [x2, y2, z2], numberOfLeds, pixelRatio = 1) {
     this.leds = numberOfLeds;
     this.x = [];
     this.y = [];
     this.z = [];
+    this.density = pixelRatio;
 
     for (let i = 0; i < numberOfLeds; i++) {
       this.x[i] = ((x2 - x1) * i) / this.leds + x1;
@@ -12,12 +13,20 @@ exports.Stripe = class Stripe {
     }
   }
   // Convenience for old 2d constructor.
-  static old2d(x1, y1, x2, y2, numberOfLeds) {
-    return new Stripe([x1, y1, 0], [x2, y2, 0], numberOfLeds);
+  static old2d(x1, y1, x2, y2, numberOfLeds, pixelRatio = 1) {
+    return new Stripe([x1, y1, 0], [x2, y2, 0], numberOfLeds, pixelRatio);
   }
   // Convenience for CAD software that displays xzy and y points upward.
-  static fromXZUpwardY([x1, z1, y1], [x2, z2, y2], numberOfLeds) {
-    return new Stripe([x1, -y1, -z1], [x2, -y2, -z2], numberOfLeds);
+  static fromXZUpwardY([x1, z1, y1], [x2, z2, y2], numberOfLeds, pixelRatio = 1) {
+    return new Stripe([x1, -y1, -z1], [x2, -y2, -z2], numberOfLeds, pixelRatio);
+  }
+  clone() {
+    const other = new Stripe([0, 0, 0], [0, 0, 0], 0);
+    other.x = [...this.x];
+    other.y = [...this.y];
+    other.z = [...this.z];
+    other.leds = this.leds;
+    return other;
   }
   clone() {
     const other = new Stripe([0, 0, 0], [0, 0, 0], 0);
@@ -75,6 +84,7 @@ exports.Geometry = class Geometry {
     this.x = [];
     this.y = [];
     this.z = [];
+    this.density = [];
 
     let count = 0;
     for (let i = 0; i < stripes.length; i++) {
@@ -85,6 +95,7 @@ exports.Geometry = class Geometry {
         this.x[count + j] = (stripe.x[j] - minX) * xScale + xBase;
         this.y[count + j] = (stripe.y[j] - minY) * yScale + yBase;
         this.z[count + j] = (stripe.z[j] - minZ) * zScale + zBase;
+        this.density[count + j] = stripe.density;
       }
       count += stripeLength;
     }

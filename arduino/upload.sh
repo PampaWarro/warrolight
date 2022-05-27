@@ -14,7 +14,23 @@ fqbn=arduino:avr:uno
 
 if [ "$3" == "NANO" ]; then
   echo "Uploading to Arduino NANO"
+  fqbn=arduino:avr:nano:cpu=atmega328
+fi
+
+if [ "$3" == "NANOOLD" ]; then
+  echo "Uploading to Arduino NANO atmega328old"
   fqbn=arduino:avr:nano:cpu=atmega328old
+fi
+
+if [ "$3" == "LOLIN_D32" ]; then
+  echo "Uploading to ESP32 lolin"
+  fqbn=esp32:esp32:d32_pro
+fi
+
+
+if [ "$3" == "MEGA" ]; then
+  echo "Uploading to Arduino MEGA"
+  fqbn=arduino:avr:mega
 fi
 
 if [ "$port" == "" ]; then

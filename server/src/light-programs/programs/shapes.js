@@ -114,20 +114,12 @@ module.exports = class Shapes extends LayerBasedProgram {
     layers.rainDots.alpha = config.rainDotsAlpha;
 
     drawables.bassLine.angle = (-Math.PI * this.timeInMs) / 7000;
-    drawables.rotor.angle =
-      Math.cos((Math.PI * this.timeInMs) / 5000) *
-      (((Math.PI * this.timeInMs) / 500) % Math.PI);
+    drawables.rotor.angle = Math.cos((Math.PI * this.timeInMs) / 5000) * (((Math.PI * this.timeInMs) / 500) % Math.PI);
     drawables.rainDots.offset = -this.timeInMs / 50;
-    drawables.rainDots.center[0] =
-      this.xBounds.center +
-      (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3;
-    drawables.fillCircle.radius =
-      (300 * (3000 - (this.timeInMs % 5000))) / 5000;
-    drawables.backgroundColors.angleOffset =
-      (Math.PI * this.timeInMs) / 5000;
-    drawables.backgroundMask.radiusOffset = Math.round(
-      this.timeInMs / 1000
-    );
+    drawables.rainDots.center[0] = this.xBounds.center + (Math.cos((Math.PI * this.timeInMs) / 7000) * this.xBounds.scale) / 3;
+    drawables.fillCircle.radius = (300 * (3000 - (this.timeInMs % 5000))) / 5000;
+    drawables.backgroundColors.angleOffset = (Math.PI * this.timeInMs) / 5000;
+    drawables.backgroundMask.radiusOffset = Math.round(this.timeInMs / 1000);
     drawables.backgroundMask.center = [
       this.xBounds.center +
         0.35 * this.xBounds.scale * Math.cos((Math.PI * this.timeInMs) / 7000),

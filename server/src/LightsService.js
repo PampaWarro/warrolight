@@ -13,7 +13,7 @@ let lightServicesCounter = 0;
 module.exports = class LightsService {
   constructor(controller, send, broadcast) {
     this.controller = controller;
-    this.micConfig = {sendingMicData: false, metric: "Rms"};
+    this.micConfig = {sendingMicData: false, metric: "rms", input: ''};
     this.broadcast = broadcast;
     this.send = send;
     this.simulating = false;
@@ -56,12 +56,25 @@ module.exports = class LightsService {
     }
   }
 
-  broadcastStateChange() {
-    this.broadcast("stateChange", {
-      currentProgramName: this.controller.currentProgramName,
-      currentConfig: this.controller.getCurrentConfig(),
-      micConfig: this.micConfig
-    });
+  broadcastStateChange(completeState = false) {
+    if(completeState) {
+      this.send("completeState", {
+        programs: this.controller.getProgramsSchema(),
+        currentProgramName: this.controller.currentProgramName,
+        currentConfig: this.controller.getCurrentConfig(),
+        globalConfig: {
+          gradientsLibrary: getGradientsByNameCss(),
+          shapes: _.keys(this.controller.shapeMapping())
+        },
+        micConfig: this.micConfig
+      });
+    } else {
+      this.broadcast("stateChange", {
+        currentProgramName: this.controller.currentProgramName,
+        currentConfig: this.controller.getCurrentConfig(),
+        micConfig: this.micConfig
+      });
+    }
   }
 
 
@@ -90,7 +103,14 @@ module.exports = class LightsService {
   savePreset({programName, presetName, currentConfig}) {
     this.controller.savePreset(programName, presetName, currentConfig);
     this.setPreset(presetName)
+    this.broadcastStateChange(true);
     console.log("Saved new preset", programName, presetName, currentConfig)
+  }
+
+  deletePreset({programName, presetName}) {
+    this.controller.deletePreset(programName, presetName);
+    this.broadcastStateChange(true);
+    console.log("Deleted preset", programName, presetName)
   }
 
   setCurrentProgram(programKey) {

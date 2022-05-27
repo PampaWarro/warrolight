@@ -13,6 +13,7 @@ interface Props {
   onChange(name: string, value: ConfigValue): void;
 
   onRemoveProgram?(name: string): void;
+  onDuplicateProgram?(subprogram: any): void;
 }
 
 export class SubprogramParam extends React.Component<Props, any> {
@@ -48,7 +49,7 @@ export class SubprogramParam extends React.Component<Props, any> {
   }
 
   render() {
-    const { name, value, options, globalConfig, includeShapeParameter, onRemoveProgram } = this.props;
+    const { name, value, options, globalConfig, includeShapeParameter, onRemoveProgram, onDuplicateProgram } = this.props;
 
     const { programName, presetName, config, shape } = value || {};
 
@@ -64,9 +65,17 @@ export class SubprogramParam extends React.Component<Props, any> {
 
     let collapsableName: any = name;
 
+    const collapsed = this.state.collapsed;
+
     if (value) {
-      if (!this.state.collapsed) {
-        programConfig = <div className="p-2 mt-1 mb-2 bg-lighter rounded" style={{ zoom: '0.9' }}>
+      if (collapsed) {
+        programConfig = null
+        collapsableName =
+          <div onClick={() => this.setState({ collapsed: false })} className="config-group-header ml-1">
+            <span role={'img'} aria-label={'Show parameters'}>▼</span> {name}
+          </div>
+      } else {
+        programConfig = <div className="p-2 mb-2 bg-lighter rounded-bottom" style={{ zoom: '0.9' }}>
 
           <ProgramConfig
             program={currentProgram}
@@ -79,25 +88,27 @@ export class SubprogramParam extends React.Component<Props, any> {
 
         collapsableName =
           <div onClick={() => this.setState({ collapsed: true })} className="config-group-header ml-1">
-            <span role={'img'} aria-label={'Hide parameters'}>➖</span> {name}
-          </div>
-      } else {
-        programConfig = null
-        collapsableName =
-          <div onClick={() => this.setState({ collapsed: false })} className="config-group-header ml-1">
-            <span role={'img'} aria-label={'Hide parameters'}>➕</span> {name}
+            <span role={'img'} aria-label={'Hide parameters'}>▲</span> {name}
           </div>
       }
     }
 
     // Convinience UI functionality for components that use SubprogramParams
-    let deleteBtn = null;
+    let deleteBtn,duplicateBtn;
     if (onRemoveProgram) {
       deleteBtn = <span className={'btn btn-sm btn-link text-danger p-1'}
                         onClick={() => onRemoveProgram(programName)}
                         title={'Remove program'}
                         role={'img'}
                         aria-label={'Remove program'}>❌</span>
+    }
+
+    if(onDuplicateProgram) {
+        duplicateBtn = <span className={'btn btn-sm btn-link text-primary p-1'}
+                             onClick={() => onDuplicateProgram(value)}
+                             title={'Duplicate program'}
+                             role={'img'}
+                             aria-label={'Duplicate program'}>↪</span>;
     }
 
     let shapeSelector = null;
@@ -133,7 +144,7 @@ export class SubprogramParam extends React.Component<Props, any> {
 
     return (
       <div className="config-item">
-        <div className="d-flex justify-content-between align-items-center bg-lighter rounded">
+        <div className={"d-flex justify-content-between align-items-center bg-lighter "+(collapsed? 'rounded' : 'rounded-top')}>
           <div className={'flex-fill'}>
             {collapsableName}
           </div>
@@ -160,6 +171,7 @@ export class SubprogramParam extends React.Component<Props, any> {
           </div>
 
           {deleteBtn}
+          {duplicateBtn}
         </div>
 
         {programConfig}

@@ -7,6 +7,8 @@ const ColorUtils = require("../utils/ColorUtils");
 module.exports = class BandParticles extends LayerBasedProgram {
 
   init() {
+    super.init();
+
     this.particles = {};
     this.offsets = {
       bass: 0,
@@ -32,8 +34,8 @@ module.exports = class BandParticles extends LayerBasedProgram {
 
   populatePerBandParticles(audio) {
     _.forEach(['low', 'mid', 'high'], (bandName) => {
-      const bandParticles = (this.particles[bandName] =
-        this.particles[bandName] || []);
+      const bandParticles = (this.particles[bandName] = this.particles[bandName] || []);
+
       while (bandParticles.length < this.config.particlesPerBand) {
         const drawable = new SingleLed({
           ledIndex: this.geometry.leds * Math.random()
@@ -47,6 +49,7 @@ module.exports = class BandParticles extends LayerBasedProgram {
           state: state
         });
       }
+
       while (bandParticles.length > this.config.particlesPerBand) {
         const particle = bandParticles.pop();
         _.remove(this.layers.particles.layers, particle.layer);
@@ -61,16 +64,10 @@ module.exports = class BandParticles extends LayerBasedProgram {
     this.populatePerBandParticles(audio);
     const audioSummary = audio.currentFrame;
     _.forOwn(this.particles, (particles, bandName) => {
-      const energy = audioSummary[`${bandName}PeakDecay`];
-      const hue = ColorUtils.mod(
-        this.offsets[bandName] + (this.config.hueSpeed * this.timeInMs) / 1000,
-        1
-      );
-      const saturation = ColorUtils.mod(
-        this.offsets[bandName] +
-          (this.config.saturationSpeed * this.timeInMs) / 1000,
-        1
-      );
+      const energy = audioSummary[`${bandName}PeakDecay`]*this.config.energyMultiplier;
+      const hue = ColorUtils.mod(this.offsets[bandName] + (this.config.hueSpeed * this.timeInMs) / 1000, 1);
+      const saturation = ColorUtils.mod(this.offsets[bandName] + (this.config.saturationSpeed * this.timeInMs) / 1000, 1);
+
       particles.forEach(particle => {
         particle.layer.alpha = energy;
         particle.drawable.ledIndex += particle.state.speed;
@@ -81,7 +78,7 @@ module.exports = class BandParticles extends LayerBasedProgram {
         if (Math.random() < Math.pow(energy, 10)) {
           sign *= -1;
         }
-        particle.state.speed = sign * Math.pow(energy, 2) * 4;
+        particle.state.speed = sign * Math.pow(energy, 2) * 4 * this.config.speed;
       });
     });
   }
@@ -102,6 +99,8 @@ module.exports = class BandParticles extends LayerBasedProgram {
       max: 35,
       step: 1
     };
+    res.energyMultiplier = { type: Number, default: 1, min: 0, max: 5, step: 0.01 };
+    res.speed = { type: Number, default: 1, min: 0, max: 5, step: 0.01 };
     res.hueSpeed = { type: Number, default: 0.2, min: 0, max: 5, step: 0.01 };
     res.saturationSpeed = {
       type: Number,

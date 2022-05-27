@@ -17,12 +17,10 @@ export class NumberParam extends React.Component<Props> {
 
   render() {
     return (
-      <div className="config-item my-1">
-        <div className="overflow-auto">
-          <div className="float-left">{this.props.name}</div>
-          <div className="float-right font-weight-bold">{this.props.value}</div>
-        </div>
-        <div style={{marginTop: '-8px'}}>
+      <div className="config-item my-1 d-flex align-items-center">
+        <div className="small" style={{width: '120px'}}>{this.props.name}</div>
+        <div className="font-weight-bold text-right mr-2" style={{width: '40px'}}>{this.props.value}</div>
+        <div style={{marginTop: '-8px'}} className={'flex-grow-1'}>
           <input
             type="range"
             min={this.props.min}

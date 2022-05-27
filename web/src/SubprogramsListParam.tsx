@@ -39,12 +39,16 @@ export class SubprogramsListParam extends React.Component<Props, any> {
     this.props.onChange(this.props.name, changedConfig);
   }
 
-  handleClick(e:any, index: string) {
-    // Clone subprogram
-    if(e.ctrlKey) {
+  cloneProgram(index: string) {
       const subCopy = _.cloneDeep(this.props.value[index])
       const changedConfig = [...this.props.value, subCopy];
       this.props.onChange(this.props.name, changedConfig);
+  }
+
+  handleClick(e:any, index: string) {
+    // Clone subprogram
+    if(e.ctrlKey) {
+      this.cloneProgram(index);
     }
   }
 
@@ -56,29 +60,30 @@ export class SubprogramsListParam extends React.Component<Props, any> {
     const subprograms = _.map(subprogramsConfig, (subprogramConfig, index) => {
       return <div className={'mb-2'} key={index} onDoubleClick={(e)=>this.handleClick(e, index)}>
         <SubprogramParam
-          name={`#${index + 1}`}
+          name={`${index + 1}`}
           value={subprogramConfig}
           globalConfig={globalConfig}
           includeShapeParameter={true}
           options={options}
           onChange={(name, config) => this.handleSubprogramChange(index, name, config)}
           onRemoveProgram={() => this.removeSubprogram(index)}
+          onDuplicateProgram={() => this.cloneProgram(index)}
         />
       </div>;
     })
 
     return (
       <div className="config-item">
-        <div className="">
-          <div>
+        <div className="small">
             {name}
-          </div>
         </div>
         <div>
           {subprograms}
-          <span className={'btn btn-sm btn-success'} onClick={() => this.addSubprogram()}>
-            Add subprogram
-          </span>
+          <div className={'text-right'}>
+            <span className={'btn btn-sm btn-success'} onClick={() => this.addSubprogram()}>
+              Add subprogram
+            </span>
+          </div>
         </div>
       </div>
     );

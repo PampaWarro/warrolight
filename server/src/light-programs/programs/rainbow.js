@@ -19,10 +19,13 @@ module.exports = class Rainbow extends LightProgram {
 
   init() {
     this.time = 0;
+    this.frame = 0;
   }
 
   drawFrame(draw) {
     this.time += this.config.speed;
+    this.frame ++;
+
     const newColors = new Array(this.numberOfLeds);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
@@ -31,8 +34,15 @@ module.exports = class Rainbow extends LightProgram {
         this.colorSet.length;
 
       let col = ColorUtils.hexToRgb(this.colorSet[colIndex]);
-      if (colIndex === 6) newColors[i] = col;
-      else newColors[i] = ColorUtils.dim(col, this.config.brillo);
+      if (colIndex === 6) {
+        if(this.frame % 2 || !this.config.blink) {
+          newColors[i] = col;
+        } else {
+          newColors[i] = ColorUtils.hexToRgb('#FF0000');
+        }
+      } else {
+        newColors[i] = ColorUtils.dim(col, this.config.brillo)
+      }
     }
     draw(newColors);
   }
@@ -51,6 +61,7 @@ module.exports = class Rainbow extends LightProgram {
     config.speed = { type: Number, min: 0, max: 20, default: 1 };
     config.sameColorLeds = { type: Number, min: 1, max: 100, default: 13 };
     config.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 0.3 };
+    config.blink = { type: Boolean, default: false };
     return config;
   }
 };

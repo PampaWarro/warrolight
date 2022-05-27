@@ -1,6 +1,12 @@
 #include <RF24.h>
 #include <SPI.h>
-#include <Warrolight.h>
+// #include <Warrolight.h>
+constexpr byte ENCODING_POS_RGB = 1;
+constexpr byte ENCODING_POS_VGA = 2;
+constexpr byte ENCODING_VGA = 3;
+constexpr byte ENCODING_RGB = 4;
+constexpr byte ENCODING_RGB565 = 5;
+constexpr byte ENCODING_RGB_DEBUG = 6;
 #include <nRF24L01.h>
 
 // How many leds in your strip?
@@ -12,17 +18,20 @@
 
 RF24 radio(7, 8); // CE, CSN
 
+
+// int channels[] = {121, 114};
+int channels[] = {72, 103};
+
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(1000000);
   Serial.println("ARDUINOSTART");
+
   radio.begin();
-  radio.openWritingPipe(0xF0F0F0F0F0);
-  // radio.setChannel(81);
-  radio.setChannel(92);
-  radio.setPALevel(RF24_PA_HIGH);
+  radio.openWritingPipe(0xF0F0F0F0F5); // 72 103
+//   radio.openWritingPipe(0xF0F0F0F0F0); // 114 121
+  radio.setPALevel(RF24_PA_MAX);
   radio.setPayloadSize(RADIO_PAYLOAD_SIZE);
-  radio.setDataRate(RF24_2MBPS);
-  // radio.enableDynamicPayloads();
+  radio.setDataRate(RF24_1MBPS);
   radio.setAutoAck(false);
   radio.stopListening();
 }
@@ -58,6 +67,12 @@ void loop() {
 }
 
 char ledData[3 * NUM_LEDS * NUM_CHANNELS + 2];
+
+char configData[2] = {255, 0};
+
+// To detect missing frames in the client
+byte frameNumber = 0;
+
 unsigned long lastConnectionTime = millis();
 void readLedsFromSerial() {
   if (!connected) {
@@ -92,12 +107,25 @@ void readLedsFromSerial() {
   int encoding = Serial.read();
   int pos = 0;
 
-  if (encoding == ENCODING_RGB) {
+  if (encoding == ENCODING_RGB || encoding == ENCODING_RGB_DEBUG) {
     int j = stripSize;
 
     int total = Serial.readBytes(ledData + 2, 3 * j);
     if (total != 3 * j) {
       return reconnect();
+    }
+
+    if(frameNumber == 0) {
+      configData[1] = encoding == ENCODING_RGB_DEBUG ? 1 : 0;
+
+      for (int k = 0; k < NUM_CHANNELS; k++) {
+          int channel = channels[k];
+          radio.setChannel(channel);
+
+          if (!radio.write(&configData[0], 2)) {
+            Serial.println("FAILED CONFIG WRITE");
+          }
+      }
     }
   } else if (encoding == ENCODING_RGB565) {
     int j = stripSize;
@@ -118,12 +146,6 @@ void readLedsFromSerial() {
     Serial.println("OK");
   }
 }
-
-// int channels[] = {81, 114};
-int channels[] = {92, 103};
-
-// To detect missing frames in the client
-byte frameNumber = 0;
 
 int bytesPerPixel = 3;
 bool transmitRadio() {

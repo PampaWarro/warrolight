@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const DeviceSerial = require('./devices/serial');
 const DeviceUDP = require('./devices/udp');
+const DeviceUDPWLED = require('./devices/udp-wled');
+const LightDeviceUDPChunked = require("./devices/udp-chunked");
 
 function initDevicesFromConfig(outputDevices) {
   let devices = {};
@@ -14,6 +16,12 @@ function initDevicesFromConfig(outputDevices) {
         break;
       case 'udp':
         device = new DeviceUDP(params);
+        break;
+      case 'udp-wled':
+        device = new DeviceUDPWLED(params);
+        break;
+      case 'udp-chunked':
+        device = new LightDeviceUDPChunked(params);
         break;
       default:
         throw new Error(`Invalid device type: ${type}`);
@@ -40,7 +48,7 @@ module.exports = class DeviceMultiplexer {
     // For each segment, save that light 'i' of the strip corresponds to light 'j' of device 'deviceName'
     _.each(setup.lightsToDevicesMapping, ({ from, to, baseIndex, deviceName }) => {
       for (let i = from; i < to; i++) {
-        let j = i - from + baseIndex;
+        let j = Math.abs(i - from + baseIndex);
         if (!lightToDevice[i]) {
           lightToDevice[i] = [namesToIndex[deviceName], j];
         } else {
@@ -87,7 +95,8 @@ module.exports = class DeviceMultiplexer {
           return {
             status: d.status,
             deviceId: d.deviceId,
-            lastFps: d.lastFps
+            lastFps: d.lastFps,
+            metadata: d.metadata || {}
           };
         })
       );

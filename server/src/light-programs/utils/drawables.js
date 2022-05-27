@@ -1,5 +1,6 @@
 const ColorUtils = require("./ColorUtils");
-const {loadGradient} = require("./gradients");
+const {loadGradient, allGradients} = require("./gradients");
+const _ = require("lodash");
 
 class Drawable {
   colorAtIndex(index, geometry) {}
@@ -17,9 +18,10 @@ class GradientColorize extends Drawable {
   }
   set gradient(gradient) {
     if (!gradient) {
-      return;
+      this._gradient = _.shuffle(allGradients())[0];
+    } else {
+      this._gradient = loadGradient(gradient);
     }
-    this._gradient = loadGradient(gradient);
   }
   set value(value) {
     if (value == "alpha") {
@@ -288,7 +290,7 @@ class RadiusCosineBrightness extends PolarDrawable {
   }
   colorAtPolar(radius, angle) {
     radius = this.radiusWarp(this.scale * (radius + this.radiusOffset));
-    const v = 0.5 + 0.5 * Math.cos(radius / Math.PI);
+    const v = 0.02 + 0.98 * (Math.cos(radius / Math.PI)**2);
     return ColorUtils.clamp(
       v * this.color[0],
       v * this.color[1],

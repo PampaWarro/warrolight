@@ -5,7 +5,9 @@ import { NumberParam } from "./NumberParam";
 import { Program, ConfigValue, CurrentProgramParameters } from "./types";
 import { GradientParam } from "./GradientParam";
 import { SubprogramParam } from "./SubprogramParam";
+import { SoundMetricParam } from "./SoundMetricParam";
 import { SubprogramsListParam } from "./SubprogramsListParam";
+import _ from "lodash";
 
 interface Props {
   program: Program | null;
@@ -14,6 +16,7 @@ interface Props {
   globalConfig: { [param: string]: any };
   onSelectPreset(name: string): void;
   onSaveNewPreset?(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }): void;
+  onDeletePreset?(programName: string, presetName: string): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 }
 
@@ -32,6 +35,12 @@ export class ProgramConfig extends React.PureComponent<Props> {
         let combinedParams = { ...this.props.config.presetOverrides, ...this.props.config.overrides };
         this.props.onSaveNewPreset(this.props.program.name, newPresetName, combinedParams)
       }
+    }
+  }
+
+  handleDeletePreset = (presetName: string) => {
+    if(this.props.program && this.props.onDeletePreset && window.confirm("Are you sure? There is no undo")) {
+        this.props.onDeletePreset(this.props.program.name, presetName)
     }
   }
 
@@ -74,16 +83,10 @@ export class ProgramConfig extends React.PureComponent<Props> {
             onChange={this.handleParamChange}/>
           break;
         case "soundMetric":
-          parameterEditor = <StringParam
+          parameterEditor = <SoundMetricParam
             key={paramName}
             name={paramName}
             value={value as string}
-            options={[
-              'rms', 'fastPeakDecay', 'peakDecay',
-              'bassRms', 'bassFastPeakDecay', 'bassPeakDecay',
-              'midRms', 'midFastPeakDecay', 'midPeakDecay',
-              'highRms', 'highFastPeakDecay', 'highPeakDecay'
-            ]}
             onChange={this.handleParamChange}/>
           break;
         case "gradient":
@@ -126,12 +129,12 @@ export class ProgramConfig extends React.PureComponent<Props> {
 
       let paramStateClass = (overrides && overrides[paramName]) ? 'text-warning' : (presetOverrides && presetOverrides[paramName] ? 'text-info' : 'text-secondary');
 
-      configOptions.push(<div key={paramName} className={paramStateClass}>{parameterEditor}</div>);
+      configOptions.push(<span key={paramName} className={paramStateClass}>{parameterEditor}</span>);
     }
 
     const presets = currentProgram.presets || [];
 
-    let savePresets = null;
+    let savePresets, deletePresetBtn;
     if (this.props.onSaveNewPreset) {
       const addNewBtn = <button className="btn btn-sm btn-link mt-2" onClick={() => this.handleSavePreset(null)}>
         Save as preset...
@@ -143,10 +146,16 @@ export class ProgramConfig extends React.PureComponent<Props> {
                                     onClick={() => this.handleSavePreset(currentPreset)}>
           Save to <span className={'text-info'}>'{currentPreset}'</span>
         </button>
+
+        deletePresetBtn = <button className="btn btn-sm btn-link text-danger mt-2 ml-3"
+                                  onClick={() => this.handleDeletePreset(currentPreset)}>
+          Delete
+        </button>
       }
       savePresets = <div className={'text-center'}>
         {addNewBtn}
         {overridePresetBtn}
+        {deletePresetBtn}
       </div>
     }
 
@@ -171,17 +180,21 @@ const Presets: React.FC<PresetsProps> = ({ presets, selected, onSelect }) => {
     return null;
   }
 
-  return (
-    <div>
-      {presets.map(preset => (
+  return <div className="dropdown">
+    <button className="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {selected || `${presets.length} presets...`}
+    </button>
+    <div className="dropdown-menu gradient-dropdown" aria-labelledby="dropdownMenuButton">
+      {_.map(presets, preset => (
         <button
-          className={`btn btn-sm ${selected === preset ? 'btn-info' : 'btn-outline-info'} mr-1 mb-1`}
           key={preset}
+          className={`small dropdown-item ${preset === selected ? "active" : ""}`}
           onClick={e => onSelect(preset)}
         >
           {preset}
         </button>
       ))}
     </div>
-  );
+  </div>
 };

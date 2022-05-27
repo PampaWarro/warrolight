@@ -1,7 +1,10 @@
 *.sw[a-z]
 .idea
+.vscode
 
 node_modules
+
+audio/venv
 
 npm-debug.log
 arduino/**/*.hex

@@ -14,7 +14,7 @@
             "velocidad": -43.1
         },
         "chico": {
-            "escala": 0.1
+            "escala": 0.25
         },
         "blueSea": {
             "escala": 51.3,
@@ -37,7 +37,8 @@
                 {
                     "programName": "musicVolumeDot",
                     "config": {
-                        "soundMetric": "bassRms"
+                        "soundMetric": "bassRms",
+                        "multiplier": 1.5
                     }
                 },
                 {
@@ -47,30 +48,37 @@
                             {
                                 "programName": "lineal",
                                 "config": {
-                                    "globalBrightness": 0.08
+                                    "globalBrightness": 0.09,
+                                    "escala": 9.5,
+                                    "velocidad": -2.3
                                 }
                             },
                             {
                                 "programName": "radial",
                                 "config": {
-                                    "escala": 51.3,
-                                    "globalBrightness": 0.13,
-                                    "velocidad": -1.2
+                                    "escala": 83.6,
+                                    "globalBrightness": 0.1,
+                                    "velocidad": -1.2,
+                                    "power": 10,
+                                    "centerY": 18
                                 }
                             },
                             {
                                 "programName": "stars",
-                                "presetName": "pocasSlow",
                                 "config": {
                                     "decay": 0.97,
-                                    "probability": 0.0003
+                                    "probability": 0.0003,
+                                    "move": true,
+                                    "moveSpeed": 1,
+                                    "globalBrightness": 0.79
                                 }
                             },
                             {
                                 "programName": "sound-waves"
                             }
                         ],
-                        "globalBrightness": 0.25
+                        "globalBrightness": 0.25,
+                        "multiply": false
                     }
                 }
             ]
@@ -85,7 +93,7 @@
                         "soundMetric": "bassFastPeakDecay",
                         "colorMap": "stardark",
                         "power": 2.1,
-                        "escala": 82,
+                        "escala": 1.991,
                         "globalBrightness": 0.53
                     }
                 },
@@ -104,12 +112,14 @@
                     "programName": "radialSun",
                     "shape": "totemsInt",
                     "config": {
-                        "escala": 81,
-                        "centerY": 53,
-                        "soundMetric": "bassPeakDecay",
+                        "escala": 2.141,
+                        "centerY": -0.8,
+                        "soundMetric": "highFastPeakDecay",
                         "power": 1.6,
                         "colorMap": "stardark",
-                        "globalBrightness": 0.48
+                        "globalBrightness": 0.48,
+                        "relative": true,
+                        "fromTop": true
                     }
                 },
                 {
@@ -119,7 +129,10 @@
                     }
                 },
                 {
-                    "programName": "musicVolumeDotRandom"
+                    "programName": "musicVolumeDotRandom",
+                    "config": {
+                        "multiplier": 1.12
+                    }
                 }
             ],
             "globalBrightness": 1
@@ -164,11 +177,12 @@
                     "shape": "totems",
                     "config": {
                         "colorMap": "tas16",
-                        "escala": 66,
+                        "escala": 3.951,
                         "globalBrightness": 0.26,
                         "soundMetric": "fastPeakDecay",
                         "power": 1.7,
-                        "centerY": -13
+                        "centerY": -13,
+                        "relative": true
                     }
                 }
             ]
@@ -238,7 +252,7 @@
                 {
                     "programName": "radialSun",
                     "config": {
-                        "escala": 86,
+                        "escala": 2.301,
                         "power": 1,
                         "colorMap": "pm3d05_r",
                         "soundMetric": "rms",
@@ -263,8 +277,9 @@
                     "config": {
                         "colorMap": "saga-03",
                         "power": 1.3,
-                        "escala": 168,
-                        "centerY": 35.6
+                        "escala": 3.571,
+                        "centerY": 35.6,
+                        "relative": false
                     }
                 },
                 {
@@ -281,26 +296,28 @@
             "programs": [
                 {
                     "programName": "radial",
+                    "shape": "Warro",
                     "config": {
-                        "colorMap": "elephee",
-                        "velocidad": -12.4
-                    },
-                    "shape": "Warro"
+                        "colorMap": "tas02",
+                        "velocidad": -12.4,
+                        "globalBrightness": 1
+                    }
                 },
                 {
                     "programName": "radialSun",
                     "config": {
                         "colorMap": "saga-03",
                         "power": 1.3,
-                        "escala": 168,
-                        "centerY": 35.6
+                        "escala": 1.901,
+                        "centerY": 35.6,
+                        "globalBrightness": 1
                     }
                 },
                 {
                     "programName": "sound-waves",
                     "config": {
                         "brilloWave": 2.39,
-                        "globalBrightness": 0.98,
+                        "globalBrightness": 1,
                         "waveWidth": 3.4,
                         "waveDecay": 0.98,
                         "soundMetric": "bassRms"
@@ -324,10 +341,12 @@
                     "config": {
                         "colorMap": "saga-03",
                         "power": 1.3,
-                        "escala": 168,
-                        "centerY": 35.6,
+                        "escala": 2.801,
+                        "centerY": 0,
                         "soundMetric": "peakDecay",
-                        "globalBrightness": 0.88
+                        "globalBrightness": 0.92,
+                        "relative": true,
+                        "fromTop": true
                     }
                 },
                 {
@@ -368,10 +387,12 @@
                                 "config": {
                                     "colorMap": "saga-03",
                                     "power": 1.3,
-                                    "escala": 168,
-                                    "centerY": 35.6,
+                                    "escala": 2.801,
+                                    "centerY": 0,
                                     "soundMetric": "peakDecay",
-                                    "globalBrightness": 0.88
+                                    "globalBrightness": 0.92,
+                                    "relative": true,
+                                    "fromTop": true
                                 }
                             },
                             {
@@ -404,7 +425,7 @@
                                 "programName": "radialSun",
                                 "config": {
                                     "power": 1,
-                                    "escala": 70,
+                                    "escala": 2.181,
                                     "colorMap": "pm3d05_r",
                                     "soundMetric": "peakDecay"
                                 }
@@ -512,46 +533,14 @@
                     "programName": "radialSun",
                     "config": {
                         "colorMap": "saga-03",
-                        "escala": 80,
+                        "escala": 1.611,
                         "soundMetric": "peakDecay",
                         "globalBrightness": 1,
-                        "power": 1
+                        "power": 3.2
                     }
                 }
             ],
             "multiply": true
-        },
-        "flashByBands": {
-            "programs": [
-                {
-                    "programName": "musicFlash",
-                    "shape": "totemsExt",
-                    "config": {
-                        "soundMetric": "highPeakDecay"
-                    }
-                },
-                {
-                    "programName": "musicFlash",
-                    "shape": "totemsInt",
-                    "config": {
-                        "soundMetric": "midPeakDecay"
-                    }
-                },
-                {
-                    "programName": "musicFlash",
-                    "shape": "trianguloTop",
-                    "config": {
-                        "soundMetric": "midPeakDecay"
-                    }
-                },
-                {
-                    "programName": "musicFlash",
-                    "shape": "WarroOnly",
-                    "config": {
-                        "soundMetric": "bassPeakDecay"
-                    }
-                }
-            ]
         },
         "soundFire": {
             "programs": [
@@ -624,17 +613,18 @@
                         "rule": "W6",
                         "blend": 0.09,
                         "scale": 14.9,
-                        "globalBrightness": 0.16,
-                        "speed": 3.8
+                        "globalBrightness": 0.08,
+                        "speed": 5.9
                     }
                 },
                 {
                     "programName": "radialSun",
                     "config": {
                         "colorMap": "titannightfall",
-                        "escala": 20,
-                        "globalBrightness": 0.36,
-                        "centerY": 35.4
+                        "escala": 1.181,
+                        "globalBrightness": 0.21,
+                        "centerY": 35.4,
+                        "power": 1.8
                     }
                 }
             ]
@@ -646,7 +636,7 @@
                     "config": {
                         "move": false,
                         "numberOfOnLeds": 8,
-                        "power": 3,
+                        "power": 1.4,
                         "blackAndWhite": true,
                         "cutThreshold": 0
                     }
@@ -890,17 +880,21 @@
                 {
                     "programName": "bombs",
                     "config": {
-                        "globalBrightness": 1
+                        "globalBrightness": 1,
+                        "highNoiseAlpha": 0
                     }
                 },
                 {
                     "programName": "radialSun",
                     "config": {
-                        "colorMap": "tas16_r",
-                        "escala": 92,
-                        "soundMetric": "peakDecay",
-                        "power": 1.2,
-                        "centerY": 35.2
+                        "colorMap": "pm3d05_r",
+                        "escala": 1.301,
+                        "soundMetric": "fastPeakDecay",
+                        "power": 2,
+                        "centerY": 36.6,
+                        "relative": true,
+                        "radialDistance": false,
+                        "animatePower": false
                     }
                 }
             ],
@@ -910,9 +904,8 @@
             "programs": [
                 {
                     "programName": "musicVolumeDot",
-                    "shape": "Warro",
                     "config": {
-                        "numberOfOnLeds": 80,
+                        "numberOfOnLeds": 100,
                         "multiplier": 1.32
                     }
                 },
@@ -930,7 +923,6 @@
                         "programs": [
                             {
                                 "programName": "musicVolumeDot",
-                                "shape": "Warro",
                                 "config": {
                                     "numberOfOnLeds": 40,
                                     "multiplier": 1.39
@@ -949,15 +941,18 @@
                         "programs": [
                             {
                                 "programName": "musicVolumeDot",
-                                "shape": "Warro",
                                 "config": {
                                     "numberOfOnLeds": 80,
                                     "soundMetric": "highFastPeakDecay",
-                                    "multiplier": 1.33
+                                    "multiplier": 2,
+                                    "cutThreshold": 0.32
                                 }
                             },
                             {
-                                "programName": "gradientSphere"
+                                "programName": "gradientSphere",
+                                "config": {
+                                    "minRadius": 0.78
+                                }
                             }
                         ],
                         "multiply": true
@@ -1146,15 +1141,66 @@
                 }
             ],
             "multiply": true
+        },
+        "flashBands": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "musicFlash",
+                                "shape": "totemsExt",
+                                "config": {
+                                    "soundMetric": "highPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "shape": "totemsInt",
+                                "config": {
+                                    "soundMetric": "midPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "shape": "trianguloTop",
+                                "config": {
+                                    "soundMetric": "midPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "shape": "WarroOnly",
+                                "config": {
+                                    "soundMetric": "bassPeakDecay"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "programName": "lineal",
+                    "config": {
+                        "escala": 5.5,
+                        "velocidad": -6,
+                        "power": 4.8,
+                        "colorMap": "pm3d05_r",
+                        "globalBrightness": 0.9
+                    }
+                }
+            ],
+            "multiply": true
         }
     },
     "ca": {
         "celullarRainbow": {
-            "scale": 10.7,
-            "speed": 1,
-            "colorMap": "saga-01",
+            "scale": 14.6,
+            "speed": 8,
+            "colorMap": "stratosphere_sunset",
             "blend": 0.04,
-            "globalBrightness": 1
+            "globalBrightness": 1,
+            "randomness": 0.03
         }
     }
 }

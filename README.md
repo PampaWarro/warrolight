@@ -64,3 +64,13 @@ En `PROGRAM_Transition.js` pueden ver un ejemplo de agarrar varios programas dis
 Si estás familiarizado con la IDE de Arduino podés usarla para compilar y subir los scripts del directorio `arduino/`. Recordá configurar la localización del proyecto (sketchbook) al directorio `arduino/` de este repositorio.
 
 Si preferís usar tu editor favorito, la herramienta `arduino-cli` también funciona muy bien. Podés encontrar instrucciones completas de cómo bajarla y usarla en https://github.com/arduino/arduino-cli.
+
+### esp32 Olimex
+
+Leer https://www.olimex.com/Products/IoT/ESP32/_resources/Arudino-ESP32.txt para compilar programas en arduino Ide
+
+Ejemplos básicos de programa que usa ethernet: 
+- https://raw.githubusercontent.com/espressif/arduino-esp32/1.0.3/libraries/WiFi/examples/ETH_LAN8720/ETH_LAN8720.ino
+- https://github.com/OLIMEX/ESP32-POE/blob/master/SOFTWARE/ARDUINO/ESP32_PoE_Ethernet_Arduino/ESP32_PoE_Ethernet_Arduino.ino
+
+Nota: El MTU default de esp32 y UDP es 1500 bytes. Al mandar paquetes más grandes nada falla pero nunca llegan.  

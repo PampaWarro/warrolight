@@ -50,14 +50,55 @@ class VGAEncoder extends Encoder {
   }
 }
 
+class RGBChunkedEncoder extends Encoder {
+  constructor(maxChunkSize) {
+    super();
+    this.maxChunkSize = maxChunkSize;
+  }
 
-class RGBEncoder extends Encoder {
-  writeHeader(lights) {
-    this.write([4]);
+  encode(lights) {
+    let chunkCount = Math.ceil(lights.length / this.maxChunkSize);
+    let chunks = [];
+
+    for(let c= 0; c < chunkCount;c++) {
+      let buf = [4];
+
+      for (let i = c*this.maxChunkSize; i < Math.min(lights.length, (c+1)*this.maxChunkSize); i++) {
+        buf.push(lights[i][0], lights[i][1], lights[i][2]);
+      }
+
+      chunks.push(buf);
+    }
+
+    return chunks;
   }
 
   writePixel(pos, r, g, b) {
     this.write([r, g, b])
+  }
+}
+
+
+class RGBEncoder extends Encoder {
+  constructor(debugMode = false) {
+    super();
+    this.debugMode = debugMode;
+  }
+  writeHeader(lights) {
+    this.write([this.debugMode ? 6 : 4]);
+  }
+
+  writePixel(pos, r, g, b) {
+    this.write([r, g, b])
+  }
+}
+
+class WLEDRGBEncoder extends RGBEncoder {
+  writeHeader(lights) {
+    // See https://kno.wled.ge/interfaces/udp-realtime/
+    // 4 =	DNRGB	489/packet
+    // 2 = seconds until WLED returns to normal functioning
+    this.write([2, 2]);
   }
 }
 
@@ -89,5 +130,7 @@ module.exports = {
   PosVGAEncoder,
   RGBEncoder,
   VGAEncoder,
-  RGB565Encoder
+  RGB565Encoder,
+  WLEDRGBEncoder,
+  RGBChunkedEncoder
 }

@@ -28,14 +28,6 @@ exports.Stripe = class Stripe {
     other.leds = this.leds;
     return other;
   }
-  clone() {
-    const other = new Stripe([0, 0, 0], [0, 0, 0], 0);
-    other.x = [...this.x];
-    other.y = [...this.y];
-    other.z = [...this.z];
-    other.leds = this.leds;
-    return other;
-  }
 };
 
 exports.Geometry = class Geometry {

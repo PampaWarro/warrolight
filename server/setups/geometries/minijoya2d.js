@@ -9,12 +9,14 @@ const { Stripe } = require("../../src/geometry");
 //   \          /
 //    p5--p0--p1
 
-const p0 = [0, 0];
-const p1 = [.57, 0];
-const p2 = [.97, -.34];
-const p3 = [0, -1.36];
-const p4 = [-.97, -.34];
-const p5 = [-.57, 0];
+const scale = x => 20 * x;
+
+const p0 = [0, 0].map(scale);
+const p1 = [.57, 0].map(scale);
+const p2 = [.97, -.34].map(scale);
+const p3 = [0, -1.36].map(scale);
+const p4 = [-.97, -.34].map(scale);
+const p5 = [-.57, 0].map(scale);
 
 const HIGH_DENSITY = 1;
 

@@ -24,13 +24,12 @@ module.exports = function hackLightControllerRestart(controller) {
           this.geometry,
           this.shapeMapping,
           this
-        )
+        ),
+        config,
+        this.updateLeds.bind(this)
       );
 
-      this.programScheduler.start(
-        this.getConfig(this.currentConfig),
-        leds => this.updateLeds(leds)
-      );
+      this.programScheduler.start();
     } catch(err) {
       console.log(err);
     }

@@ -128,10 +128,7 @@ module.exports = class LightController extends EventEmitter {
   start() {
     if (this.programScheduler) {
       this.currentConfig = this.buildParameters(this.programs[this.currentProgramName].configSchema);
-      this.programScheduler.start(
-        this.getConfig(this.currentConfig),
-        leds => this.updateLeds(leds)
-      );
+      this.programScheduler.start();
       this.running = true;
     }
   }
@@ -246,7 +243,9 @@ module.exports = class LightController extends EventEmitter {
         this.geometry,
         this.shapeMapping,
         this
-      )
+      ),
+      config,
+      this.updateLeds.bind(this)
     );
     if (this.running) {
       this.start();

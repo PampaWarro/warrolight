@@ -8,18 +8,18 @@ const NanoTimer = require('nanotimer');
 
 module.exports = class ProgramScheduler {
 
-  constructor(program) {
+  constructor(program, config, newFrameCallback) {
     this.program = program;
+    this.config = config;
+    this.newFrameCallback = newFrameCallback;
     this.timeInMs = 0;
     this.startTime = null;
     this.nextTickTimeout = null;
   }
 
-  start(config, draw) {
+  start() {
     this.timeInMs = 0;
     this.startTime = Date.now();
-    this.config = config;
-    this.draw = draw;
     this.timer = new NanoTimer();
 
     this.program.init();
@@ -52,7 +52,7 @@ module.exports = class ProgramScheduler {
 
           clearInterval(this.nextTickTimeout);
           lastFlushTime = now;
-          draw(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness)));
+          this.newFrameCallback(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness)));
 
           frame();
         }, '', remainingTime + 'm');
@@ -71,7 +71,7 @@ module.exports = class ProgramScheduler {
   restart() {
     this.stop();
     this.program.init();
-    this.start(this.config, this.draw);
+    this.start();
   }
 
   get config() {

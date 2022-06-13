@@ -7,7 +7,6 @@ module.exports = class CongaShooting extends LightProgram {
   init() {
     this.center = this.numberOfLeds / 2;
     this.segmentSize = 60;
-    this.colors = new Array(this.numberOfLeds);
     this.rope = {pos: this.center - this.segmentSize, length: 2 * this.segmentSize};
     this.explosionLevel = 0;
     this.time = 0;
@@ -31,7 +30,7 @@ module.exports = class CongaShooting extends LightProgram {
       this.updateAudioWindow(audio);
       let burstSizeP1 = _.sum(this.audioWindow1);
       let burstSizeP2 = _.sum(this.audioWindow2);
-      console.log(burstSizeP1, burstSizeP2);
+      //console.log(burstSizeP1, burstSizeP2);
 
       if(burstSizeP1 < this.config.burstThreshold){
           burstSizeP1 = 0;
@@ -65,10 +64,10 @@ module.exports = class CongaShooting extends LightProgram {
           this.resetBurstsForPlayer(player);
       }
   }
-  paintAll(){
+  paintAll(leds){
       let baseColor = ColorUtils.HSVtoRGB(0, 0, this.explosionLevel/20);
       for (let i = 0; i < this.numberOfLeds; i++) {
-          this.colors[i] = [255,255,255];
+          leds[i] = [255,255,255];
       }
   }
 
@@ -80,12 +79,13 @@ module.exports = class CongaShooting extends LightProgram {
           this.audioWindow2.fill(0);
       }
   }
-  gameOver(winner){
+  gameOver(winner, leds){
       this.rope = {pos: this.center - this.segmentSize, length: 2 * this.segmentSize};
-      this.paintAll();
+      this.paintAll(leds);
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     let bursts = this.detectBursts(audio);
     let burstP1 = bursts[0];
@@ -98,19 +98,18 @@ module.exports = class CongaShooting extends LightProgram {
     }
 
     if (this.rope.pos == 0){
-        this.gameOver('P1');
+        this.gameOver('P1', leds);
     }
     if(this.rope.pos + this.rope.length == this.numberOfLeds){
-        this.gameOver('P2');
+        this.gameOver('P2', leds);
     }
     let baseColor = ColorUtils.HSVtoRGB(0, 0, this.explosionLevel/20);
     for (let i = 0; i < this.numberOfLeds; i++) {
-        this.colors[i] = baseColor;
+        leds[i] = baseColor;
         if (i >= this.rope.pos && i < this.rope.pos+this.rope.length){
-            this.colors[i] = [255,255,0];
+            leds[i] = [255,255,0];
         }
     }
-    draw(this.colors);
   }
 
   static presets() {

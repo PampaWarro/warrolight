@@ -17,7 +17,8 @@ module.exports = function mixPrograms(...programs) {
         this.programs.push({
           programInstance: new Program(config, geometry, shapeMapping),
           customConfig: specificConfig,
-          alpha: alpha || 1
+          alpha: alpha || 1,
+          leds: new Array(this.numberOfLeds).fill([0, 0, 0]),
         });
       });
     }
@@ -27,32 +28,30 @@ module.exports = function mixPrograms(...programs) {
       this.programs.forEach(p => p.programInstance.init());
     }
 
-    mix(frames) {
+    mix(frames, output) {
       // TODO: clamp / divide final values?
-      return _.map(frames[0], (c, i) => {
+      frames[0].forEach((c, i) => {
         let [r, g, b] = c;
         for (let j = 1; j < frames.length; j++) {
           r += frames[j][i][0];
           g += frames[j][i][1];
           b += frames[j][i][2];
         }
-        return [r, g, b];
+        output[i] = [r, g, b];
       });
     }
 
-    drawFrame(draw, audio) {
+    drawFrame(leds, context) {
       let frames = [];
       _.each(this.programs, (p, i) => {
         // TODO: remove this forwarding somehow
         p.programInstance.timeInMs = this.timeInMs;
 
-        p.programInstance.drawFrame(
-          colors => frames[i] = colors,
-          audio
-        )
+        p.programInstance.drawFrame(p.leds, context);
+        frames.push(p.leds);
       });
 
-      draw(this.mix(frames));
+      this.mix(frames, leds);
     }
 
     updateConfig(config) {

@@ -40,13 +40,14 @@ module.exports = class AliveDotsSpeed extends LightProgram {
     }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio;
     if (!audio.ready) {
       return;
     }
     // let decay = this.config.decay;
     this.time++;
-    this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
+    leds.fill([0, 0, 0]);
 
     for (let dot of this.dots) {
       let roundPos = Math.floor(dot.pos);
@@ -57,8 +58,8 @@ module.exports = class AliveDotsSpeed extends LightProgram {
         dot.val
       );
 
-      let [r, g, b] = this.stars[roundPos];
-      let [ru, gu, bu] = this.stars[roundPosNext];
+      let [r, g, b] = leds[roundPos];
+      let [ru, gu, bu] = leds[roundPosNext];
 
       dot.update(this.config.speedWeight, audio.currentFrame.slowRms);
 
@@ -72,15 +73,13 @@ module.exports = class AliveDotsSpeed extends LightProgram {
         bu + high * b2
       );
 
-      this.stars[roundPos] = [r, g, b];
-      this.stars[roundPosNext] = [ru, gu, bu];
+      leds[roundPos] = [r, g, b];
+      leds[roundPosNext] = [ru, gu, bu];
     }
 
-    draw(
-      this.stars.map(([r, g, b]) =>
-        ColorUtils.dim([r, g, b], this.config.brillo)
-      )
-    );
+    leds.forEach(([r, g, b], i) => {
+      leds[i] = ColorUtils.dim([r, g, b], this.config.brillo)
+    });
   }
 
   static presets() {

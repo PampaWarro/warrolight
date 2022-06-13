@@ -8,7 +8,7 @@ module.exports = class Stars extends LightProgram {
     this.time = 0;
   }
 
-  drawFrame(draw) {
+  drawFrame(leds) {
     let decay = this.config.decay;
     this.time++;
 
@@ -33,11 +33,9 @@ module.exports = class Stars extends LightProgram {
       let first = this.stars.shift();
       this.stars.push(first);
     }
-    draw(
-      this.stars.map(([r, g, b]) =>
-        ColorUtils.dim([r, g, b], this.config.brillo)
-      )
-    );
+    this.stars.forEach(([r, g, b], i) => {
+      leds[i] = ColorUtils.dim([r, g, b], this.config.brillo)
+    });
   }
 
   static presets() {

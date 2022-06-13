@@ -48,7 +48,8 @@ module.exports = class Rays extends LightProgram {
     }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio
     // let decay = this.config.decay;
     this.time++;
     let decay = this.config.decay;
@@ -106,7 +107,9 @@ module.exports = class Rays extends LightProgram {
       }
     }
 
-    draw(this.stars);
+    leds.forEach((v, i) => {
+      leds[i] = this.stars[i];
+    });
   }
 
   static presets() {

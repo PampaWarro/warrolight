@@ -72,17 +72,16 @@ module.exports = class LayerBasedProgram extends LightProgram {
     console.warn("Unimplemented updateState()");
   }
 
-  drawFrame(draw, audio) {
-    this.updateState(audio);
-    const colors = new Array(this.numberOfLeds);
-    colors.fill([0, 0, 0, 1]);
+  drawFrame(leds, context) {
+    this.updateState(context.audio);
+    leds.fill([0, 0, 0, 1]);
     if (!this.rootLayer) {
       console.error("Missing rootLayer.");
     }
-    colors.forEach((baseColor, i) => {
+    leds.forEach((baseColor, i) => {
       const color = this.rootLayer.applyAtIndex(i, this.geometry, baseColor);
-      colors[i] = color.splice(0, 3);
+      color.length = 3;
+      leds[i] = color;
     });
-    draw(colors);
   }
 };

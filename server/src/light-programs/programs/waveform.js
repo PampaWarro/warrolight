@@ -13,8 +13,8 @@ module.exports = class Waveform extends LightProgram {
     this.max = 0;
   }
 
-  drawFrame(draw, audio) {
-    const colors = new Array(this.numberOfLeds);
+  drawFrame(leds, context) {
+    const audio = context.audio;
 
     const frame = audio.currentFrame;
     if (!frame) {
@@ -34,12 +34,10 @@ module.exports = class Waveform extends LightProgram {
       const absSample = absSamples[index];
       const gradientPos = 0.5 * (sample / this.max) + 0.5;
       const brightness = absSample / this.max;
-      colors[i] = gradient
+      leds[i] = gradient
         .colorAt(gradientPos)
         .map(x => Math.floor(x * brightness));
     }
-
-    draw(colors);
   }
 
   static presets() {

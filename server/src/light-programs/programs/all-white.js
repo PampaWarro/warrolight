@@ -3,12 +3,10 @@ const ColorUtils = require("./../utils/ColorUtils");
 
 module.exports = class AllWhite extends LightProgram {
   // Override base class
-  drawFrame(draw) {
+  drawFrame(leds, context) {
     // En HSV blanco es (0,0,1)
     let tonoDeBlanco = ColorUtils.HSVtoRGB(0, 0, this.config.brillo);
-
-    let colors = new Array(this.numberOfLeds).fill(tonoDeBlanco);
-    draw(colors);
+    leds.fill(tonoDeBlanco);
   }
 
   // Override and extend config Schema

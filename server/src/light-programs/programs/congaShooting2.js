@@ -7,7 +7,6 @@ const {Glob} = require("glob");
 module.exports = class CongaShooting extends LightProgram {
 
   init() {
-    this.colors = new Array(this.numberOfLeds);
     this.bulletsA = [];
     this.bulletsB = [];
     this.explosionLevel = 0;
@@ -76,7 +75,8 @@ module.exports = class CongaShooting extends LightProgram {
       }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     this.frame ++;
     this.time += this.config.speed;
@@ -94,20 +94,18 @@ module.exports = class CongaShooting extends LightProgram {
     let baseColor = ColorUtils.HSVtoRGB(0, 0, this.explosionLevel/20);
     this.simulate();
     for (let i = 0; i < this.numberOfLeds; i++) {
-        this.colors[i] = baseColor;
+        leds[i] = baseColor;
         for(const b of this.bulletsA){
             if (Math.abs(b.pos - i) < this.config.speed){
-                this.colors[i] = ColorUtils.HSVtoRGB(b.size/400, 1, 1);
+                leds[i] = ColorUtils.HSVtoRGB(b.size/400, 1, 1);
             }
         }
         for(const b of this.bulletsB){
             if (Math.abs(b.pos - i) < this.config.speed){
-              this.colors[i] = ColorUtils.HSVtoRGB(b.size/400+0.33, 1, 1);
+              leds[i] = ColorUtils.HSVtoRGB(b.size/400+0.33, 1, 1);
             }
         }
     }
-
-    draw(this.colors);
   }
 
   static presets() {

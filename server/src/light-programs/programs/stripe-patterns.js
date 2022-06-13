@@ -57,9 +57,9 @@ module.exports = class StripePattern extends LightProgram {
     }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio;
     this.time += this.config.speed;
-    const newColors = new Array(this.numberOfLeds);
 
     if (audio.ready) {
       this.rebuildPattern(audio.currentFrame);
@@ -69,11 +69,10 @@ module.exports = class StripePattern extends LightProgram {
     }
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      newColors[i] = this.pattern[
+      leds[i] = this.pattern[
         (i + Math.floor(this.time)) % this.pattern.length
       ];
     }
-    draw(newColors);
   }
 
   static presets() {

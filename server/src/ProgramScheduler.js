@@ -8,10 +8,11 @@ const NanoTimer = require('nanotimer');
 
 module.exports = class ProgramScheduler {
 
-  constructor(program, config, newFrameCallback) {
+  constructor(program, config, leds, ledsUpdatedCallback) {
     this.program = program;
     this.config = config;
-    this.newFrameCallback = newFrameCallback;
+    this.leds = leds;
+    this.ledsUpdatedCallback = ledsUpdatedCallback;
     this.timeInMs = 0;
     this.startTime = null;
     this.nextTickTimeout = null;
@@ -30,35 +31,38 @@ module.exports = class ProgramScheduler {
       // TODO: find a way to remove this
       this.program.timeInMs = this.timeInMs;
 
-
       let startFrameTime = Date.now();
+      this.program.drawFrame(this.leds, {
+        timeInMs: this.timeInMs,
+        audio: audioEmitter,
+      });
 
-      const flushFrameData = colorsArray => {
-        const endFrameTime = Date.now();
-        let drawingTimeMs = endFrameTime - startFrameTime;
-        let frameLength = Math.round(1000 / this.config.fps);
-        let remainingTime = frameLength - (endFrameTime - lastFlushTime);
+      const endFrameTime = Date.now();
+      let drawingTimeMs = endFrameTime - startFrameTime;
+      let frameLength = Math.round(1000 / this.config.fps);
+      let remainingTime = frameLength - (endFrameTime - lastFlushTime);
 
-        if (drawingTimeMs > 10) {
-          // console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
+      if (drawingTimeMs > 10) {
+        // console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
+      }
+      // Schedule next frame for the remaing time considering how long it took to do the drawing
+      // We wait at least 3ms in order to throttle CPU to give room for IO, serial and other critical stuff
+      this.timer.setTimeout(() => {
+        const now = Date.now().valueOf();
+        if (Math.abs(now - lastFlushTime - frameLength) > 3) {
+          // console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
         }
-        // Schedule next frame for the remaing time considering how long it took to do the drawing
-        // We wait at least 3ms in order to throttle CPU to give room for IO, serial and other critical stuff
-        this.timer.setTimeout(() => {
-          const now = Date.now().valueOf();
-          if (Math.abs(now - lastFlushTime - frameLength) > 3) {
-            // console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
-          }
 
-          clearInterval(this.nextTickTimeout);
-          lastFlushTime = now;
-          this.newFrameCallback(_.map(colorsArray, col => ColorUtils.dim(col, this.config.globalBrightness)));
+        clearInterval(this.nextTickTimeout);
+        lastFlushTime = now;
+        this.leds.forEach((col, i) => {
+          this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
+        });
+        this.ledsUpdatedCallback(this.leds);
 
-          frame();
-        }, '', remainingTime + 'm');
-      };
+        frame();
+      }, '', remainingTime + 'm');
 
-      this.program.drawFrame(flushFrameData, audioEmitter);
     };
 
     this.nextTickTimeout = setTimeout(frame, 1);

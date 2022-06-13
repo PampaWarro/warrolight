@@ -4,8 +4,7 @@ const ColorUtils = require("./../utils/ColorUtils");
 const {loadGradient} = require("../utils/gradients");
 
 module.exports = class Lineal extends LightProgram {
-  drawFrame(draw) {
-    const colors = new Array(this.numberOfLeds);
+  drawFrame(leds) {
     const elapsed = this.timeInMs / 1000;
 
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
@@ -28,13 +27,12 @@ module.exports = class Lineal extends LightProgram {
       const brightness = Math.pow(v, this.config.power);
       if (this.config.colorMap) {
         const gradient = loadGradient(this.config.colorMap);
-        colors[i] = gradient.colorAt(1-brightness);
+        leds[i] = gradient.colorAt(1-brightness);
       } else {
-        colors[i] = ColorUtils.HSVtoRGB((distance / 50 + this.extraTime / 1000) % 1, this.config.saturation, brightness);
+        leds[i] = ColorUtils.HSVtoRGB((distance / 50 + this.extraTime / 1000) % 1, this.config.saturation, brightness);
       }
 
     }
-    draw(colors);
   }
 
   static presets() {

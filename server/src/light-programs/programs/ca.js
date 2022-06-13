@@ -23,7 +23,8 @@ module.exports = class CA extends LightProgram {
     }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio;
     const time = this.timeInMs / 1000;
     this.cellularAutomata.setRule(this.config.rule);
     if (
@@ -35,7 +36,6 @@ module.exports = class CA extends LightProgram {
       this.lastIterationTime = time;
     }
     this.timedMultiGradient.currentTime = time;
-    const colors = new Array(this.numberOfLeds);
     const blend = this.config.blend;
     const gradient = this.config.colorMap
       ? loadGradient(this.config.colorMap)
@@ -47,13 +47,12 @@ module.exports = class CA extends LightProgram {
       const value = this.cellularAutomata.array.get(i);
       this.values[i] = (1 - blend) * this.values[i] + blend * value;
     }
-    for (var i = 0; i < colors.length; i++) {
+    for (var i = 0; i < leds.length; i++) {
       const value = this.values[Math.floor(i / this.config.scale)];
       const brightness = Math.pow(value, 8);
       const [r, g, b, a] = gradient.colorAt(brightness);
-      colors[i] = [r * brightness, g * brightness, b * brightness];
+      leds[i] = [r * brightness, g * brightness, b * brightness];
     }
-    draw(colors);
   }
 
   static presets() {

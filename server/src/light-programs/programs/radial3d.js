@@ -14,8 +14,7 @@ module.exports = class Radial3D extends LightProgram {
     super.init();
   }
 
-  drawFrame(draw) {
-    const colors = new Array(this.numberOfLeds);
+  drawFrame(leds) {
     const elapsed = this.timeInMs / 1000;
 
     const time = this.timeInMs / 1000;
@@ -39,9 +38,8 @@ module.exports = class Radial3D extends LightProgram {
       );
 
       const [r, g, b, a] = gradient.colorAt(1 - v);
-      colors[i] = [r*v, g*v, b*v];
+      leds[i] = [r*v, g*v, b*v];
     }
-    draw(colors);
   }
 
   // Override and extend config Schema

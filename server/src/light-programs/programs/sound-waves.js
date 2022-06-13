@@ -31,7 +31,8 @@ module.exports = class SoundWaves extends LightProgram {
     wave.intensity = wave.intensity * (intensityDecay + ((1 - intensityDecay) * Math.sqrt(wave.intensity)));
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     if (!audio.ready) {
       return;
     }
@@ -58,7 +59,6 @@ module.exports = class SoundWaves extends LightProgram {
 
     let geometry = this.geometry;
 
-    const colors = _.map(new Array(this.numberOfLeds), c => [0, 0, 0]);
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0];
       _.each(this.dots, dot => {
@@ -90,12 +90,10 @@ module.exports = class SoundWaves extends LightProgram {
           }
         }
       });
-      colors[i] = ColorUtils.dim([r, g, b], this.config.brilloWave);
+      leds[i] = ColorUtils.dim([r, g, b], this.config.brilloWave);
     }
 
     _.each(this.dots, dot => this.updateWave(dot));
-
-    draw(colors);
   }
 
   static presets() {

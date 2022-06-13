@@ -22,7 +22,8 @@ module.exports = class Stars extends LightProgram {
     })
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio;
     this.time++;
     let vol = ((audio.currentFrame || {})[this.config.soundMetric] || 0)
     if (vol < this.config.cutThreshold) {
@@ -67,7 +68,9 @@ module.exports = class Stars extends LightProgram {
       }
     }
 
-    draw(this.stars.map(([r, g, b]) => ColorUtils.dim([r, g, b], this.config.brillo)));
+    this.stars.forEach(([r, g, b], i) => {
+      leds[i] = ColorUtils.dim([r, g, b], this.config.brillo);
+    });
   }
 
   static presets() {

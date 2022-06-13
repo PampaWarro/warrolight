@@ -14,13 +14,13 @@ module.exports = class RadialSun extends LightProgram {
     this.globalTop = this.geometry.height;
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     if (!audio.ready) {
       return;
     }
 
     audio = audio.currentFrame;
-    const colors = new Array(this.numberOfLeds);
     const elapsed = this.timeInMs / 1000;
 
     const vol = audio[this.config.soundMetric] || Number.EPSILON;
@@ -64,16 +64,15 @@ module.exports = class RadialSun extends LightProgram {
 
       if(gradient) {
         const [r, g, b, a] = gradient.colorAt(1 - energy);
-        colors[i] = [energy*r,energy*g,energy*b,1]
+        leds[i] = [energy*r,energy*g,energy*b,1]
       } else {
-        colors[i] = ColorUtils.HSVtoRGB(
+        leds[i] = ColorUtils.HSVtoRGB(
             (this.baseHue + this.extraTime / 5000) % 1,
             this.config.saturation,
             energy
         );
       }
     }
-    draw(colors);
   }
 
   static presets() {

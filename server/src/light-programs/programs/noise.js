@@ -24,7 +24,7 @@ module.exports = class Noise extends LightProgram {
     this.noise = new tumult[this.config.noise]();
   }
 
-  drawFrame(draw) {
+  drawFrame(leds) {
     this.timedMultiGradient.currentTime = this.timeInMs / 1000;
     this.time += this.config.speed;
 
@@ -35,8 +35,7 @@ module.exports = class Noise extends LightProgram {
     const { x, y } = this.geometry;
     const t = this.time / 1000;
 
-    var colors = new Array(this.numberOfLeds);
-    for (let i = 0; i < colors.length; i++) {
+    for (let i = 0; i < leds.length; i++) {
       const v = rescale(
         this.config.colorScale * this.gen(x[i] / 32 + t, y[i] / 32 + t)
       );
@@ -44,9 +43,8 @@ module.exports = class Noise extends LightProgram {
         this.config.brightnessScale *
           this.gen(x[i] / 32 + t + 100, y[i] / 32 + t)
       );
-      colors[i] = gradient.colorAt(v).map(x => Math.floor(x * brightness));
+      leds[i] = gradient.colorAt(v).map(x => Math.floor(x * brightness));
     }
-    draw(colors);
   }
 
   gen(x, y) {

@@ -26,13 +26,14 @@ module.exports = class AliveDots extends LightProgram {
     );
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
     // let decay = this.config.decay;
+    const audio = context.audio;
     if (!audio.ready) {
       return;
     }
     this.time++;
-    this.stars = [...Array(this.numberOfLeds)].map(() => [0, 0, 0]);
+    leds.fill([0, 0, 0]);
 
     _.each(this.dots, dot => {
       let roundPos = Math.floor(dot.pos);
@@ -43,8 +44,8 @@ module.exports = class AliveDots extends LightProgram {
         dot.val
       );
 
-      let [r, g, b] = this.stars[roundPos];
-      let [ru, gu, bu] = this.stars[roundPosNext];
+      let [r, g, b] = leds[roundPos];
+      let [ru, gu, bu] = leds[roundPosNext];
 
       this.updateDot(dot, audio);
 
@@ -58,16 +59,14 @@ module.exports = class AliveDots extends LightProgram {
         bu + high * b2
       );
 
-      this.stars[roundPos] = [r, g, b];
-      this.stars[roundPosNext] = [ru, gu, bu];
+      leds[roundPos] = [r, g, b];
+      leds[roundPosNext] = [ru, gu, bu];
     });
 
     this.lastVolume = audio.currentFrame[this.config.soundMetric] || 0;
-    draw(
-      this.stars.map(([r, g, b]) =>
-        ColorUtils.dim([r, g, b], this.config.brillo)
-      )
-    );
+    leds.forEach(([r, g, b], i) => {
+      leds[i] = ColorUtils.dim([r, g, b], this.config.brillo)
+    });
   }
 
   updateDot(dot, audio) {

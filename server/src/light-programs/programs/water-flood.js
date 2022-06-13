@@ -9,8 +9,8 @@ module.exports = class WaterFlood extends LightProgram {
     this.waterLevel = 0.5;
   }
 
-  drawFrame(draw, audio) {
-    const colors = new Array(this.numberOfLeds);
+  drawFrame(leds, context) {
+    const audio = context.audio;
     const geometry = this.geometry;
 
     if (!audio.ready) {
@@ -28,7 +28,7 @@ module.exports = class WaterFlood extends LightProgram {
         posY < volumeHeight &&
         posY > volumeHeight * whiteBorderWidth
       ) {
-        colors[i] = [100, 100, 100];
+        leds[i] = [100, 100, 100];
       } else if (posY < volumeHeight) {
         let timeY = Math.sin(
           geometry.y[i] * this.config.escala +
@@ -38,17 +38,16 @@ module.exports = class WaterFlood extends LightProgram {
           geometry.x[i] * this.config.escala +
             (this.timeInMs * this.config.velocidad) / 20
         );
-        colors[i] = ColorUtils.HSVtoRGB(
+        leds[i] = ColorUtils.HSVtoRGB(
           this.config.color + 0.6 + (timeX * 0.05 + 0.025),
           1,
           Math.max(0, timeY + 0.7)
         );
       } else {
-        colors[i] = [0, 0, 0];
+        leds[i] = [0, 0, 0];
       }
     }
 
-    draw(colors);
   }
 
   static presets() {

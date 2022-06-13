@@ -5,7 +5,6 @@ const _ = require("lodash");
 module.exports = class CongaShooting extends LightProgram {
 
   init() {
-    this.colors = new Array(this.numberOfLeds);
     this.bulletsA = [];
     this.bulletsB = [];
     this.explosionLevel = 0;
@@ -47,7 +46,8 @@ module.exports = class CongaShooting extends LightProgram {
       }
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
@@ -64,20 +64,18 @@ module.exports = class CongaShooting extends LightProgram {
     let baseColor = ColorUtils.HSVtoRGB(0, 0, this.explosionLevel/20);
     this.simulate();
     for (let i = 0; i < this.numberOfLeds; i++) {
-        this.colors[i] = baseColor;
+        leds[i] = baseColor;
         for(const b of this.bulletsA){
             if (b.pos == i){
-                this.colors[i] = [255,255,0];
+                leds[i] = [255,255,0];
             }
         }
         for(const b of this.bulletsB){
             if (b.pos == i){
-                this.colors[i] = [0, 255, 255];
+                leds[i] = [0, 255, 255];
             }
         }
     }
-
-    draw(this.colors);
   }
 
   static presets() {

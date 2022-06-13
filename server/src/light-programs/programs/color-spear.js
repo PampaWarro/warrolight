@@ -7,23 +7,21 @@ module.exports = class ColorSpear extends LightProgram {
     this.time = 0;
   }
 
-  drawFrame(draw) {
+  drawFrame(leds) {
     this.time += this.config.speed;
     const punta = this.time;
-    const newColors = new Array(this.numberOfLeds);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
-      newColors[i] = [0, 0, 0];
+      leds[i] = [0, 0, 0];
     }
     const colorTime = this.config.colorTime * 1000;
     for (let i = 0; i < this.config.spearLength; i++) {
-      newColors[(punta + i) % this.numberOfLeds] = ColorUtils.HSVtoRGB(
+      leds[(punta + i) % this.numberOfLeds] = ColorUtils.HSVtoRGB(
         ((this.time + i * this.config.colorVariety) % colorTime) / colorTime,
         1,
         this.config.brillo
       );
     }
-    draw(newColors);
   }
 
   static presets() {

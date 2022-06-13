@@ -57,12 +57,10 @@ exports.LightDevice = class LightDevice {
 
   setLights(rgbArray) {
     // Initialize everything black
-    const newState = _.map(_.range(this.numberOfLights), () => [0, 0, 0]);
-
+    this.state.fill([0, 0, 0]);
     for (let i = 0; i < this.numberOfLights; i++) {
-      newState[i] = rgbArray[i % rgbArray.length];
+      this.state[i] = rgbArray[i % rgbArray.length];
     }
-    this.state = newState;
     this.freshData = true;
     this.sendNextFrame();
   }

@@ -7,6 +7,7 @@ module.exports = function programsByShape(mapping, name) {
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry)
       this.instances = {};
+      this.perInstanceLeds = {};
       this.knownMappings = shapeMapping();
 
       _.each(mapping, (Program, shapeName) => {
@@ -49,8 +50,8 @@ module.exports = function programsByShape(mapping, name) {
         }
         this.instances[shapeName] = new Program(specificConfig, shape, shapeMapping, lightController);
         this.instances[shapeName].specificConfig = specificConfig;
+        this.perInstanceLeds[shapeName] = new Array(map.length).fill([0, 0, 0]);
       });
-      this.state = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
     init() {
@@ -69,7 +70,7 @@ module.exports = function programsByShape(mapping, name) {
       return config;
     }
 
-    drawFrame(draw, audio) {
+    drawFrame(leds, context) {
       _.each(this.instances, (program, mapName) => {
         const map = this.knownMappings[mapName];
 
@@ -83,15 +84,10 @@ module.exports = function programsByShape(mapping, name) {
         // TODO: remove this forwarding somehow
         program.timeInMs = this.timeInMs;
 
-        program.drawFrame(
-          colors => {
-            _.each(colors, (col, index) => (this.state[map[index]] = col));
-          },
-          audio
-        );
+        const perInstanceLeds = this.perInstanceLeds[mapName];
+        program.drawFrame(perInstanceLeds, context);
+        _.each(perInstanceLeds, (col, index) => (leds[map[index]] = col));
       });
-
-      draw(this.state);
     }
 
     updateConfig(config) {

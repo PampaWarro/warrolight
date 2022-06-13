@@ -95,7 +95,15 @@ function hexToRgb(hexColor) {
   return [r, g, b, 1];
 }
 
-function mix([r, g, b, a], [r2, g2, b2, a2], ratio) {
+function mix(c1, c2, ratio) {
+  if (ratio <= 0) {
+    return c1;
+  }
+  if (ratio >= 1) {
+    return c2;
+  }
+  let [r, g, b, a] = c1;
+  let [r2, g2, b2, a2] = c2;
   a = a === undefined ? 1 : a;
   a2 = a2 === undefined ? 1 : a2;
   return [
@@ -116,12 +124,15 @@ function clamp(r, g, b, a) {
   ];
 }
 
-function dim([r, g, b, a], number) {
+function dim(color, number) {
+  if (number == 1) {
+    return color;
+  }
+  let [r, g, b, a] = color;
   r = Math.floor(r * number);
   g = Math.floor(g * number);
   b = Math.floor(b * number);
-  a = a === undefined ? 1 : a;
-  return [r, g, b, a];
+  return a === undefined ? [r, g, b] : [r, g, b, a];
 }
 
 // Modulo that handles negative numbers better.

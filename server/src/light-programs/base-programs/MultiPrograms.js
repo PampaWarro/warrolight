@@ -48,6 +48,8 @@ module.exports = function createMultiProgram(
       this.previous = null;
       this.current = null;
       this.nextStartChange = null;
+      this.previousColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
+      this.currentColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
     init() {
@@ -59,7 +61,7 @@ module.exports = function createMultiProgram(
       this.nextStartChange = null;
     }
 
-    drawFrame(draw, audio) {
+    drawFrame(leds, context) {
       // init
       if (this.current === null) {
         let scheduleItem = this.programSchedule[this.position];
@@ -68,35 +70,33 @@ module.exports = function createMultiProgram(
       }
 
       if (this.previous) {
-        let previousColors, currentColors;
-
+        const previousColors = this.previousColors;
+        const currentColors = this.currentColors;
         // TODO: remove this forwarding somehow
         this.previous.timeInMs = this.timeInMs;
         this.current.timeInMs = this.timeInMs;
 
-        this.previous.drawFrame((colors) => previousColors = colors, audio);
-        this.current.drawFrame((colors) => currentColors = colors, audio);
+        this.previous.drawFrame(previousColors, context);
+        this.current.drawFrame(currentColors, context);
 
         let alpha = clamp(
           (Date.now() - this.crossFadeStart)
            / (this.crossFadeFinish - this.crossFadeStart), 0, 1);
 
-        let colors = new Array(currentColors.length);
         for (let i = 0; i < currentColors.length; i++) {
           if(previousColors[i] && currentColors[i]) {
-            colors[i] = ColorUtils.mix(previousColors[i], currentColors[i], alpha);
+            leds[i] = ColorUtils.mix(previousColors[i], currentColors[i], alpha);
           } else {
             console.warn("Cannot do color crossfade between ", previousColors[i], currentColors[i])
-            colors[i] = [0,0,0,0]
+            leds[i] = [0,0,0,0]
           }
         }
 
-        draw(colors)
       } else {
         // TODO: remove this forwarding somehow
         this.current.timeInMs = this.timeInMs;
 
-        this.current.drawFrame(draw, audio);
+        this.current.drawFrame(leds, context);
       }
 
       if (this.crossFadeFinish && Date.now() >= this.crossFadeFinish) {

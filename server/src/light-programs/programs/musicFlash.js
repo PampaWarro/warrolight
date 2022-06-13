@@ -9,7 +9,8 @@ module.exports = class MusicFlash extends LightProgram {
     this.maxVolume = 0;
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
@@ -28,7 +29,9 @@ module.exports = class MusicFlash extends LightProgram {
       this.lastVolume[i] = newVal;
     }
 
-    draw(this.lastVolume);
+    leds.forEach((v, i) => {
+      leds[i] = this.lastVolume[i];
+    });
   }
 
   static presets() {

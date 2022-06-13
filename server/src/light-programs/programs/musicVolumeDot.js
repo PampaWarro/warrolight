@@ -11,7 +11,8 @@ module.exports = class MusicVolumeDot extends LightProgram {
     this.densityInvariantLength = _.sumBy(this.geometry.density, v => 1/v);
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
@@ -36,7 +37,9 @@ module.exports = class MusicVolumeDot extends LightProgram {
       densityInvariantPos += 1/this.geometry.density[i];
     }
 
-    draw(this.lastVolume);
+    leds.forEach((v, i) => {
+      leds[i] = this.lastVolume[i];
+    });
   }
 
   static presets() {

@@ -4,13 +4,14 @@ const ColorUtils = require("./../utils/ColorUtils");
 module.exports = class FrequencyActivation extends LightProgram {
 
   init() {
-    this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
+    this.lastVolume = new Array(this.numberOfLeds).fill([0, 0, 0]);
     this.time = 0;
     this.maxVolume = 0;
   }
 
   // Override parent method
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    const audio = context.audio;
     if (!audio.ready) {
       return;
     }
@@ -26,7 +27,9 @@ module.exports = class FrequencyActivation extends LightProgram {
       this.lastVolume[i] = newVal;
     }
 
-    draw(this.lastVolume);
+    this.lastVolume.forEach((v, i) => {
+      leds[i] = v;
+    });
   }
 
   static presets() {

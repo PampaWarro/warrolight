@@ -5,7 +5,10 @@ const programsByShape = require('./../base-programs/ProgramsByShape');
 
 module.exports = class Mix extends LightProgram {
   init() {
-    this.subprograms = _.map(this.config.programs, config => this.getProgramInstanceFromParam(config));
+    this.subprograms = _.map(this.config.programs, config => [
+      this.getProgramInstanceFromParam(config),
+      new Array(this.numberOfLeds)
+    ]);
   }
 
   getProgramInstanceFromParam({programName, config, shape}) {
@@ -24,36 +27,35 @@ module.exports = class Mix extends LightProgram {
     return p;
   }
 
-  drawFrame(draw, audio) {
-    const combinedColors = new Array(this.numberOfLeds).fill(this.config.multiply ? [255, 255, 255, 0] : [0, 0, 0, 0]);
+  drawFrame(leds, context) {
+    leds.fill(this.config.multiply ? [255, 255, 255, 0] : [0, 0, 0, 0]);
 
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
 
-    for (const prog of this.subprograms) {
+    for (const [prog, progLeds] of this.subprograms) {
       // Done by ProgramScheduler, has to be replicated here
       prog.timeInMs = this.timeInMs;
       let globalBrightness = prog.config.globalBrightness || 0;
-      prog.drawFrame((colors) => {
-        for (let i = 0; i < this.numberOfLeds; i++) {
-          let [r, g, b, a] = combinedColors[i]
-          const [r2, g2, b2, a2] = colors[i];
-          if (this.config.multiply) {
-            // globalBrightness of 0 means "the layer does not darken the other layer"
-            r = r * ((r2+(255-r2)*(1-globalBrightness)) || 0) / 255;
-            g = g * ((g2+(255-g2)*(1-globalBrightness)) || 0) / 255;
-            b = b * ((b2+(255-b2)*(1-globalBrightness)) || 0) / 255;
-            a = a + (a2 || 0)
-          } else {
-            r += (r2 || 0) * globalBrightness;
-            g += (g2 || 0) * globalBrightness;
-            b += (b2 || 0) * globalBrightness;
-            a += a2 || 0;
-          }
-          combinedColors[i] = [r, g, b, a];
+      progLeds.fill([0, 0, 0]);
+      prog.drawFrame(progLeds, context);
+      for (let i = 0; i < leds.length; i++) {
+        let [r, g, b, a] = leds[i]
+        const [r2, g2, b2, a2] = progLeds[i];
+        if (this.config.multiply) {
+          // globalBrightness of 0 means "the layer does not darken the other layer"
+          r = r * ((r2+(255-r2)*(1-globalBrightness)) || 0) / 255;
+          g = g * ((g2+(255-g2)*(1-globalBrightness)) || 0) / 255;
+          b = b * ((b2+(255-b2)*(1-globalBrightness)) || 0) / 255;
+          a = a + (a2 || 0)
+        } else {
+          r += (r2 || 0) * globalBrightness;
+          g += (g2 || 0) * globalBrightness;
+          b += (b2 || 0) * globalBrightness;
+          a += a2 || 0;
         }
-      }, audio)
+        leds[i] = [r, g, b, a];
+      }
     }
-    draw(combinedColors);
   }
 
   updateConfig(newConfig) {
@@ -75,7 +77,7 @@ module.exports = class Mix extends LightProgram {
 
         // Detect if the selected program type is the same or it changed
         if (oldProgDef && oldProgDef.programName === newProgDef.programName && oldProgDef.shape === newProgDef.shape) {
-          subprogram = this.subprograms[i]
+          subprogram = this.subprograms[i][0];
           subprogram.updateConfig({ ... subprogram.config, ... newProgDef.config })
         } else {
           subprogram = this.getProgramInstanceFromParam(newProgDef)
@@ -89,7 +91,7 @@ module.exports = class Mix extends LightProgram {
           subprogram.updateConfig({ ... defaults, ... presets[newProgDef.presetName] })
         }
 
-        return subprogram
+        return [subprogram, new Array(this.numberOfLeds).fill([0, 0, 0, 0])]
       });
     }
 

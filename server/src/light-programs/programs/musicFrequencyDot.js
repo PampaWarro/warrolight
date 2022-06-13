@@ -13,7 +13,8 @@ module.exports = class MusicFrequencyDot extends LightProgram {
     this.densityInvariantLength = _.sumBy(this.geometry.density, v => 1/v);
   }
 
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     if (audio.ready) {
       let [,mic,,metric] = (this.config.soundMetric || 'bassPeakDecay') .match(/(\w+_)?(bass|mid|high)?(.+)/);
 
@@ -68,7 +69,9 @@ module.exports = class MusicFrequencyDot extends LightProgram {
 
     this.frameNumber++;
 
-    draw(this.lastVolume);
+    leds.forEach((v, i) => {
+      leds[i] = this.lastVolume[i];
+    });
   }
 
   static presets() {

@@ -28,10 +28,8 @@ module.exports = class Circles extends LightProgram {
     this.yBounds = findBounds(geometry.y);
   }
 
-  drawFrame(draw, audio) {
-    const colors = new Array(this.numberOfLeds);
-
-    const frame = audio.currentFrame;
+  drawFrame(colors, context) {
+    const frame = context.audio.currentFrame;
     if (!frame) {
       return;
     }
@@ -68,8 +66,6 @@ module.exports = class Circles extends LightProgram {
       const color = ColorUtils.HSVtoRGB(h, s, v);
       colors[i] = color;
     }
-
-    draw(colors);
   }
 
   static presets() {

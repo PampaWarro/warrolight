@@ -11,7 +11,8 @@ module.exports = class MusicFlow extends LightProgram {
   }
 
   // Override parent method
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     if (!audio.ready) {
       return;
     }
@@ -64,7 +65,9 @@ module.exports = class MusicFlow extends LightProgram {
       }
     }
 
-    draw(this.lastVolume);
+    leds.forEach((v, i) => {
+      leds[i] = this.lastVolume[i];
+    });
   }
 
   static presets() {

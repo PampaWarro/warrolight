@@ -22,11 +22,9 @@ module.exports = class Rainbow extends LightProgram {
     this.frame = 0;
   }
 
-  drawFrame(draw) {
+  drawFrame(leds) {
     this.time += this.config.speed;
     this.frame ++;
-
-    const newColors = new Array(this.numberOfLeds);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       let colIndex =
@@ -36,15 +34,14 @@ module.exports = class Rainbow extends LightProgram {
       let col = ColorUtils.hexToRgb(this.colorSet[colIndex]);
       if (colIndex === 6) {
         if(this.frame % 2 || !this.config.blink) {
-          newColors[i] = col;
+          leds[i] = col;
         } else {
-          newColors[i] = ColorUtils.hexToRgb('#FF0000');
+          leds[i] = ColorUtils.hexToRgb('#FF0000');
         }
       } else {
-        newColors[i] = ColorUtils.dim(col, this.config.brillo)
+        leds[i] = ColorUtils.dim(col, this.config.brillo)
       }
     }
-    draw(newColors);
   }
 
   static presets() {

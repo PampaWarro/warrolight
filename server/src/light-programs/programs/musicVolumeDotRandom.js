@@ -21,7 +21,8 @@ module.exports = class MusicVolumeDotRandom extends LightProgram {
   }
 
   // Override parent method
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
+    let audio = context.audio;
     audio = audio.currentFrame || {};
     this.time += this.config.speed;
 
@@ -49,7 +50,9 @@ module.exports = class MusicVolumeDotRandom extends LightProgram {
       }
     }
 
-    draw(this.lastVolume);
+    leds.forEach((v, i) => {
+      leds[i] = this.lastVolume[i];
+    });
   }
 
   static presets() {

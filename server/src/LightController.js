@@ -69,7 +69,7 @@ module.exports = class LightController extends EventEmitter {
     this.geometry = geometry;
     this.shapeMapping = shapeMapping;
 
-    this.leds = [];
+    this.leds = new Array(geometry.leds).fill([0, 0, 0]);
 
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
     this.setCurrentProgram(programNames[0]);
@@ -245,6 +245,7 @@ module.exports = class LightController extends EventEmitter {
         this
       ),
       config,
+      this.leds,
       this.updateLeds.bind(this)
     );
     if (this.running) {
@@ -261,12 +262,12 @@ module.exports = class LightController extends EventEmitter {
     };
   }
 
-  updateLeds(rgbaLeds) {
+  updateLeds(leds) {
     // TODO: remove rgba before?
-    const rgbLeds = _.map(rgbaLeds, rgba => rgba.slice(0, 3));
-    this.emit("lights", rgbLeds);
+    leds.forEach(color => color.length = 3);
+    this.emit("lights", leds);
 
-    this.setLights(rgbLeds);
+    this.setLights(leds);
     let lastUpdateLatency = Date.now() - this.lastLightsUpdate;
     this.lastLightsUpdate = Date.now();
     // TODO: where does the number 34 come from?

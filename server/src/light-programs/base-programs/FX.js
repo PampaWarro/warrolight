@@ -12,13 +12,10 @@ function makeBaseFXProgram(WrappedProgram) {
 
     init() { return this.wrapped.init(); }
 
-    drawFrame(draw, audio) {
-      let frame = null;
+    drawFrame(leds, context) {
       this.wrapped.timeInMs = this.timeInMs;
-      this.wrapped.drawFrame(colors => {
-        this.processFrame(colors, audio);
-        draw(colors);
-      }, audio);
+      this.wrapped.drawFrame(leds, context);
+      this.processFrame(leds, context);
     }
 
     updateConfig(config) {
@@ -42,7 +39,7 @@ function makeDelay(WrappedProgram) {
       this.pastFrames = [];
     }
 
-    processFrame(frame, audio) {
+    processFrame(leds, context) {
       let ms = this.config.FXDelayMs;
       let dry = this.config.FXDelayDry;
       let wet = this.config.FXDelayWet;
@@ -51,7 +48,7 @@ function makeDelay(WrappedProgram) {
       }
       let feedback = this.config.FXDelayFeedback;
 
-      let savedFrame = _.clone(frame);
+      let savedFrame = _.clone(leds);
       this.pastFrames.push([ this.timeInMs, savedFrame ]);
 
       let pastFrame = null;
@@ -68,15 +65,15 @@ function makeDelay(WrappedProgram) {
       if (!pastFrame) {
         return;
       }
-      for (let i = 0; i < frame.length; i++) {
-        let currentColor = _.map(frame[i], x => x * dry);
+      for (let i = 0; i < leds.length; i++) {
+        let currentColor = _.map(leds[i], x => x * dry);
         let pastColor = _.map(pastFrame[i], x => x * wet);
-        frame[i] = ColorUtils.max(currentColor, pastColor);
+        leds[i] = ColorUtils.max(currentColor, pastColor);
       }
 
       if (feedback > 0) {
-        for (let i = 0; i < frame.length; i++) {
-          savedFrame[i] = ColorUtils.mix(savedFrame[i], frame[i], feedback);
+        for (let i = 0; i < leds.length; i++) {
+          savedFrame[i] = ColorUtils.mix(savedFrame[i], leds[i], feedback);
         }
       }
     }
@@ -104,20 +101,20 @@ function makeSlowFade(WrappedProgram) {
       this.lastFrame = null;
     }
 
-    processFrame(frame, audio) {
+    processFrame(leds, context) {
       let alpha = this.config.FXSlowFadeAlpha;
       if(alpha > 0) {
         if (this.lastFrame) {
-          for (let i = 0; i < frame.length; i++) {
+          for (let i = 0; i < leds.length; i++) {
             let oldColor = this.lastFrame[i];
-            let color = frame[i];
+            let color = leds[i];
             if (Math.max(...color) < Math.max(...oldColor)) {
               // Less bright, slow fade.
-              frame[i] = ColorUtils.mix(color, oldColor, alpha);
+              leds[i] = ColorUtils.mix(color, oldColor, alpha);
             }
           }
         }
-        this.lastFrame = frame;
+        this.lastFrame = leds;
       }
     }
 

@@ -10,7 +10,7 @@ module.exports = class LightProgram {
   init() {}
 
   // Override in subclasses
-  drawFrame(draw, audio) {
+  drawFrame(leds, context) {
     throw new Error("Child classes should override drawFrame");
   }
 

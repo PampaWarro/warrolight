@@ -135,6 +135,11 @@
   resolved "https://registry.yarnpkg.com/@types/xmldom/-/xmldom-0.1.29.tgz#c4428b0ca86d3b881475726fd94980b38a27c381"
   integrity sha1-xEKLDKhtO4gUdXJv2UmAs4onw4E=
 
+accurate-game-loop@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/accurate-game-loop/-/accurate-game-loop-2.0.0.tgz#2a378fc061ebe0f446861518528a094fdc9f230d"
+  integrity sha512-JIftZhFffBoxGZZiwv0Y4nHme16LkPq6oblYqn0k5/iQCvUCqE4vpqI4Uc+C7utsyzKmY8jD0WUgHjCJa9uhpQ==
+
 acorn-jsx@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.1.0.tgz#294adb71b57398b0680015f0a38c563ee1db5384"
@@ -1871,11 +1876,6 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
-
-nanotimer@^0.3.15:
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/nanotimer/-/nanotimer-0.3.15.tgz#280d277db9146eca6f8a570b572abaf2a9acc754"
-  integrity sha1-KA0nfbkUbspvilcLVyq68qmsx1Q=
 
 napi-build-utils@^1.0.1:
   version "1.0.2"

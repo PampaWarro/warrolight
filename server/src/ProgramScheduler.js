@@ -4,7 +4,7 @@ const audioEmitter = require("./audioEmitter");
 
 let lastFlushTime = new Date().valueOf();
 
-const NanoTimer = require('nanotimer');
+const Loop = require('accurate-game-loop');
 
 module.exports = class ProgramScheduler {
 
@@ -15,13 +15,11 @@ module.exports = class ProgramScheduler {
     this.ledsUpdatedCallback = ledsUpdatedCallback;
     this.timeInMs = 0;
     this.startTime = null;
-    this.nextTickTimeout = null;
   }
 
   start() {
     this.timeInMs = 0;
     this.startTime = Date.now();
-    this.timer = new NanoTimer();
 
     this.program.init();
 
@@ -45,31 +43,23 @@ module.exports = class ProgramScheduler {
       if (drawingTimeMs > 10) {
         // console.log(`Time tick took: ${drawingTimeMs}ms (${remainingTime}ms remaining)`);
       }
-      // Schedule next frame for the remaing time considering how long it took to do the drawing
-      // We wait at least 3ms in order to throttle CPU to give room for IO, serial and other critical stuff
-      this.timer.setTimeout(() => {
-        const now = Date.now().valueOf();
-        if (Math.abs(now - lastFlushTime - frameLength) > 3) {
-          // console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
-        }
+      const now = Date.now().valueOf();
+      if (Math.abs(now - lastFlushTime - frameLength) > 3) {
+        // console.log(`${now - lastFlushTime}ms (render ${drawingTimeMs}ms, scheduled ${remainingTime}, took ${now - endFrameTime})`);
+      }
 
-        clearInterval(this.nextTickTimeout);
-        lastFlushTime = now;
-        this.leds.forEach((col, i) => {
-          this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
-        });
-        this.ledsUpdatedCallback(this.leds);
-
-        frame();
-      }, '', remainingTime + 'm');
-
+      lastFlushTime = now;
+      this.leds.forEach((col, i) => {
+        this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
+      });
+      this.ledsUpdatedCallback(this.leds);
     };
-
-    this.nextTickTimeout = setTimeout(frame, 1);
+    this.loop = new Loop(frame, this.config.fps);
+    this.loop.start();
   }
 
   stop() {
-    this.timer.clearTimeout();
+    this.loop.stop();
   }
 
   restart() {
@@ -91,14 +81,3 @@ module.exports = class ProgramScheduler {
   }
 
 }
-
-// var NanoTimer = require('nanotimer');
-// timer = new NanoTimer();
-// c = new Date().valueOf();
-// var log = () => {
-//   let now = new Date().valueOf();
-//   let diff = now - c;
-//   console.log(diff);
-//   c = now;
-// };
-// timer.setInterval(log,null, '16m')

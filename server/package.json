@@ -16,6 +16,7 @@
   "author": "Pampa Warro",
   "license": "MIT",
   "dependencies": {
+    "accurate-game-loop": "^2.0.0",
     "cellular-automata": "^2.0.1",
     "cli-table2": "^0.2.0",
     "color-string": "^1.5.3",
@@ -23,7 +24,6 @@
     "dgram": "^1.0.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "nanotimer": "^0.3.15",
     "node-fetch": "^2.6.6",
     "performance-now": "^2.1.0",
     "pino": "^5.15.0",

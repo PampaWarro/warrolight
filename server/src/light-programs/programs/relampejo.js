@@ -33,7 +33,7 @@ module.exports = class Stars extends LightProgram {
       vol = 1;
     }
 
-    this.stars = new Array(this.numberOfLeds).fill([0, 0, 0]);
+    this.stars.fill([0, 0, 0]);
 
     for(const f of this.flashes) {
       for (let i = f.location; i < f.location+f.size; i++) {

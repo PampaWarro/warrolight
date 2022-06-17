@@ -4,8 +4,18 @@ const audioEmitter = require("./audioEmitter");
 const {getGradientsByNameCss} = require('./light-programs/utils/gradients')
 
 function lightsToByteString(ledsColorArray) {
-  let bytes = _.flatten(ledsColorArray);
-  return Buffer.from(bytes).toString("base64");
+  // Note: this function is in a hot code path. If you're tempted to change this
+  // (e.g. simplify using _.flatten), run some profiling to make sure there
+  // isn't a CPU time or memory allocation regression.
+  const buffer = Buffer.allocUnsafe(ledsColorArray.length * 3);
+  for (let i = 0; i < ledsColorArray.length; i++) {
+    const offset = i * 3;
+    const led = ledsColorArray[i];
+    buffer[offset] = led[0];
+    buffer[offset + 1] = led[1];
+    buffer[offset + 2] = led[2];
+  }
+  return buffer.toString("base64");
 }
 
 let lightServicesCounter = 0;

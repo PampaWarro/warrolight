@@ -263,8 +263,6 @@ module.exports = class LightController extends EventEmitter {
   }
 
   updateLeds(leds) {
-    // TODO: remove rgba before?
-    leds.forEach(color => color.length = 3);
     this.emit("lights", leds);
 
     this.setLights(leds);

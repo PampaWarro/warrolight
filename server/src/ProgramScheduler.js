@@ -49,9 +49,11 @@ module.exports = class ProgramScheduler {
       }
 
       lastFlushTime = now;
-      this.leds.forEach((col, i) => {
-        this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
-      });
+      if (this.config.globalBrightness != 1) {
+        this.leds.forEach((col, i) => {
+          this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
+        });
+      }
       this.ledsUpdatedCallback(this.leds);
     };
     this.loop = new Loop(frame, this.config.fps);

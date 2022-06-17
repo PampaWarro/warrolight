@@ -85,6 +85,9 @@ module.exports = class DeviceMultiplexer {
       this.targetPosition[i] = position;
     }
 
+    this.deviceStateArrays = this.devices.map(
+        device => _.map(_.range(device.numberOfLights), i => [0, 0, 0]));
+
     this.statusCbk = () => null;
 
     // Report devices' states every 1s
@@ -108,19 +111,16 @@ module.exports = class DeviceMultiplexer {
   }
 
   setLights(rgbArray) {
-    const deviceStateArrays = this.devices.map(
-        device => _.map(_.range(device.numberOfLights), i => [0, 0, 0]));
-
     for (let i = 0; i < rgbArray.length; i++) {
       const deviceIndex = this.targetDevice[i];
       const positionIndex = this.targetPosition[i];
       if (deviceIndex >= 0) {
-        deviceStateArrays[deviceIndex][positionIndex] = rgbArray[i];
+        this.deviceStateArrays[deviceIndex][positionIndex] = rgbArray[i];
       }
     }
 
     for (let i = 0; i < this.devices.length; i++) {
-      this.devices[i].setLights(deviceStateArrays[i]);
+      this.devices[i].setLights(this.deviceStateArrays[i]);
     }
   }
 };

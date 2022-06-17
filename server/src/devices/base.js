@@ -12,7 +12,7 @@ const { DEBUG, INFO, WARNING, ERROR } = {
 
 exports.LightDevice = class LightDevice {
   constructor(numberOfLights, deviceId) {
-    this.state = _.range(0, numberOfLights);
+    this.state = new Array(numberOfLights).fill([0, 0, 0]);
     this.numberOfLights = numberOfLights;
 
     this.deviceId = deviceId;
@@ -56,8 +56,6 @@ exports.LightDevice = class LightDevice {
   }
 
   setLights(rgbArray) {
-    // Initialize everything black
-    this.state.fill([0, 0, 0]);
     for (let i = 0; i < this.numberOfLights; i++) {
       this.state[i] = rgbArray[i % rgbArray.length];
     }

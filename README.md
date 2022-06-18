@@ -8,8 +8,10 @@ Software para simular y emitir programas audiorítmicos en tiras de luces LED. U
 1. Instalar dependencias. En macOS con Homebrew el comando es:
 
 ```
-brew install node yarn python pipenv
+brew install node yarn
 ```
+
+En windows también hace falta python para el backend viejo de audio.
 
 2. Clonar el repo de warrolight: 
 
@@ -23,6 +25,12 @@ cd warrolight/
 ```
 cd audio/
 yarn
+```
+
+Si el nuevo backend de audio node nativo (`rtaudio`) falla la instalación (en
+macOS anda bien, en Windows ni idea), instalar el fallback viejo en Python.
+
+```
 pipenv install
 ```
 

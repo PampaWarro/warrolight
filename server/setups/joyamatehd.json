@@ -3,7 +3,7 @@
   "shapeMapping": "joyamatehd",
   "lights": 5400,
   "outputDevices": {
-    "joya1": {
+    "joya-ribs": {
       "type": "udp",
       "params": {
         "numberOfLights": 1800,
@@ -11,18 +11,18 @@
         "udpPort": 8888
       }
     },
-    "joya2": {
+    "joya-horizontal": {
       "type": "udp",
       "params": {
         "numberOfLights": 900,
-        "name": "undefined-joya2",
+        "name": "undefined-joya-horizontal",
         "udpPort": 8887
       }
     },
     "mate": {
       "type": "udp",
       "params": {
-        "numberOfLights": 2400,
+        "numberOfLights": 2700,
         "name": "undefined-mate",
         "udpPort": 8886
       }
@@ -33,17 +33,17 @@
       "from": 0,
       "to": 1800,
       "baseIndex": 0,
-      "deviceName": "joya1"
+      "deviceName": "joya-ribs"
     },
     {
       "from": 1800,
       "to": 2700,
       "baseIndex": 0,
-      "deviceName": "joya2"
+      "deviceName": "joya-horizontal"
     },
     {
       "from": 2700,
-      "to": 2400,
+      "to": 5400,
       "baseIndex": 0,
       "deviceName": "mate"
     }

@@ -15,14 +15,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.expectedIp = ip;
     this.name = name;
     if (name && !ip) {
-      dns.lookup(name, (err, address) => {
-        if (err) {
-          logger.info(`failed to resolve ${name}`);
-        } else {
-          logger.info(`resolved ${name} to ${address}`);
-          this.expectedIp = address;
-        }
-      });
+      this.lookupByName();
     }
     this.udpPort = udpPort;
 
@@ -34,6 +27,18 @@ module.exports = class LightDeviceUDP extends LightDevice {
     this.packageCount = 0;
 
     this.setupCommunication();
+  }
+
+  lookupByName() {
+    dns.lookup(this.name, (err, address) => {
+      if (err) {
+        logger.info(`failed to resolve ${this.name}`);
+        setTimeout(() => this.lookupByName(), 500);
+      } else {
+        logger.info(`resolved ${this.name} to ${address}`);
+        this.expectedIp = address;
+      }
+    });
   }
 
   sendNextFrame() {
@@ -90,6 +95,9 @@ module.exports = class LightDeviceUDP extends LightDevice {
   }
 
   flush(data) {
+    if (!this.udpSocket) {
+      return;
+    }
     let payload = Buffer.from(data);
     this.udpSocket.send(
       payload,
@@ -106,7 +114,7 @@ module.exports = class LightDeviceUDP extends LightDevice {
   }
 
   setupCommunication() {
-    this.udpSocket = dgram.createSocket("udp4");
+    this.udpSocket = dgram.createSocket({type: "udp4", reuseAddr: true});
 
     this.udpSocket.on("listening", this.handleListening.bind(this));
     this.udpSocket.on("message", this.handleMessage.bind(this));
@@ -133,14 +141,10 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
   handleMessage(message, remote) {
     // logger.info(message.toString(), remote.address)
-    if (message.toString().startsWith("YEAH") &&
-        !message.toString().endsWith(this.name)) {
-      logger.warn("UDP message came from %s, expected %s",
-                  message.toString().substr(4), this.name);
-      return;
-    } else if (this.expectedIp && remote.address !== this.expectedIp) {
+    if (this.expectedIp && remote.address !== this.expectedIp) {
       logger.warn("UDP message came from %s, expected %s", remote.address,
                   this.expectedIp);
+      this.lookupByName();
       return;
     }
 
@@ -162,9 +166,21 @@ module.exports = class LightDeviceUDP extends LightDevice {
 
   // open errors will be emitted as an error event
   handleError(err) {
-    this.udpSocket.close();
+    if (this.udpSocket) {
+      try {
+        this.udpSocket.disconnect();
+      } catch (e) {
+        logger.error("UDP disconnect error:", + err);
+      }
+      try {
+        this.udpSocket.close();
+      } catch (e) {
+        logger.error("UDP close error:", + err);
+      }
+      this.udpSocket = null;
+    }
     this.updateStatus(this.STATUS_ERROR);
-    logger.error("Error: " + err.message);
+    logger.error("UDP error: " + err);
     // Create socket again
     setTimeout(() => this.setupCommunication(), 500);
   }

@@ -47,6 +47,7 @@ module.exports = function mixPrograms(...programs) {
         // TODO: remove this forwarding somehow
         p.programInstance.timeInMs = this.timeInMs;
 
+        p.leds.fill([0, 0, 0]);
         p.programInstance.drawFrame(p.leds, context);
         frames.push(p.leds);
       });

@@ -76,7 +76,9 @@ module.exports = function createMultiProgram(
         this.previous.timeInMs = this.timeInMs;
         this.current.timeInMs = this.timeInMs;
 
+        previousColors.fill([0, 0, 0]);
         this.previous.drawFrame(previousColors, context);
+        currentColors.fill([0, 0, 0]);
         this.current.drawFrame(currentColors, context);
 
         let alpha = clamp(

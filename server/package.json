@@ -24,7 +24,7 @@
     "dgram": "^1.0.1",
     "gl-matrix": "^3.4.3",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "node-fetch": "^2.6.6",
     "performance-now": "^2.1.0",
     "pino": "^5.15.0",

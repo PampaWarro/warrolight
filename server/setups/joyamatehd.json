@@ -3,19 +3,19 @@
   "shapeMapping": "joyamatehd",
   "lights": 5400,
   "outputDevices": {
-    "joya-ribs": {
+    "joya-r": {
       "type": "udp",
       "params": {
         "numberOfLights": 1800,
-        "name": "teensy-00-12-28-ca.local",
+        "name": "joya-r.local",
         "udpPort": 8888
       }
     },
-    "joya-horizontal": {
+    "joya-h": {
       "type": "udp",
       "params": {
         "numberOfLights": 900,
-        "name": "undefined-joya-horizontal",
+        "name": "joya-h.local",
         "udpPort": 8887
       }
     },
@@ -23,7 +23,7 @@
       "type": "udp",
       "params": {
         "numberOfLights": 2700,
-        "name": "undefined-mate",
+        "name": "mate.local",
         "udpPort": 8886
       }
     }
@@ -33,13 +33,13 @@
       "from": 0,
       "to": 1800,
       "baseIndex": 0,
-      "deviceName": "joya-ribs"
+      "deviceName": "joya-r"
     },
     {
       "from": 1800,
       "to": 2700,
       "baseIndex": 0,
-      "deviceName": "joya-horizontal"
+      "deviceName": "joya-h"
     },
     {
       "from": 2700,

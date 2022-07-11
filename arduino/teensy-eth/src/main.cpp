@@ -6,10 +6,18 @@
 #include <TeensyID.h>
 #include <WarroUDP.h>
 
-static constexpr size_t kNumLedsPerStrip = 300;
-static constexpr size_t kNumStrips = 8;
+#ifndef LEDS_PER_STRIP
+#define LEDS_PER_STRIP 300
+#endif // LEDS_PER_STRIP
+
+#ifndef UDP_PORT
+#define UDP_PORT 8888
+#endif // UDP_PORT
+
+static constexpr size_t kNumLedsPerStrip = LEDS_PER_STRIP;
+static constexpr size_t kNumStrips = 8;  // Always 8 with OctoWS2811.
 static constexpr size_t kNumLeds = kNumLedsPerStrip * kNumStrips;
-static constexpr uint16_t kUdpPort = 8888;
+static constexpr uint16_t kUdpPort = UDP_PORT;
 
 using qindesign::network::Ethernet;
 using qindesign::network::EthernetUDP;
@@ -42,7 +50,13 @@ void setup() {
     Serial.println("");
     warroUDP.broadcastAlive();
   });
+#ifndef HOSTNAME
   String hostname = String("teensy-") + String(teensySN());
+#else
+#define QUOTE(x) #x
+  String hostname = QUOTE(HOSTNAME);
+#undef QUOTE
+#endif // HOSTNAME
   Serial.println(hostname);
   Ethernet.setHostname(hostname);
   Ethernet.begin();

@@ -1,7 +1,7 @@
 require("colors");
 const _ = require("lodash");
 const now = require("performance-now");
-const logger = require("pino")({ prettyPrint: true });
+const logger = require("pino")(require('pino-pretty')());
 
 const { DEBUG, INFO, WARNING, ERROR } = {
   DEBUG: 1,

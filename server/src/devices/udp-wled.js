@@ -1,8 +1,8 @@
 const dns = require('dns');
 const dgram = require("dgram");
 const now = require("performance-now");
-const logger = require("pino")({ prettyPrint: true });
-const fetch = require('node-fetch');
+const logger = require("pino")(require('pino-pretty')());
+const fetch = import('node-fetch');
 
 const { LightDevice } = require("./base");
 const { WLEDRGBEncoder } = require("./encodings");

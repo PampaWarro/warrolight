@@ -1,7 +1,7 @@
 const dns = require('dns');
 const dgram = require("dgram");
 const now = require("performance-now");
-const logger = require("pino")({ prettyPrint: true });
+const logger = require("pino")(require('pino-pretty')());
 
 const { LightDevice } = require("./base");
 const { RGBEncoder } = require("./encodings");

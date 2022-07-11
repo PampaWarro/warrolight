@@ -23,7 +23,7 @@
     "colors": "^1.4.0",
     "dgram": "^1.0.1",
     "gl-matrix": "^3.4.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.6",
     "performance-now": "^2.1.0",

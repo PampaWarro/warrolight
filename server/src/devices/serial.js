@@ -1,5 +1,5 @@
 const SerialPort = require("serialport");
-const logger = require("pino")({ prettyPrint: true });
+const logger = require("pino")(require('pino-pretty')());
 
 const { LightDevice } = require("./base");
 const { RGBEncoder } = require("./encodings");

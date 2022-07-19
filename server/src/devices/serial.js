@@ -1,4 +1,5 @@
-const SerialPort = require("serialport");
+const { SerialPort } = require('serialport');
+const { ReadlineParser } = require('@serialport/parser-readline')
 const logger = require("pino")(require('pino-pretty')());
 
 const { LightDevice } = require("./base");
@@ -115,7 +116,8 @@ module.exports = class LightDeviceSerial extends LightDevice {
   setupCommunication() {
     this.updateStatus(this.STATUS_CONNECTING);
 
-    this.port = new SerialPort(this.devicePort, {
+    this.port = new SerialPort({
+      path: this.devicePort,
       baudRate: this.baudRate
     });
 
@@ -125,7 +127,7 @@ module.exports = class LightDeviceSerial extends LightDevice {
     this.port.on("close", this.handleClose.bind(this));
     this.port.on("disconnect", this.handleClose.bind(this));
 
-    const parser = new SerialPort.parsers.Readline({ delimiter: "\n" });
+    const parser = new ReadlineParser({ delimiter: "\n" });
     parser.on("data", this.handleArduinoData.bind(this));
 
     this.port.pipe(parser);

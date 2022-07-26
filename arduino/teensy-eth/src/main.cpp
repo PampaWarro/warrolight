@@ -18,6 +18,7 @@ static constexpr size_t kNumLedsPerStrip = LEDS_PER_STRIP;
 static constexpr size_t kNumStrips = 8;  // Always 8 with OctoWS2811.
 static constexpr size_t kNumLeds = kNumLedsPerStrip * kNumStrips;
 static constexpr uint16_t kUdpPort = UDP_PORT;
+static constexpr unsigned long kFadeInMillis = 30000;
 
 using qindesign::network::Ethernet;
 using qindesign::network::EthernetUDP;
@@ -86,18 +87,21 @@ void loop() {
 
     fadeToBlackBy(leds, kNumLeds, 5);
     uint8_t dothue = 0;
-    for (int i = 0; i < 8; i++) {
-      leds[(5 * (10 + i) * millis() / 1000) % kNumLeds] |=
+    for (int i = 0; i < 16; i++) {
+      leds[(5 * (10 + i) * (30000 + millis()) / 1000) % kNumLeds] |=
           CHSV(dothue, 200, 255);
-      dothue += 32;
+      dothue += 16;
     }
+  }
 
-    if (millis() < 10000) {
-      // Set the first n leds on each strip to show which strip it is
-      for (size_t i = 0; i < kNumStrips; i++) {
-        for (size_t j = 0; j <= i; j++) {
-          leds[(i * kNumLedsPerStrip) + j] = CRGB::Red;
-        }
+  const unsigned long currentMillis = millis();
+  if (currentMillis < kFadeInMillis) {
+    float fadeInRatio = static_cast<float>(currentMillis) / kFadeInMillis;
+    FastLED.setBrightness(static_cast<uint8_t>(255.f * fadeInRatio * fadeInRatio));
+    // Set the first n leds on each strip to show which strip it is
+    for (size_t i = 0; i < kNumStrips; i++) {
+      for (size_t j = 0; j <= i; j++) {
+        leds[(i * kNumLedsPerStrip) + j] = CRGB::Red;
       }
     }
   }

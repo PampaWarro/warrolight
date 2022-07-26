@@ -10,7 +10,7 @@ const shapes = {};
 shapes.all = shapes.allOfIt = _.range(0, ledCount);
 
 let globalOffset = 0;
-const ribSize = 300;
+const ribSize = 258;
 const ribCount = 6;
 const ribs = [];
 const oddRibs = [];
@@ -32,7 +32,7 @@ for (let i = 0; i < mirrorRibs.length; i++) {
 }
 globalOffset += shapes.ribs.length;
 
-const hSegmentSize = 150;
+const hSegmentSize = 145;
 const hSegmentCount = 6;
 const horizontal = [];
 const oddHorizontal = [];

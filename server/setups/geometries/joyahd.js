@@ -3,11 +3,11 @@ const { Stripe } = require("../../src/geometry");
 // Single rib points.
 //
 // p2
-// |  \
-// p3  \
-//   \  \
-//    \  \
-//    p4  \
+//    \
+//     \
+//      \
+//       \
+//        \
 //         \
 //          \
 //           \
@@ -20,12 +20,10 @@ const { Stripe } = require("../../src/geometry");
 //          /
 //         p0
 
-function makeRib(p0, p1, p2, p3, p4) {
+function makeRib(p0, p1, p2) {
   return [
     Stripe.fromXZUpwardY(p0, p1, 80),
     Stripe.fromXZUpwardY(p1, p2, 178),
-    Stripe.fromXZUpwardY(p2, p3, 12),
-    Stripe.fromXZUpwardY(p3, p4, 30)
   ];
 }
 
@@ -48,22 +46,16 @@ const R0 = [
   [-1.2, 0, 0],
   [-2.19, 0, 0.88],
   [-0.14, 0, 3],
-  [-0.14, 0, 2.8],
-  [-0.49, 0, 2.44]
 ];
 const R1 = [
   [-0.6, 1.04, 0],
   [-1.09, 1.9, 0.88],
   [-0.07, 0.13, 3],
-  [-0.07, 0.13, 2.8],
-  [-0.25, 0.43, 2.44]
 ];
 const R2 = [
   [0.6, 1.04, 0],
   [1.09, 1.9, 0.88],
   [0.07, 0.13, 3],
-  [0.07, 0.13, 2.8],
-  [0.25, 0.43, 2.44]
 ];
 const R3 = R0.map(([x, z, y]) => [-x, -z, y]);
 const R4 = R1.map(([x, z, y ]) => [-x, -z, y]);
@@ -76,12 +68,12 @@ const stripes = [];
 
 // Horizontal.
 stripes.push(
-    Stripe.fromXZUpwardY(scale(R0[1]), scale(R1[1]), 150),
-    Stripe.fromXZUpwardY(scale(R1[1]), scale(R2[1]), 150),
-    Stripe.fromXZUpwardY(scale(R2[1]), scale(R3[1]), 150),
-    Stripe.fromXZUpwardY(scale(R3[1]), scale(R4[1]), 150),
-    Stripe.fromXZUpwardY(scale(R4[1]), scale(R5[1]), 150),
-    Stripe.fromXZUpwardY(scale(R5[1]), scale(R0[1]), 150)
+    Stripe.fromXZUpwardY(scale(R0[1]), scale(R1[1]), 145),
+    Stripe.fromXZUpwardY(scale(R1[1]), scale(R2[1]), 145),
+    Stripe.fromXZUpwardY(scale(R2[1]), scale(R3[1]), 145),
+    Stripe.fromXZUpwardY(scale(R3[1]), scale(R4[1]), 145),
+    Stripe.fromXZUpwardY(scale(R4[1]), scale(R5[1]), 145),
+    Stripe.fromXZUpwardY(scale(R5[1]), scale(R0[1]), 145)
 );
 
 module.exports = stripes;

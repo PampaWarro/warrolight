@@ -23,13 +23,13 @@
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 1800,
+      "to": 1548,
       "baseIndex": 0,
       "deviceName": "joya1"
     },
     {
-      "from": 1800,
-      "to": 2700,
+      "from": 1548,
+      "to": 2418,
       "baseIndex": 0,
       "deviceName": "joya2"
     }

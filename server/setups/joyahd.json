@@ -1,12 +1,12 @@
 {
   "geometry": "joyahd",
   "shapeMapping": "joyahd",
-  "lights": 2700,
+  "lights": 2418,
   "outputDevices": {
     "joya1": {
       "type": "udp",
       "params": {
-        "numberOfLights": 1800,
+        "numberOfLights": 1548,
         "name": "teensy-00-12-28-ca.local",
         "udpPort": 8888
       }
@@ -14,7 +14,7 @@
     "joya2": {
       "type": "udp",
       "params": {
-        "numberOfLights": 900,
+        "numberOfLights": 870,
         "name": "undefined-joya2",
         "udpPort": 8887
       }

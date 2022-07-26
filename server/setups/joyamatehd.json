@@ -1,12 +1,12 @@
 {
   "geometry": "joyamatehd",
   "shapeMapping": "joyamatehd",
-  "lights": 5400,
+  "lights": 5118,
   "outputDevices": {
     "joya-r": {
       "type": "udp",
       "params": {
-        "numberOfLights": 1800,
+        "numberOfLights": 1548,
         "name": "joya-r.local",
         "udpPort": 8888
       }
@@ -14,7 +14,7 @@
     "joya-h": {
       "type": "udp",
       "params": {
-        "numberOfLights": 900,
+        "numberOfLights": 870,
         "name": "joya-h.local",
         "udpPort": 8887
       }
@@ -31,19 +31,19 @@
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 1800,
+      "to": 1548,
       "baseIndex": 0,
       "deviceName": "joya-r"
     },
     {
-      "from": 1800,
-      "to": 2700,
+      "from": 1548,
+      "to": 2418,
       "baseIndex": 0,
       "deviceName": "joya-h"
     },
     {
-      "from": 2700,
-      "to": 5400,
+      "from": 2418,
+      "to": 5118,
       "baseIndex": 0,
       "deviceName": "mate"
     }

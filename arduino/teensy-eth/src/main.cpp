@@ -53,8 +53,10 @@ void setup() {
 #ifndef HOSTNAME
   String hostname = String("teensy-") + String(teensySN());
 #else
-#define QUOTE(x) #x
+#define QUOTE(x) _QUOTE(x)
+#define _QUOTE(x) #x
   String hostname = QUOTE(HOSTNAME);
+#undef _QUOTE
 #undef QUOTE
 #endif // HOSTNAME
   Serial.println(hostname);

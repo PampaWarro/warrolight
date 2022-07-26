@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const {getAllPresets, getFilePresets} = require("../../presets.js");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/ProgramsByShape");
@@ -35,29 +36,6 @@ const Circles = require("./circles");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000 * 1;
-
-function getAllPresets(funcClass, time, shape = "Warro") {
-  return _.map(funcClass.presets(), (preset, name) => {
-    return {
-      duration: time * baseTime,
-      program: programsByShape({ [shape]: [funcClass, preset] }, name)
-    };
-  });
-}
-
-function getFilePresets(presetFileName, duration = 30) {
-  const presetsByProgram = require(`../../../setups/program-presets/${presetFileName}`);
-  const presets = [];
-  _.each(presetsByProgram, (presetsByName, programName) => {
-    const ProgramClass = require(`./${programName}.js`);
-
-    _.each(presetsByName, (config, name) => {
-      presets.push({duration: duration * baseTime, program: programsByShape({all: [ProgramClass, config]}, name)});
-      console.log(`Loaded preset ${programName.green} ${name.yellow} from ${presetFileName}`)
-    })
-  })
-  return presets;
-}
 
 function sineScale(s) {
   return (Math.sin(this.timeInMs / 1000) + 1) * 8 + 0.5;
@@ -191,18 +169,18 @@ let starsSunrise = mixPrograms(
 );
 
 const schedule = [
-  ...getAllPresets(Mix, 60),
+  ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 
-  ...getFilePresets('javier.json', 60),
+  ...getFilePresets('javier.json', 60 * baseTime),
 
 
-  ...getAllPresets(Rays, 60),
+  ...getAllPresets(Rays, 60 * baseTime, "Warro"),
 
-  ...getAllPresets(Circles, 30, "allOfIt"),
+  ...getAllPresets(Circles, 30 * baseTime, "allOfIt"),
 
-  ...getAllPresets(StripePatterns, 30, "allOfIt"),
+  ...getAllPresets(StripePatterns, 30 * baseTime, "allOfIt"),
 
-  ...getAllPresets(MusicFrequencyDot, 30, "allOfIt"),
+  ...getAllPresets(MusicFrequencyDot, 30 * baseTime, "allOfIt"),
 
 
   { duration: 60 * baseTime, program: BandParticles },
@@ -213,17 +191,17 @@ const schedule = [
 
   { duration: 30 * baseTime, program: radialSunArribaAbajo },
 
-  ...getAllPresets(Shapes, 60, "allOfIt"),
+  ...getAllPresets(Shapes, 60 * baseTime, "allOfIt"),
 
   { duration: 30 * baseTime, program: WarroBass },
   { duration: 30 * baseTime, program: WarroBass }, // Es muy buenoo!!! más
   { duration: 60 * baseTime, program: WarroBass }, // Es muy buenoo!!! más
 
-  ...getAllPresets(Bombs, 60, "allOfIt"),
+  ...getAllPresets(Bombs, 60 * baseTime, "allOfIt"),
 
-  ...getAllPresets(BassWarpGrid, 60, "allOfIt"),
+  ...getAllPresets(BassWarpGrid, 60 * baseTime, "allOfIt"),
 
-  ...getAllPresets(RadialSun, 30, "allOfIt"),
+  ...getAllPresets(RadialSun, 30 * baseTime, "allOfIt"),
   { duration: 60 * baseTime, program: radialSunByBand },
 
   { duration: 60 * baseTime, program: volumeDotsRandomByBand(3) },
@@ -372,7 +350,7 @@ const schedule = [
       Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]
     })
   },
-  ...getAllPresets(SoundWaves, 60, "allOfIt"),
+  ...getAllPresets(SoundWaves, 60 * baseTime, "allOfIt"),
   {
     duration: 60 * baseTime,
     program: programsByShape({
@@ -474,11 +452,11 @@ const schedule = [
     })
   },
 
-  ...getAllPresets(Lineal, 30),
+  ...getAllPresets(Lineal, 30 * baseTime, "Warro"),
 
-  ...getAllPresets(WaterFlood, 40, "allOfIt"),
+  ...getAllPresets(WaterFlood, 40 * baseTime, "allOfIt"),
 
-  ...getAllPresets(AliveDots, 30),
+  ...getAllPresets(AliveDots, 30 * baseTime, "Warro"),
   {
     duration: 30 * baseTime,
     program: programsByShape({
@@ -600,7 +578,7 @@ const schedule = [
 
   // {duration: 30*baseTime, program: Hourglass},
 
-  ...getAllPresets(Stars, 30)
+  ...getAllPresets(Stars, 30 * baseTime, "Warro")
 ];
 
 // las formas que se pueden usar están definidas en Transformation

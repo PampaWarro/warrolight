@@ -16,6 +16,10 @@ const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
+  "JoyaMate_BM22_art",
+  // "JoyaMate_BM22_music_low",
+  // "JoyaMate_BM22_music_mid",
+  // "JoyaMate_BM22_music_high",
   "mix",
   "congaShooting2",
   "congaScore",

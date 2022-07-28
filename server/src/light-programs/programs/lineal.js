@@ -25,6 +25,9 @@ module.exports = class Lineal extends LightProgram {
       );
 
       const brightness = Math.pow(v, this.config.power);
+      if (Number.isNaN(brightness)) {
+        continue;
+      }
       if (this.config.colorMap) {
         const gradient = loadGradient(this.config.colorMap);
         leds[i] = gradient.colorAt(1-brightness);

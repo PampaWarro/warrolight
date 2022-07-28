@@ -16,11 +16,13 @@ module.exports = class MusicExplosions extends LightProgram {
     let location = Math.floor(Math.random() * this.numberOfLeds);
     let centerX = this.geometry.x[location];
     let centerY = this.geometry.y[location];
+    let centerZ = this.geometry.z[location];
 
     let energy = (vol * this.config.energy) ** this.config.power;
     this.explosions.push({
       centerX,
       centerY,
+      centerZ,
       age: 1,
       energy,
       initialEnergy: energy,
@@ -59,9 +61,10 @@ module.exports = class MusicExplosions extends LightProgram {
       let e = 0;
       const x = this.geometry.x[i];
       const y = this.geometry.y[i]; // 18 is the offset
+      const z = this.geometry.z[i];
 
-      for (const {centerX, centerY, energy, radius} of this.explosions) {
-        let d = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+      for (const {centerX, centerY, centerZ, energy, radius} of this.explosions) {
+        let d = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2 + (z - centerZ) ** 2);
         if (d < radius) {
           e += energy / d;
         }

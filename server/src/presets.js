@@ -1,5 +1,7 @@
 const _ = require("lodash");
 const programsByShape = require("./light-programs/base-programs/ProgramsByShape");
+const { glob } = require("glob");
+const path = require("path");
 
 // Get a multiProgram schedule entry for each class-defined preset in the given
 // class.
@@ -32,7 +34,17 @@ function getFilePresets(presetFileName, duration = 30) {
   return presets;
 }
 
+function loadAllPresetFiles() {
+  const files = glob.sync(path.join(__dirname, "../setups/program-presets", "*.json"));
+  const allPresets = {};
+  files.forEach(file => {
+    allPresets[path.basename(file)] = require(file);
+  });
+  return allPresets;
+}
+
 module.exports = {
   getAllPresets,
   getFilePresets,
+  loadAllPresetFiles,
 };

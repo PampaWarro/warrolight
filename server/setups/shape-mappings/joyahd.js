@@ -96,6 +96,13 @@ for (let i = 0; i < mirrorTriangles.length; i++) {
   shapes[`mirror-triangles${i + 1}`] = _.flatten(mirrorTriangles[i]);
 }
 
+const ribTops = ribs.map(rib => rib.slice(ribHIntersection));
+shapes["top"] = _.flatten(ribTops);
+shapes["top-h"] = [..._.flatten(horizontal), ..._.flatten(ribTops)];
+const ribBottoms = ribs.map(rib => rib.slice(0, ribHIntersection));
+shapes["bottom"] = _.flatten(ribBottoms);
+shapes["bottom-h"] = [..._.flatten(horizontal), ..._.flatten(ribBottoms)];
+
 module.exports = function getShapes() {
   return shapes;
 };

@@ -25,7 +25,7 @@ Object.entries(pieces).forEach(([name, piece]) => {
     if (shapeName in shapes) {
       throw `duplicate shape name: '${shapeName}'`;
     }
-    shapes[shapeName] = shape.map(i => i + piece.offset);
+    shapes[`${name}-${shapeName}`] = shape.map(i => i + piece.offset);
   });
   size += piece.size;
 });

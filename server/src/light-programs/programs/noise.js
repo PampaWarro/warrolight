@@ -1,4 +1,4 @@
-const tumult = require("tumult");
+const {createNoise2D} = require('simplex-noise');
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("../utils/ColorUtils");
 const {
@@ -21,7 +21,7 @@ module.exports = class Noise extends LightProgram {
 
   init() {
     this.time = 0;
-    this.noise = new tumult[this.config.noise]();
+    this.noise = createNoise2D();
   }
 
   drawFrame(leds) {
@@ -49,15 +49,10 @@ module.exports = class Noise extends LightProgram {
 
   gen(x, y) {
     try {
-      return this.noise.gen(x, y);
+      return this.noise(x, y);
     } catch {
       return 0;
     }
-  }
-
-  updateConfig(config) {
-    super.updateConfig(config);
-    this.noise = new tumult[this.config.noise]();
   }
 
   static configSchema() {
@@ -76,11 +71,6 @@ module.exports = class Noise extends LightProgram {
       max: 30,
       default: 5,
       step: 0.01
-    };
-    config.noise = {
-      type: String,
-      values: ["Simplex2", "Perlin2"],
-      default: "Simplex2"
     };
     config.colorMap = { type: "gradient", default: "" };
     return config;

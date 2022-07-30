@@ -26,14 +26,12 @@ module.exports = class Circles extends LightProgram {
 
     this.xBounds = findBounds(geometry.x);
     this.yBounds = findBounds(geometry.y);
+    this.zBounds = findBounds(geometry.z);
   }
 
   drawFrame(colors, context) {
     const frame = context.audio.currentFrame;
-    if (!frame) {
-      return;
-    }
-    const normalizedAudio = frame[this.config.soundMetric];
+    const normalizedAudio = frame ? frame[this.config.soundMetric] : 0.1;
     const centerX =
       this.xBounds.center +
       0.25 *
@@ -44,25 +42,32 @@ module.exports = class Circles extends LightProgram {
       0.25 *
         this.yBounds.scale *
         Math.sin((this.timeInMs * this.config.velocidad) / 800);
-    const maxScale = Math.max(this.xBounds.scale, this.yBounds.scale);
+    const centerZ =
+      this.zBounds.center +
+      0.25 *
+        this.zBounds.scale *
+        Math.sin((this.timeInMs * this.config.velocidad) / 900);
+    const maxScale =
+        Math.max(this.xBounds.scale, this.yBounds.scale, this.zBounds.scale);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       const x = this.geometry.x[i];
       const y = this.geometry.y[i];
+      const z = this.geometry.z[i];
       const rx = x - centerX;
       const ry = y - centerY;
-      const r = Math.sqrt(Math.pow(rx, 2) + Math.pow(ry, 2));
+      const rz = z - centerZ;
+      const r = Math.sqrt(Math.pow(rx, 2) + Math.pow(ry, 2), + Math.pow(z, 2));
       const normalizedR = (2 * r) / maxScale;
-      const theta = Math.acos(rx / r);
       const radiusFactor =
         0.2 * Math.sin(this.timeInMs / 1000) +
         0.2 * this.config.escala +
-        0.2 * frame.slowRms;
+        0.2 * normalizedAudio;
       const h = (r * 0.1 + (this.timeInMs * this.config.velocidad) / 10000) % 1;
       const s = 1 / (1 + normalizedR);
       const v =
         (0.01 + 0.99 * Math.pow(normalizedAudio, 8)) *
-        Math.pow(Math.sin(r * radiusFactor + theta), 10); ///Math.pow(r, 1);
+        Math.pow(Math.sin(r * radiusFactor), 10);
       const color = ColorUtils.HSVtoRGB(h, s, v);
       colors[i] = color;
     }

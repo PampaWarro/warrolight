@@ -567,11 +567,11 @@ class Real3DLightsRenderer extends LightsRenderer {
       const power = (r+g+b)/3;
       let [or, og, ob] = [r/power, g/power, b/power];
 
-      (color.array as any)[3 * i] = or;
-      (color.array as any)[3 * i + 1] = og;
-      (color.array as any)[3 * i + 2] = ob;
+      (color.array as any)[3 * i] = or || 0;
+      (color.array as any)[3 * i + 1] = og || 0;
+      (color.array as any)[3 * i + 2] = ob || 0;
 
-      (size.array as any)[i] = (0.02+0.98*gammaPower**invGamma);
+      (size.array as any)[i] = (0.02+0.98*gammaPower**invGamma) || 0;
     }
     color.needsUpdate = true;
     size.needsUpdate = true;

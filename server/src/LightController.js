@@ -39,6 +39,7 @@ const programNames = [
   "circles",
   "debugSetup",
   "debugShapes",
+  "dynamicMask",
   "frequencyActivation",
   "gradientSphere",
   "lineal",

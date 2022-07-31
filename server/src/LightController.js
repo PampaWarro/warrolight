@@ -51,6 +51,7 @@ const programNames = [
   "musicVolumeDotRandom",
   "noise",
   "polar",
+  "randomShapes",
   "radial",
   "radial3d",
   "radialSun",

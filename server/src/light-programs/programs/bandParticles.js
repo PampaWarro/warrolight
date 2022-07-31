@@ -33,7 +33,7 @@ module.exports = class BandParticles extends LayerBasedProgram {
   }
 
   populatePerBandParticles(audio) {
-    _.forEach(['low', 'mid', 'high'], (bandName) => {
+    _.forEach(['bass', 'mid', 'high'], (bandName) => {
       const bandParticles = (this.particles[bandName] = this.particles[bandName] || []);
 
       while (bandParticles.length < this.config.particlesPerBand) {
@@ -64,12 +64,14 @@ module.exports = class BandParticles extends LayerBasedProgram {
     this.populatePerBandParticles(audio);
     const audioSummary = audio.currentFrame;
     _.forOwn(this.particles, (particles, bandName) => {
-      const energy = audioSummary[`${bandName}PeakDecay`]*this.config.energyMultiplier;
+      const energy = Math.pow(audioSummary[`${bandName}FastPeakDecay`] *
+                                  this.config.energyMultiplier,
+                              .5);
       const hue = ColorUtils.mod(this.offsets[bandName] + (this.config.hueSpeed * this.timeInMs) / 1000, 1);
       const saturation = ColorUtils.mod(this.offsets[bandName] + (this.config.saturationSpeed * this.timeInMs) / 1000, 1);
 
       particles.forEach(particle => {
-        particle.layer.alpha = energy;
+        particle.layer.alpha = 0.1 + 0.9 * energy;
         particle.drawable.ledIndex += particle.state.speed;
         particle.drawable.color = ColorUtils.HSVtoRGB(hue, saturation, 1);
 

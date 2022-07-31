@@ -250,8 +250,8 @@ export class App extends React.Component<Props, State> {
             <div className="preview p-2">
               <LightsSimulator
                 ref={this.lightsSim}
-                height={600}
-                width={800}
+                height={900}
+                width={1200}
                 receivingData={this.state.receivingLights}
                 onStart={this.handleStartLights}
                 onStop={this.handleStopLights}

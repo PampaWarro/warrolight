@@ -10,11 +10,7 @@ import { DOMParser } from "xmldom";
 import colorString from "color-string";
 
 function interpolate(a: Color, b: Color, blend: number) {
-  if (blend < 0 || blend > 1) {
-    throw `blend out of bounds: ${blend}`;
-  }
-
-  return mix(a, b, blend);
+  return mix(a, b, _.clamp(blend, 0, 1));
 }
 
 abstract class Gradient {
@@ -33,12 +29,7 @@ class EvenSpacedGradient extends Gradient {
     this.colors = colors;
   }
   colorAt(pos: number): Color {
-    if (pos == null || Number.isNaN(pos)) {
-      throw `invalid pos: ${pos}`;
-    }
-    if (pos < 0 || pos > 1) {
-      throw `pos out of bounds: ${pos}`;
-    }
+    pos = _.clamp(pos, 0, 1);
     const scaledPos = pos * (this.colors.length - 1);
     const lowerIndex = Math.floor(scaledPos);
     const upperIndex = Math.ceil(scaledPos);

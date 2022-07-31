@@ -102,8 +102,16 @@ function mix(c1, c2, ratio) {
   if (ratio >= 1) {
     return c2;
   }
-  let [r, g, b, a] = c1;
-  let [r2, g2, b2, a2] = c2;
+  // Hot code path, avoid array destructuring (e.g. let [r, g, b] = c1) because
+  // it's slow.
+  const r = c1[0];
+  const g = c1[1];
+  const b = c1[2];
+  let a = c1[3];
+  const r2 = c2[0];
+  const g2 = c2[1];
+  const b2 = c2[2];
+  let a2 = c2[3];
   a = a === undefined ? 1 : a;
   a2 = a2 === undefined ? 1 : a2;
   return [

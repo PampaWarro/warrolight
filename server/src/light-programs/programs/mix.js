@@ -39,8 +39,18 @@ module.exports = class Mix extends LightProgram {
       progLeds.fill([0, 0, 0]);
       prog.drawFrame(progLeds, context);
       for (let i = 0; i < leds.length; i++) {
-        let [r, g, b, a] = leds[i]
-        const [r2, g2, b2, a2] = progLeds[i];
+        // Hot code path, avoid array destructuring (e.g. let [r, g, b] = c1)
+        // because it's slow.
+        const led = leds[i];
+        let r = led[0];
+        let g = led[1];
+        let b = led[2];
+        let a = led[3];
+        const progLed = progLeds[i];
+        const r2 = progLed[0];
+        const g2 = progLed[1];
+        const b2 = progLed[2];
+        const a2 = progLed[3];
         if (this.config.multiply) {
           // globalBrightness of 0 means "the layer does not darken the other layer"
           r = r * ((r2+(255-r2)*(1-globalBrightness)) || 0) / 255;

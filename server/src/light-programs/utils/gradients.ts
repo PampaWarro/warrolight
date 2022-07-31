@@ -182,8 +182,12 @@ function loadGradient(gradientNameOrCssStops: string) {
   return gradientsByName[gradientNameOrCssStops]
 }
 
-
-const gradientsByName: { [index: string]: Gradient } = {};
+const blackToWhiteGradient =
+    new EvenSpacedGradient([ [ 0, 0, 0, 1 ], [ 255, 255, 255, 1 ] ]);
+const gradientsByName: {[index: string]: Gradient} = {
+  _bw : blackToWhiteGradient,
+  _wb : blackToWhiteGradient.reverse(),
+};
 const gradientFiles = glob.sync(path.join(__dirname, "gradientlib", "*"));
 gradientFiles.forEach(filename => {
   const extension = path.extname(filename).toLowerCase();

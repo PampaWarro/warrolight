@@ -5,7 +5,12 @@ const { Geometry } = require("./geometry");
 
 exports.loadSetup = function loadSetup(setup) {
   const geometryDefinition = require(`../setups/geometries/${setup.geometry}`);
-  const geometry = new Geometry(geometryDefinition);
+  let stripes = geometryDefinition.stripes;
+  if (!stripes) {
+    // Old style geometry definiton, exports stripes array directly.
+    stripes = geometryDefinition;
+  }
+  const geometry = new Geometry(stripes, geometryDefinition);
 
   const shapeMapping = require(`../setups/shape-mappings/${setup.shapeMapping}`);
   const multiplexer = new DeviceMultiplexer(setup);

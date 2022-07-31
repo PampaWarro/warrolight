@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const {Stripe} = require("../../src/geometry");
 
 function dist(p0, p1) {
@@ -147,9 +148,16 @@ const L9 = [
   [ -.46, -.06, 0 ],
 ];
 const stripes = [];
+const allLines = [L1, L2, L3, L4, L5, L6, L7, L8, L9];
 const scale = vec => vec.map(x => 20 * x);
-[L1, L2, L3, L4, L5, L6, L7, L8, L9]
-    .map(strip => strip.map(scale))
-    .forEach(strip => stripes.push(...multiPointStrip(strip, 300)));
+for (line of allLines) {
+  for (let i = 0; i < line.length; i++) {
+    line[i] = scale(line[i]);
+  }
+}
+allLines.forEach(strip => stripes.push(...multiPointStrip(strip, 300)));
 
-module.exports = stripes;
+module.exports = {
+  stripes,
+  vertices: _.flatten(allLines).map(([x, y, z]) => [x, -z, -y]),
+};

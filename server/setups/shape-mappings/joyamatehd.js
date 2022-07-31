@@ -18,8 +18,10 @@ const pieces = (() => {
 })();
 const shapes = {};
 let size = 0;
+const vertices = [];
 Object.entries(pieces).forEach(([name, piece]) => {
   shapes[name] = piece.shapes.all.map(i => i + piece.offset);
+  vertices.push(...piece.shapes.vertices.map(i => i + piece.offset));
   Object.entries(piece.shapes).forEach(([shapeName, shape]) => {
     if (shapeName === "all" || shapeName === "allOfIt") return;
     if (shapeName in shapes) {
@@ -29,6 +31,7 @@ Object.entries(pieces).forEach(([name, piece]) => {
   });
   size += piece.size;
 });
+shapes.vertices = vertices;
 shapes.all = shapes.allOfIt = _.range(0, size);
 
 module.exports = function getShapes() {

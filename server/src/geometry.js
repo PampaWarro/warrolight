@@ -31,7 +31,10 @@ exports.Stripe = class Stripe {
 };
 
 exports.Geometry = class Geometry {
-  constructor(stripes) {
+  constructor(stripes, definition) {
+    // Preserve definition in case someone program wants to use geometry
+    // internals.
+    this.definition = definition;
     const marginX = 0;
     const marginY = 0;
     const marginZ = 0;

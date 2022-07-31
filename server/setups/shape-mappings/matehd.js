@@ -1,9 +1,10 @@
 const _ = require("lodash");
 const geometry = require("../geometries/matehd.js");
 
+const stripes = geometry.stripes;
 let ledCount = 0;
-for (let i = 0; i < geometry.length; i++) {
-  ledCount += geometry[i].leds;
+for (let i = 0; i < stripes.length; i++) {
+  ledCount += stripes[i].leds;
 }
 const shapes = {};
 shapes.all = shapes.allOfIt = _.range(0, ledCount);
@@ -55,6 +56,37 @@ for (let i = 0; i < ringSizes.length; i++) {
     );
   }
 }
+
+function distance(a, b) {
+  let sum = 0;
+  for (let i = 0; i < 3; i++) {
+    const diff = a[i] - b[i];
+    sum += diff * diff;
+  }
+  return Math.sqrt(sum);
+}
+
+function isNearVertex(point, threshold) {
+  for (const vertex of geometry.vertices) {
+    if (distance(point, vertex) < threshold) {
+      return true;
+    }
+  }
+  return false;
+}
+
+let i = 0;
+const vertices = [];
+for (const stripe of stripes) {
+  for (let j = 0; j < stripe.leds; j++) {
+    const ledCoords = [stripe.x[j], stripe.y[j], stripe.z[j]];
+    if (isNearVertex(ledCoords, 0.1)) {
+      vertices.push(i);
+    }
+    i++;
+  }
+}
+shapes.vertices = vertices;
 
 module.exports = function getShapes() {
   return shapes;

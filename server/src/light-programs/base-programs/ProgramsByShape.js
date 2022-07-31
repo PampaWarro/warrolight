@@ -29,7 +29,8 @@ module.exports = function programsByShape(mapping, name) {
           density: [...Array(map.length)],
           height: geometry.height,
           width: geometry.width,
-          leds: map.length
+          leds: map.length,
+          definition: geometry.definition,
         };
 
         for (let i = 0; i < map.length; i++) {

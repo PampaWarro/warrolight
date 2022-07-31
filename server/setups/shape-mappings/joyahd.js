@@ -12,6 +12,7 @@ shapes.all = shapes.allOfIt = _.range(0, ledCount);
 
 let globalOffset = 0;
 const ribSize = 258;
+const ribHIntersection = 80;
 const ribCount = 6;
 const ribs = [];
 const oddRibs = [];
@@ -74,7 +75,6 @@ for (let i = 0; i < mirrorHShapes.length; i++) {
   shapes[`mirror-hshapes${i + 1}`] = _.flatten(mirrorHShapes[i]);
 }
 
-const ribHIntersection = 80;
 const oddTriangles = [];
 const evenTriangles = [];
 const mirrorTriangles = _.range(ribCount / 2).map(() => []);
@@ -104,34 +104,13 @@ const ribBottoms = ribs.map(rib => rib.slice(0, ribHIntersection));
 shapes["bottom"] = _.flatten(ribBottoms);
 shapes["bottom-h"] = [..._.flatten(horizontal), ..._.flatten(ribBottoms)];
 
-function distance(a, b) {
-  let sum = 0;
-  for (let i = 0; i < 3; i++) {
-    const diff = a[i] - b[i];
-    sum += diff * diff;
-  }
-  return Math.sqrt(sum);
-}
-
-function isNearVertex(point, threshold) {
-  for (const vertex of geometry.vertices) {
-    if (distance(point, vertex) < threshold) {
-      return true;
-    }
-  }
-  return false;
-}
-
-let i = 0;
 const vertices = [];
-for (const stripe of stripes) {
-  for (let j = 0; j < stripe.leds; j++) {
-    const ledCoords = [stripe.x[j], stripe.y[j], stripe.z[j]];
-    if (isNearVertex(ledCoords, 0.34)) {
-      vertices.push(i);
-    }
-    i++;
-  }
+for (let i = 0; i < ribCount; i++) {
+  const offset = i * ribSize;
+  vertices.push(offset, offset + ribHIntersection, offset + ribSize - 1);
+}
+for (const segment of horizontal) {
+  vertices.push(segment[0]);
 }
 shapes.vertices = vertices;
 

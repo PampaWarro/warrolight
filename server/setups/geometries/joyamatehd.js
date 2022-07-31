@@ -2,7 +2,7 @@ const { Stripe } = require("../../src/geometry");
 const joya = require("./joyahd");
 const mate = require("./matehd");
 
-const OFFSET = 35;
+const OFFSET = 40;
 
 const stripes = [];
 for (const stripe of joya.stripes) {

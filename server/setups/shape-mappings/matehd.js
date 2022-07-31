@@ -80,7 +80,7 @@ const vertices = [];
 for (const stripe of stripes) {
   for (let j = 0; j < stripe.leds; j++) {
     const ledCoords = [stripe.x[j], stripe.y[j], stripe.z[j]];
-    if (isNearVertex(ledCoords, 0.1)) {
+    if (isNearVertex(ledCoords, 0.05)) {
       vertices.push(i);
     }
     i++;

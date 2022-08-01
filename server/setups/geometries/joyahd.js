@@ -22,10 +22,13 @@ const { Stripe } = require("../../src/geometry");
 //         p0
 
 function makeRib(p0, p1, p2) {
-  return [
-    Stripe.fromXZUpwardY(p0, p1, 80),
-    Stripe.fromXZUpwardY(p1, p2, 178),
-  ];
+  return {
+    stripes : [
+      Stripe.fromXZUpwardY(p0, p1, 80),
+      Stripe.fromXZUpwardY(p1, p2, 178),
+    ],
+    vertices : [ 0, 80, 80 + 178 - 1 ],
+  };
 }
 
 // El orden de los segmentos es clave. Replica cómo vamos a conectar las luces y
@@ -69,19 +72,31 @@ for (rib of allRibs) {
   }
 }
 const stripes = [];
-allRibs.forEach(rib => stripes.push(...makeRib(...rib)));
+const vertices = [];
+let offset = 0;
+for (const rib of allRibs) {
+  const {stripes: ribStripes, vertices: ribVertices} = makeRib(...rib);
+  stripes.push(...ribStripes);
+  vertices.push(...ribVertices.map(x => x + offset));
+  offset += ribVertices[ribVertices.length - 1] + 1;
+}
 
 // Horizontal.
+const hSegmentLength = 145;
 stripes.push(
-    Stripe.fromXZUpwardY(R0[1], R1[1], 145),
-    Stripe.fromXZUpwardY(R1[1], R2[1], 145),
-    Stripe.fromXZUpwardY(R2[1], R3[1], 145),
-    Stripe.fromXZUpwardY(R3[1], R4[1], 145),
-    Stripe.fromXZUpwardY(R4[1], R5[1], 145),
-    Stripe.fromXZUpwardY(R5[1], R0[1], 145)
+    Stripe.fromXZUpwardY(R0[1], R1[1], hSegmentLength),
+    Stripe.fromXZUpwardY(R1[1], R2[1], hSegmentLength),
+    Stripe.fromXZUpwardY(R2[1], R3[1], hSegmentLength),
+    Stripe.fromXZUpwardY(R3[1], R4[1], hSegmentLength),
+    Stripe.fromXZUpwardY(R4[1], R5[1], hSegmentLength),
+    Stripe.fromXZUpwardY(R5[1], R0[1], hSegmentLength)
 );
+for (let i = 0; i < 6; i++) {
+  vertices.push(offset);
+  offset += hSegmentLength;
+}
 
 module.exports = {
   stripes,
-  vertices: _.flatten(allRibs).map(([x, y, z]) => [x, -z, -y]),
+  vertices,
 }

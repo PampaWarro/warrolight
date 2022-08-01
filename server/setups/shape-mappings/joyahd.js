@@ -104,15 +104,7 @@ const ribBottoms = ribs.map(rib => rib.slice(0, ribHIntersection));
 shapes["bottom"] = _.flatten(ribBottoms);
 shapes["bottom-h"] = [..._.flatten(horizontal), ..._.flatten(ribBottoms)];
 
-const vertices = [];
-for (let i = 0; i < ribCount; i++) {
-  const offset = i * ribSize;
-  vertices.push(offset, offset + ribHIntersection, offset + ribSize - 1);
-}
-for (const segment of horizontal) {
-  vertices.push(segment[0]);
-}
-shapes.vertices = vertices;
+shapes.vertices = geometry.vertices;
 
 module.exports = function getShapes() {
   return shapes;

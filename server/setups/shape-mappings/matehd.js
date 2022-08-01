@@ -57,36 +57,7 @@ for (let i = 0; i < ringSizes.length; i++) {
   }
 }
 
-function distance(a, b) {
-  let sum = 0;
-  for (let i = 0; i < 3; i++) {
-    const diff = a[i] - b[i];
-    sum += diff * diff;
-  }
-  return Math.sqrt(sum);
-}
-
-function isNearVertex(point, threshold) {
-  for (const vertex of geometry.vertices) {
-    if (distance(point, vertex) < threshold) {
-      return true;
-    }
-  }
-  return false;
-}
-
-let i = 0;
-const vertices = [];
-for (const stripe of stripes) {
-  for (let j = 0; j < stripe.leds; j++) {
-    const ledCoords = [stripe.x[j], stripe.y[j], stripe.z[j]];
-    if (isNearVertex(ledCoords, 0.05)) {
-      vertices.push(i);
-    }
-    i++;
-  }
-}
-shapes.vertices = vertices;
+shapes.vertices = geometry.vertices;
 
 module.exports = function getShapes() {
   return shapes;

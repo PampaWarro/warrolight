@@ -19,6 +19,7 @@ function multiPointStrip(points, totalPixels) {
   const segments = [];
   let usedPixels = 0;
   let roundError = 0;
+  const indices = [];
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[i];
     const p1 = points[i + 1];
@@ -27,10 +28,12 @@ function multiPointStrip(points, totalPixels) {
     const pixels = i < points.length - 2 ? Math.max(1, Math.round(fPixels))
                                          : totalPixels - usedPixels;
     roundError = fPixels - pixels;
+    indices.push(usedPixels);
     usedPixels += pixels;
     segments.push(Stripe.fromXZUpwardY(p0, p1, pixels));
   }
-  return segments;
+  indices.push(usedPixels - 1);
+  return [segments, indices];
 }
 
 // Strips go from bottom to top, exterior first and interior second.
@@ -155,9 +158,16 @@ for (line of allLines) {
     line[i] = scale(line[i]);
   }
 }
-allLines.forEach(strip => stripes.push(...multiPointStrip(strip, 300)));
+let offset = 0;
+const vertices = [];
+for (const line of allLines) {
+  const [lineStripes, indices] = multiPointStrip(line, 300);
+  stripes.push(...lineStripes);
+  vertices.push(...indices.map(x => x + offset));
+  offset += indices[indices.length - 1] + 1;
+}
 
 module.exports = {
   stripes,
-  vertices: _.flatten(allLines).map(([x, y, z]) => [x, -z, -y]),
+  vertices,
 };

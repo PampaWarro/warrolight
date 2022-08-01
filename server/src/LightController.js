@@ -64,6 +64,7 @@ const programNames = [
   "sound-waves",
   "stars",
   "stripe-patterns",
+  "vertexGlow",
   "warroBass",
   "water-flood",
   "waveform",

@@ -30,6 +30,7 @@ module.exports = class ProgramScheduler {
       this.program.timeInMs = this.timeInMs;
 
       let startFrameTime = Date.now();
+      this.leds.fill([0, 0, 0]);
       this.program.drawFrame(this.leds, {
         timeInMs: this.timeInMs,
         audio: audioEmitter,

@@ -44,7 +44,10 @@ module.exports = function createMultiProgram(
           ));
         }
       );
+    }
 
+    init() {
+      this.position = 0;
       this.previous = null;
       this.current = null;
       this.nextStartChange = null;
@@ -52,20 +55,12 @@ module.exports = function createMultiProgram(
       this.currentColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
-    init() {
-      for (let scheduleItem of this.programSchedule) {
-        scheduleItem.programInstance.init();
-      }
-
-      this.position = this.position || 0; // So that in case of restart it continues where it was left
-      this.nextStartChange = null;
-    }
-
     drawFrame(leds, context) {
       // init
       if (this.current === null) {
         let scheduleItem = this.programSchedule[this.position];
         this.current = scheduleItem.programInstance;
+        this.current.init();
         this.nextStartChange = Date.now() + scheduleItem.duration;
       }
 
@@ -127,6 +122,7 @@ module.exports = function createMultiProgram(
       const {programInstance, duration} = this.programSchedule[this.position]
       this.previous = this.current;
       this.current = programInstance;
+      this.current.init();
       this.nextStartChange = Date.now() + duration;
 
       console.log("Playing", programInstance.toString())

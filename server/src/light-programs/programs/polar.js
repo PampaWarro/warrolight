@@ -3,9 +3,6 @@ const LightProgram = require("../base-programs/LightProgram");
 const _ = require("lodash");
 const { mat4, vec3 } = require("gl-matrix");
 
-const white = [255, 255, 255];
-const black = [0, 0, 0];
-
 function angleDegrees(x, y) {
   let angle = (Math.atan2(y, x) * 180) / Math.PI;
   if (isNaN(angle)) {
@@ -140,18 +137,14 @@ module.exports = class Polar extends LightProgram {
       const x = this.geometry.x[i];
       const y = this.geometry.y[i];
       const z = this.geometry.z[i];
-      leds[i] = ColorUtils.mix(black, white, this.brightness(x, y, z));
+      const brightness = this.brightness(x, y, z);
+      const scaled = Math.floor(brightness * 255);
+      leds[i] = [scaled, scaled, scaled];
     });
   }
 
   brightness(x, y, z) {
     const config = this.config;
-    if (config.width <= 0) {
-      return 0;
-    }
-    if (config.width >= 360) {
-      return 1;
-    }
     x -= this.centerX;
     y -= this.centerY;
     z -= this.centerZ;

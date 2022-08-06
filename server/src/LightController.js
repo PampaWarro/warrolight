@@ -275,18 +275,20 @@ module.exports = class LightController extends EventEmitter {
     this.setLights(leds);
     let lastUpdateLatency = Date.now() - this.lastLightsUpdate;
     this.lastLightsUpdate = Date.now();
-    // TODO: where does the number 34 come from?
-    if (lastUpdateLatency > 34) {
+
+    const frameDurationMS = 1000/this.programScheduler.config.fps;
+
+    if (lastUpdateLatency > frameDurationMS*2) {
       console.warn(
         `[${moment().format(
           "HH:mm:ss"
-        )}] Dropped frames: Last light update took ${lastUpdateLatency}ms  [+${Math.round(
+        )}] Dropped frame: Last one took ${lastUpdateLatency}ms (instead of ${Math.round(frameDurationMS)}ms)  [after ${Math.round(
           (Date.now() - this.lastDroppedFrame) / 1000
         ).toString()}s]`.red
       );
       this.lastDroppedFrame = Date.now();
-    } else if (lastUpdateLatency > 25) {
-      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frames: Last light update took ${lastUpdateLatency}ms`.yellow);
+    } else if (lastUpdateLatency > frameDurationMS*1.5) {
+      console.warn(`[${moment().format('HH:mm:ss')}] Dropped frame: Last one took ${lastUpdateLatency}ms (instead of ${Math.round(frameDurationMS)}ms)`.yellow);
     }
   }
 };

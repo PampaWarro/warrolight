@@ -55,7 +55,15 @@ module.exports = class ProgramScheduler {
         });
       }
       this.ledsUpdatedCallback(this.leds);
+
+      // Needed to change fps config in realtime without start/stop
+      if(this.config.fps !== this.loop._times) {
+        this.loop.stop();
+        this.loop = new Loop(frame, this.config.fps);
+        this.loop.start();
+      }
     };
+
     this.loop = new Loop(frame, this.config.fps);
     this.loop.start();
   }

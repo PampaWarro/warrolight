@@ -32,7 +32,8 @@ module.exports = class LightProgram {
         step: 0.01,
         default: 1
       },
-      fps: { type: Number, min: 2, max: 120, default: 60 }
+      fps: { type: Number, min: 2, max: 120, default: 60 },
+      tags: {type: 'tags', options: ['bright', 'dark']}
     };
   }
 };

@@ -8,6 +8,7 @@ import { SubprogramParam } from "./SubprogramParam";
 import { SoundMetricParam } from "./SoundMetricParam";
 import { SubprogramsListParam } from "./SubprogramsListParam";
 import _ from "lodash";
+import { TagsParam } from "./TagsParam";
 
 interface Props {
   program: Program | null;
@@ -19,6 +20,8 @@ interface Props {
   onDeletePreset?(programName: string, presetName: string): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 }
+
+const lightProgramConfigKeys = ['tags', 'globalBrightness', 'fps']
 
 export class ProgramConfig extends React.PureComponent<Props> {
   handleParamChange = (
@@ -58,8 +61,10 @@ export class ProgramConfig extends React.PureComponent<Props> {
 
     let configOptions = [];
 
+    let configKeys = Object.keys(currentProgram.config);
+    configKeys = _.sortBy(configKeys, k => lightProgramConfigKeys.includes(k));
 
-    for (let paramName in currentProgram.config) {
+    for (let paramName of configKeys) {
       let configDef = currentProgram.config[paramName] as any;
       let value = currentConfig[paramName];
 
@@ -114,6 +119,14 @@ export class ProgramConfig extends React.PureComponent<Props> {
             value={value}
             globalConfig={globalConfig}
             options={this.props.programs}
+            onChange={this.handleParamChange}/>
+          break;
+        case "tags":
+          parameterEditor = <TagsParam
+            key={paramName}
+            name={paramName}
+            value={value}
+            options={configDef.options}
             onChange={this.handleParamChange}/>
           break;
         default:

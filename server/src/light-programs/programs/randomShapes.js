@@ -40,6 +40,9 @@ module.exports = class RandomShapes extends LightProgram {
     this.mask = {};
     const threshold = this.config.fillAmount * this.numberOfLeds;
     for (const shape of _.shuffle(this.shapes)) {
+      if (shape.length < this.config.minShapeSize) {
+        continue;
+      }
       const currentMaskSize = Object.keys(this.mask).length;
       if (currentMaskSize >= threshold) {
         break;
@@ -55,6 +58,13 @@ module.exports = class RandomShapes extends LightProgram {
 
   static configSchema() {
     return Object.assign(super.configSchema(), {
+      minShapeSize : {
+        type : Number,
+        min : 0,
+        max : 1000,
+        step : 1,
+        default : 110,
+      },
       fillAmount : {
         type : Number,
         min : 0,

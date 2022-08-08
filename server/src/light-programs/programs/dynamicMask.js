@@ -56,8 +56,19 @@ module.exports = class DynamicMask extends LightProgram {
           oldProgramConfig.programName === newProgramConfig.programName) {
         // Same program, just update config.
         const instance = this[subprogram];
-        instance.updateConfig(
-            Object.assign(instance.config, newProgramConfig.config || {}));
+        let config =
+            Object.assign(instance.config, newProgramConfig.config || {})
+        // Detect and apply preset.
+        if (oldProgramConfig.presetName !== newProgramConfig.presetName &&
+            newProgramConfig.presetName) {
+          const presets = this.lightController.getProgramPresets(
+              newProgramConfig.programName);
+          const defaults = this.lightController.getProgramDefaultParams(
+              newProgramConfig.programName);
+          newProgramConfig.config = presets[newProgramConfig.presetName];
+          config = {...defaults, ...presets[newProgramConfig.presetName]};
+        }
+        instance.updateConfig(config);
       } else {
         this[subprogram] = this.getProgramInstanceFromParam(newProgramConfig);
       }

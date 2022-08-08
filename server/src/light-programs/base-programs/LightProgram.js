@@ -33,7 +33,14 @@ module.exports = class LightProgram {
         default: 1
       },
       fps: { type: Number, min: 2, max: 120, default: 60 },
-      tags: {type: 'tags', options: ['bright', 'dark']}
+      tags: {type: 'tags', options: [
+        // Overall brightness.
+        'bright', 'dark',
+        // Works fine without music?
+        'music-required', 'music-optional',
+        // Intensity level.
+        'intensity-low', 'intensity-mid', 'instensity-high',
+      ]}
     };
   }
 };

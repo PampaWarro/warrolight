@@ -39,7 +39,7 @@ module.exports = class LightProgram {
         // Works fine without music?
         'music-required', 'music-optional',
         // Intensity level.
-        'intensity-low', 'intensity-mid', 'instensity-high',
+        'intensity-low', 'intensity-mid', 'intensity-high',
       ]}
     };
   }

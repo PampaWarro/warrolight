@@ -36,7 +36,7 @@ export class DevicesStatus extends React.Component<Props,State> {
       {devices.map(device => {
           let extendedMetadata = {FPS: device.lastFps || '-'};
           if(this.state.showMetadata) {
-              extendedMetadata = {...  extendedMetadata, ... device.metadata};
+              extendedMetadata = {...extendedMetadata, ...device.metadata};
           }
 
           let metadata = <div className={'small'}>

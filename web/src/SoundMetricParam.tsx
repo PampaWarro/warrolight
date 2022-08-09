@@ -25,7 +25,7 @@ export function SoundMetricParam({ onChange, name, value }) {
               onClick={() => onChange(name, baseMetric)}>
           A
         </span>
-      <span className={'btn btn-sm btn-' + (mic == 'mic2_' ? 'warning' : 'outline-secondary')}
+      <span className={'btn btn-sm btn-' + (mic === 'mic2_' ? 'warning' : 'outline-secondary')}
             onClick={() => onChange(name, 'mic2_'+baseMetric)}>
           B
         </span>

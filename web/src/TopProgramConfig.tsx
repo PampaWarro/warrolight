@@ -37,7 +37,7 @@ export class TopProgramConfig extends React.PureComponent<Props> {
             "programs": [
                 {
                     "programName": this.props.program?.name,
-                    "config": {... this.props.config.presetOverrides, ... this.props.config.overrides}
+                    "config": {...this.props.config.presetOverrides, ...this.props.config.overrides}
                 }
             ]
         }

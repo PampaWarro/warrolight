@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import Creatable, { ActionMeta, MultiValue, Options } from 'react-select/creatable';
+import Creatable, { ActionMeta, MultiValue } from 'react-select/creatable';
 import _ from "lodash";
 
 interface Props {

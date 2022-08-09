@@ -10,7 +10,7 @@ import { DOMParser } from "xmldom";
 import colorString from "color-string";
 
 function interpolate(a: Color, b: Color, blend: number) {
-  return mix(a, b, _.clamp(blend, 0, 1));
+  return mix(a, b, blend || 0);
 }
 
 abstract class Gradient {

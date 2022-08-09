@@ -14,12 +14,20 @@ function getAllPresets(funcClass, duration, shape = "all") {
   });
 }
 
+function getPresetsByProgram(presetFileName) {
+  return require(`../setups/program-presets/${presetFileName}`);
+}
+
+function getProgramClass(programName) {
+  return require(`./light-programs/programs/${programName}.js`);
+}
+
 // Get a multiProgram schedule entry for each preset defined in the given file.
 function getFilePresets(presetFileName, duration = 30) {
-  const presetsByProgram = require(`../setups/program-presets/${presetFileName}`);
+  const presetsByProgram = getPresetsByProgram(presetFileName);
   const presets = [];
   _.each(presetsByProgram, (presetsByName, programName) => {
-    const ProgramClass = require(`./light-programs/programs/${programName}.js`);
+    const ProgramClass = getProgramClass(programName);
 
     _.each(presetsByName, (config, name) => {
       presets.push({
@@ -47,4 +55,6 @@ module.exports = {
   getAllPresets,
   getFilePresets,
   loadAllPresetFiles,
+  getPresetsByProgram,
+  getProgramClass,
 };

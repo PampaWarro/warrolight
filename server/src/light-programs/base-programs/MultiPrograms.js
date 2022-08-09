@@ -20,6 +20,21 @@ function extractDefault(program) {
   return config;
 }
 
+function arraySchedule(schedule, random) {
+  // Shallow copy of schedule
+  schedule = [].concat(schedule).map(item => _.extend({}, item));
+  if (random) {
+    return () => _.sample(schedule);
+  } else {
+    let position = 0;
+    return () => {
+      const item = schedule[position];
+      position = (position + 1) % schedule.length;
+      return item;
+    };
+  }
+}
+
 module.exports = function createMultiProgram(
   programSchedule,
   random = false,
@@ -29,25 +44,21 @@ module.exports = function createMultiProgram(
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry, shapeMapping, lightController);
 
-      // Shallow copy of schedule
-      this.programSchedule = []
-        .concat(programSchedule)
-        .map(item => _.extend({}, item));
+      this.programSchedule = Array.isArray(programSchedule)
+                                 ? arraySchedule(programSchedule, random)
+                                 : programSchedule;
+    }
 
-      // instantiate each program
-      _.each(this.programSchedule, scheduleItem => {
-          return (scheduleItem.programInstance = new scheduleItem.program(
+    instantiate(scheduleItem) {
+      return new scheduleItem.program(
             extractDefault(scheduleItem.program),
             this.geometry,
             this.shapeMapping,
             this.lightController
-          ));
-        }
       );
     }
 
     init() {
-      this.position = 0;
       this.previous = null;
       this.current = null;
       this.nextStartChange = null;
@@ -58,8 +69,8 @@ module.exports = function createMultiProgram(
     drawFrame(leds, context) {
       // init
       if (this.current === null) {
-        let scheduleItem = this.programSchedule[this.position];
-        this.current = scheduleItem.programInstance;
+        let scheduleItem = this.programSchedule();
+        this.current = this.instantiate(scheduleItem);
         this.current.init();
         this.nextStartChange = Date.now() + scheduleItem.duration;
       }
@@ -113,19 +124,13 @@ module.exports = function createMultiProgram(
       this.crossFadeStart = Date.now();
       this.crossFadeFinish = Date.now() + randomCrossFadeDuration;
 
-      if (random) {
-        this.position = Math.floor(Math.random() * this.programSchedule.length) % this.programSchedule.length;
-      } else {
-        this.position = (this.position + 1) % this.programSchedule.length;
-      }
-
-      const {programInstance, duration} = this.programSchedule[this.position]
+      const scheduleItem = this.programSchedule();
       this.previous = this.current;
-      this.current = programInstance;
+      this.current = this.instantiate(scheduleItem);
       this.current.init();
-      this.nextStartChange = Date.now() + duration;
+      this.nextStartChange = Date.now() + scheduleItem.duration;
 
-      console.log("Playing", programInstance.toString())
+      console.log("Playing", this.current.toString())
     }
 
     updateConfig(config) {

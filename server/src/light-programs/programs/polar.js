@@ -58,12 +58,16 @@ module.exports = class Polar extends LightProgram {
     this.centerX = xBounds.center;
     this.centerY = yBounds.center;
     this.centerZ = zBounds.center;
+    this.timeSinceStart = null;
   }
 
   calculateTransform() {
     let transform = mat4.create();
 
-    const t = this.timeInMs / 1000 / 60;
+    if (this.timeSinceStart === null) {
+      this.timeSinceStart = this.timeInMs;
+    }
+    const t = (this.timeInMs - this.timeSinceStart) / 1000 / 60;
     const angleX = getUpdatedAngle(
       this.config.angleX,
       t,

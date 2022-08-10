@@ -1378,12 +1378,20 @@
         "centroDots": {
             "waveSpeed": 2,
             "waveWidth": 0.5,
-            "brilloWave": 1.75
+            "brilloWave": 1.75,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
         },
         "centroLentoDark": {
             "waveSpeed": 0.1,
             "brilloWave": 0.12,
-            "soundMetric": "bassFastPeakDecay"
+            "soundMetric": "bassFastPeakDecay",
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
         },
         "whiteUp": {
             "colorMap": "pm3d05_r",
@@ -1394,7 +1402,11 @@
             "soundMetric": "bassRms",
             "wavePower": 1,
             "brilloWave": 1.37,
-            "initialDistance": 15.4
+            "initialDistance": 15.4,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
         },
         "hexagono": {
             "initialDistance": 69,
@@ -1402,8 +1414,77 @@
             "waveSpeed": 1,
             "waveWidth": 2,
             "tags": [
-                "music-optional",
-                "intensity-mid"
+                "intensity-mid",
+                "music-required"
+            ]
+        },
+        "default": {
+            "waveCenterY": 0,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "deLasPuntas": {
+            "waveSpeed": 1,
+            "waveWidth": 2,
+            "initialDistance": 40,
+            "haciaAfuera": false,
+            "brilloWave": 0.5,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "centroLento": {
+            "waveSpeed": 0.1,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "centroFast": {
+            "waveSpeed": 3,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "centroBrightFast": {
+            "waveSpeed": 0.7,
+            "brilloWave": 2,
+            "waveWidth": 1,
+            "waveCenterY": -17.3,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "abajoFast": {
+            "waveCenterY": -17.3,
+            "waveSpeed": 3,
+            "waveWidth": 3,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "xInvertida": {
+            "initialDistance": 15,
+            "haciaAfuera": false,
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
+        },
+        "deArribaAbajo": {
+            "initialDistance": 67,
+            "waveCenterY": -40,
+            "haciaAfuera": false,
+            "waveSpeed": 2,
+            "tags": [
+                "music-required",
+                "intensity-low"
             ]
         }
     },

@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const {getPresetsByProgram, getProgramClass} = require("../../presets.js");
+const {randomSchedule} = require("../joyamate-utils/preset");
 const overrideBrightness = require("../base-programs/OverrideBrightness");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
@@ -7,7 +7,6 @@ const programsByShape = require("../base-programs/ProgramsByShape");
 
 const AllWhite = require("./all-white");
 const CA = require("./ca");
-const DynamicMask = require("./dynamicMask");
 const ColorSpear = require("./color-spear");
 const Noise = require("./noise");
 const Polar = require("./polar");
@@ -19,6 +18,8 @@ const VertexGlow = require("./vertexGlow");
 const timeScale = 1; // RESET to 1 before commet.
 const seconds = (1 / timeScale) * 1000;
 const minutes = 60 * seconds;
+const baseDuration = 30 * seconds;
+const randomDuration = 5 * seconds;
 
 function linearFade(start, startMs, end, endMs) {
   const fadeDuration = endMs - startMs;
@@ -140,105 +141,29 @@ const rampUp =
                 duration : .4 * minutes,
               },
             ],
-            false, 30 * seconds),
+            false, 15 * seconds),
         linearFade(.2, rampUpDuration / 3, .7, 2 * rampUpDuration / 3));
 
 const interludeDuration = 3 * minutes;
-function getFilteredPresets(fileName, filter) {
-  const presets = [];
-  for (const [program, programPresets] of Object.entries(
-           getPresetsByProgram(fileName))) {
-    for (const [name, config] of Object.entries(programPresets)) {
-      if (filter(program, name, config)) {
-        presets.push({
-          presetName : name,
-          programName : program,
-          programClass : getProgramClass(program),
-          config : config
-        });
-      }
-    }
-  }
-  return presets;
-}
-
-function presetToByShapeSpec({programClass, config}) {
-  return [ programClass, config ];
-}
-
-function randomScheduleWithFilter(filter) {
-  const presets = getFilteredPresets('joyamatehd', filter);
-  const masks = getFilteredPresets('joyamatehd', (program, name, config) => {
-    if (!filter(program, name, config)) {
-      return false;
-    }
-    if (program === 'shapes' && name === 'rotor') {
-      return true;
-    }
-    if (program === 'polar' && name.startsWith('joyamate')) {
-      return true;
-    }
-    if (program === 'randomshapes') {
-      return true;
-    }
-    return false;
-  });
-  return function() {
-    const byShapeSpec = {};
-    if (Math.random() < .75) {  // 75% of the time it's all.
-      if (Math.random() < .5) { // Fill all with a single preset.
-        byShapeSpec.all = presetToByShapeSpec(_.sample(presets));
-      } else { // Or two presets using dynamic mask.
-        byShapeSpec.all = [
-          DynamicMask, {
-            mask : _.sample(masks),
-            positive : _.sample(presets),
-            negative : _.sample(presets)
-          }
-        ];
-      }
-    } else { // Rest of the time it's joya/mate by shape.
-      const randomVal = Math.random();
-      // 1/3 joya only, 1/3 mate only, 1/3 joya/mate.
-      if (randomVal < 2 / 3) {
-        let preset = presetToByShapeSpec(_.sample(presets));
-        while (preset[1].tags.includes('shape-specific')) {
-          preset = presetToByShapeSpec(_.sample(presets));
-        }
-        byShapeSpec.joya = preset;
-      }
-      if (randomVal >= 1 / 3) {
-        let preset = presetToByShapeSpec(_.sample(presets));
-        while (preset[1].tags.includes('shape-specific')) {
-          preset = presetToByShapeSpec(_.sample(presets));
-        }
-        byShapeSpec.mate = preset;
-      }
-    }
-    return {
-      duration : 30 * seconds + Math.random() * 5 * seconds,
-      program : programsByShape(byShapeSpec),
-    };
-  }
-}
 
 const interlude = overrideBrightness(
     createMultiProgram(
-        randomScheduleWithFilter((program, presetName, config) =>
-                                     config.tags &&
-                                     config.tags.includes('music-optional') &&
-                                     (config.tags.includes('intensity-low') ||
-                                      config.tags.includes('intensity-mid'))),
-        false, 10 * seconds),
+        randomSchedule((program, presetName, config) =>
+                           config.tags &&
+                           config.tags.includes('music-optional') &&
+                           (config.tags.includes('intensity-low') ||
+                            config.tags.includes('intensity-mid')),
+                       baseDuration, randomDuration),
+        false, 7 * seconds),
     .5);
 
 const peakDuration = 3 * minutes;
 const peak = createMultiProgram(
-    randomScheduleWithFilter((program, presetName, config) =>
-                                 config.tags &&
-                                 config.tags.includes('music-optional') &&
-                                 config.tags.includes('intensity-high')),
-    false, 10 * seconds);
+    randomSchedule((program, presetName, config) =>
+                       config.tags && config.tags.includes('music-optional') &&
+                       config.tags.includes('intensity-high'),
+                   baseDuration, randomDuration),
+    false, 5 * seconds);
 
 const interlude2Duration = 2 * minutes;
 const interlude2 = interlude;

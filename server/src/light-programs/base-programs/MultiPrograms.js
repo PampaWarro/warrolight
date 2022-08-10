@@ -119,10 +119,8 @@ module.exports = function createMultiProgram(
     }
 
     startNextProgram() {
-      // start crossfade of random duration between 0 and [crossFade]ms
-      const randomCrossFadeDuration = crossFade * Math.random();
       this.crossFadeStart = Date.now();
-      this.crossFadeFinish = Date.now() + randomCrossFadeDuration;
+      this.crossFadeFinish = Date.now() + crossFade;
 
       const scheduleItem = this.programSchedule();
       this.previous = this.current;

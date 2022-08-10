@@ -40,6 +40,8 @@ module.exports = class LightProgram {
         'music-required', 'music-optional',
         // Intensity level.
         'intensity-low', 'intensity-mid', 'intensity-high',
+        // Depends on shape mapping?
+        'shape-specific', 'shape-agnostic',
       ]}
     };
   }

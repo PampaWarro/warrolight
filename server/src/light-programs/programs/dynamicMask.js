@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const LightProgram = require('./../base-programs/LightProgram');
 const ColorUtils = require("../utils/ColorUtils");
 
@@ -14,7 +12,7 @@ module.exports = class DynamicMask extends LightProgram {
   }
 
   getProgramInstanceFromParam({programName, config}) {
-    const p = this.lightController.instanciateProgram(programName);
+    const p = this.lightController.instanciateProgram(programName, config);
     p.init();
     return p;
   }

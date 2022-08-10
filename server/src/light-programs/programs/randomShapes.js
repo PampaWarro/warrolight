@@ -25,6 +25,9 @@ module.exports = class RandomShapes extends LightProgram {
       return;
     }
     const frame = context.audio.currentFrame;
+    if (!frame) {
+      return;
+    }
     const soundValue = frame[this.config.soundMetric];
     if (soundValue < this.config.soundTriggerThreshold) {
       return;

@@ -1372,6 +1372,588 @@
                 "intensity-high",
                 "shape-specific"
             ]
+        },
+        "biradial": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "centerY": 34.5,
+                        "power": 1.4,
+                        "fromTop": false,
+                        "saturation": 0.68,
+                        "escala": 4.881,
+                        "colorMap": "a_fire"
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "escala": 5.231,
+                        "centerY": 8.8,
+                        "colorMap": "sky-44",
+                        "power": 1.8
+                    }
+                }
+            ],
+            "tags": [
+                "music-optional",
+                "intensity-high"
+            ]
+        },
+        "calesita-biradial": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "centerY": 34.5,
+                                    "power": 1.4,
+                                    "fromTop": false,
+                                    "saturation": 0.68,
+                                    "escala": 4.881,
+                                    "colorMap": "a_fire"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "escala": 5.231,
+                                    "centerY": 8.8,
+                                    "colorMap": "sky-44",
+                                    "power": 1.8
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "music-optional",
+                            "intensity-high"
+                        ]
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "presetName": "calesita-slow",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "polar",
+                                "shape": "joya",
+                                "presetName": "calesita-slow",
+                                "config": {
+                                    "angleYSpeed": 10,
+                                    "fadeWidth": 45,
+                                    "tags": [
+                                        "music-optional",
+                                        "intensity-low"
+                                    ]
+                                }
+                            },
+                            {
+                                "programName": "polar",
+                                "shape": "mate",
+                                "config": {
+                                    "angleYSpeed": -10,
+                                    "fadeWidth": 45,
+                                    "tags": [
+                                        "music-optional",
+                                        "intensity-low"
+                                    ],
+                                    "angleY": 180
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "music-optional",
+                            "intensity-low",
+                            "shape-specific"
+                        ]
+                    }
+                }
+            ],
+            "tags": [
+                "music-optional",
+                "intensity-mid"
+            ]
+        },
+        "flow-flash": {
+            "programs": [
+                {
+                    "programName": "polar",
+                    "presetName": "joyamate-flow",
+                    "config": {
+                        "width": 80,
+                        "offsetX": 20,
+                        "angleYSpeed": 15,
+                        "tags": [
+                            "intensity-low",
+                            "music-optional"
+                        ],
+                        "fadeWidth": 45,
+                        "angleZSpeed": 6.2,
+                        "angleXSpeed": -2.8
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0.21,
+                        "multiplier": 1.99
+                    }
+                }
+            ],
+            "multiply": true,
+            "tags": [
+                "music-required",
+                "intensity-high"
+            ]
+        },
+        "flow-flash-noise": {
+            "programs": [
+                {
+                    "programName": "polar",
+                    "presetName": "joyamate-flow",
+                    "config": {
+                        "width": 80,
+                        "offsetX": 20,
+                        "angleYSpeed": 15,
+                        "tags": [
+                            "intensity-low",
+                            "music-optional"
+                        ],
+                        "fadeWidth": 45,
+                        "angleZSpeed": 6.2,
+                        "angleXSpeed": -2.8
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0.21,
+                        "multiplier": 1.99
+                    }
+                },
+                {
+                    "programName": "noise"
+                }
+            ],
+            "multiply": true,
+            "tags": [
+                "music-required",
+                "intensity-high"
+            ]
+        },
+        "flow-flash-noise-explosions": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "polar",
+                                "presetName": "joyamate-flow",
+                                "config": {
+                                    "width": 80,
+                                    "offsetX": 20,
+                                    "angleYSpeed": 15,
+                                    "tags": [
+                                        "intensity-low",
+                                        "music-optional"
+                                    ],
+                                    "fadeWidth": 45,
+                                    "angleZSpeed": 6.2,
+                                    "angleXSpeed": -2.8
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "cutThreshold": 0.21,
+                                    "multiplier": 1.99
+                                }
+                            },
+                            {
+                                "programName": "noise",
+                                "config": {
+                                    "colorMap": "butterflytalker_r"
+                                }
+                            }
+                        ],
+                        "multiply": true,
+                        "tags": [
+                            "music-required",
+                            "intensity-high"
+                        ]
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "musicExplosions",
+                                "config": {
+                                    "soundMetric": "midRms",
+                                    "cutThreshold": 0.26,
+                                    "allowMultiple": true,
+                                    "colorMap": "a_deepblue"
+                                }
+                            },
+                            {
+                                "programName": "musicExplosions",
+                                "config": {
+                                    "blastSpeed": 0.45,
+                                    "cutThreshold": 0.33,
+                                    "soundMetric": "bassRms",
+                                    "energy": 2.6,
+                                    "colorMap": "tas01",
+                                    "multiplier": 1.53,
+                                    "power": 4.9,
+                                    "depowering": 1.42
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "dark",
+                            "music-required",
+                            "intensity-mid"
+                        ]
+                    }
+                }
+            ],
+            "tags": [
+                "music-required",
+                "intensity-high",
+                "shape-agnostic"
+            ]
+        },
+        "random-flow": {
+            "programs": [
+                {
+                    "programName": "polar",
+                    "config": {
+                        "width": 80,
+                        "offsetX": 20,
+                        "angleYSpeed": 133,
+                        "tags": [
+                            "intensity-low",
+                            "music-optional"
+                        ],
+                        "fadeWidth": 45,
+                        "angleZSpeed": 103.4,
+                        "angleXSpeed": -137.7,
+                        "angleXWiggleSpeed": 60.7,
+                        "angleXWiggleAmplitude": 90,
+                        "angleYWiggleSpeed": -48.7,
+                        "angleYWiggleAmplitude": 105,
+                        "angleZWiggleSpeed": -0.3,
+                        "angleZWiggleAmplitude": 3600
+                    }
+                },
+                {
+                    "programName": "randomShapes",
+                    "config": {
+                        "minShapeSize": 251,
+                        "fillAmount": 0.34,
+                        "tags": [
+                            "music-optional",
+                            "intensity-mid"
+                        ],
+                        "soundTriggerTimeout": 280,
+                        "soundTriggerThreshold": 0.4,
+                        "soundMetric": "bassFastPeakDecay",
+                        "soundTrigger": false,
+                        "timeout": 1140
+                    }
+                }
+            ],
+            "multiply": true,
+            "tags": [
+                "intensity-high",
+                "music-optional"
+            ]
+        },
+        "random-flow-stars": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "polar",
+                                "config": {
+                                    "width": 80,
+                                    "offsetX": 20,
+                                    "angleYSpeed": 133,
+                                    "tags": [
+                                        "intensity-low",
+                                        "music-optional"
+                                    ],
+                                    "fadeWidth": 45,
+                                    "angleZSpeed": 103.4,
+                                    "angleXSpeed": -137.7,
+                                    "angleXWiggleSpeed": 60.7,
+                                    "angleXWiggleAmplitude": 90,
+                                    "angleYWiggleSpeed": -48.7,
+                                    "angleYWiggleAmplitude": 105,
+                                    "angleZWiggleSpeed": -0.3,
+                                    "angleZWiggleAmplitude": 3600
+                                }
+                            },
+                            {
+                                "programName": "randomShapes",
+                                "config": {
+                                    "minShapeSize": 251,
+                                    "fillAmount": 0.34,
+                                    "tags": [
+                                        "music-optional",
+                                        "intensity-mid"
+                                    ],
+                                    "soundTriggerTimeout": 280,
+                                    "soundTriggerThreshold": 0.4,
+                                    "soundMetric": "bassFastPeakDecay",
+                                    "soundTrigger": false,
+                                    "timeout": 1140
+                                }
+                            }
+                        ],
+                        "multiply": true,
+                        "tags": [
+                            "intensity-high",
+                            "music-optional"
+                        ]
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "presetName": "StarFlash",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "starsColor": 1,
+                                    "move": true,
+                                    "decay": 0.965
+                                }
+                            },
+                            {
+                                "programName": "musicFlash",
+                                "config": {
+                                    "soundMetric": "bassFastPeakDecay",
+                                    "multiplier": 2,
+                                    "cutThreshold": 0.2,
+                                    "globalBrightness": 1
+                                }
+                            }
+                        ],
+                        "multiply": true,
+                        "tags": [
+                            "music-required",
+                            "intensity-mid"
+                        ]
+                    }
+                }
+            ],
+            "tags": [
+                "music-optional",
+                "intensity-high"
+            ]
+        },
+        "band-radialsuns": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "centerY": -5.7,
+                        "power": 1.4,
+                        "fromTop": false,
+                        "saturation": 0.68,
+                        "escala": 1.331,
+                        "colorMap": "a_fire",
+                        "soundMetric": "bassFastPeakDecay"
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "escala": 1.021,
+                        "centerY": 22.8,
+                        "colorMap": "pm3d11_r",
+                        "power": 1.8,
+                        "soundMetric": "midFastPeakDecay"
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "escala": 1.101,
+                        "centerX": 0,
+                        "power": 2.2,
+                        "soundMetric": "highFastPeakDecay",
+                        "centerY": 61.5,
+                        "colorMap": "a_deepblue"
+                    }
+                }
+            ],
+            "tags": [
+                "intensity-high",
+                "shape-agnostic",
+                "music-required"
+            ]
+        },
+        "band-radialsuns-stars": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "centerY": -5.7,
+                                    "power": 1.4,
+                                    "fromTop": false,
+                                    "saturation": 0.68,
+                                    "escala": 1.331,
+                                    "colorMap": "a_fire",
+                                    "soundMetric": "bassFastPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "escala": 1.021,
+                                    "centerY": 22.8,
+                                    "colorMap": "pm3d11_r",
+                                    "power": 1.8,
+                                    "soundMetric": "midFastPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "escala": 1.101,
+                                    "centerX": 0,
+                                    "power": 2.2,
+                                    "soundMetric": "highFastPeakDecay",
+                                    "centerY": 61.5,
+                                    "colorMap": "a_deepblue"
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "intensity-high",
+                            "shape-agnostic",
+                            "music-required"
+                        ]
+                    }
+                },
+                {
+                    "programName": "stars"
+                }
+            ],
+            "tags": [
+                "music-required",
+                "intensity-mid"
+            ]
+        },
+        "calesita-band-radialsuns": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "centerY": -5.7,
+                                    "power": 1.4,
+                                    "fromTop": false,
+                                    "saturation": 0.68,
+                                    "escala": 1.331,
+                                    "colorMap": "a_fire",
+                                    "soundMetric": "bassFastPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "escala": 1.021,
+                                    "centerY": 22.8,
+                                    "colorMap": "pm3d11_r",
+                                    "power": 1.8,
+                                    "soundMetric": "midFastPeakDecay"
+                                }
+                            },
+                            {
+                                "programName": "radialSun",
+                                "config": {
+                                    "escala": 1.101,
+                                    "centerX": 0,
+                                    "power": 2.2,
+                                    "soundMetric": "highFastPeakDecay",
+                                    "centerY": 61.5,
+                                    "colorMap": "a_deepblue"
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "intensity-high",
+                            "shape-agnostic",
+                            "music-required"
+                        ]
+                    }
+                },
+                {
+                    "programName": "mix",
+                    "presetName": "calesita-slow",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "polar",
+                                "shape": "joya",
+                                "presetName": "calesita-slow",
+                                "config": {
+                                    "angleYSpeed": 10,
+                                    "fadeWidth": 45,
+                                    "tags": [
+                                        "music-optional",
+                                        "intensity-low"
+                                    ]
+                                }
+                            },
+                            {
+                                "programName": "polar",
+                                "shape": "mate",
+                                "config": {
+                                    "angleYSpeed": -10,
+                                    "fadeWidth": 45,
+                                    "tags": [
+                                        "music-optional",
+                                        "intensity-low"
+                                    ],
+                                    "angleY": 180
+                                }
+                            }
+                        ],
+                        "tags": [
+                            "music-optional",
+                            "intensity-low",
+                            "shape-specific"
+                        ]
+                    }
+                }
+            ],
+            "tags": [
+                "music-required",
+                "intensity-mid",
+                "shape-specific"
+            ],
+            "multiply": true
         }
     },
     "sound-waves": {
@@ -2128,7 +2710,7 @@
         "random-sphere-rays": {
             "tags": [
                 "music-optional",
-                "intensity-high"
+                "intensity-mid"
             ],
             "positive": {
                 "programName": "gradientSphere",
@@ -2140,6 +2722,547 @@
                 "programName": "rays"
             },
             "colorMask": false
+        },
+        "random-flow-rays": {
+            "tags": [
+                "music-optional",
+                "intensity-mid"
+            ],
+            "positive": {
+                "programName": "polar",
+                "presetName": "joyamate-flow",
+                "config": {
+                    "width": 80,
+                    "offsetX": 20,
+                    "angleYSpeed": 15,
+                    "tags": [
+                        "intensity-low",
+                        "music-optional"
+                    ],
+                    "fadeWidth": 45,
+                    "angleZSpeed": 6.2,
+                    "angleXSpeed": -2.8
+                }
+            },
+            "negative": {
+                "programName": "rays"
+            },
+            "colorMask": false
+        },
+        "musicrandomflow-stars": {
+            "mask": {
+                "programName": "mix",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "config": {
+                                "width": 80,
+                                "offsetX": 20,
+                                "angleYSpeed": 133,
+                                "tags": [
+                                    "intensity-low",
+                                    "music-optional"
+                                ],
+                                "fadeWidth": 45,
+                                "angleZSpeed": 103.4,
+                                "angleXSpeed": -137.7,
+                                "angleXWiggleSpeed": 60.7,
+                                "angleXWiggleAmplitude": 90,
+                                "angleYWiggleSpeed": -48.7,
+                                "angleYWiggleAmplitude": 105,
+                                "angleZWiggleSpeed": -0.3,
+                                "angleZWiggleAmplitude": 3600
+                            }
+                        },
+                        {
+                            "programName": "randomShapes",
+                            "config": {
+                                "minShapeSize": 251,
+                                "fillAmount": 0.34,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-mid"
+                                ],
+                                "soundTriggerTimeout": 160,
+                                "soundTriggerThreshold": 0.4,
+                                "soundMetric": "bassFastPeakDecay",
+                                "soundTrigger": true,
+                                "timeout": 1140
+                            }
+                        }
+                    ],
+                    "multiply": true,
+                    "tags": [
+                        "intensity-high",
+                        "music-optional"
+                    ]
+                }
+            },
+            "positive": {
+                "programName": "mix",
+                "presetName": "TwoSuns",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "relative": true,
+                                "fromTop": true,
+                                "radialDistance": false,
+                                "soundMetric": "midFastPeakDecay",
+                                "animatePower": false,
+                                "globalBrightness": 1
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "soundMetric": "bassFastPeakDecay",
+                                "relative": false,
+                                "escala": 1.091,
+                                "power": 2.3,
+                                "globalBrightness": 0.15
+                            }
+                        },
+                        {
+                            "programName": "stars",
+                            "config": {
+                                "move": true,
+                                "moveSpeed": 1,
+                                "starsColor": 0.5
+                            }
+                        }
+                    ],
+                    "multiply": false,
+                    "tags": [
+                        "music-optional",
+                        "intensity-mid"
+                    ]
+                }
+            },
+            "tags": [
+                "music-required",
+                "intensity-mid"
+            ]
+        },
+        "musicalesita-stars": {
+            "mask": {
+                "programName": "mix",
+                "presetName": "calesita-slow",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "shape": "joya",
+                            "presetName": "calesita-slow",
+                            "config": {
+                                "angleYSpeed": 10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ]
+                            }
+                        },
+                        {
+                            "programName": "polar",
+                            "shape": "mate",
+                            "config": {
+                                "angleYSpeed": -10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ],
+                                "angleY": 180
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "music-optional",
+                        "intensity-low",
+                        "shape-specific"
+                    ]
+                }
+            },
+            "positive": {
+                "programName": "mix",
+                "presetName": "TwoSuns",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "relative": true,
+                                "fromTop": true,
+                                "radialDistance": false,
+                                "soundMetric": "midFastPeakDecay",
+                                "animatePower": false,
+                                "globalBrightness": 1
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "soundMetric": "bassFastPeakDecay",
+                                "relative": false,
+                                "escala": 1.091,
+                                "power": 2.3,
+                                "globalBrightness": 0.15
+                            }
+                        },
+                        {
+                            "programName": "stars",
+                            "config": {
+                                "move": true,
+                                "moveSpeed": 1,
+                                "starsColor": 0.5
+                            }
+                        }
+                    ],
+                    "multiply": false,
+                    "tags": [
+                        "music-optional",
+                        "intensity-mid"
+                    ]
+                }
+            },
+            "tags": [
+                "music-required",
+                "intensity-mid",
+                "shape-specific"
+            ]
+        },
+        "musicalesita-randomhigh": {
+            "mask": {
+                "programName": "mix",
+                "presetName": "calesita-slow",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "shape": "joya",
+                            "presetName": "calesita-slow",
+                            "config": {
+                                "angleYSpeed": 10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ]
+                            }
+                        },
+                        {
+                            "programName": "polar",
+                            "shape": "mate",
+                            "config": {
+                                "angleYSpeed": -10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ],
+                                "angleY": 180
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "music-optional",
+                        "intensity-low",
+                        "shape-specific"
+                    ]
+                }
+            },
+            "positive": {
+                "programName": "mix",
+                "presetName": "TwoSuns",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "relative": true,
+                                "fromTop": true,
+                                "radialDistance": false,
+                                "soundMetric": "midFastPeakDecay",
+                                "animatePower": false,
+                                "globalBrightness": 1
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "soundMetric": "bassFastPeakDecay",
+                                "relative": false,
+                                "escala": 1.091,
+                                "power": 2.3,
+                                "globalBrightness": 0.15
+                            }
+                        },
+                        {
+                            "programName": "stars",
+                            "config": {
+                                "move": true,
+                                "moveSpeed": 1,
+                                "starsColor": 0.5
+                            }
+                        }
+                    ],
+                    "multiply": false,
+                    "tags": [
+                        "music-optional",
+                        "intensity-mid"
+                    ]
+                }
+            },
+            "tags": [
+                "music-required",
+                "intensity-mid",
+                "shape-specific"
+            ],
+            "negative": {
+                "programName": "shapes",
+                "config": {
+                    "bassCircle": false,
+                    "rotorAlpha": 0.07,
+                    "rainDotsAlpha": 0.08,
+                    "highLayerAlpha": 0.33
+                }
+            }
+        },
+        "calesita-roise-stars": {
+            "mask": {
+                "programName": "mix",
+                "presetName": "calesita-slow",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "shape": "joya",
+                            "presetName": "calesita-slow",
+                            "config": {
+                                "angleYSpeed": 10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ]
+                            }
+                        },
+                        {
+                            "programName": "polar",
+                            "shape": "mate",
+                            "config": {
+                                "angleYSpeed": -10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ],
+                                "angleY": 180
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "music-optional",
+                        "intensity-low",
+                        "shape-specific"
+                    ]
+                }
+            },
+            "tags": [
+                "music-optional",
+                "intensity-low",
+                "shape-specific"
+            ]
+        },
+        "calesita-bandsuns-stars": {
+            "mask": {
+                "programName": "mix",
+                "presetName": "calesita-slow",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "shape": "joya",
+                            "presetName": "calesita-slow",
+                            "config": {
+                                "angleYSpeed": 10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ]
+                            }
+                        },
+                        {
+                            "programName": "polar",
+                            "shape": "mate",
+                            "config": {
+                                "angleYSpeed": -10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ],
+                                "angleY": 180
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "music-optional",
+                        "intensity-low",
+                        "shape-specific"
+                    ]
+                }
+            },
+            "tags": [
+                "intensity-low",
+                "shape-specific",
+                "music-required"
+            ],
+            "positive": {
+                "programName": "mix",
+                "presetName": "band-radialsuns",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "centerY": -5.7,
+                                "power": 1.4,
+                                "fromTop": false,
+                                "saturation": 0.68,
+                                "escala": 1.331,
+                                "colorMap": "a_fire",
+                                "soundMetric": "bassFastPeakDecay"
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "escala": 1.021,
+                                "centerY": 22.8,
+                                "colorMap": "pm3d11_r",
+                                "power": 1.8,
+                                "soundMetric": "midFastPeakDecay"
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "escala": 1.101,
+                                "centerX": 0,
+                                "power": 2.2,
+                                "soundMetric": "highFastPeakDecay",
+                                "centerY": 61.5,
+                                "colorMap": "a_deepblue"
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "intensity-high",
+                        "shape-agnostic",
+                        "music-required"
+                    ]
+                }
+            }
+        },
+        "calesita-bandsuns-sphere": {
+            "mask": {
+                "programName": "mix",
+                "presetName": "calesita-slow",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "polar",
+                            "shape": "joya",
+                            "presetName": "calesita-slow",
+                            "config": {
+                                "angleYSpeed": 10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ]
+                            }
+                        },
+                        {
+                            "programName": "polar",
+                            "shape": "mate",
+                            "config": {
+                                "angleYSpeed": -10,
+                                "fadeWidth": 45,
+                                "tags": [
+                                    "music-optional",
+                                    "intensity-low"
+                                ],
+                                "angleY": 180
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "music-optional",
+                        "intensity-low",
+                        "shape-specific"
+                    ]
+                }
+            },
+            "tags": [
+                "shape-specific",
+                "music-required",
+                "intensity-mid"
+            ],
+            "positive": {
+                "programName": "mix",
+                "presetName": "band-radialsuns",
+                "config": {
+                    "programs": [
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "centerY": -5.7,
+                                "power": 1.4,
+                                "fromTop": false,
+                                "saturation": 0.68,
+                                "escala": 1.331,
+                                "colorMap": "a_fire",
+                                "soundMetric": "bassFastPeakDecay"
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "escala": 1.021,
+                                "centerY": 22.8,
+                                "colorMap": "pm3d11_r",
+                                "power": 1.8,
+                                "soundMetric": "midFastPeakDecay"
+                            }
+                        },
+                        {
+                            "programName": "radialSun",
+                            "config": {
+                                "escala": 1.101,
+                                "centerX": 0,
+                                "power": 2.2,
+                                "soundMetric": "highFastPeakDecay",
+                                "centerY": 61.5,
+                                "colorMap": "a_deepblue"
+                            }
+                        }
+                    ],
+                    "tags": [
+                        "intensity-high",
+                        "shape-agnostic",
+                        "music-required"
+                    ]
+                }
+            },
+            "negative": {
+                "programName": "gradientSphere"
+            }
         }
     },
     "gradientSphere": {

@@ -24,10 +24,10 @@ const { Stripe } = require("../../src/geometry");
 function makeRib(p0, p1, p2) {
   return {
     stripes : [
-      Stripe.fromXZUpwardY(p0, p1, 80),
-      Stripe.fromXZUpwardY(p1, p2, 178),
+      Stripe.fromXZUpwardY(p0, p1, 78),
+      Stripe.fromXZUpwardY(p1, p2, 180),
     ],
-    vertices : [ 0, 80, 80 + 178 - 1 ],
+    vertices : [ 0, 78, 78 + 180 - 1 ],
   };
 }
 
@@ -82,18 +82,20 @@ for (const rib of allRibs) {
 }
 
 // Horizontal.
-const hSegmentLength = 145;
-stripes.push(
-    Stripe.fromXZUpwardY(R0[1], R1[1], hSegmentLength),
-    Stripe.fromXZUpwardY(R1[1], R2[1], hSegmentLength),
-    Stripe.fromXZUpwardY(R2[1], R3[1], hSegmentLength),
-    Stripe.fromXZUpwardY(R3[1], R4[1], hSegmentLength),
-    Stripe.fromXZUpwardY(R4[1], R5[1], hSegmentLength),
-    Stripe.fromXZUpwardY(R5[1], R0[1], hSegmentLength)
-);
-for (let i = 0; i < 6; i++) {
+const hSegmentLength = 142.5;
+for (let i = 0; i < allRibs.length; i++) {
+  const thisSegmentLength =
+    (i % 2) == 0 ? Math.floor(hSegmentLength) : Math.ceil(hSegmentLength);
+  stripes.push(
+    Stripe.fromXZUpwardY(
+      allRibs[i][1],
+      allRibs[(i + 1) % allRibs.length][1],
+      thisSegmentLength
+    )
+  );
   vertices.push(offset);
-  offset += hSegmentLength;
+  vertices.push(offset + thisSegmentLength - 1);
+  offset += thisSegmentLength;
 }
 
 module.exports = {

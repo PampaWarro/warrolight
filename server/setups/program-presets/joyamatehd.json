@@ -2118,7 +2118,7 @@
             "escala": 7.4,
             "globalBrightness": 0.33,
             "velocidad": -8.1,
-            "colorMap": "stratosphere_sunset",
+            "colorMap": "butterflyfairy",
             "centerY": 16,
             "power": 1.1,
             "tags": [
@@ -3848,16 +3848,10 @@
         }
     },
     "vertexGlow": {
-        "joya": {
-            "scale": 36.58,
-            "pow": 11.19
-        },
-        "mate": {
-            "scale": 53.62,
-            "pow": 62.52,
+        "default": {
             "tags": [
-                "music-optional",
-                "intensity-low"
+                "intensity-low",
+                "music-optional"
             ]
         }
     },

@@ -51,29 +51,35 @@ function animateAdaptor(f) {
 }
 
 const introDuration = 2 * minutes;
-const intro = overrideBrightness(
-    createMultiProgram(
-        [
-          {
-            program : programsByShape({
-              vertices : [ CA, {randomness : .02, colorMap : "_bw"} ],
-            }),
-            duration : 1 * minutes,
-          },
-          {
-            program : programsByShape({
-              all : [
-                animateParamProgram(
-                    VertexGlow, "scale", 1,
-                    animateAdaptor(linearFade(0.1, 0, 100, 1 * minutes))),
-                {pow : 30},
-              ],
-            }),
-            duration : 1 * minutes,
-          },
-        ],
-        false, 15 * seconds),
-    linearFade(0, .05, .2, introDuration / 2));
+const intro =
+    overrideBrightness(
+        createMultiProgram(
+            [
+              {
+                program : programsByShape({
+                  vertices :
+                      [ CA, {scale : 1, randomness : .02, colorMap : "_bw"} ],
+                }),
+                duration : 1 * minutes,
+              },
+              {
+                program :
+                    programsByShape({
+                      all : [
+                        animateParamProgram(
+                            animateParamProgram(VertexGlow, "scale", 1,
+                                                animateAdaptor(linearFade(
+                                                    0.1, 0, .7, 1 * minutes))),
+                            "rippleStrength", 1,
+                            animateAdaptor(linearFade(0, 0, 1, 1 * minutes))),
+                        {enableSound : false},
+                      ],
+                    }),
+                duration : 1 * minutes,
+              },
+            ],
+            false, 15 * seconds),
+        linearFade(0, .05, .2, introDuration / 2));
 
 const rampUpDuration = 3 * minutes;
 const rampUp =

@@ -14,9 +14,17 @@ module.exports = class VertexGlow extends LightProgram {
   init() {
     this.vertices = this.getVerticesFromGeometry();
     this.nearestVertex = new Array(this.numberOfLeds);
+    this.vertexMaxDistance = {};
     for (let i = 0; i < this.numberOfLeds; i++) {
-      this.nearestVertex[i] = this.findNearestVertex(
+      const nearestVertex = this.nearestVertex[i] = this.findNearestVertex(
           this.geometry.x[i], this.geometry.y[i], this.geometry.z[i]);
+      this.vertexMaxDistance[nearestVertex.vertex] =
+          Math.max(nearestVertex.distance,
+                   this.vertexMaxDistance[nearestVertex.vertex] || 0);
+    }
+    for (const nearestVertex of this.nearestVertex) {
+      nearestVertex.normalizedDistance =
+          nearestVertex.distance / this.vertexMaxDistance[nearestVertex.vertex];
     }
   }
 
@@ -56,13 +64,26 @@ module.exports = class VertexGlow extends LightProgram {
 
   drawFrame(leds, context) {
     const frame = context.audio.currentFrame;
-    const audioPower = Math.pow(frame ? frame[this.config.soundMetric] : 0, .5);
+    const {timeInMs} = context;
+    const audioPower =
+        this.config.enableSound
+            ? Math.pow(frame ? frame[this.config.soundMetric] : 0, .5)
+            : 0;
     for (let i = 0; i < leds.length; i++) {
       const led = leds[i] = [ 0, 0, 0 ];
-      const {distance} = this.nearestVertex[i];
-      const brightness = Math.pow(
-          _.clamp(1 - distance / ((1 + audioPower) * this.config.scale), 0, 1),
-          this.config.pow);
+      const {normalizedDistance : distance} = this.nearestVertex[i];
+      const vertexBrightness =
+          1 - distance / ((1 + audioPower) * this.config.scale);
+      const rippleBrightness = Math.pow(
+          (1 - distance) * this.config.rippleStrength *
+              (.5 +
+               .5 * Math.cos(Math.PI *
+                             (distance * this.config.rippleFreq - audioPower -
+                              this.config.rippleSpeed * timeInMs / 1000))),
+          this.config.ripplePow);
+      const brightness =
+          Math.pow(_.clamp(Math.max(vertexBrightness, rippleBrightness), 0, 1),
+                   this.config.pow);
       leds[i].fill(255 * brightness);
     }
     return;
@@ -70,8 +91,14 @@ module.exports = class VertexGlow extends LightProgram {
 
   static configSchema() {
     return Object.assign(super.configSchema(), {
-      scale : {type : Number, min : .1, max : 100, step : .01, default : 1},
-      pow : {type : Number, min : .1, max : 100, step : .01, default : 1},
+      scale : {type : Number, min : .01, max : 1, step : .01, default : 0.5},
+      pow : {type : Number, min : .1, max : 10, step : .01, default : 2},
+      rippleStrength :
+          {type : Number, min : 0, max : 10, step : .01, default : 1},
+      rippleSpeed : {type : Number, min : 0, max : 10, step : .01, default : 1},
+      rippleFreq :
+          {type : Number, min : 0.1, max : 100, step : .01, default : 10},
+      ripplePow : {type : Number, min : .1, max : 10, step : .01, default : 1},
       soundMetric : {type : 'soundMetric', default : "rms"},
       enableSound : {type : Boolean, default : true},
     });

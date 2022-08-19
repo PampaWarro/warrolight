@@ -1954,6 +1954,152 @@
                 "shape-specific"
             ],
             "multiply": true
+        },
+        "3-suns-joya-mate": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "radialDistance": true,
+                        "centerY": 0,
+                        "centerX": 30.8,
+                        "escala": 2.561,
+                        "power": 5.3,
+                        "soundMetric": "midFastPeakDecay",
+                        "saturation": 0.92,
+                        "fromTop": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "radialDistance": true,
+                        "centerY": 49.3,
+                        "centerX": -52.6,
+                        "escala": 2.561,
+                        "power": 5.3,
+                        "soundMetric": "highFastPeakDecay",
+                        "relative": false,
+                        "fromTop": false,
+                        "saturation": 0.84
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "centerY": -10.9,
+                        "soundMetric": "bassFastPeakDecay",
+                        "power": 4,
+                        "tags": null,
+                        "escala": 0.801,
+                        "animatePower": true,
+                        "globalBrightness": 0.9
+                    }
+                }
+            ],
+            "tags": [
+                "music-required",
+                "intensity-high"
+            ]
+        },
+        "blue-supernovas": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.75,
+                        "cutThreshold": 0.22,
+                        "soundMetric": "bassRms",
+                        "energy": 1.8,
+                        "colorMap": "a_deepblue",
+                        "multiplier": 1.08,
+                        "power": 0.6,
+                        "depowering": 0.03,
+                        "allowMultiple": true,
+                        "tags": [
+                            "music-required",
+                            "intensity-high"
+                        ],
+                        "blackAndWhite": false
+                    }
+                },
+                {
+                    "programName": "stars",
+                    "config": {
+                        "decay": 0.95,
+                        "probability": 0.001,
+                        "starsColor": 0.58,
+                        "brillo": 0.4,
+                        "tags": [
+                            "music-optional",
+                            "intensity-low"
+                        ],
+                        "move": true
+                    }
+                }
+            ],
+            "tags": [
+                "music-optional",
+                "intensity-mid"
+            ]
+        },
+        "blue-electrons": {
+            "programs": [
+                {
+                    "programName": "musicExplosions",
+                    "config": {
+                        "blastSpeed": 0.75,
+                        "cutThreshold": 0.41,
+                        "soundMetric": "fastPeakDecay",
+                        "energy": 1.8,
+                        "colorMap": "",
+                        "multiplier": 1.08,
+                        "power": 0.6,
+                        "depowering": 0.03,
+                        "allowMultiple": false,
+                        "tags": [
+                            "music-required",
+                            "intensity-high"
+                        ],
+                        "blackAndWhite": false,
+                        "globalBrightness": 0.69
+                    }
+                },
+                {
+                    "programName": "rays",
+                    "config": {
+                        "decay": 0.445,
+                        "brillo": 1,
+                        "globalSpeed": 4.46,
+                        "colorSaturationRange": 0,
+                        "numberOfParticles": 32,
+                        "colorHueAmplitude": 0.1,
+                        "colorHueOffset": 0.51,
+                        "tags": [
+                            "music-optional",
+                            "intensity-low"
+                        ],
+                        "useSoundSpeed": false,
+                        "singleDirection": true
+                    }
+                },
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "colorMap": "a_deepblue",
+                        "power": 4.6,
+                        "centerY": -1.6,
+                        "soundMetric": "bassFastPeakDecay",
+                        "globalBrightness": 0.37
+                    }
+                }
+            ],
+            "tags": [
+                "music-optional",
+                "intensity-mid"
+            ],
+            "multiply": false,
+            "globalBrightness": 0.32
         }
     },
     "sound-waves": {
@@ -3263,6 +3409,48 @@
             "negative": {
                 "programName": "gradientSphere"
             }
+        },
+        "rays-directions": {
+            "mask": {
+                "programName": "radialSun",
+                "config": {
+                    "colorMap": "_wb",
+                    "power": 2.2,
+                    "escala": 2.661,
+                    "soundMetric": "fastPeakDecay",
+                    "centerY": 2.6
+                }
+            },
+            "positive": {
+                "programName": "rays",
+                "config": {
+                    "singleDirection": true,
+                    "colorHueAmplitude": 0.15,
+                    "colorSaturationRange": 0.11,
+                    "colorHueOffset": 1,
+                    "globalSpeed": 4.415,
+                    "decay": 0.665,
+                    "numberOfParticles": 31,
+                    "brillo": 1
+                }
+            },
+            "negative": {
+                "programName": "rays",
+                "config": {
+                    "singleDirection": true,
+                    "colorHueAmplitude": 0.16,
+                    "colorSaturationRange": 1,
+                    "colorHueOffset": 0.61,
+                    "globalSpeed": 2.45,
+                    "decay": 0.285,
+                    "numberOfParticles": 53,
+                    "brillo": 0.25
+                }
+            },
+            "tags": [
+                "music-required",
+                "intensity-low"
+            ]
         }
     },
     "gradientSphere": {
@@ -3753,6 +3941,16 @@
                 "music-optional",
                 "intensity-low"
             ]
+        },
+        "electrons": {
+            "singleDirection": true,
+            "colorHueAmplitude": 0.29,
+            "colorSaturationRange": 0.54,
+            "colorHueOffset": 0.36,
+            "globalSpeed": 4.28,
+            "decay": 0.24,
+            "numberOfParticles": 53,
+            "brillo": 0.34
         }
     },
     "shapes": {

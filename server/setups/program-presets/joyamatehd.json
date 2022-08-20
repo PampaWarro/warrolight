@@ -1999,7 +1999,8 @@
             ],
             "tags": [
                 "music-required",
-                "intensity-high"
+                "intensity-high",
+                "shape-specific"
             ]
         },
         "blue-supernovas": {
@@ -2040,7 +2041,8 @@
             ],
             "tags": [
                 "music-optional",
-                "intensity-mid"
+                "intensity-low",
+                "shape-agnostic"
             ]
         },
         "blue-electrons": {
@@ -2096,7 +2098,8 @@
             ],
             "tags": [
                 "music-optional",
-                "intensity-mid"
+                "intensity-mid",
+                "shape-agnostic"
             ],
             "multiply": false,
             "globalBrightness": 0.32
@@ -3448,8 +3451,8 @@
                 }
             },
             "tags": [
-                "music-required",
-                "intensity-low"
+                "music-optional",
+                "intensity-mid"
             ]
         }
     },

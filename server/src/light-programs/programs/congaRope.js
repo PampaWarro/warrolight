@@ -1,6 +1,7 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 const _ = require("lodash");
+const GlobalGame = require("./../conga-utils/GlobalGame");
 
 module.exports = class CongaShooting extends LightProgram {
 
@@ -11,8 +12,8 @@ module.exports = class CongaShooting extends LightProgram {
     this.rope = {pos: this.center - this.segmentSize, length: 2 * this.segmentSize};
     this.explosionLevel = 0;
     this.time = 0;
-    this.audioWindow1 = new Array(1000).fill(0);
-    this.audioWindow2 = new Array(1000).fill(0);
+    this.audioWindow1 = new Array(600).fill(0);
+    this.audioWindow2 = new Array(600).fill(0);
     this.maxVolume = 0;
   }
 
@@ -21,17 +22,16 @@ module.exports = class CongaShooting extends LightProgram {
       let volP2 = (audio[this.config.soundMetricP2] || 0) * this.config.multiplier;
 
       this.audioWindow1.unshift();
-      this.audioWindow1.push(volP1 > this.config.fireThreshold ? 1 : 0);
+      this.audioWindow1.push(volP1 > this.config.fireThreshold ? volP1 : 0);
 
       this.audioWindow2.unshift();
-      this.audioWindow2.push(volP2 > this.config.fireThreshold ? 1 : 0);
+      this.audioWindow2.push(volP2 > this.config.fireThreshold ? volP2 : 0);
   }
 
   detectBursts(audio){
       this.updateAudioWindow(audio);
       let burstSizeP1 = _.sum(this.audioWindow1);
       let burstSizeP2 = _.sum(this.audioWindow2);
-      console.log(burstSizeP1, burstSizeP2);
 
       if(burstSizeP1 < this.config.burstThreshold){
           burstSizeP1 = 0;
@@ -82,7 +82,7 @@ module.exports = class CongaShooting extends LightProgram {
   }
   gameOver(winner){
       this.rope = {pos: this.center - this.segmentSize, length: 2 * this.segmentSize};
-      this.paintAll();
+      GlobalGame.game.score[winner] = GlobalGame.game.max();
   }
 
   drawFrame(draw, audio) {
@@ -98,10 +98,10 @@ module.exports = class CongaShooting extends LightProgram {
     }
 
     if (this.rope.pos == 0){
-        this.gameOver('P1');
+        this.gameOver(0);
     }
     if(this.rope.pos + this.rope.length == this.numberOfLeds){
-        this.gameOver('P2');
+        this.gameOver(1);
     }
     let baseColor = ColorUtils.HSVtoRGB(0, 0, this.explosionLevel/20);
     for (let i = 0; i < this.numberOfLeds; i++) {

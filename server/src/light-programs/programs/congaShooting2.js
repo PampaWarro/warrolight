@@ -41,10 +41,6 @@ module.exports = class CongaShooting extends LightProgram {
           if(b.pos < 0 || b.pos > this.numberOfLeds) {
             this.bulletsA = _.without(this.bulletsA, b);
             GlobalGame.game.addPoint(0);
-
-            if(GlobalGame.game.score[0] === 10) {
-                GlobalGame.game.restart()
-            }
           }
       }
 
@@ -54,10 +50,6 @@ module.exports = class CongaShooting extends LightProgram {
         if(b.pos < 0 || b.pos > this.numberOfLeds) {
           this.bulletsB = _.without(this.bulletsB, b);
           GlobalGame.game.addPoint(1);
-
-            if(GlobalGame.game.score[1] === 10) {
-                GlobalGame.game.restart()
-            }
         }
       }
 
@@ -97,12 +89,12 @@ module.exports = class CongaShooting extends LightProgram {
         this.colors[i] = baseColor;
         for(const b of this.bulletsA){
             if (Math.abs(b.pos - i) < this.config.speed){
-                this.colors[i] = ColorUtils.HSVtoRGB(b.size/400, 1, 1);
+                this.colors[i] = GlobalGame.game.player1Color;
             }
         }
         for(const b of this.bulletsB){
             if (Math.abs(b.pos - i) < this.config.speed){
-              this.colors[i] = ColorUtils.HSVtoRGB(b.size/400+0.33, 1, 1);
+              this.colors[i] = GlobalGame.game.player2Color;
             }
         }
     }

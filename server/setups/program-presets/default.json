@@ -740,6 +740,74 @@
                 }
             ],
             "multiply": true
+        },
+        "ShootingArcCelebration": {
+            "programs": [
+                {
+                    "programName": "congaShooting2",
+                    "shape": "fullArc",
+                    "config": {
+                        "fireThreshold": 0.31,
+                        "soundMetricP1": "mic2_rms",
+                        "soundMetricP2": "mic2_rms"
+                    }
+                },
+                {
+                    "programName": "congaScore",
+                    "shape": "highestSide",
+                    "config": {
+                        "playerNumber": 1,
+                        "globalBrightness": 0.47,
+                        "reverse": true,
+                        "colorHue": 0.7,
+                        "colorSat": 0.7
+                    }
+                },
+                {
+                    "programName": "congaScore",
+                    "shape": "lowestSide",
+                    "config": {
+                        "globalBrightness": 1,
+                        "reverse": true,
+                        "playerNumber": "0",
+                        "colorHue": 0.71,
+                        "colorSat": 0.84
+                    }
+                },
+                {
+                    "programName": "congaCelebration",
+                    "shape": "head",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "radial3d",
+                                "config": {
+                                    "colorMap": "a_pink_r"
+                                }
+                            }
+                        ],
+                        "animateOnlyOnCelebration": true
+                    }
+                }
+            ],
+            "fps": 60
+        },
+        "Rope w/ Celebration": {
+            "programs": [
+                {
+                    "programName": "congaCelebration",
+                    "shape": "man"
+                },
+                {
+                    "programName": "congaRope",
+                    "shape": "fullArc",
+                    "config": {
+                        "soundMetricP1": "peakDecay",
+                        "soundMetricP2": "mic2_peakDecay"
+                    }
+                }
+            ],
+            "multiply": false
         }
     },
     "sound-waves": {

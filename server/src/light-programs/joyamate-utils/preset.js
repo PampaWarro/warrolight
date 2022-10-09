@@ -62,14 +62,16 @@ function randomSchedule(filter, baseDuration, randomDuration) {
       // 1/3 joya only, 1/3 mate only, 1/3 joya/mate.
       if (randomVal < 2 / 3) {
         let preset = presetToByShapeSpec(_.sample(presets));
-        while (preset[1].tags.includes('shape-specific')) {
+        const tags = preset[1].tags || [];
+        while (tags.includes('shape-specific')) {
           preset = presetToByShapeSpec(_.sample(presets));
         }
         byShapeSpec.joya = preset;
       }
       if (randomVal >= 1 / 3) {
         let preset = presetToByShapeSpec(_.sample(presets));
-        while (preset[1].tags.includes('shape-specific')) {
+        const tags = preset[1].tags || [];
+        while (tags.includes('shape-specific')) {
           preset = presetToByShapeSpec(_.sample(presets));
         }
         byShapeSpec.mate = preset;

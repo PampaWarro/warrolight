@@ -20,7 +20,7 @@ module.exports = class Rays extends LightProgram {
 
   updateRay(ray, currentAudioFrame) {
     let speed = ray.speed * this.config.globalSpeed * ray.direction;
-    if (this.config.useSoundSpeed) {
+    if (this.config.useSoundSpeed && currentAudioFrame) {
       // let vol = Math.max(0.1, audio.averageRelativeVolume - 0.2);
       speed *= (currentAudioFrame[this.config.soundMetric] || 0) * 3;
     }

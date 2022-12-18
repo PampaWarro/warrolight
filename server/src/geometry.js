@@ -1,27 +1,36 @@
 exports.Stripe = class Stripe {
-  constructor([x1, y1, z1], [x2, y2, z2], numberOfLeds, pixelRatio = 1) {
-    this.leds = numberOfLeds;
-    this.x = [];
-    this.y = [];
-    this.z = [];
+  constructor(points, pixelRatio = 1) {
+    this.leds = points.length;
     this.density = pixelRatio;
-
-    for (let i = 0; i < numberOfLeds; i++) {
-      this.x[i] = ((x2 - x1) * i) / this.leds + x1;
-      this.y[i] = ((y2 - y1) * i) / this.leds + y1;
-      this.z[i] = ((z2 - z1) * i) / this.leds + z1;
-    }
+    this.x = points.map(p => p[0] || 0);
+    this.y = points.map(p => p[1] || 0);
+    this.z = points.map(p => p[2] || 0);
   }
+
+  static line([x1, y1, z1], [x2, y2, z2], numberOfLeds, pixelRatio = 1) {
+    const points = new Array(numberOfLeds);
+    for (let i = 0; i < numberOfLeds; i++) {
+      points[i] = [
+        ((x2 - x1) * i) / numberOfLeds + x1,
+        ((y2 - y1) * i) / numberOfLeds + y1,
+        ((z2 - z1) * i) / numberOfLeds + z1,
+      ];
+    }
+    return new Stripe(points, pixelRatio);
+  }
+
   // Convenience for old 2d constructor.
   static old2d(x1, y1, x2, y2, numberOfLeds, pixelRatio = 1) {
-    return new Stripe([x1, y1, 0], [x2, y2, 0], numberOfLeds, pixelRatio);
+    return Stripe.line([x1, y1, 0], [x2, y2, 0], numberOfLeds, pixelRatio);
   }
+
   // Convenience for CAD software that displays xzy and y points upward.
   static fromXZUpwardY([x1, z1, y1], [x2, z2, y2], numberOfLeds, pixelRatio = 1) {
-    return new Stripe([x1, -y1, -z1], [x2, -y2, -z2], numberOfLeds, pixelRatio);
+    return Stripe.line([x1, -y1, -z1], [x2, -y2, -z2], numberOfLeds, pixelRatio);
   }
+
   clone() {
-    const other = new Stripe([0, 0, 0], [0, 0, 0], 0);
+    const other = new Stripe([], this.density);
     other.x = [...this.x];
     other.y = [...this.y];
     other.z = [...this.z];

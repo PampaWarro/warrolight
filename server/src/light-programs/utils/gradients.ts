@@ -6,7 +6,7 @@ import _ from "lodash"
 import { Color } from "../../types";
 import { mix, hexToRgb, rgbToHex } from "./ColorUtils"
 import xpath from "xpath";
-import { DOMParser } from "xmldom";
+import { DOMParser } from "@xmldom/xmldom";
 import colorString from "color-string";
 
 function interpolate(a: Color, b: Color, blend: number) {

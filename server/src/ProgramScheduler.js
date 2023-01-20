@@ -91,4 +91,8 @@ module.exports = class ProgramScheduler {
     this.program.updateConfig(config);
   }
 
+  tap(cid) {
+    this.program.tap(cid);
+  }
+
 }

@@ -169,6 +169,10 @@ module.exports = class LightController extends EventEmitter {
     return {defaults, presetOverrides, currentPreset: presetName, overrides};
   }
 
+  tap(cid) {
+    this.programScheduler.tap(cid);
+  }
+
   updateConfigOverride(config) {
     let configSchema = this.programs[this.currentProgramName].configSchema;
     let { presetOverrides, currentPreset, overrides } = this.currentConfig;

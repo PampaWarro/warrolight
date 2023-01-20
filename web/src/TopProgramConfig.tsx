@@ -17,6 +17,8 @@ interface Props {
 
     onRestartProgram(): void;
 
+    onTap(): void;
+
     onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 
     onProgramChange(name: string): void;
@@ -26,6 +28,11 @@ export class TopProgramConfig extends React.PureComponent<Props> {
     handleRestartProgram(e: React.SyntheticEvent) {
         e.preventDefault();
         this.props.onRestartProgram();
+    }
+
+    handleTap(e: React.SyntheticEvent) {
+        e.preventDefault();
+        this.props.onTap();
     }
 
     handleParamChange = (value: { [param: string]: ConfigValue }) => {
@@ -63,6 +70,12 @@ export class TopProgramConfig extends React.PureComponent<Props> {
                         onClick={this.handleRestartProgram.bind(this)}
                     >
                         Restart
+                    </button> 
+                    <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={this.handleTap.bind(this)}
+                    >
+                        Tap
                     </button>
                 </h5>
 

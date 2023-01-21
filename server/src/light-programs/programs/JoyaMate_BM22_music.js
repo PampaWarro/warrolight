@@ -59,9 +59,10 @@ module.exports = class JoyaMusic extends (
 
   drawFrame(leds, context) {
     super.drawFrame(leds, context);
-    const mask = this.masks[this.config.mask];
+    let mask = this.masks[this.config.mask];
     if (!mask) {
       console.warn(`unknown mask: ${this.config.mask}`);
+      mask = this.masks.all;
     }
     for (let i = 0; i < leds.length; i++) {
       if (!mask[i]) {

@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
@@ -222,6 +223,12 @@ export class App extends React.Component<Props, State> {
               <span className="navbar-brand">WarroLight</span>
               <DevicesStatus devices={this.state.devices} />
               <ConnectionStatus status={this.state.connection} />
+              <button className="nav-item btn btn-sm btn-secondary">
+                <Link className="nav-link" to="/wand">🪄</Link>
+              </button>
+              <button className="nav-item btn btn-sm btn-secondary">
+                <Link className="nav-link" to="/buttons">🚨</Link>
+              </button>
             </nav>
             <nav className="programsbar overflow-auto py-2">
               <ProgramList

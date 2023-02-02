@@ -12,6 +12,12 @@ function makeBaseFXProgram(WrappedProgram) {
 
     init() { return this.wrapped.init(); }
 
+    tap(clientId){
+      if (this.wrapped.tap){
+        this.wrapped.tap(clientId);
+      }
+    }
+
     drawFrame(leds, context) {
       this.wrapped.timeInMs = this.timeInMs;
       this.wrapped.drawFrame(leds, context);

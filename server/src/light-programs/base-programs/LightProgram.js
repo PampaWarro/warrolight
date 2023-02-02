@@ -1,6 +1,5 @@
 module.exports = class LightProgram {
   constructor(config, geometry, shapeMapping, lightController) {
-    this.taps = [];
     this.config = config;
     this.geometry = geometry;
     this.shapeMapping = shapeMapping;
@@ -15,9 +14,7 @@ module.exports = class LightProgram {
     throw new Error("Child classes should override drawFrame");
   }
 
-  tap(cid) {
-    this.taps.push(cid);
-    console.log(this.taps.length)
+  tap(clientId) {
   }
 
   updateConfig(config) {

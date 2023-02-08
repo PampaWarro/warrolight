@@ -26,7 +26,7 @@ exports.startServer = function startServer(controller) {
 
     function send(event, data) {
       const message = JSON.stringify([event, data]);
-        if (ws.readyState === WebSocket.OPEN) {
+        if (ws.readyState === WebSocket.OPEN && ws.protocol == 'warro') {
           ws.send(message);
         }
     }

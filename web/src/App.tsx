@@ -190,6 +190,10 @@ export class App extends React.Component<Props, State> {
     this.api.restartProgram();
   };
 
+  tap = () => {
+    this.api.sendTap();
+  };
+
   handleSetMicConfig = (config: Partial<MicConfig>) => {
     this.api.setMicConfig(config);
   };
@@ -254,6 +258,7 @@ export class App extends React.Component<Props, State> {
                 onSaveNewPreset={this.handleSaveNewPreset}
                 onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
+                onTap={this.tap}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
                 onProgramChange={this.handleProgramChange}
               />

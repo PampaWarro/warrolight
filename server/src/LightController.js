@@ -36,6 +36,7 @@ const programNames = [
   "bombsTap",
   "ca",
   "circles",
+  "circlesTap",
   "debugSetup",
   "debugShapes",
   "dynamicMask",

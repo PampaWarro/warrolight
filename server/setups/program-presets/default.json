@@ -1383,5 +1383,10 @@
             "blinkSpeed": 4,
             "refillChance": 0.459
         }
+    },
+    "all-white": {
+        "blanco tranca": {
+            "globalBrightness": 0.34
+        }
     }
 }

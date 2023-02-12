@@ -1,7 +1,7 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 
-module.exports = class AllWhite extends LightProgram {
+module.exports = class WandAllWhite extends LightProgram {
 
   init() {
     this.ledsToPaint = [];
@@ -15,7 +15,7 @@ module.exports = class AllWhite extends LightProgram {
       this.currentColor = [0,0,0]
       return;
     }
-    this.ledsToPaint.push(data.position);
+    this.ledsToPaint.push({pos: data.position, color: data.color});
   }
   // Override base class
   drawFrame(leds, context) {
@@ -26,7 +26,8 @@ module.exports = class AllWhite extends LightProgram {
       leds[i] = tonoDeBlanco.slice();
     }
     for (let j = 0; j < this.ledsToPaint.length ; j++){
-      leds[this.ledsToPaint[j]] = this.currentColor;
+      let ledToPaint = this.ledsToPaint[j]
+      leds[ledToPaint.pos] = ledToPaint.color;
     }
   }
 

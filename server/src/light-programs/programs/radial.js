@@ -11,9 +11,9 @@ module.exports = class Radial extends LightProgram {
     super.init();
   }
 
-  tap(clientId){
+  tap(data){
     console.log('tap received program');
-    this.taps.push(clientId);
+    this.taps.push(data);
   }
 
   drawFrame(leds) {

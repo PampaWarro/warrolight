@@ -70,6 +70,10 @@ const programNames = [
   "warroBass",
   "water-flood",
   "waveform",
+  "wand-mixable",
+  "wand-all-white",
+  "wand-stars",
+  "djtap"
 ];
 
 module.exports = class LightController extends EventEmitter {

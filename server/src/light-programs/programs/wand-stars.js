@@ -2,7 +2,7 @@ const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
 const {random} = require("lodash");
 
-module.exports = class Stars extends LightProgram {
+module.exports = class WandStars extends LightProgram {
 
   init() {
     this.stars = new Array(this.numberOfLeds).fill([0, 0, 0]);

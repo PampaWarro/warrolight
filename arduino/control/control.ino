@@ -8,16 +8,19 @@
 
 WebSocketsClient webSocket;
 
-#define WIFI_SSID "Monasterio Mesh"
-#define WIFI_PASS "batatamacabra"
+#define WIFI_SSID "Monasterio Mesh" // Brillitos
+#define WIFI_PASS "batatamacabra" // rinocerontes
 //#define WARRO_SERVER "multivac.local"
-#define WARRO_SERVER "192.168.86.70"
+#define WARRO_SERVER "192.168.86.70" // 192.168.1.131
 #define DEBUG true
 
 #define USE_SERIAL Serial
-#define MESSAGE1 "[\"tap\",{}]"
-#define MESSAGE2 "[\"setCurrentProgram\",\"all-white\"]"
-#define MESSAGE3 "[\"updateConfigParam\",{\"brillo\":%.2f}]"
+#define MESSAGE1 "[\"tap\",0]"
+#define MESSAGE2 "[\"tap\",1]"
+#define MESSAGE3 "[\"updateConfigParam\",{\"pote1\":%.2f}]"
+#define MESSAGE4 "[\"updateConfigParam\",{\"pote2\":%.2f}]"
+
+#define MAX_POTE 4095
 
 int pot1 = 0;
 int pot2 = 0;
@@ -108,12 +111,16 @@ void loop() {
 
   webSocket.loop();
 
-  // read entries
+  // read entries, evaluate change, snap potes to min/max
   int new_pot1 = analogRead(36);
   bool pot1_changed = abs(pot1 - new_pot1) > 150;
+  new_pot1 = new_pot1 < 150 ? 0 : new_pot1;
+  new_pot1 = new_pot1 > (MAX_POTE - 150) ? MAX_POTE : new_pot1;
 
   int new_pot2 = analogRead(39);
   bool pot2_changed = abs(pot2 - new_pot2) > 150;
+  new_pot2 = new_pot2 < 150 ? 0 : new_pot2;
+  new_pot2 = new_pot2 > (MAX_POTE - 150) ? MAX_POTE : new_pot1;
 
   int new_button1 = digitalRead(25) == 0;
   bool button1_changed = button1 != new_button1;
@@ -129,18 +136,25 @@ void loop() {
       button2 = new_button2;
   
     if (button1_changed && button1){
-      USE_SERIAL.println("[SEND] Tap");
+      USE_SERIAL.println("[SEND] Tap 1");
       webSocket.sendTXT(MESSAGE1);
     }
 
     if (button2_changed && button2){
-      USE_SERIAL.println("SEND] all white");
+      USE_SERIAL.println("[SEND] Tap 2");
       webSocket.sendTXT(MESSAGE2);
     }
 
     if (pot1_changed){
-      float value = 1.0 * pot1 / 4095;
+      float value = 1.0 * pot1 / MAX_POTE;
       sprintf(message_buffer, MESSAGE3, value);
+      USE_SERIAL.printf("[SEND] %s\n", message_buffer);
+      webSocket.sendTXT(message_buffer);
+    }
+
+    if (pot2_changed){
+      float value = 1.0 * pot2 / MAX_POTE;
+      sprintf(message_buffer, MESSAGE4, value);
       USE_SERIAL.printf("[SEND] %s\n", message_buffer);
       webSocket.sendTXT(message_buffer);
     }

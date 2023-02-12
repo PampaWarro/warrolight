@@ -1,0 +1,23 @@
+{
+  "geometry": "wchica",
+  "shapeMapping": "wchica",
+  "lights": 150,
+  "outputDevices": {
+    "serial": {
+      "type": "udp-wled",
+      "params": {
+        "numberOfLights": 150,
+        "ip": "192.168.0.177",
+        "udpPort": 21324
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 150,
+      "baseIndex": 0,
+      "deviceName": "serial"
+    }
+  ]
+}

@@ -96,7 +96,7 @@ class RGBEncoder extends Encoder {
 class WLEDRGBEncoder extends RGBEncoder {
   writeHeader(lights) {
     // See https://kno.wled.ge/interfaces/udp-realtime/
-    // 4 =	DNRGB	489/packet
+    // 2 =	DRGB	Max 490 leds (TODO: Consider using 4 = DNRGB	for multi packets with 489/packet)
     // 2 = seconds until WLED returns to normal functioning
     this.write([2, 2]);
   }

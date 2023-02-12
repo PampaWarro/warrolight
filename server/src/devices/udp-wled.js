@@ -2,7 +2,7 @@ const dns = require('dns');
 const dgram = require("dgram");
 const now = require("performance-now");
 const logger = require("pino")(require('pino-pretty')());
-const fetch = import('node-fetch');
+const fetch = require('node-fetch');
 
 const { LightDevice } = require("./base");
 const { WLEDRGBEncoder } = require("./encodings");
@@ -23,9 +23,9 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
         }
       });
     }
-    this.remotePort = udpPort;
+    // 21324 is the default WLED port
+    this.remotePort = udpPort || 21324;
     this.remoteAddress = ip;
-    // this.udpPort = udpPort;
 
     this.encoder = new WLEDRGBEncoder();
 
@@ -43,11 +43,12 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
       let res = await (await fetch(`http://${this.expectedIp}/json/info`, {timeout: 2000})).json()
       this.updateStatus(this.STATUS_RUNNING);
       this.connected = true;
+      this.wledName = res.name;
       this.lastFps = res.leds.fps;
     } catch(err) {
       this.updateStatus(this.STATUS_ERROR);
     }
-    setTimeout(() => this.fetchDeviceInfo(), 1000);
+    setTimeout(() => this.fetchDeviceInfo(), 2000);
   }
 
   sendNextFrame() {
@@ -61,39 +62,11 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
     }
   }
 
-  // handleArduinoData(data) {
-  //   if (data) {
-  //     data = data.replace(/[^\w]+/gi, "");
-  //
-  //     if (data.startsWith("YEAH")) {
-  //       logger.info("Reconnected");
-  //       this.updateStatus(this.STATUS_RUNNING);
-  //     } else if (data.startsWith("PERF")) {
-  //       let perfCount = parseInt(data.substring(4) || 0);
-  //       this.lastFps = perfCount;
-  //       // logger.info("Perf ", perfCount)
-  //       // logger.info(`ACK`)
-  //     } else {
-  //       logger.info(`UNEXPECTED MSG'${data}'`);
-  //     }
-  //   } else {
-  //     logger.info(`No data received`);
-  //   }
-  //
-  //   clearTimeout(this.reconnectTimeout);
-  //
-  //   this.reconnectTimeout = setTimeout(() => {
-  //     this.connected = false;
-  //     this.updateStatus(this.STATUS_CONNECTING);
-  //     logger.info(`no data`);
-  //   }, RECONNECT_TIME);
-  // }
-
   // Override parent
   logDeviceState() {
     if (this.status === this.STATUS_RUNNING) {
       if (now() - this.lastPrint > 250) {
-        logger.info(`FPS: ${this.lastFps}`.green);
+        logger.info(`FPS: ${this.lastFps} (${this.wledName || '-'})`.green);
         this.lastPrint = now();
       }
     }
@@ -121,9 +94,6 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
 
   setupCommunication() {
     this.udpSocket = dgram.createSocket("udp4");
-
-    // this.udpSocket.on("listening", this.handleListening.bind(this));
-    // this.udpSocket.on("message", this.handleMessage.bind(this));
     this.udpSocket.on("error", this.handleError.bind(this));
     this.udpSocket.on("close", this.handleClose.bind(this));
 
@@ -139,39 +109,6 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
     this.fetchDeviceInfo();
   }
 
-  // handleListening() {
-  //   const address = this.udpSocket.address();
-  //   this.updateStatus(this.STATUS_CONNECTING);
-  //   logger.info(
-  //     "UDP Server listening on " + address.address + ":" + address.port
-  //   );
-  // }
-
-  // handleMessage(message, remote) {
-  //   // logger.info(message.toString(), remote.address)
-  //   if (message.toString().startsWith("YEAH") &&
-  //       !message.toString().endsWith(this.name)) {
-  //     logger.warn("UDP message came from %s, expected %s",
-  //                 message.toString().substr(4), this.name);
-  //     return;
-  //   } else if (this.expectedIp && remote.address !== this.expectedIp) {
-  //     logger.warn("UDP message came from %s, expected %s", remote.address,
-  //                 this.expectedIp);
-  //     return;
-  //   }
-  //
-  //   this.remotePort = remote.port;
-  //   this.remoteAddress = remote.address;
-  //
-  //   if (!this.connected) {
-  //     logger.info(`Connected to ${this.remoteAddress}:${this.remotePort}`);
-  //     this.connected = true;
-  //     this.updateStatus(this.STATUS_RUNNING);
-  //   }
-  //
-  //   this.handleArduinoData(message.toString());
-  // }
-
   handleClose() {
     this.handleError("socket closed. Falta manejarlo");
   }
@@ -185,25 +122,3 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
     setTimeout(() => this.setupCommunication(), 500);
   }
 };
-//
-//
-// var client = dgram.createSocket('udp4');
-// const _ = require('lodash')
-// let i = 0;
-// let send = () => {
-//   i = (i+1) % 120;
-//   let payload = Buffer.from([
-//     2, 5,
-//     100, 50, 50,
-//     ... _.flatten(new Array(i*1).fill([0,0,0])),
-//     // 0, 0, 50,
-//     // 0, 255, Math.floor(Math.random()*255),
-//     255, 0, 255,
-//     255, 0, 255,
-//     255, 0, 255,
-//     255, 0, 255,
-//   ]);
-//   client.send(payload, 0, payload.length, 21666, '192.168.0.255');
-// }
-//
-// setTimeout(send, 20);

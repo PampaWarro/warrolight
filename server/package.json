@@ -27,7 +27,7 @@
     "gl-matrix": "^3.4.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "node-fetch": "^3.2.6",
+    "node-fetch": "^2.6.9",
     "performance-now": "^2.1.0",
     "pino": "^8.1.0",
     "pino-pretty": "^9.1.1",

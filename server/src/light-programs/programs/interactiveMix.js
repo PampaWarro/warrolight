@@ -15,11 +15,11 @@ module.exports = class Mix extends LightProgram {
 
   tap(data) {
     if (data.client == 'drum' && this.subprograms[1]) {
-      this.subprograms[1][0].tap(clientId, message);
+      this.subprograms[1][0].tap(data);
       this.tap1 = 5;
     }
     if (data.client == 'party' && this.subprograms[2]) {
-      this.subprograms[2][0].tap(clientId, message);
+      this.subprograms[2][0].tap(data);
       this.tap2 = 5;
     }
   }

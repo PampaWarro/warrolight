@@ -5,8 +5,8 @@ const programsByShape = require('./../base-programs/ProgramsByShape');
 
 module.exports = class Mix extends LightProgram {
   init() {
-    this.tap1 = 0;
-    this.tap2 = 0;
+    this.tapDrum = 0;
+    this.tapParty = 0;
     this.subprograms = _.map(this.config.programs, config => [
       this.getProgramInstanceFromParam(config),
       new Array(this.numberOfLeds)
@@ -14,13 +14,13 @@ module.exports = class Mix extends LightProgram {
   }
 
   tap(data) {
-    if (data.client == 'drum' && this.subprograms[1]) {
+    if (data.client === 'drum' && this.subprograms[1]) {
       this.subprograms[1][0].tap(data);
-      this.tap1 = 5;
+      this.tapDrum = this.config.lengthDrum;
     }
-    if (data.client == 'party' && this.subprograms[2]) {
+    if (data.client === 'party' && this.subprograms[2]) {
       this.subprograms[2][0].tap(data);
-      this.tap2 = 5;
+      this.tapParty = this.config.lengthParty;
     }
   }
 
@@ -49,19 +49,19 @@ module.exports = class Mix extends LightProgram {
       var [prog, progLeds] = this.subprograms[i];
 
       // skip main frame if flash is enabled
-      if (i == 0 && (this.tap1 != 0 || this.tap2 != 0)) {
+      if (i == 0 && (this.tapDrum != 0 || this.tapParty != 0)) {
         continue;
       }
 
       // skip main frame if flash is enabled
       if (i == 1) {
-        if (this.tap1 == 0) continue;
-        this.tap1--;
+        if (this.tapDrum == 0) continue;
+        this.tapDrum--;
       }
 
       if (i == 2) {
-        if (this.tap2 == 0) continue;
-        this.tap2--;
+        if (this.tapParty == 0) continue;
+        this.tapParty--;
       }
 
       // Done by ProgramScheduler, has to be replicated here
@@ -156,7 +156,8 @@ module.exports = class Mix extends LightProgram {
     // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-
+    res.lengthDrum = { type: Number, min: 0, max: 10000, step: 1, default: 5 };
+    res.lengthParty = { type: Number, min: 0, max: 10000, step: 10, default: 3000 };
     res.programs = {type: 'programs', default: [{programName: 'all-off'}]};
     res.multiply = {type: Boolean, default: false};
 

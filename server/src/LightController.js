@@ -19,13 +19,14 @@ const programNames = [
   "JoyaMate_BM22_art",
   "JoyaMate_BM22_music",
   "mix",
+  "interactiveMix",
   // "congaShooting2",
   // "congaScore",
   // "congaShooting",
   // "congaRope",
-  // "PROGRAM_Main_fuego2022",
-  // "PROGRAM_Triangulo",
-  // "PROGRAM_Transition",
+  "PROGRAM_Main_fuego2022",
+  "PROGRAM_Triangulo",
+  "PROGRAM_Transition",
   "aliveDots",
   "aliveDotsSpeed",
   "all-off",
@@ -33,12 +34,15 @@ const programNames = [
   "bandParticles",
   "bassWarpGrid",
   "bombs",
+  "bombsTap",
   "ca",
   "circles",
+  "circlesTap",
   "debugSetup",
   "debugShapes",
   "dynamicMask",
   "frequencyActivation",
+  "flashes",
   "gradientSphere",
   "lineal",
   "musicFlow",
@@ -167,6 +171,10 @@ module.exports = class LightController extends EventEmitter {
       }
     }
     return {defaults, presetOverrides, currentPreset: presetName, overrides};
+  }
+
+  tap(data) {
+    this.programScheduler.tap(data);
   }
 
   updateConfigOverride(config) {

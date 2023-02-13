@@ -1392,5 +1392,22 @@
             "blinkSpeed": 4,
             "refillChance": 0.459
         }
+    },
+    "interactiveMix": {
+        "Interactive Main": {
+            "programs": [
+                {
+                    "programName": "PROGRAM_Main_fuego2022"
+                },
+                {
+                    "programName": "flashes"
+                },
+                {
+                    "programName": "flashes"
+                }
+            ],
+            "pote1": 0,
+            "pote2": 0
+        }
     }
 }

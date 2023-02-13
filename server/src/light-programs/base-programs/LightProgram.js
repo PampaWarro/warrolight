@@ -14,6 +14,9 @@ module.exports = class LightProgram {
     throw new Error("Child classes should override drawFrame");
   }
 
+  tap(clientId) {
+  }
+
   updateConfig(config) {
     this.config = config;
   }

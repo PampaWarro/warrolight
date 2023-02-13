@@ -73,10 +73,10 @@ const programNames = [
   "PROGRAM_Tap_fuego2023",
   "PROGRAM_Wand_fuego2023",
   "DJTap",
+  "wand-empty-canvas",
   "wandMix",
   "wandRelampejo",
   "wand-mixable",
-  "wand-all-white",
   "wand-stars",
   "djtap"
 ];

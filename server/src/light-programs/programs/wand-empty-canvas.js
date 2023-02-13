@@ -1,40 +1,50 @@
 const LightProgram = require("./../base-programs/LightProgram");
-const ColorUtils = require("./../utils/ColorUtils");
+const ColorUtils = require("../utils/ColorUtils");
 
-module.exports = class WandAllWhite extends LightProgram {
+module.exports = class WandEmptyCanvas extends LightProgram {
 
   init() {
-    this.ledsToPaint = [];
-    this.currentColor = [0, 0, 0];
+    this.ledsToPaint = new Array(this.numberOfLeds).fill([0, 0, 0]);
+    this.time = 0;
     super.init();
   }
 
   tap(data){
     if (data.clear){
-      this.ledsToPaint = [];
-      this.currentColor = [0,0,0]
+      this.ledsToPaint = new Array(this.numberOfLeds).fill([0, 0, 0]);
       return;
     }
-    this.ledsToPaint.push({pos: data.position, color: data.color});
+    if (data.move){
+      this.config.move = true;
+    }
+    this.ledsToPaint[data.position] = data.color;
   }
   // Override base class
   drawFrame(leds, context) {
+    this.time++;
     // En HSV blanco es (0,0,1)
 
-    let tonoDeBlanco = ColorUtils.HSVtoRGB(0, 0, this.config.brillo);
     for (let i = 0; i < leds.length; i++) {
-      leds[i] = tonoDeBlanco.slice();
+      leds[i] = [0, 0, 0];
     }
-    for (let j = 0; j < this.ledsToPaint.length ; j++){
-      let ledToPaint = this.ledsToPaint[j]
-      leds[ledToPaint.pos] = ledToPaint.color;
+
+    this.ledsToPaint.forEach(([r, g, b], j) => {
+      leds[j] = [r, g, b];
+    });
+
+    if (this.config.move && (Math.floor((this.time*2)*this.config.moveSpeed) % 2 == 0)) {
+      let first = this.ledsToPaint.shift();
+      this.ledsToPaint.push(first);
     }
+
   }
 
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
     res.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
+    res.move = { type: Boolean, default: false };
+    res.moveSpeed = { type: Number, min: 0, step: 0.01, max: 1, default: 0.2 };
     return res;
   }
 };

@@ -91,8 +91,8 @@ module.exports = class ProgramScheduler {
     this.program.updateConfig(config);
   }
 
-  tap(clientId) {
-    this.program.tap(clientId);
+  tap(data) {
+    this.program.tap(data);
   }
 
 }

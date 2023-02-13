@@ -15,8 +15,8 @@ WebSocketsClient webSocket;
 #define DEBUG true
 
 #define USE_SERIAL Serial
-#define MESSAGE1 "[\"tap\",0]"
-#define MESSAGE2 "[\"tap\",1]"
+#define MESSAGE1 "[\"tap\",{\"client\": \"drum\"}]"
+#define MESSAGE2 "[\"tap\",{\"client\": \"party\"}]"
 #define MESSAGE3 "[\"updateConfigParam\",{\"pote1\":%.2f}]"
 #define MESSAGE4 "[\"updateConfigParam\",{\"pote2\":%.2f}]"
 

@@ -19,6 +19,7 @@ const programNames = [
   "JoyaMate_BM22_art",
   "JoyaMate_BM22_music",
   "mix",
+  "interactiveMix",
   // "congaShooting2",
   // "congaScore",
   // "congaShooting",
@@ -41,6 +42,7 @@ const programNames = [
   "debugShapes",
   "dynamicMask",
   "frequencyActivation",
+  "flashes",
   "gradientSphere",
   "lineal",
   "musicFlow",
@@ -171,8 +173,8 @@ module.exports = class LightController extends EventEmitter {
     return {defaults, presetOverrides, currentPreset: presetName, overrides};
   }
 
-  tap(clientId) {
-    this.programScheduler.tap(clientId);
+  tap(data) {
+    this.programScheduler.tap(data);
   }
 
   updateConfigOverride(config) {

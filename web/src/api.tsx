@@ -49,7 +49,7 @@ export class API extends EventEmitter {
   }
 
   sendTap() {
-    this.send("tap", {});
+    this.send("tap", {'client': 'drum'});
   }
 
   updateConfigParam(config: { [name: string]: ConfigValue }) {

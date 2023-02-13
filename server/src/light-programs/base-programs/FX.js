@@ -12,9 +12,9 @@ function makeBaseFXProgram(WrappedProgram) {
 
     init() { return this.wrapped.init(); }
 
-    tap(clientId){
+    tap(data){
       if (this.wrapped.tap){
-        this.wrapped.tap(clientId);
+        this.wrapped.tap(data);
       }
     }
 

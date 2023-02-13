@@ -128,8 +128,8 @@ module.exports = class LightsService {
     this.broadcastStateChange();
   }
 
-  tap() {
-    this.controller.tap(this.id);
+  tap(data) {
+    this.controller.tap(data);
   }
 
   updateConfigParam(config) {

@@ -66,6 +66,10 @@ module.exports = function createMultiProgram(
       this.currentColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
+    tap(data) {
+      if (this.current && this.current.tap) this.current.tap(data);
+    }
+
     drawFrame(leds, context) {
       // init
       if (this.current === null) {

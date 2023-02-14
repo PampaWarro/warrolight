@@ -1464,6 +1464,16 @@
                     }
                 }
             ]
+        },
+        "MainWithWand": {
+            "programs": [
+                {
+                    "programName": "PROGRAM_Main_fuego2022"
+                },
+                {
+                    "programName": "wand-empty-canvas"
+                }
+            ]
         }
     },
     "DJTap": {

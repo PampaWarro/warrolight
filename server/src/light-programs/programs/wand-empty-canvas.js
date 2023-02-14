@@ -14,9 +14,8 @@ module.exports = class WandEmptyCanvas extends LightProgram {
       this.ledsToPaint = new Array(this.numberOfLeds).fill([0, 0, 0]);
       return;
     }
-    if (data.move){
-      this.config.move = true;
-    }
+    this.config.move = data.move !== undefined ? data.move : this.config.move;
+
     this.ledsToPaint[data.position] = data.color;
   }
   // Override base class

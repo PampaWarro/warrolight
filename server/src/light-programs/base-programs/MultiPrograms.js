@@ -38,7 +38,8 @@ function arraySchedule(schedule, random) {
 module.exports = function createMultiProgram(
   programSchedule,
   random = false,
-  crossFade = 20000
+  crossFade = 20000,
+  randomCrossFade = false
 ) {
   return class MultiProgram extends LightProgram {
     constructor(config, geometry, shapeMapping, lightController) {
@@ -120,7 +121,10 @@ module.exports = function createMultiProgram(
 
     startNextProgram() {
       this.crossFadeStart = Date.now();
-      this.crossFadeFinish = Date.now() + crossFade;
+
+      let crossFadeDuration = randomCrossFade ? crossFade * Math.random() : crossFade;
+
+      this.crossFadeFinish = Date.now() + crossFadeDuration;
 
       const scheduleItem = this.programSchedule();
       this.previous = this.current;
@@ -128,7 +132,7 @@ module.exports = function createMultiProgram(
       this.current.init();
       this.nextStartChange = Date.now() + scheduleItem.duration;
 
-      console.log("Playing", this.current.toString())
+      console.log(`Playing ${this.current.toString()} [CROSSFADE ${(crossFadeDuration/1000).toFixed(1)}s]`, )
     }
 
     updateConfig(config) {

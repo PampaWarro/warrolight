@@ -35,7 +35,7 @@ const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
-const baseTime = 1 * 1000 * 1;
+const baseTime = 1 * 1000;
 
 function sineScale(s) {
   return (Math.sin(this.timeInMs / 1000) + 1) * 8 + 0.5;
@@ -583,4 +583,4 @@ const schedule = [
 
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, false, 1000);
+module.exports = createMultiProgram(schedule, true, 15000, true);

@@ -260,7 +260,8 @@ module.exports = class LightController extends EventEmitter {
   }
 
   loadProgram(name) {
-    const FunctionClass = makeFXProgram(require("./light-programs/programs/" + name));
+    // const FunctionClass = makeFXProgram(require("./light-programs/programs/" + name));
+    const FunctionClass = require("./light-programs/programs/" + name);
     return {
       name: name,
       configSchema: FunctionClass.configSchema(),

@@ -6,14 +6,7 @@ const {loadGradient} = require("../utils/gradients");
 
 module.exports = class Radial extends LightProgram {
   init() {
-    this.taps = [];
-    this.holdWhite = 0;
     super.init();
-  }
-
-  tap(data){
-    console.log('tap received program');
-    this.taps.push(data);
   }
 
   drawFrame(leds) {
@@ -34,12 +27,6 @@ module.exports = class Radial extends LightProgram {
         this.config.power
       );
 
-      if (this.taps.length > 0){
-        this.taps.pop();
-        this.holdWhite = 3000;
-        console.log('adentro tap');
-      }
-
       if (this.config.colorMap) {
         const gradient = loadGradient(this.config.colorMap);
         const [r, g, b, a] = gradient.colorAt(1 - v);
@@ -51,7 +38,6 @@ module.exports = class Radial extends LightProgram {
             v
         );
       }
-      leds[i] = --this.holdWhite > 0 ? [255,255,255] : leds[i];
 
     }
   }

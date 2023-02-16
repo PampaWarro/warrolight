@@ -1403,11 +1403,12 @@
                     "programName": "flashes"
                 },
                 {
-                    "programName": "flashes"
+                    "programName": "flashesLong"
                 }
             ],
             "pote1": 0,
-            "pote2": 0
+            "pote2": 0,
+            "lengthParty": 400
         }
     },
     "wandMix": {

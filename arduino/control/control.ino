@@ -8,17 +8,16 @@
 
 WebSocketsClient webSocket;
 
-#define WIFI_SSID "Monasterio Mesh" // Brillitos
-#define WIFI_PASS "batatamacabra" // rinocerontes
-//#define WARRO_SERVER "multivac.local"
-#define WARRO_SERVER "192.168.86.70" // 192.168.1.131
+#define WIFI_SSID "Brillitos"
+#define WIFI_PASS "rinocerontes"
+#define WARRO_SERVER "192.168.1.131"
 #define DEBUG true
 
 #define USE_SERIAL Serial
 #define MESSAGE1 "[\"tap\",{\"client\": \"drum\"}]"
 #define MESSAGE2 "[\"tap\",{\"client\": \"party\"}]"
-#define MESSAGE3 "[\"updateConfigParam\",{\"pote1\":%.2f}]"
-#define MESSAGE4 "[\"updateConfigParam\",{\"pote2\":%.2f}]"
+#define MESSAGE3 "[\"updateConfigParam\",{\"globalBrightness\":%.2f}]"
+#define MESSAGE4 "[\"updateConfigParam\",{\"colorFilter\":%.2f}]"
 
 #define MAX_POTE 4095
 
@@ -120,13 +119,14 @@ void loop() {
   int new_pot2 = analogRead(39);
   bool pot2_changed = abs(pot2 - new_pot2) > 150;
   new_pot2 = new_pot2 < 150 ? 0 : new_pot2;
-  new_pot2 = new_pot2 > (MAX_POTE - 150) ? MAX_POTE : new_pot1;
+  new_pot2 = new_pot2 > (MAX_POTE - 150) ? MAX_POTE : new_pot2;
 
   int new_button1 = digitalRead(25) == 0;
   bool button1_changed = button1 != new_button1;
 
   int new_button2 = digitalRead(26) == 0;
   bool button2_changed = button2 != new_button2;
+  
 
   if((pot1_changed || pot2_changed || button1_changed || button2_changed )) {
       

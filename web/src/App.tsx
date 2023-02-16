@@ -190,8 +190,12 @@ export class App extends React.Component<Props, State> {
     this.api.restartProgram();
   };
 
-  tap = () => {
-    this.api.sendTap();
+  drum = () => {
+    this.api.sendTap({ client: 'drum'});
+  };
+
+  party = () => {
+    this.api.sendTap({ client: 'party'});
   };
 
   handleSetMicConfig = (config: Partial<MicConfig>) => {
@@ -231,12 +235,6 @@ export class App extends React.Component<Props, State> {
               <span className="navbar-brand">WarroLight</span>
               <DevicesStatus devices={this.state.devices} />
               <ConnectionStatus status={this.state.connection} />
-              <button className="nav-item btn btn-sm btn-secondary">
-                <Link className="nav-link" to="/wand">🪄</Link>
-              </button>
-              <button className="nav-item btn btn-sm btn-secondary">
-                <Link className="nav-link" to="/buttons">🚨</Link>
-              </button>
             </nav>
             <nav className="programsbar overflow-auto py-2">
               <ProgramList
@@ -258,7 +256,8 @@ export class App extends React.Component<Props, State> {
                 onSaveNewPreset={this.handleSaveNewPreset}
                 onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
-                onTap={this.tap}
+                onDrum={this.drum}
+                onParty={this.party}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
                 onProgramChange={this.handleProgramChange}
               />

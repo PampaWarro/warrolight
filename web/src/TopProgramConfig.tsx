@@ -17,7 +17,9 @@ interface Props {
 
     onRestartProgram(): void;
 
-    onTap(): void;
+    onDrum(): void;
+
+    onParty(): void;
 
     onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 
@@ -30,9 +32,14 @@ export class TopProgramConfig extends React.PureComponent<Props> {
         this.props.onRestartProgram();
     }
 
-    handleTap(e: React.SyntheticEvent) {
+    handleDrum(e: React.SyntheticEvent) {
         e.preventDefault();
-        this.props.onTap();
+        this.props.onDrum();
+    }
+
+    handleParty(e: React.SyntheticEvent) {
+        e.preventDefault();
+        this.props.onParty();
     }
 
     handleParamChange = (value: { [param: string]: ConfigValue }) => {
@@ -73,9 +80,15 @@ export class TopProgramConfig extends React.PureComponent<Props> {
                     </button>
                     <button
                         className="btn btn-sm btn-outline-secondary"
-                        onClick={this.handleTap.bind(this)}
+                        onClick={this.handleDrum.bind(this)}
                     >
-                        Tap
+                        Drum
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={this.handleParty.bind(this)}
+                    >
+                        Party
                     </button>
                 </h5>
 

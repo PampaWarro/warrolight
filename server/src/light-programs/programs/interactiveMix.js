@@ -89,9 +89,18 @@ module.exports = class Mix extends LightProgram {
           b = b * ((b2+(255-b2)*(1-globalBrightness)) || 0) / 255;
           a = a + (a2 || 0)
         } else {
-          r += (r2 || 0) * globalBrightness;
-          g += (g2 || 0) * globalBrightness;
-          b += (b2 || 0) * globalBrightness;
+          if (this.config.colorFilter > 0.5) {
+            // blue pass filter [0.5, 1]
+            var fade = 1 - (this.config.colorFilter * 2 - 1);
+            r += (r2 || 0) * globalBrightness * fade;
+            g += (g2 || 0) * globalBrightness * fade;
+            b += (b2 || 0) * globalBrightness;
+          } else {
+            var fade = this.config.colorFilter * 2;
+            r += (r2 || 0) * globalBrightness;
+            g += (g2 || 0) * globalBrightness * fade;
+            b += (b2 || 0) * globalBrightness * fade;
+          }
           a += a2 || 0;
         }
         leds[i] = [r, g, b, a];
@@ -156,8 +165,9 @@ module.exports = class Mix extends LightProgram {
     // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
-    res.lengthDrum = { type: Number, min: 0, max: 10000, step: 1, default: 5 };
-    res.lengthParty = { type: Number, min: 0, max: 10000, step: 10, default: 3000 };
+    res.lengthDrum = { type: Number, min: 0, max: 1000, step: 1, default: 5 };
+    res.lengthParty = { type: Number, min: 0, max: 1000, step: 10, default: 100 };
+    res.colorFilter = { type: Number, min: 0, max: 1, step: 0.01, default: 0.5 };
     res.programs = {type: 'programs', default: [{programName: 'all-off'}]};
     res.multiply = {type: Boolean, default: false};
 

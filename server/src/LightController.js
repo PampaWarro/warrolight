@@ -44,6 +44,7 @@ const programNames = [
   "dynamicMask",
   "frequencyActivation",
   "flashes",
+  "flashesLong",
   "gradientSphere",
   "lineal",
   "musicFlow",

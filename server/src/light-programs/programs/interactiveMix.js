@@ -48,9 +48,17 @@ module.exports = class Mix extends LightProgram {
     for (var i = 0; i < this.subprograms.length ; i++) {
       var [prog, progLeds] = this.subprograms[i];
 
-      // skip main frame if flash is enabled
-      if (i == 0 && (this.tapDrum != 0 || this.tapParty != 0)) {
+      // skip main drum if drum/party is enabled
+      if (i == 0 && (this.tapDrum != 0 || this.tapParty > 100)) {
         continue;
+      }
+
+      // fade main/drum frames if party is ending
+      let fadeMain = 1;
+      let fadeParty = 1;
+      if ((i == 0 || i == 2) && this.tapParty > 0 && this.tapParty < 100) {
+        fadeParty = this.tapParty / 100;
+        fadeMain = 1 - fadeParty;
       }
 
       // skip main frame if flash is enabled
@@ -92,14 +100,14 @@ module.exports = class Mix extends LightProgram {
           if (this.config.colorFilter > 0.5) {
             // blue pass filter [0.5, 1]
             var fade = 1 - (this.config.colorFilter * 2 - 1);
-            r += (r2 || 0) * globalBrightness * fade;
-            g += (g2 || 0) * globalBrightness * fade;
-            b += (b2 || 0) * globalBrightness;
+            r += (r2 || 0) * globalBrightness * fadeMain * fadeParty * fade;
+            g += (g2 || 0) * globalBrightness * fadeMain * fadeParty * fade;
+            b += (b2 || 0) * globalBrightness * fadeMain * fadeParty;
           } else {
             var fade = this.config.colorFilter * 2;
-            r += (r2 || 0) * globalBrightness;
-            g += (g2 || 0) * globalBrightness * fade;
-            b += (b2 || 0) * globalBrightness * fade;
+            r += (r2 || 0) * globalBrightness * fadeMain * fadeParty;
+            g += (g2 || 0) * globalBrightness * fadeMain * fadeParty * fade;
+            b += (b2 || 0) * globalBrightness * fadeMain * fadeParty * fade;
           }
           a += a2 || 0;
         }

@@ -72,7 +72,7 @@ const programNames = [
   "warroBass",
   "water-flood",
   "waveform",
-  "DJTap",
+  "djtap",
   "wand-empty-canvas",
   "wandMix",
   "wand-stars",

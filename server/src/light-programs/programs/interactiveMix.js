@@ -148,21 +148,7 @@ module.exports = class Mix extends LightProgram {
     super.updateConfig(newConfig)
   }
 
-  static presets() {
-    return {
-      radialStars: {
-        programs: [{programName: 'stars'},
-          {
-            programName: 'radial', config: {
-              velocidad: 20
-            }
-          }
-        ],
-      }
-    }
-  }
-
-    // Override and extend config Schema
+  // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
     res.lengthDrum = { type: Number, min: 0, max: 1000, step: 1, default: 5 };

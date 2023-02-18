@@ -10,7 +10,7 @@ const Rainbow = require("./rainbow");
 const VertexGlow = require("./vertexGlow");
 const WarroBass = require("./warroBass");
 const WaveForm = require('./waveform');
-const DJTap = require('./DJTap.js');
+const DJTap = require('./djtap.js');
 const BassWarpGrid = require('./bassWarpGrid.js');
 const FrequencyActivation = require('./frequencyActivation.js');
 

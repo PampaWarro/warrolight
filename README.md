@@ -27,6 +27,9 @@ cd audio/
 yarn
 ```
 
+En Raspberry PI usar `CFLAGS="-mfloat-abi=hard -mfpu=neon" yarn` para que
+`rtaudio` compile.
+
 Si el nuevo backend de audio node nativo (`rtaudio`) falla la instalación (en
 macOS anda bien, en Windows ni idea), instalar el fallback viejo en Python.
 

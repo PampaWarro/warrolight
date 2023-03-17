@@ -38,7 +38,8 @@ module.exports = class BandParticles extends LayerBasedProgram {
 
       while (bandParticles.length < this.config.particlesPerBand) {
         const drawable = new SingleLed({
-          ledIndex: this.geometry.leds * Math.random()
+          ledIndex: this.geometry.leds * Math.random(),
+          interpolate: true,
         });
         const layer = new DrawableLayer({ drawable: drawable });
         const state = { speed: 0 };

@@ -60,13 +60,26 @@ class SingleLed extends Drawable {
     super(options);
     this.color = options.color || [255, 255, 255, 1];
     this.ledIndex = options.ledIndex || 0;
+    this.interpolate = !!options.interpolate;
   }
   colorAtIndex(index, geometry) {
-    const currentIndex = Math.round(
-      ColorUtils.mod(this.ledIndex, geometry.leds)
-    );
-    if (index == currentIndex) {
-      return this.color;
+    if (this.interpolate) {
+      const currentIndex = this.ledIndex % geometry.leds;
+      const d = Math.abs(index - currentIndex);
+      if (d === 0) {
+        return this.color;
+      }
+      if (d < 1) {
+        const alpha = 1 - d;
+        return ColorUtils.dim(this.color, alpha);
+      }
+    } else {
+      const currentIndex = Math.round(
+        ColorUtils.mod(this.ledIndex, geometry.leds)
+      );
+      if (index == currentIndex) {
+        return this.color;
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
   constructor({ numberOfLights, ip, name, udpPort }) {
     super(numberOfLights, "WLED " + (name || ip));
 
-    this.expectedIp = ip;
+    this.remoteAddress = ip;
     this.name = name;
     if (name && !ip) {
       dns.lookup(name, (err, address) => {
@@ -19,7 +19,7 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
           logger.info(`failed to resolve ${name}`);
         } else {
           logger.info(`resolved ${name} to ${address}`);
-          this.expectedIp = address;
+          this.remoteAddress = address;
         }
       });
     }
@@ -40,7 +40,7 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
 
   async fetchDeviceInfo() {
     try {
-      let res = await (await fetch(`http://${this.expectedIp}/json/info`, {timeout: 2000})).json()
+      let res = await (await fetch(`http://${this.remoteAddress}/json/info`, {timeout: 2000})).json()
       this.updateStatus(this.STATUS_RUNNING);
       this.connected = true;
       this.wledName = res.name;

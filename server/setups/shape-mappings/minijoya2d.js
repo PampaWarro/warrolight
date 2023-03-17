@@ -1,16 +1,20 @@
 const _ = require("lodash");
 module.exports = function getShapes() {
+  // TODO fix this.
   const allOfIt = _.range(0, 300);
-  const left = _.range(150, 300);
-  const right = _.range(0, 150);
-  const topLeft = _.range(150, 233);
-  const topRight = _.range(67, 150);
+  const left = _.flatten([
+    _.range(0, 36),
+    _.range(185, 300),
+  ]);
+  const right = _.range(35, 186);
+  const topLeft = _.range(185, 269);
+  const topRight = _.range(102, 186);
   const top = _.flatten([topRight, topLeft]);
-  const tip = _.range(149, 152);
-  const leftTip = _.range(232, 235);
-  const rightTip = _.range(66, 69);
-  const bottomLeftTip = _.range(265, 268);
-  const bottomRightTip = _.range(35, 38);
+  const tip = _.range(184, 187);
+  const leftTip = _.range(267, 270);
+  const rightTip = _.range(101, 104);
+  const bottomLeftTip = [299, 0, 1];
+  const bottomRightTip = _.range(69, 72);
   const tips = _.flatten([
     tip,
     leftTip,
@@ -18,12 +22,15 @@ module.exports = function getShapes() {
     bottomLeftTip,
     bottomRightTip,
   ]);
-  const bottomLeft = _.range(233, 300);
-  const bottomRight = _.range(0, 67);
+  const bottomLeft = _.flatten([
+    _.range(268, 300),
+    _.range(0, 36),
+  ]);
+  const bottomRight = _.range(35, 103);
   const bottom = _.flatten([bottomRight, bottomLeft]);
-  const base = _.flatten([_.range(0, 36), _.range(266, 300)]);
-  const bottomLeftNoBase = _.range(233, 266);
-  const bottomRightNoBase = _.range(36, 67);
+  const base = _.range(0, 71);
+  const bottomLeftNoBase = _.flatten([_.range(268, 300), [0]]);
+  const bottomRightNoBase = _.range(70, 103);
   const bottomNoBase = _.flatten([bottomRightNoBase, bottomLeftNoBase]);
   // Permutaciones
   const shuffleBase = [...allOfIt];

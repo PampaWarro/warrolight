@@ -3,12 +3,11 @@
   "shapeMapping": "minijoya2d",
   "lights": 300,
   "outputDevices": {
-    "teensy": {
-      "type": "udp",
+    "minijoya": {
+      "type": "udp-wled",
       "params": {
         "numberOfLights": 300,
-        "name": "teensy-00-12-28-ca.local",
-        "udpPort": 8888
+        "name": "wled-minijoya.local"
       }
     }
   },
@@ -17,7 +16,7 @@
       "from": 0,
       "to": 300,
       "baseIndex": 0,
-      "deviceName": "teensy"
+      "deviceName": "minijoya"
     }
   ]
 }

@@ -8,7 +8,7 @@ Software para simular y emitir programas audiorítmicos en tiras de luces LED. U
 1. Instalar dependencias. En macOS con Homebrew el comando es:
 
 ```
-brew install node yarn
+brew install node yarn cmake
 ```
 
 En windows también hace falta python para el backend viejo de audio.

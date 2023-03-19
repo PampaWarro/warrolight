@@ -1,7 +1,7 @@
 #!/bin/bash
 
 session="warrolight"
-path="~/Documents/projects/warrolight"
+path="$(dirname $(readlink -f $0))"
 
 # Check if the session exists, discarding output
 # We can check $? for the exit status (zero for success, non-zero for failure)

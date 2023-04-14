@@ -1,0 +1,37 @@
+{
+  "geometry": "joyahdtotems",
+  "shapeMapping": "joyahdtotems",
+  "lights": 2934,
+  "outputDevices": {
+    "joya-r": {
+      "type": "udp",
+      "params": {
+        "numberOfLights": 2064,
+        "name": "joya-r.local",
+        "udpPort": 8888
+      }
+    },
+    "joya-h": {
+      "type": "udp",
+      "params": {
+        "numberOfLights": 870,
+        "name": "joya-h.local",
+        "udpPort": 8887
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 2064,
+      "baseIndex": 0,
+      "deviceName": "joya-r"
+    },
+    {
+      "from": 2064,
+      "to": 2934,
+      "baseIndex": 0,
+      "deviceName": "joya-h"
+    }
+  ]
+}

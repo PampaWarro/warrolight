@@ -61,7 +61,6 @@ module.exports = class JoyaMusic extends (
     super.drawFrame(leds, context);
     let mask = this.masks[this.config.mask];
     if (!mask) {
-      console.warn(`unknown mask: ${this.config.mask}`);
       mask = this.masks.all;
     }
     for (let i = 0; i < leds.length; i++) {
@@ -72,6 +71,9 @@ module.exports = class JoyaMusic extends (
   }
 
   updateConfig(newConfig) {
+    if (this.masks && !(newConfig.mask in this.masks)) {
+      console.warn(`unknown mask: ${newConfig.mask}`);
+    }
     metaSchedule.activeSchedule = newConfig.intensity;
     this.startNextProgram();
     super.updateConfig(newConfig);

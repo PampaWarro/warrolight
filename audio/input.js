@@ -18,7 +18,7 @@ class AudioInput extends EventEmitter {
   constructor(options) {
     super();
     // this._sampleRate = options._sampleRate || 48000;
-    const deviceIndex = options.deviceIndex || null;
+    const deviceIndex = options.deviceIndex ?? null;
     const profile = options.profile || null;
     this._args = [ '-u' ];
     if (!profile) {
@@ -27,7 +27,7 @@ class AudioInput extends EventEmitter {
       const profilePath = options.profilePath || 'audioprofile.pstats';
       this._args.push('-m', 'cProfile', '-o', profilePath, mainScript);
     }
-    if (deviceIndex) {
+    if (deviceIndex !== undefined) {
       this._args.push('-d', deviceIndex.toString());
     }
     this._subprocess = null;

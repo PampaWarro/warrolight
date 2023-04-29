@@ -73,6 +73,7 @@ module.exports = function getShapes() {
     inv(_.range(T2, T2+SIDE_TRIANGULO))
   ]);
 
+
   // Totems
   const totemL1 = _.range(T4_end, T4_end+150);
   const totemL2 = _.range(T4_end+150, T4_end+150*2);
@@ -152,12 +153,24 @@ module.exports = function getShapes() {
   const wingsLeft = _.flatten([totemL1, totemL2, V1L, V2L]);
   const wingsX = _.flatten([totemL1, totemL2, X, totemR1, totemR2]);
 
+  const arc = _.flatten([
+      inv(_.range(quiebre_abajo, T2)),
+      _.range(T2, T2+SIDE_TRIANGULO),
+      inv(_.range(T3, T3+SIDE_TRIANGULO)),
+      _.range(T4 + quiebre_abajo, T4_end)
+  ]);
+
+  const right_mini_w = _.flatten([
+
+
+  ]);
   return {
     Warro,
     WarroOnly,
     allOfIt,
     all,
     mini_w,
+    arc,
     pataLeft,
     pataRight,
     reloj,

@@ -18,22 +18,22 @@ const controller = loadSetup(setup);
 controller.start();
 
 console.log('Available audio devices:\n', listDevices());
-//
-const audioInput = new AudioInput({deviceIndex: null});
+
+const audioInput = new AudioInput({deviceIndex: 0,});
 audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
 
-// const audioInput2 = new AudioInput({deviceIndex: 3,});
-// audioInput2.on('audioframe', (frame) => {
-//   audioEmitter.frame2 = frame;
-// });
-// audioInput2.start();
-//
-// // Second audio input test
-// audioInput.on('audioframe', (frame) => {
-//   audioEmitter.currentFrame = frame;
-//   audioEmitter.ready = true;
-//   audioEmitter.emit('audioframe', audioEmitter.currentFrame);
-// });
+const audioInput2 = new AudioInput({deviceIndex: 2,});
+audioInput2.on('audioframe', (frame) => {
+    audioEmitter.frame2 = frame;
+});
+audioInput2.start();
+
+// Second audio input test
+audioInput.on('audioframe', (frame) => {
+    audioEmitter.currentFrame = {... frame, ... _.mapKeys(audioEmitter.frame2, (v,k) => 'mic2_'+k)};
+    audioEmitter.ready = true;
+    audioEmitter.emit('audioframe', audioEmitter.currentFrame);
+});
 audioInput.start();
 
 

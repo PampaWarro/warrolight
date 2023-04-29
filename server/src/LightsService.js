@@ -128,6 +128,10 @@ module.exports = class LightsService {
     this.broadcastStateChange();
   }
 
+  tap(data) {
+    this.controller.tap(data);
+  }
+
   updateConfigParam(config) {
     this.controller.updateConfigOverride(config);
 

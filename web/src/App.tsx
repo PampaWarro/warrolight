@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
 import { LightsSimulator } from "./LightsSimulator";
@@ -18,7 +19,9 @@ import {
 import { API } from "./api";
 import { TopProgramConfig } from "./TopProgramConfig";
 
-interface Props {}
+interface Props {
+  api: API;
+}
 
 interface State {
   selected: string | null;
@@ -87,7 +90,7 @@ export class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const api = new API();
+    const api = this.props.api
     this.api = api;
 
     api.on("connecting", () => this.setState({ connection: "connecting" }));
@@ -114,7 +117,9 @@ export class App extends React.Component<Props, State> {
       this.pendingAnimationFrame = window.requestAnimationFrame(() => {
         delete this.pendingAnimationFrame;
         const lights = decodeLedsColorsFromString(encodedLights);
-        this.lightsSim.current!.drawCanvas(lights);
+        if (this.lightsSim.current!){
+          this.lightsSim.current!.drawCanvas(lights);
+        }
       });
     });
 
@@ -185,6 +190,14 @@ export class App extends React.Component<Props, State> {
     this.api.restartProgram();
   };
 
+  drum = () => {
+    this.api.sendTap({ client: 'drum'});
+  };
+
+  party = () => {
+    this.api.sendTap({ client: 'party'});
+  };
+
   handleSetMicConfig = (config: Partial<MicConfig>) => {
     this.api.setMicConfig(config);
   };
@@ -243,6 +256,8 @@ export class App extends React.Component<Props, State> {
                 onSaveNewPreset={this.handleSaveNewPreset}
                 onDeletePreset={this.handleDeletePreset}
                 onRestartProgram={this.restartProgram}
+                onDrum={this.drum}
+                onParty={this.party}
                 onChangeProgramConfig={this.handleChangeProgramConfig}
                 onProgramChange={this.handleProgramChange}
               />

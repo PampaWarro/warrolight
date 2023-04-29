@@ -16,29 +16,35 @@ const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
-  "JoyaMate_BM22_art",
-  "JoyaMate_BM22_music",
+  "all-off",
+  //"JoyaMate_BM22_art",
+  //"JoyaMate_BM22_music",
   "mix",
+  "interactiveMix",
   // "congaShooting2",
   // "congaScore",
   // "congaShooting",
   // "congaRope",
-  // "PROGRAM_Main_fuego2022",
-  // "PROGRAM_Triangulo",
-  // "PROGRAM_Transition",
+  "PROGRAM_Main_fuego2022",
+  "PROGRAM_Triangulo",
+  "PROGRAM_Transition",
   "aliveDots",
   "aliveDotsSpeed",
-  "all-off",
+
   "all-white",
   "bandParticles",
   "bassWarpGrid",
   "bombs",
+  "bombsTap",
   "ca",
   "circles",
+  "circlesTap",
   "debugSetup",
   "debugShapes",
   "dynamicMask",
   "frequencyActivation",
+  "flashes",
+  "flashesLong",
   "gradientSphere",
   "lineal",
   "musicFlow",
@@ -66,6 +72,10 @@ const programNames = [
   "warroBass",
   "water-flood",
   "waveform",
+  "djtap",
+  "wand-empty-canvas",
+  "wandMix",
+  "wand-stars",
 ];
 
 module.exports = class LightController extends EventEmitter {
@@ -167,6 +177,10 @@ module.exports = class LightController extends EventEmitter {
       }
     }
     return {defaults, presetOverrides, currentPreset: presetName, overrides};
+  }
+
+  tap(data) {
+    this.programScheduler.tap(data);
   }
 
   updateConfigOverride(config) {

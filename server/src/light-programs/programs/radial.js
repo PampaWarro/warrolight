@@ -5,11 +5,14 @@ const ColorUtils = require("./../utils/ColorUtils");
 const {loadGradient} = require("../utils/gradients");
 
 module.exports = class Radial extends LightProgram {
+  init() {
+    super.init();
+  }
+
   drawFrame(leds) {
     const elapsed = this.timeInMs / 1000;
 
     this.extraTime = (this.extraTime || 0) + Math.random() * 10;
-
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.geometry;
 
@@ -24,18 +27,18 @@ module.exports = class Radial extends LightProgram {
         this.config.power
       );
 
-
       if (this.config.colorMap) {
         const gradient = loadGradient(this.config.colorMap);
         const [r, g, b, a] = gradient.colorAt(1 - v);
         leds[i] = [r, g, b];
       } else {
         leds[i] = ColorUtils.HSVtoRGB(
-          (distance / 5 + this.extraTime / 1000) % 1,
-          1,
-          v
+            (distance / 5 + this.extraTime / 1000) % 1,
+            1,
+            v
         );
       }
+
     }
   }
 

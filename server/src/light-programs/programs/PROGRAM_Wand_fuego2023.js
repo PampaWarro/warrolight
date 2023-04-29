@@ -1,20 +1,25 @@
 const _ = require("lodash");
 const {getAllPresets, getFilePresets} = require("../../presets.js");
-const createMultiProgram = require("../base-programs/MultiPrograms");
+const createTappableMultiProgram = require("../base-programs/TappableMultiPrograms");
+const createMultiProgram = require("../base-programs/TappableMultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/ProgramsByShape");
-const mixPrograms = require("../base-programs/MixProgram");
-
+const mixTappablePrograms = require("../base-programs/TappableMixProgram");
+const Stars = require("./wand-stars");
+const Relampejo = require("./wandRelampejo");
+const WandStars = require("./wand-stars");
+const WandMixble = require("./wand-mixable");
+const DJTap = require("./djtap");
 const Rainbow = require("./../../light-programs/programs/rainbow");
 const Radial = require("./radial");
 const Lineal = require("./lineal");
 const RadialSun = require("./radialSun");
-const Stars = require("./stars");
+const Mix = require("./Mix");
+
 const VolumeDot = require("./musicVolumeDot");
 const VolumeDotRandom = require("./musicVolumeDotRandom");
 const VolumeBars = require("./musicVolumeBars");
 const MusicFlow = require("./musicFlow");
-// const Fire = require("./fire").Func;
 const SpeedingSpear = require("./speeding-spear");
 const ColorSpear = require("./color-spear");
 const AliveDots = require("./aliveDots");
@@ -25,22 +30,18 @@ const AliveDotsSpeed = require("./aliveDotsSpeed");
 const BassWarpGrid = require("./bassWarpGrid");
 const Bombs = require("./bombs");
 const Shapes = require("./shapes");
-const Mix = require("./mix");
+
 const WarroBass = require("./warroBass");
 
 const MusicFrequencyDot = require("./musicFrequencyDot");
 const BandParticles = require("./bandParticles");
 const StripePatterns = require("./stripe-patterns");
-const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
-const MusicExplosions = require("./musicExplosions");
-const Relampejo = require("./relampejo");
-
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
-const baseTime = 1 * 1000;
+const baseTime = 1 * 1000 * 1;
 
-function sineScale(s) {
+function sineScale() {
   return (Math.sin(this.timeInMs / 1000) + 1) * 8 + 0.5;
 }
 
@@ -136,8 +137,8 @@ let rainbowIteratingShapes = createMultiProgram(
   0
 );
 
-let radialSunArribaAbajo = mixPrograms(
-  [
+let radialSunArribaAbajo = mixTappablePrograms(
+    [WandMixble, {}], [DJTap,{}],[
     RadialSun,
     {
       ...RadialSun.presets().fromBottom,
@@ -157,45 +158,32 @@ let radialSunArribaAbajo = mixPrograms(
   ]
 );
 
-let starsSunrise = mixPrograms(
-  [Stars, Stars.presets().pocasSlow],
-  [
-    RadialSun,
-    {
-      ...RadialSun.presets().fromBottom,
-      soundMetric: "bassPeakDecay",
-      power: 2,
-      escala: 80,
-      saturation: 0.5
-    }
-  ]
+let starsSunrise = mixTappablePrograms(
+    [WandStars, {}], [Stars, Stars.presets().pocasSlow],
+    [
+      RadialSun,
+      {
+        ...RadialSun.presets().fromBottom,
+        soundMetric: "bassPeakDecay",
+        power: 2,
+        escala: 80,
+        saturation: 0.5
+      }
+    ]
 );
 
+let bandParticles = mixTappablePrograms([WandStars,{}], [BandParticles, {}]);
+let rays = mixTappablePrograms([WandStars, {}], [Rays, {}]);
+
+
 const schedule = [
-  ...getAllPresets(Relampejo, 60),
 
-  ...getAllPresets(MusicExplosions, 60),
+  //{ duration: 60 * baseTime, program: rays },
+  { duration: 30 * baseTime, program: starsSunrise},
+  { duration: 60 * baseTime, program: bandParticles },
+  { duration: 60 * baseTime, program: bandParticles },
 
-  ...getAllPresets(Mix, 60 * baseTime, "Warro"),
-
-  ...getFilePresets('default.json', 60 * baseTime),
-
-  ...getFilePresets('javier.json', 60 * baseTime),
-
-  ...getAllPresets(Rays, 60 * baseTime, "Warro"),
-
-  ...getAllPresets(Circles, 30 * baseTime, "allOfIt"),
-
-  ...getAllPresets(StripePatterns, 30 * baseTime, "allOfIt"),
-
-  ...getAllPresets(MusicFrequencyDot, 30 * baseTime, "allOfIt"),
-
-
-  { duration: 60 * baseTime, program: BandParticles },
-  { duration: 60 * baseTime, program: BandParticles },
-  { duration: 60 * baseTime, program: BandParticles },
-
-  { duration: 30 * baseTime, program: starsSunrise },
+  { duration: 60 * baseTime, program: bandParticles },
 
   { duration: 30 * baseTime, program: radialSunArribaAbajo },
 
@@ -383,7 +371,7 @@ const schedule = [
           sineScale,
           "power",
           60 * 30,
-          p => Math.max(1, Math.random() * 40)
+          _ => Math.max(1, Math.random() * 40)
         )
       )
     })
@@ -399,7 +387,7 @@ const schedule = [
           s => Math.max((s * 1.01) % 15, 0.5),
           "power",
           60 * 30,
-          p => Math.max(1, Math.random() * 40)
+          _ => Math.max(1, Math.random() * 40)
         )
       )
     })
@@ -533,7 +521,7 @@ const schedule = [
     duration: 30 * baseTime,
     program: programsByShape({
       Warro: [
-        animateParamProgram(VolumeDot, "numberOfOnLeds", 30, n =>
+        animateParamProgram(VolumeDot, "numberOfOnLeds", 30, _ =>
           Math.ceil(Math.random() * 100)
         )
       ]
@@ -590,5 +578,4 @@ const schedule = [
 ];
 
 // las formas que se pueden usar están definidas en Transformation
-
-module.exports = createMultiProgram(schedule, true, 15000, true);
+module.exports = createTappableMultiProgram(schedule, false, 1000);

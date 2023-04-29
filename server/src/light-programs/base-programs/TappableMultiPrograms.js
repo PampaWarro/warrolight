@@ -35,13 +35,12 @@ function arraySchedule(schedule, random) {
   }
 }
 
-module.exports = function createMultiProgram(
+module.exports = function createTappableMultiProgram(
   programSchedule,
   random = false,
-  crossFade = 20000,
-  randomCrossFade = false
+  crossFade = 20000
 ) {
-  return class MultiProgram extends LightProgram {
+  return class TappableMultiProgram extends LightProgram {
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry, shapeMapping, lightController);
 
@@ -67,8 +66,8 @@ module.exports = function createMultiProgram(
       this.currentColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
 
-    tap(data) {
-      if (this.current && this.current.tap) this.current.tap(data);
+    tap(data){
+      this.current.tap(data);
     }
 
     drawFrame(leds, context) {
@@ -125,10 +124,7 @@ module.exports = function createMultiProgram(
 
     startNextProgram() {
       this.crossFadeStart = Date.now();
-
-      let crossFadeDuration = randomCrossFade ? crossFade * Math.random() : crossFade;
-
-      this.crossFadeFinish = Date.now() + crossFadeDuration;
+      this.crossFadeFinish = Date.now() + crossFade;
 
       const scheduleItem = this.programSchedule();
       this.previous = this.current;
@@ -136,7 +132,7 @@ module.exports = function createMultiProgram(
       this.current.init();
       this.nextStartChange = Date.now() + scheduleItem.duration;
 
-      console.log(`Playing ${this.current.toString()} [CROSSFADE ${(crossFadeDuration/1000).toFixed(1)}s]`, )
+      console.log("Playing", this.current.toString())
     }
 
     updateConfig(config) {

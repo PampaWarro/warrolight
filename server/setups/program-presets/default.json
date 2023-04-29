@@ -1392,5 +1392,94 @@
             "blinkSpeed": 4,
             "refillChance": 0.459
         }
+    },
+    "interactiveMix": {
+        "Interactive Main": {
+            "programs": [
+                {
+                    "programName": "PROGRAM_Main_fuego2022"
+                },
+                {
+                    "programName": "flashes"
+                },
+                {
+                    "programName": "flashesLong"
+                }
+            ],
+            "pote1": 0,
+            "pote2": 0,
+            "lengthParty": 400
+        }
+    },
+    "wandMix": {
+        "circlesTap": {
+            "programs": [
+                {
+                    "programName": "radial"
+                },
+                {
+                    "programName": "djtap",
+                    "config": {
+                        "partyLength": 100,
+                        "drumLength": 10
+                    }
+                }
+            ]
+        },
+        "radialStarsTapStars": {
+            "programs": [
+                {
+                    "programName": "stars"
+                },
+                {
+                    "programName": "radial",
+                    "config": {
+                        "velocidad": 20
+                    }
+                },
+                {
+                    "programName": "djtap",
+                    "config": {
+                        "partyLength": 100,
+                        "effect": "stars"
+                    }
+                }
+            ],
+            "multiply": false
+        },
+        "radialStarsTapRelampejo": {
+            "programs": [
+                {
+                    "programName": "stars"
+                },
+                {
+                    "programName": "radial",
+                    "config": {
+                        "velocidad": 20
+                    }
+                },
+                {
+                    "programName": "djtap",
+                    "config": {
+                        "partyLength": 100
+                    }
+                }
+            ]
+        },
+        "MainWithWand": {
+            "programs": [
+                {
+                    "programName": "PROGRAM_Main_fuego2022"
+                },
+                {
+                    "programName": "wand-empty-canvas"
+                }
+            ]
+        }
+    },
+    "djtap": {
+        "DJTapStars": {
+            "effect": "stars"
+        }
     }
 }

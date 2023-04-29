@@ -17,6 +17,10 @@ interface Props {
 
     onRestartProgram(): void;
 
+    onDrum(): void;
+
+    onParty(): void;
+
     onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
 
     onProgramChange(name: string): void;
@@ -26,6 +30,16 @@ export class TopProgramConfig extends React.PureComponent<Props> {
     handleRestartProgram(e: React.SyntheticEvent) {
         e.preventDefault();
         this.props.onRestartProgram();
+    }
+
+    handleDrum(e: React.SyntheticEvent) {
+        e.preventDefault();
+        this.props.onDrum();
+    }
+
+    handleParty(e: React.SyntheticEvent) {
+        e.preventDefault();
+        this.props.onParty();
     }
 
     handleParamChange = (value: { [param: string]: ConfigValue }) => {
@@ -63,6 +77,18 @@ export class TopProgramConfig extends React.PureComponent<Props> {
                         onClick={this.handleRestartProgram.bind(this)}
                     >
                         Restart
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={this.handleDrum.bind(this)}
+                    >
+                        Drum
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={this.handleParty.bind(this)}
+                    >
+                        Party
                     </button>
                 </h5>
 

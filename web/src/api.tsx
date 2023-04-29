@@ -48,6 +48,10 @@ export class API extends EventEmitter {
     this.send("restartProgram");
   }
 
+  sendTap(message: {client: string}) {
+    this.send("tap", message);
+  }
+
   updateConfigParam(config: { [name: string]: ConfigValue }) {
     this.send("updateConfigParam", config);
   }

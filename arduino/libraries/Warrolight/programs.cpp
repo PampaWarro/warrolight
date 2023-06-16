@@ -87,7 +87,7 @@ void Explosion::draw(CRGB *leds, unsigned int numLeds, unsigned long time)
 
   for (unsigned int i = 0; i < numLeds; i++)
   {
-    int d = abs(i % 25 - m_center);
+    int d = abs(static_cast<int>(i % 25) - m_center);
     if (d < (m_intensity - m_life))
     {
       long fb = min(255, max(0, (255 / m_intensity) * m_life));
@@ -143,10 +143,9 @@ void Sines::setup()
   m_relative_time = 0;
 
   double sinSize = 50;
-  int power = 5;
   for (int i = 0; i < 150; i++) {
     double p = sin(i/ sinSize);
-    PARAM_SINES[i] = (int) max(0, floor(p*p*p*p*p*255.0));
+    PARAM_SINES[i] = (int) max((double)0, floor(p*p*p*p*p*255.0));
   }
 
   m_init = true;
@@ -158,7 +157,7 @@ void Sines::draw(CRGB *leds, unsigned int numLeds, unsigned long time) {
     setup();
   }
   
-  for (int i = 0; i < numLeds; i++) {
+  for (unsigned int i = 0; i < numLeds; i++) {
     byte hue = (byte) ((((i * 4 + m_relative_time/10) % 255) * m_color_range >> 8) + m_color_tone);
     
     byte b = PARAM_SINES[(i * m_scale + m_relative_time/20) % 150];

@@ -5,32 +5,49 @@
 #include <Print.h>
 #include <UDP.h>
 
+#include <functional>
 #include <vector>
 
-namespace warrolight {
-
-class WarroUDP {
+class WarroUDPBase {
  public:
-  explicit WarroUDP(Print& std_print, UDP& udp, uint16_t remote_port,
-                    size_t pixel_count);
-  bool readFrame(CRGB* leds);
-  void broadcastAlive();
-  bool connected() const;
+  using FrameCallback = std::function<void(CRGB*, size_t)>;
 
- private:
-  bool readPacket();
-  bool writeLedFrame(size_t offset, CRGB* leds);
-  void broadcastPerf(size_t frames);
+  explicit WarroUDPBase(size_t pixel_count, FrameCallback callback);
 
-  Print& std_print_;
-  UDP& udp_;
-  const uint16_t remote_port_;
+  // Call with UDP frame data.
+  virtual bool handlePacket(const uint8_t* data, size_t length) = 0;
+
+  bool broadcastAlive(
+      const std::function<bool(const uint8_t*, size_t)>& callback);
+
+  bool broadcastFps(
+      size_t fps, const std::function<bool(const uint8_t*, size_t)>& callback);
+
+ protected:
+  void frameReady();
+
   const size_t pixel_count_;
-  std::vector<uint8_t> buffer_;
-  uint8_t last_packet_ = 0;
-  bool connected_ = false;
+  const FrameCallback frame_callback_;
+  std::vector<CRGB> pixels_;
+  bool got_first_packet_ = false;
+  uint8_t expected_seq_;
 };
 
-}  // namespace warrolight
+class WarroUDP : public WarroUDPBase {
+ public:
+  using WarroUDPBase::WarroUDPBase;
+
+  bool handlePacket(const uint8_t* data, size_t length) final;
+};
+
+class WarroChunkedUDP : public WarroUDPBase {
+ public:
+  using WarroUDPBase::WarroUDPBase;
+
+  bool handlePacket(const uint8_t* data, size_t length) final;
+
+ private:
+  bool frame_sent_ = false;
+};
 
 #endif  // _WARROUDP_H_

@@ -148,7 +148,11 @@ module.exports = class LightDeviceUDPChunked extends LightDevice {
 
   handleMessage(message, remote) {
     // logger.info(message.toString(), remote.address)
-    if (this.expectedIp && remote.address !== this.expectedIp) {
+    if (!this.expectedIp) {
+      logger.warn(`Expected IP uknown, ignoring message: ${message.toString()}`);
+      return;
+    }
+    if (remote.address !== this.expectedIp) {
       logger.warn("UDP message came from %s, expected %s", remote.address,
                   this.expectedIp);
       this.lookupByName();

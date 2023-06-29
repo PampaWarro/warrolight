@@ -1,0 +1,23 @@
+{
+  "geometry": "cabra",
+  "shapeMapping": "cabra",
+  "lights": 1200,
+  "outputDevices": {
+    "udp": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "espnow-gw.local",
+        "udpPort": 6677
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 1200,
+      "baseIndex": 0,
+      "deviceName": "udp"
+    }
+  ]
+}

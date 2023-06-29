@@ -82,30 +82,6 @@ for (const rib of allRibs) {
   offset += ribVertices[ribVertices.length - 1] + 1;
 }
 
-// Totems
-const allTotems = [];
-const TOTEM_DISTANCE = 5 * SCALE;
-for (const rib of allRibs) {
-  const norm = Math.sqrt(
-    Math.pow(rib[0][0], 2) +
-    Math.pow(rib[0][1], 2) +
-    Math.pow(rib[0][2], 2)
-  );
-  const displacement = rib[0].map(x => x * TOTEM_DISTANCE / norm);
-  const totem = rib.map(([x, y, z]) => [
-    x + displacement[0],
-    y + displacement[1],
-    z + displacement[2],
-  ]);
-  allTotems.push(totem);
-}
-for (const totem of allTotems.slice(4)) {
-  const {stripes: totemStripes, vertices: totemVertices} = makeRib(...totem);
-  stripes.push(...totemStripes);
-  vertices.push(...totemVertices.map(x => x + offset));
-  offset += totemVertices[totemVertices.length - 1] + 1;
-}
-
 // Horizontal.
 const hSegmentLength = 142.5;
 for (let i = 0; i < allRibs.length; i++) {
@@ -121,6 +97,35 @@ for (let i = 0; i < allRibs.length; i++) {
   vertices.push(offset);
   vertices.push(offset + thisSegmentLength - 1);
   offset += thisSegmentLength;
+}
+
+// Totems
+const TOTEM_DISTANCE = 5 * SCALE;
+const TOTEM_H = 5 * SCALE * Math.cos(Math.PI / 3.5);
+const TOTEM_V = 5 * SCALE * Math.sin(Math.PI / 3.5);
+for (const rib of allRibs) {
+  const norm = Math.sqrt(
+    Math.pow(rib[0][0], 2) +
+    Math.pow(rib[0][1], 2) +
+    Math.pow(rib[0][2], 2)
+  );
+  const unit = rib[0].map(x => x / norm);
+  const start = rib[0].map(x => x * TOTEM_DISTANCE / norm);
+  const end = [
+    start[0] + TOTEM_H * unit[0],
+    start[1] + TOTEM_H * unit[1],
+    start[2] + TOTEM_V,
+  ]
+  stripes.push(
+    Stripe.fromXZUpwardY(
+      start,
+      end,
+      300
+    )
+  );
+  vertices.push(offset);
+  vertices.push(offset + 300 - 1);
+  offset += 300;
 }
 
 module.exports = {

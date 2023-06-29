@@ -3,12 +3,14 @@ const geometry = require("../geometries/joyahd.js");
 
 const stripes = geometry.stripes;
 let ledCount = 0;
+const totemCount = 6;
+const totemSize = 300;
 for (let i = 0; i < stripes.length; i++) {
   ledCount += stripes[i].leds;
 }
 const shapes = {};
 
-shapes.all = shapes.allOfIt = _.range(0, ledCount);
+shapes.all = shapes.allOfIt = _.range(0, ledCount + totemCount * totemSize);
 
 let offset = 0;
 const ribSize = 258;
@@ -32,17 +34,6 @@ shapes["even-ribs"] = _.flatten(evenRibs);
 for (let i = 0; i < mirrorRibs.length; i++) {
   shapes[`mirror-ribs${i + 1}`] = _.flatten(mirrorRibs[i]);
 }
-
-const totemCount = 2;
-const totems = []
-const totemSize = ribSize;
-for (let i = 0; i < totemCount; i++) {
-  const totem = _.range(offset, offset + ribSize);
-  shapes[`totem${i + 1}`] = totem;
-  totems.push(totem);
-  offset += totemSize;
-}
-shapes.totems = _.flatten(totems);
 
 const hSegmentLength = 142.5;
 const hSegmentCount = 6;
@@ -117,11 +108,21 @@ shapes["bottom-h"] = [..._.flatten(horizontal), ..._.flatten(ribBottoms)];
 
 shapes.vertices = geometry.vertices;
 
-for (const [key, value] of Object.entries(shapes)) {
-  if (key.startsWith('all')) continue;
-  shapes[`joya-${key}`] = value;
-}
 shapes.joya = _.flatten([shapes.ribs, shapes.horizontal]);
+
+const totems = []
+const oddTotems = [];
+const evenTotems = [];
+for (let i = 0; i < totemCount; i++) {
+  const totem = _.range(offset, offset + totemSize);
+  shapes[`totem${i + 1}`] = totem;
+  totems.push(totem);
+  (i % 2 === 0 ? oddTotems : evenTotems).push(totem);
+  offset += totemSize;
+}
+shapes.totems = _.flatten(totems);
+shapes["odd-totems"] = _.flatten(oddTotems);
+shapes["even-totems"] = _.flatten(evenTotems);
 
 module.exports = function getShapes() {
   return shapes;

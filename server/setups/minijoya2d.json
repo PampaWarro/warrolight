@@ -3,11 +3,20 @@
   "shapeMapping": "minijoya2d",
   "lights": 300,
   "outputDevices": {
-    "minijoya": {
-      "type": "udp-wled",
+    "udp": {
+      "type": "udp-chunked",
       "params": {
         "numberOfLights": 300,
-        "name": "wled-minijoya.local"
+        "name": "espnow-gw.local",
+        "udpPort": 6677
+      }
+    },
+    "serial": {
+      "type": "serial",
+      "params": {
+        "numberOfLights": 300,
+        "baudRate": 460800,
+        "devicePortUnix": "/dev/cu.usbserial-11430"
       }
     }
   },
@@ -16,7 +25,7 @@
       "from": 0,
       "to": 300,
       "baseIndex": 0,
-      "deviceName": "minijoya"
+      "deviceName": "udp"
     }
   ]
 }

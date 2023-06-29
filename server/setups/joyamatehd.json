@@ -14,7 +14,7 @@
     "joya-h": {
       "type": "udp",
       "params": {
-        "numberOfLights": 870,
+        "numberOfLights": 855,
         "name": "joya-h.local",
         "udpPort": 8887
       }
@@ -37,13 +37,13 @@
     },
     {
       "from": 1548,
-      "to": 2418,
+      "to": 2403,
       "baseIndex": 0,
       "deviceName": "joya-h"
     },
     {
-      "from": 2418,
-      "to": 5118,
+      "from": 2403,
+      "to": 5103,
       "baseIndex": 0,
       "deviceName": "mate"
     }

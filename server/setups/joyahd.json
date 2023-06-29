@@ -14,7 +14,7 @@
     "joya2": {
       "type": "udp",
       "params": {
-        "numberOfLights": 870,
+        "numberOfLights": 855,
         "name": "undefined-joya2",
         "udpPort": 8887
       }
@@ -29,7 +29,7 @@
     },
     {
       "from": 1548,
-      "to": 2418,
+      "to": 2403,
       "baseIndex": 0,
       "deviceName": "joya2"
     }

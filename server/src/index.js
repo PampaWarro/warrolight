@@ -2,6 +2,7 @@ const { startServer } = require("./server");
 const { loadSetup } = require("./setup");
 const audioEmitter = require("./audioEmitter");
 const {AudioInput, listDevices} = require("../../audio/input");
+const nowPlaying = require("./nowPlaying");
 const _ = require('lodash');
 
 const setupFile = process.argv[2] || "sample.json";
@@ -21,6 +22,8 @@ console.log('Available audio devices:\n', listDevices());
 //
 const audioInput = new AudioInput({deviceIndex: null});
 audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
+
+nowPlaying.start();
 
 // const audioInput2 = new AudioInput({deviceIndex: 3,});
 // audioInput2.on('audioframe', (frame) => {

@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const ColorUtils = require("./light-programs/utils/ColorUtils");
 const audioEmitter = require("./audioEmitter");
+const nowPlaying = require("./nowPlaying");
 
 let lastFlushTime = new Date().valueOf();
 
@@ -34,6 +35,7 @@ module.exports = class ProgramScheduler {
       this.program.drawFrame(this.leds, {
         timeInMs: this.timeInMs,
         audio: audioEmitter,
+        nowPlaying: nowPlaying.currentStatus(),
       });
 
       const endFrameTime = Date.now();

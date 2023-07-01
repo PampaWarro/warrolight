@@ -90,7 +90,12 @@ class NowPlaying extends EventEmitter {
               continue; // Ignore all data before prompt.
             }
             const command = this.pendingCommands.shift();
-            const { fieldName, transform } = this.COMMANDS[command];
+            const commandInfo = this.COMMANDS[command];
+            if (!commandInfo) {
+              logger.error(`Error getting command info for "${command}". Line: "${line}"`)
+              continue;
+            }
+            const { fieldName, transform } = commandInfo;
             const value = transform(line);
             if ((fieldName === "time" && this.status.time != value) || (fieldName === "playing" && !value)) {
               this.status.lastTimeUpdate = Date.now();

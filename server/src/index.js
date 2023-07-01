@@ -4,6 +4,7 @@ const audioEmitter = require("./audioEmitter");
 const {AudioInput, listDevices} = require("../../audio/input");
 const nowPlaying = require("./nowPlaying");
 const _ = require('lodash');
+const logger = require("pino")(require('pino-pretty')());
 
 const setupFile = process.argv[2] || "sample.json";
 const setupPath = `../setups/${setupFile}`;
@@ -24,6 +25,7 @@ const audioInput = new AudioInput({deviceIndex: null});
 audioInput.on('audioframe', audioEmitter.updateFrame.bind(audioEmitter));
 
 nowPlaying.start();
+nowPlaying.on("trackchange", (title) => logger.info(`New track: "${title}"`));
 
 // const audioInput2 = new AudioInput({deviceIndex: 3,});
 // audioInput2.on('audioframe', (frame) => {

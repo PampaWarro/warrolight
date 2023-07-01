@@ -1,20 +1,18 @@
-import { EventEmitter } from "events";
+const logger = require("pino")(require('pino-pretty')());
+import _ from "lodash";
 import net from "node:net";
-
-const COMMANDS = [
-  "get_title",
-  "get_length",
-  "get_time",
-];
+import { EventEmitter } from "events";
 
 // Connects to the VLC Telnet interface.
-// Usage: vlc -I telnet --telnet-password warro --random <music folder>
+// Usage: vlc -I telnet --telnet-password warro --random --loop <music folder>
 class NowPlaying extends EventEmitter {
   status: {
     title: string,
     length: number,
     time: number,
-    progress: number,
+    playing: boolean,
+    lastTimeUpdate: number,
+    [key: string]: any,
   };
   client: net.Socket;
   password: string;
@@ -23,6 +21,25 @@ class NowPlaying extends EventEmitter {
   pendingCommands: string[];
   connected: boolean;
 
+  COMMANDS: { [key: string]: { fieldName: string, transform: (x: string) => any } } = {
+    "get_title": {
+      fieldName: "title",
+      transform: (value: string) => value,
+    },
+    "get_length": {
+      fieldName: "length",
+      transform: (value: string) => parseInt(value, 10),
+    },
+    "get_time": {
+      fieldName: "time",
+      transform: (value: string) => parseInt(value, 10),
+    },
+    "status": {
+      fieldName: "playing",
+      transform: (value: string) => value === "( state playing )"
+    },
+  };
+
   constructor() {
     super();
     this.password = "warro";
@@ -30,11 +47,22 @@ class NowPlaying extends EventEmitter {
   }
 
   currentStatus() {
-    return this.status;
+    const playing = this.status.playing;
+    const delta = playing ? (Date.now() - this.status.lastTimeUpdate) / 1000 : 0;
+    const time = this.status.time + delta;
+    const length = this.status.length;
+    const progress = length ? _.clamp(time / this.status.length, 0, 1) : 0;
+    return {
+      title: this.status.title,
+      length,
+      time,
+      progress,
+      playing,
+    }
   }
 
   private reset() {
-    this.status = { title: null, length: null, time: null, progress: null };
+    this.status = { title: null, length: null, time: null, playing: false, lastTimeUpdate: null };
     this.gotPrompt = false;
     this.pendingCommands = [];
     this.connected = false;
@@ -51,6 +79,9 @@ class NowPlaying extends EventEmitter {
         callback: (nread, buf) => {
           const lines = buf.slice(0, nread).toString().trim().split("\n").map(s => s.trim());
           for (let line of lines) {
+            if (line.startsWith("(") && !line.startsWith("( state")) {
+              continue; // Ignore non-state status lines.
+            }
             if (line === ">") {
               this.gotPrompt = true;
               continue;  // Ignore prompt.
@@ -59,37 +90,31 @@ class NowPlaying extends EventEmitter {
               continue; // Ignore all data before prompt.
             }
             const command = this.pendingCommands.shift();
-            switch (command) {
-              case "get_title":
-                this.status.title = line;
-                break;
-              case "get_length":
-                this.status.length = parseInt(line, 10);
-                this.updateProgress();
-                break;
-              case "get_time":
-                this.status.time = parseInt(line, 10);
-                this.updateProgress();
-                break;
-              default:
-                throw `Unexpected command ${command}`
+            const { fieldName, transform } = this.COMMANDS[command];
+            const value = transform(line);
+            if ((fieldName === "time" && this.status.time != value) || (fieldName === "playing" && !value)) {
+              this.status.lastTimeUpdate = Date.now();
             }
+            if (fieldName === "title" && this.status.title != value) {
+              this.emit("trackchange", line);
+            }
+            this.status[fieldName] = value;
           }
           return true;
         },
       },
     }, () => {
-      console.log("VLC connected.");
+      logger.info("VLC connected.");
       this.connected = true;
       this.client.write(`${this.password}\n`);
       this.pollIntervalId = setInterval(this.poll.bind(this), 250);
     });
-    this.client.on("error", (error) => {
-      // console.log("error", error);
+    this.client.on("error", () => {
+      // Need to handle and ignore error to prevent program from crashing.
     });
     this.client.on("close", () => {
       if (this.connected) {
-        console.log("VLC disconnected.");
+        logger.info("VLC disconnected.");
       }
       this.client = null;
       clearInterval(this.pollIntervalId);
@@ -99,19 +124,8 @@ class NowPlaying extends EventEmitter {
     });
   }
 
-
-  private updateProgress() {
-    const time = this.status.time;
-    const length = this.status.length;
-    if (length && time != null) {
-      this.status.progress = time / length;
-    } else {
-      this.status.progress = time;
-    }
-  }
-
   private poll() {
-    for (let command of COMMANDS) {
+    for (let command in this.COMMANDS) {
       this.client.write(`${command}\n`);
       this.pendingCommands.push(command);
     }

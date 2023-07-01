@@ -16,13 +16,29 @@
 // Valid range [8, 84], corresponding to 2dBm - 20dBm.
 // https://github.com/espressif/arduino-esp32/blob/bcc1d758fc343887de03affeedfbb33522ff2523/tools/sdk/esp32c3/include/esp_wifi/include/esp_wifi.h#L905
 static constexpr int8_t kWifiMaxTxPower = 84;
-static constexpr int kChannel = 7;
+#ifndef WIFI_CHANNEL
+#define WIFI_CHANNEL 1
+#endif
+static constexpr int kChannel = WIFI_CHANNEL;
 static constexpr uint8_t kBroadcastAddress[]{0xff, 0xff, 0xff,
                                              0xff, 0xff, 0xff};
 static constexpr size_t kMacAddressLength =
     sizeof(kBroadcastAddress) / sizeof(uint8_t);
 
-static constexpr uint16_t kUdpPort = 6677;
+#ifndef UDP_PORT
+#define UDP_PORT 6677
+#endif
+static constexpr uint16_t kUdpPort = UDP_PORT;
+
+#ifndef NUM_CLIENTS
+#define NUM_CLIENTS 6
+#endif
+static constexpr size_t kNumClients = NUM_CLIENTS;
+#ifndef LEDS_PER_CLIENT
+#define LEDS_PER_CLIENT 300
+#endif
+static constexpr size_t kLedsPerClient = LEDS_PER_CLIENT;
+static constexpr size_t kNumLeds = kNumClients * kLedsPerClient;
 
 #ifdef HOSTNAME
 #define XSTR(s) STR(s)
@@ -57,7 +73,6 @@ static constexpr unsigned long kConnectionTimeoutMillis = 1000 + 500;
   } while (0)
 
 AsyncUDP udp;
-static constexpr size_t kNumLeds = 1800;
 
 static bool eth_connected = false;
 
@@ -133,7 +148,7 @@ void handleUdpPacket(AsyncUDPPacket& packet) {
 
 std::atomic<size_t> out_frame_count = 0;
 TaskHandle_t espNowSenderTaskHandle;
-ESPNOWSender espNowSender(300, 6);
+ESPNOWSender espNowSender(kLedsPerClient, kNumClients);
 SemaphoreHandle_t espNowSemaphore = NULL;
 
 bool espNowSend(const uint8_t* data, size_t length) {

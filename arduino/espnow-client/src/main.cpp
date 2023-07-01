@@ -25,8 +25,6 @@
 #define DATA_PIN 16
 #endif
 
-#define CLIENT 0
-
 #define TRUE_OR_RESTART(x)           \
   do {                               \
     if (!x) {                        \
@@ -35,10 +33,30 @@
     }                                \
   } while (0)
 
-static constexpr int kChannel = 7;
-static constexpr size_t kNumLeds = 300;
+#ifndef CLIENT
+#define CLIENT 0
+#endif
+static constexpr uint8_t kClient = CLIENT;
 
+#ifndef WIFI_CHANNEL
+#define WIFI_CHANNEL 1
+#endif
+static constexpr int kChannel = WIFI_CHANNEL;
+
+#ifndef NUM_LEDS
+#define NUM_LEDS 300
+#endif
+static constexpr size_t kNumLeds = NUM_LEDS;
+
+#ifdef GATEWAY_HOSTNAME
+#define XSTR(s) STR(s)
+#define STR(s) #s
+static constexpr std::string_view kGatewayHostname = XSTR(GATEWAY_HOSTNAME);
+#undef STR
+#undef XSTR
+#else
 static constexpr std::string_view kGatewayHostname = "espnow-gw";
+#endif
 
 CRGB leds[kNumLeds];
 #if defined(ARDUINO_ARCH_ESP32)

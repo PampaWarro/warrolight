@@ -15,7 +15,7 @@
       "type": "udp-chunked",
       "params": {
         "numberOfLights": 1800,
-        "name": "espnow-gw.local",
+        "name": "joya-totems-gw.local",
         "udpPort": 6677
       }
     }

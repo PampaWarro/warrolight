@@ -45,9 +45,7 @@ module.exports = function programsByShape(mapping, name) {
         let specificConfig = {... config};
         if (_.isArray(Program)) {
           [Program, specificConfig] = Program;
-          let defaultConfig = this.extractDefault(
-            Program.configSchema ? Program.configSchema() : {}
-          );
+          let defaultConfig = Program.extractDefaults();
           specificConfig = _.extend({}, config, defaultConfig, specificConfig);
         }
         this.instances[shapeName] = new Program(specificConfig, shape, shapeMapping, lightController);
@@ -60,16 +58,6 @@ module.exports = function programsByShape(mapping, name) {
       for (let shapeName in this.instances) {
         this.instances[shapeName].init();
       }
-    }
-
-    extractDefault(configSchema) {
-      let config = {};
-      for (let paramName in configSchema) {
-        if (configSchema[paramName].default !== undefined) {
-          config[paramName] = configSchema[paramName].default;
-        }
-      }
-      return config;
     }
 
     drawFrame(leds, context) {

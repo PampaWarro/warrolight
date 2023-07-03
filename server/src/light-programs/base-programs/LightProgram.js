@@ -45,4 +45,15 @@ module.exports = class LightProgram {
       ]}
     };
   }
+
+  static extractDefaults() {
+    let configSchema = this.configSchema();
+    let config = {};
+    for (let paramName in configSchema) {
+      if (configSchema[paramName].default !== undefined) {
+        config[paramName] = configSchema[paramName].default;
+      }
+    }
+    return config;
+  }
 };

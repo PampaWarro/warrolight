@@ -2,20 +2,6 @@ const _ = require("lodash");
 const LightProgram = require("./LightProgram");
 const ColorUtils = require("../utils/ColorUtils");
 
-function extractDefault(program) {
-  if (!program || !program.configSchema) {
-    return {};
-  }
-  let configSchema = program.configSchema();
-  let config = {};
-  for (let paramName in configSchema) {
-    if (configSchema[paramName].default !== undefined) {
-      config[paramName] = configSchema[paramName].default;
-    }
-  }
-  return config;
-}
-
 function arraySchedule(schedule, random) {
   // Shallow copy of schedule
   schedule = [].concat(schedule).map(item => _.extend({}, item));
@@ -48,10 +34,10 @@ module.exports = function createMultiProgram(
 
     instantiate(scheduleItem) {
       return new scheduleItem.program(
-            extractDefault(scheduleItem.program),
-            this.geometry,
-            this.shapeMapping,
-            this.lightController
+        scheduleItem.program.extractDefaults(),
+        this.geometry,
+        this.shapeMapping,
+        this.lightController
       );
     }
 

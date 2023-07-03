@@ -96,7 +96,7 @@ module.exports = function programsByShape(mapping, name) {
       this.config = config;
       for (let shapeName in this.instances) {
         const instance = this.instances[shapeName];
-        instance.updateConfig({ ... instance.config, ... config});
+        instance.updateConfig({ ...instance.specificConfig, ...config });
       }
     }
 

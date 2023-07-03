@@ -10,8 +10,8 @@ const Loop = require('accurate-game-loop');
 module.exports = class ProgramScheduler {
 
   constructor(program, config, leds, ledsUpdatedCallback) {
-    this.program = program;
     this.config = config;
+    this.program = program;
     this.leds = leds;
     this.ledsUpdatedCallback = ledsUpdatedCallback;
     this.timeInMs = 0;
@@ -90,7 +90,9 @@ module.exports = class ProgramScheduler {
   }
 
   updateConfig(config) {
-    this.program.updateConfig(config);
+    if (this.program) {
+      this.program.updateConfig(config);
+    }
   }
 
 }

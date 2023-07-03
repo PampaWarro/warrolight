@@ -2,17 +2,10 @@ const _ = require("lodash");
 const EventEmitter = require("events");
 const fs = require("fs");
 const moment = require("moment");
+const logger = require("pino")(require('pino-pretty')());
 
 const ProgramScheduler = require("./ProgramScheduler");
 const {makeFXProgram} = require("./light-programs/base-programs/FX");
-
-const savedPresetsFilePath =  `${__dirname}/../setups/program-presets/default.json`;
-
-if (!fs.existsSync(savedPresetsFilePath)) {
-  fs.writeFileSync(savedPresetsFilePath, "{}");
-}
-
-const savedPresets = require(savedPresetsFilePath)
 
 // TODO: move this to some configuration file
 const programNames = [
@@ -70,8 +63,15 @@ const programNames = [
 ];
 
 module.exports = class LightController extends EventEmitter {
-  constructor(multiplexer, geometry, shapeMapping) {
+  constructor(multiplexer, geometry, shapeMapping, presetsFile) {
     super();
+    this.savedPresetsFilePath = `${__dirname}/../setups/program-presets/${presetsFile}.json`;
+    if (!fs.existsSync(this.savedPresetsFilePath)) {
+      fs.writeFileSync(this.savedPresetsFilePath, "{}");
+    }
+    this.savedPresets = require(this.savedPresetsFilePath)
+    logger.info(`Loaded presets from ${presetsFile}.`);
+
     this.multiplexer = multiplexer;
     this.geometry = geometry;
     this.shapeMapping = shapeMapping;
@@ -108,7 +108,7 @@ module.exports = class LightController extends EventEmitter {
   getProgramPresets(programName) {
     const program = this.programs[programName];
     if(program) {
-      let presets = savedPresets[programName] || {};
+      let presets = this.savedPresets[programName] || {};
 
       if(program.generator.presets) {
         presets = { ... program.generator.presets(), ... presets };
@@ -193,26 +193,26 @@ module.exports = class LightController extends EventEmitter {
   }
 
   savePreset(programName, presetName, config) {
-    savedPresets[programName] = savedPresets[programName] || {}
-    savedPresets[programName][presetName] = config;
+    this.savedPresets[programName] = this.savedPresets[programName] || {}
+    this.savedPresets[programName][presetName] = config;
 
     this.savePresetsToDisk();
   }
 
   deletePreset(programName, presetName) {
-    savedPresets[programName] = savedPresets[programName] || {}
-    delete savedPresets[programName][presetName];
+    this.savedPresets[programName] = this.savedPresets[programName] || {}
+    delete this.savedPresets[programName][presetName];
     this.savePresetsToDisk();
 
     this.currentConfig.currentPreset = null;
   }
 
   savePresetsToDisk() {
-    fs.writeFile(savedPresetsFilePath, JSON.stringify(savedPresets, true, 4), (err) => {
+    fs.writeFile(this.savedPresetsFilePath, JSON.stringify(this.savedPresets, true, 4), (err) => {
       if(err) {
         console.error(err);
       } else {
-        console.log(`Updated presets file ${savedPresetsFilePath}`)
+        console.log(`Updated presets file ${this.savedPresetsFilePath}`)
       }
     });
   }

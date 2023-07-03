@@ -14,6 +14,7 @@ exports.loadSetup = function loadSetup(setup) {
 
   const shapeMapping = require(`../setups/shape-mappings/${setup.shapeMapping}`);
   const multiplexer = new DeviceMultiplexer(setup);
+  const presetsFile = setup.presetsFile || "default";
 
-  return new LightController(multiplexer, geometry, shapeMapping);
+  return new LightController(multiplexer, geometry, shapeMapping, presetsFile);
 };

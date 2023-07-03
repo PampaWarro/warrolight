@@ -101,8 +101,10 @@ for (let i = 0; i < allRibs.length; i++) {
 
 // Totems
 const TOTEM_DISTANCE = 5 * SCALE;
-const TOTEM_H = 5 * SCALE * Math.cos(Math.PI / 3.5);
-const TOTEM_V = 5 * SCALE * Math.sin(Math.PI / 3.5);
+const TOTEM_ANGLE = 55;
+const TOTEM_RADIANS = Math.PI * TOTEM_ANGLE / 180;
+const TOTEM_H = 5 * SCALE * Math.cos(TOTEM_RADIANS);
+const TOTEM_V = 5 * SCALE * Math.sin(TOTEM_RADIANS);
 for (const rib of allRibs) {
   const norm = Math.sqrt(
     Math.pow(rib[0][0], 2) +

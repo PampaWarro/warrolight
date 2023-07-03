@@ -2,10 +2,6 @@ const _ = require("lodash");
 const LightProgram = require("./LightProgram");
 const ColorUtils = require("../utils/ColorUtils");
 
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v));
-}
-
 function extractDefault(program) {
   if (!program || !program.configSchema) {
     return {};
@@ -88,7 +84,7 @@ module.exports = function createMultiProgram(
         currentColors.fill([0, 0, 0]);
         this.current.drawFrame(currentColors, context);
 
-        let alpha = clamp(
+        let alpha = _.clamp(
           (Date.now() - this.crossFadeStart)
            / (this.crossFadeFinish - this.crossFadeStart), 0, 1);
 

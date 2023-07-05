@@ -17,5 +17,9 @@ module.exports = function overrideBrightness(Program, brightness) {
       const value = brightness.call(this, context);
       leds.forEach(led => led.forEach((x, i) => led[i] = x * value));
     }
+
+    toString() {
+      return `OverrideBrightness(${Program.name})`
+    }
   };
 };

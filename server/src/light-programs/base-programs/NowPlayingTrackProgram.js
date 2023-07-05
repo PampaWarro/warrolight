@@ -59,6 +59,10 @@ module.exports = function createNowPlayingTrackProgram(
       this.current.timeInMs = this.timeInMs;
       this.current.drawFrame(leds, context);
     }
+
+    toString() {
+      return `NowPlayingTrackProgram(${JSON.stringify(trackMapping)})`;
+    }
   };
 };
 

@@ -3601,7 +3601,7 @@
         }
     },
     "polar": {
-        "joyatotems-slow": {
+        "dynamicmask-slow": {
             "width": 180,
             "angleYSpeed": 1.3,
             "tags": [
@@ -3610,7 +3610,7 @@
                 "shape-specific"
             ]
         },
-        "joyatotems-mid": {
+        "dynamicmask-mid": {
             "width": 180,
             "angleYSpeed": 24.9,
             "tags": [
@@ -3619,7 +3619,7 @@
                 "shape-specific"
             ]
         },
-        "joyatotems-fast": {
+        "dynamicmask-fast": {
             "width": 180,
             "angleYSpeed": 125.8,
             "tags": [
@@ -3628,7 +3628,7 @@
                 "shape-specific"
             ]
         },
-        "joyatotems-flow": {
+        "dynamicmask-flow": {
             "width": 80,
             "angleYSpeed": 15,
             "tags": [
@@ -3639,7 +3639,7 @@
             "angleZSpeed": 6.2,
             "angleXSpeed": -2.8
         },
-        "joyatotems-var": {
+        "dynamicmask-var": {
             "width": 180,
             "angleYSpeed": 0,
             "tags": [

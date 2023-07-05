@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const {randomSchedule} = require("../joyamate-utils/preset");
+const { randomSchedule } = require("../joya-utils/preset");
 const overrideBrightness = require("../base-programs/OverrideBrightness");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
@@ -154,21 +154,31 @@ const interludeDuration = 3 * minutes;
 
 const interlude = overrideBrightness(
     createMultiProgram(
-        randomSchedule((program, presetName, config) =>
+      randomSchedule({
+        presetsFile: 'joyamatehd',
+        mainShapes: ['joya', 'mate'],
+        filter: (program, presetName, config) =>
                            config.tags &&
                            config.tags.includes('music-optional') &&
                            (config.tags.includes('intensity-low') ||
                             config.tags.includes('intensity-mid')),
-                       baseDuration, randomDuration),
+        baseDuration,
+        randomDuration,
+      }),
         false, 7 * seconds),
     .5);
 
 const peakDuration = 3 * minutes;
 const peak = createMultiProgram(
-    randomSchedule((program, presetName, config) =>
+  randomSchedule({
+    presetsFile: 'joyamatehd',
+    mainShapes: ['joya', 'mate'],
+    filter: (program, presetName, config) =>
                        config.tags && config.tags.includes('music-optional') &&
                        config.tags.includes('intensity-high'),
-                   baseDuration, randomDuration),
+    baseDuration,
+    randomDuration,
+  }),
     false, 5 * seconds);
 
 const interlude2Duration = 2 * minutes;

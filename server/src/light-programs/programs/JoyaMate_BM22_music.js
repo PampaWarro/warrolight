@@ -1,5 +1,5 @@
 const createMultiProgram = require("../base-programs/MultiPrograms");
-const { randomSchedule } = require("../joyamate-utils/preset");
+const { randomSchedule } = require("../joya-utils/preset");
 
 const timeScale = 1; // RESET to 1 before commet.
 const seconds = (1 / timeScale) * 1000;
@@ -10,25 +10,35 @@ const randomDuration = 5 * seconds;
 class MetaSchedule {
   constructor() {
     this.schedules = {
-      any: randomSchedule(null, baseDuration, randomDuration),
-      low: randomSchedule(
-        (program, presetName, config) =>
-          config.tags && config.tags.includes("intensity-low"),
+      any: randomSchedule({
+        presetsFile: 'joyamatehd',
+        mainShapes: ['joya', 'mate'],
         baseDuration,
-        randomDuration
-      ),
-      mid: randomSchedule(
-        (program, presetName, config) =>
+        randomDuration,
+      }),
+      low: randomSchedule({
+        presetsFile: 'joyamatehd',
+        mainShapes: ['joya', 'mate'],
+        filter: (program, presetName, config) => config.tags && config.tags.includes("intensity-low"),
+        baseDuration,
+        randomDuration,
+      }),
+      mid: randomSchedule({
+        presetsFile: 'joyamatehd',
+        mainShapes: ['joya', 'mate'],
+        filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-mid"),
         baseDuration,
-        randomDuration
-      ),
-      high: randomSchedule(
-        (program, presetName, config) =>
+        randomDuration,
+      }),
+      high: randomSchedule({
+        presetsFile: 'joyamatehd',
+        mainShapes: ['joya', 'mate'],
+        filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-high"),
         baseDuration,
-        randomDuration
-      ),
+        randomDuration,
+      }),
     };
     this.activeSchedule = "any";
   }

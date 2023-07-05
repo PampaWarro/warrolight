@@ -114,6 +114,7 @@ void setup() {
 
 size_t frame_count = 0;
 std::optional<unsigned long> last_frame_millis;
+std::optional<unsigned long> last_non_black_frame_millis;
 bool connected = false;
 
 void loop() {
@@ -140,28 +141,53 @@ void loop() {
 #endif
     new_frame = std::move(latest_frame);
   }
+  bool draw_fallback = false;
   if (new_frame) {
     if (!connected) {
       Serial.println("Connected.");
       connected = true;
     }
-    last_frame_millis = millis();
+    const auto now = millis();
+    last_frame_millis = now;
     ++frame_count;
-    std::copy(new_frame->begin(), new_frame->end(), leds);
-    FastLED.show();
-  } else if (!last_frame_millis || millis() - *last_frame_millis > 1000) {
+    bool all_black = true;
+    for (size_t i = 0; i < new_frame->size(); ++i) {
+      const CRGB& color = new_frame->at(i);
+      leds[i] = color;
+      if (all_black && (color.r != 0 || color.g != 0 || color.b != 0)) {
+        all_black = false;
+      }
+    }
+    if (!all_black) {
+      last_non_black_frame_millis = now;
+    }
+    const bool non_black_timeout =
+        !last_non_black_frame_millis ||
+        millis() - *last_non_black_frame_millis > 10000;
+    if (non_black_timeout) {
+      draw_fallback = true;
+    } else {
+      FastLED.show();
+    }
+  }
+  const bool connection_timeout =
+      !last_frame_millis || millis() - *last_frame_millis > 1000;
+  if (connection_timeout) {
+    draw_fallback = true;
     if (connected) {
-      Serial.println("Connection timeout. Falling back to built-in animation.");
+      Serial.println(
+          "Connection timeout. Falling back to built-in "
+          "animation.");
       connected = false;
     }
+  }
+  if (draw_fallback) {
     EVERY_N_MILLIS(1000 / 40) {
-      fadeToBlackBy(leds, kNumLeds, 40);
-      uint8_t dothue = 0;
-      for (int i = 0; i < 4; i++) {
-        leds[(5 * (10 + i) * (30000 + millis() / 2) / 1000) % kNumLeds] |=
-            CHSV(dothue, 200, 255);
-        dothue += 64;
-      }
+      fadeToBlackBy(leds, kNumLeds, 8);
+      uint16_t value = beatsin8(10, 1, 80);
+      leds[0].b = value * value / 255;
+      leds[1].b = leds[0].b / 6;
+      leds[2].b = leds[1].b / 6;
       FastLED.show();
     }
   }

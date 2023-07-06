@@ -1483,7 +1483,7 @@
             "programs": [
                 {
                     "programName": "polar",
-                    "presetName": "joyamate-flow",
+                    "presetName": "dynamicmask-flow",
                     "config": {
                         "width": 80,
                         "offsetX": 20,
@@ -1515,7 +1515,7 @@
             "programs": [
                 {
                     "programName": "polar",
-                    "presetName": "joyamate-flow",
+                    "presetName": "dynamicmask-flow",
                     "config": {
                         "width": 80,
                         "offsetX": 20,
@@ -1554,7 +1554,7 @@
                         "programs": [
                             {
                                 "programName": "polar",
-                                "presetName": "joyamate-flow",
+                                "presetName": "dynamicmask-flow",
                                 "config": {
                                     "width": 80,
                                     "offsetX": 20,
@@ -2879,7 +2879,7 @@
             ],
             "positive": {
                 "programName": "polar",
-                "presetName": "joyamate-flow",
+                "presetName": "dynamicmask-flow",
                 "config": {
                     "width": 80,
                     "offsetX": 20,

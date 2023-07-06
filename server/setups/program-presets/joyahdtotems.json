@@ -648,7 +648,7 @@
                     "programName": "musicVolumeDotRandom",
                     "config": {
                         "soundMetric": "midPeakDecay",
-                        "cutThreshold": 0.15,
+                        "cutThreshold": 0.59,
                         "numberOfOnLeds": 60
                     }
                 }
@@ -704,7 +704,7 @@
                     "programName": "musicExplosions",
                     "config": {
                         "blastSpeed": 0.45,
-                        "cutThreshold": 0.13,
+                        "cutThreshold": 0.28,
                         "soundMetric": "rms",
                         "energy": 1.9,
                         "colorMap": "",
@@ -720,7 +720,7 @@
                     "config": {
                         "numberOfOnLeds": 160,
                         "multiplier": 1.68,
-                        "cutThreshold": 0.09,
+                        "cutThreshold": 0.25,
                         "soundMetric": "bassPeakDecay"
                     }
                 }
@@ -1483,7 +1483,7 @@
             "programs": [
                 {
                     "programName": "polar",
-                    "presetName": "joyatotems-flow",
+                    "presetName": "dynamicmask-flow",
                     "config": {
                         "width": 80,
                         "angleYSpeed": 15,
@@ -1514,7 +1514,7 @@
             "programs": [
                 {
                     "programName": "polar",
-                    "presetName": "joyatotems-flow",
+                    "presetName": "dynamicmask-flow",
                     "config": {
                         "width": 80,
                         "angleYSpeed": 15,
@@ -1552,7 +1552,7 @@
                         "programs": [
                             {
                                 "programName": "polar",
-                                "presetName": "joyatotems-flow",
+                                "presetName": "dynamicmask-flow",
                                 "config": {
                                     "width": 80,
                                     "angleYSpeed": 15,
@@ -1631,22 +1631,17 @@
             "programs": [
                 {
                     "programName": "polar",
+                    "presetName": "dynamicmask-flow",
                     "config": {
                         "width": 80,
-                        "angleYSpeed": 133,
+                        "angleYSpeed": 15,
                         "tags": [
                             "intensity-low",
                             "music-optional"
                         ],
                         "fadeWidth": 45,
-                        "angleZSpeed": 103.4,
-                        "angleXSpeed": -137.7,
-                        "angleXWiggleSpeed": 60.7,
-                        "angleXWiggleAmplitude": 90,
-                        "angleYWiggleSpeed": -48.7,
-                        "angleYWiggleAmplitude": 105,
-                        "angleZWiggleSpeed": -0.3,
-                        "angleZWiggleAmplitude": 3600
+                        "angleZSpeed": 6.2,
+                        "angleXSpeed": -2.8
                     }
                 },
                 {
@@ -1680,22 +1675,17 @@
                         "programs": [
                             {
                                 "programName": "polar",
+                                "presetName": "dynamicmask-flow",
                                 "config": {
                                     "width": 80,
-                                    "angleYSpeed": 133,
+                                    "angleYSpeed": 15,
                                     "tags": [
                                         "intensity-low",
                                         "music-optional"
                                     ],
                                     "fadeWidth": 45,
-                                    "angleZSpeed": 103.4,
-                                    "angleXSpeed": -137.7,
-                                    "angleXWiggleSpeed": 60.7,
-                                    "angleXWiggleAmplitude": 90,
-                                    "angleYWiggleSpeed": -48.7,
-                                    "angleYWiggleAmplitude": 105,
-                                    "angleZWiggleSpeed": -0.3,
-                                    "angleZWiggleAmplitude": 3600
+                                    "angleZSpeed": 6.2,
+                                    "angleXSpeed": -2.8
                                 }
                             },
                             {
@@ -2874,7 +2864,7 @@
             ],
             "positive": {
                 "programName": "polar",
-                "presetName": "joyatotems-flow",
+                "presetName": "dynamicmask-flow",
                 "config": {
                     "width": 80,
                     "angleYSpeed": 15,

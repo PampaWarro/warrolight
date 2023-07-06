@@ -1043,28 +1043,28 @@
                         "programs": [
                             {
                                 "programName": "musicFlash",
-                                "shape": "joya-odd-ribs",
+                                "shape": "odd-ribs",
                                 "config": {
                                     "soundMetric": "highPeakDecay"
                                 }
                             },
                             {
                                 "programName": "musicFlash",
-                                "shape": "joya-horizontal",
+                                "shape": "horizontal",
                                 "config": {
                                     "soundMetric": "midPeakDecay"
                                 }
                             },
                             {
                                 "programName": "musicFlash",
-                                "shape": "totems-odd",
+                                "shape": "odd-totems",
                                 "config": {
                                     "soundMetric": "midPeakDecay"
                                 }
                             },
                             {
                                 "programName": "musicFlash",
-                                "shape": "totems-even",
+                                "shape": "even-totems",
                                 "config": {
                                     "soundMetric": "bassPeakDecay"
                                 }

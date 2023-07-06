@@ -1,10 +1,11 @@
-const logger = require("pino")(require('pino-pretty')());
+const logger = require("pino")(require("pino-pretty")());
 import _ from "lodash";
-import net from "node:net";
 import { EventEmitter } from "events";
+import { DOMParser } from "@xmldom/xmldom";
+import xpath from "xpath";
 
-// Connects to the VLC Telnet interface.
-// Usage: vlc -I telnet --telnet-password warro --random --loop <music folder>
+// Connects to the VLC HTTP XML API.
+// Usage: vlc -I http --http-password warro --http-port 9099 --random --loop <music folder>
 class NowPlaying extends EventEmitter {
   status: {
     title: string,
@@ -12,37 +13,19 @@ class NowPlaying extends EventEmitter {
     time: number,
     playing: boolean,
     lastTimeUpdate: number,
-    [key: string]: any,
   };
-  client: net.Socket;
+  port: number;
   password: string;
-  pollIntervalId: NodeJS.Timer;
-  gotPrompt: boolean;
-  pendingCommands: string[];
-  connected: boolean;
-
-  COMMANDS: { [key: string]: { fieldName: string, transform: (x: string) => any } } = {
-    "get_title": {
-      fieldName: "title",
-      transform: (value: string) => value,
-    },
-    "get_length": {
-      fieldName: "length",
-      transform: (value: string) => parseInt(value, 10),
-    },
-    "get_time": {
-      fieldName: "time",
-      transform: (value: string) => parseInt(value, 10),
-    },
-    "status": {
-      fieldName: "playing",
-      transform: (value: string) => value === "( state playing )"
-    },
-  };
+  pollIntervalId: NodeJS.Timer = null;
+  connected: boolean = false;
+  headers: Headers;
 
   constructor() {
     super();
+    this.port = 9099;
     this.password = "warro";
+    this.headers = new Headers();
+    this.headers.set("Authorization", "Basic " + Buffer.from(":" + this.password).toString("base64"));
     this.reset();
   }
 
@@ -63,88 +46,63 @@ class NowPlaying extends EventEmitter {
 
   private reset() {
     this.status = { title: null, length: null, time: null, playing: false, lastTimeUpdate: null };
-    this.gotPrompt = false;
-    this.pendingCommands = [];
-    this.connected = false;
   }
 
-  private connect() {
-    if (this.client) {
-      throw "Already connected";
+  private startPolling() {
+    if (this.pollIntervalId) {
+      throw "Already started";
     }
-    this.client = net.connect({
-      port: 4212,
-      onread: {
-        buffer: Buffer.alloc(4 * 1024),
-        callback: (nread, buf) => {
-          const lines = buf.slice(0, nread).toString().trim().split("\n").map(s => s.trim());
-          for (let line of lines) {
-            if (line.startsWith("(") && !line.startsWith("( state")) {
-              continue; // Ignore non-state status lines.
-            }
-            if (line === ">") {
-              this.gotPrompt = true;
-              continue;  // Ignore prompt.
-            }
-            if (!this.gotPrompt) {
-              continue; // Ignore all data before prompt.
-            }
-            const command = this.pendingCommands.shift();
-            const commandInfo = this.COMMANDS[command];
-            if (!commandInfo) {
-              logger.error(`Error getting command info for "${command}". Line: "${line}"`)
-              continue;
-            }
-            const { fieldName, transform } = commandInfo;
-            const value = transform(line);
-            if ((fieldName === "time" && this.status.time != value) || (fieldName === "playing" && !value)) {
-              this.status.lastTimeUpdate = Date.now();
-            }
-            if (fieldName === "title" && this.status.title != value) {
-              this.emit("trackchange", line);
-            }
-            this.status[fieldName] = value;
-          }
-          return true;
-        },
-      },
-    }, () => {
-      logger.info("VLC connected.");
-      this.connected = true;
-      this.client.write(`${this.password}\n`);
-      this.pollIntervalId = setInterval(this.poll.bind(this), 250);
-    });
-    this.client.on("error", () => {
-      // Need to handle and ignore error to prevent program from crashing.
-    });
-    this.client.on("close", () => {
-      if (this.connected) {
-        logger.info("VLC disconnected.");
-      }
-      this.client = null;
-      clearInterval(this.pollIntervalId);
-      this.pollIntervalId = null;
-      this.reset();
-      setTimeout(this.connect.bind(this), 1000);
-    });
+    this.pollIntervalId = setInterval(this.poll.bind(this), 250);
   }
 
-  private poll() {
-    for (let command in this.COMMANDS) {
-      this.client.write(`${command}\n`);
-      this.pendingCommands.push(command);
+  private async poll() {
+    let response;
+    try {
+      response = await fetch(`http://localhost:${this.port}/requests/status.xml`, { headers: this.headers });
+      if (!this.connected) {
+        logger.info("VLC connected.");
+        this.connected = true;
+      }
+    } catch {
+      if (this.connected) {
+        logger.warn("VLC disconnected.");
+        this.connected = false;
+      }
+      this.reset();
+      return;
+    }
+    try {
+      const text = await response.text();
+      const data = new DOMParser().parseFromString(text, "text/xml")
+      const title = (xpath.select("//information/category[@name='meta']/info[@name='filename']/text()", data, true) as Attr).textContent;
+      if (title != this.status.title) {
+        this.emit("trackchange", title);
+      }
+      this.status.title = title;
+      const length = parseInt((xpath.select("//length/text()", data, true) as Attr).textContent, 10);
+      this.status.length = length;
+      const time = parseInt((xpath.select("//time/text()", data, true) as Attr).textContent, 10);
+      if (time != this.status.time) {
+        this.status.lastTimeUpdate = Date.now();
+      }
+      this.status.time = time;
+      const playing = (xpath.select("//state/text()", data, true) as Attr).textContent == "playing";
+      this.status.playing = playing;
+    } catch (e) {
+      logger.error(e);
     }
   }
 
   public start() {
-    this.connect();
+    this.startPolling();
   }
 
   public stop() {
-    if (!this.client || !this.pollIntervalId) {
+    if (!this.pollIntervalId) {
       throw "Not connected";
     }
-    this.client.destroy();
+    clearInterval(this.pollIntervalId);
+    this.pollIntervalId = null;
   }
 }
 

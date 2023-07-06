@@ -8,6 +8,7 @@ class Dot {
     //console.log(`Nuevo dot intensidad ${Math.round(relativeVolume * 100)}% (of ${self.dots.length}) vol real ${Math.round(100 * self.audio.averageVolume)}`)
     this.waveCenterX = config.waveCenterX;
     this.waveCenterY = config.waveCenterY;
+    this.waveCenterZ = config.waveCenterZ;
     this.speed = relativeVolume * relativeVolume + 0.05;
     // this.speed = 0.1;
     this.intensity = relativeVolume;
@@ -62,9 +63,10 @@ module.exports = class SoundWaves extends LightProgram {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let [r, g, b] = [0, 0, 0];
       _.each(this.dots, dot => {
+        let z = geometry.z[i] - geometry.depth / 2 - dot.waveCenterZ;
         let y = geometry.y[i] - (geometry.height - 18) / 2 + dot.waveCenterY;
         let x = geometry.x[i] - geometry.width / 2 - dot.waveCenterX;
-        let d = Math.sqrt(x * x + y * y);
+        let d = Math.sqrt(x * x + y * y + z * z);
 
         let distance = Math.abs(dot.distance - d);
         let maxDis = this.config.waveWidth;
@@ -119,6 +121,7 @@ module.exports = class SoundWaves extends LightProgram {
     config.initialDistance = {type: Number, min: 0, max: 100, step: 0.1, default: 0};
     config.waveCenterY = {type: Number, min: -40, max: 40, step: 1, default: 0};
     config.waveCenterX = {type: Number, min: -60, max: 60, step: 1, default: 0};
+    config.waveCenterZ = { type: Number, min: -60, max: 60, step: 1, default: 0 };
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5};
     config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1};
     config.waveDecay = {type: Number, min: 0.01, max: 0.99, step: 0.01, default: 0.9};

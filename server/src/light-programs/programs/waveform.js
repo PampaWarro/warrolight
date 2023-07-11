@@ -34,9 +34,13 @@ module.exports = class Waveform extends LightProgram {
       const absSample = absSamples[index];
       const gradientPos = 0.5 * (sample / this.max) + 0.5;
       const brightness = absSample / this.max;
-      leds[i] = gradient
-        .colorAt(gradientPos)
-        .map(x => Math.floor(x * brightness));
+      // BUG: gradient.colorAt() sometimes returns undefined.
+      const color = gradient.colorAt(gradientPos);
+      if (!color) {
+        console.error(`gradient.colorAt(${gradientPos}) returned undefined`);
+        continue;
+      }
+      leds[i] = color.map(x => Math.floor(x * brightness));
     }
   }
 

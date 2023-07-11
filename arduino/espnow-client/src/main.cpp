@@ -22,7 +22,7 @@
 #if defined(ARDUINO_ARCH_ESP8266)
 #define DATA_PIN D4
 #elif defined(ARDUINO_ARCH_ESP32)
-#define DATA_PIN 16
+#define DATA_PIN 13
 #endif
 
 #define TRUE_OR_RESTART(x)           \

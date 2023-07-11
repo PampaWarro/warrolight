@@ -5,7 +5,7 @@ const logger = require("pino")(require('pino-pretty')());
 const fetch = require('node-fetch');
 
 const { LightDevice } = require("./base");
-const { WLEDRGBEncoder } = require("./encodings");
+const { WLEDDNRGBEncoder } = require("./encodings");
 
 module.exports = class LightDeviceUDPWLED extends LightDevice {
   constructor({ numberOfLights, ip, name, udpPort }) {
@@ -27,7 +27,7 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
     this.remotePort = udpPort || 21324;
     this.remoteAddress = ip;
 
-    this.encoder = new WLEDRGBEncoder();
+    this.encoder = new WLEDDNRGBEncoder();
 
     this.freshData = false;
     this.connected = true;
@@ -53,12 +53,12 @@ module.exports = class LightDeviceUDPWLED extends LightDevice {
 
   sendNextFrame() {
     if (this.connected && this.freshData) {
-      const data = this.encoder.encode(this.state)
-      // data.unshift(this.packageCount % 256)
+      for (let chunk of this.encoder.encode(this.state)) {
+        this.flush(chunk);
+        this.packageCount++;
+      }
 
       this.freshData = false;
-      // this.packageCount++;
-      this.flush(data);
     }
   }
 

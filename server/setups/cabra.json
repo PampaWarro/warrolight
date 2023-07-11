@@ -7,8 +7,8 @@
       "type": "udp-chunked",
       "params": {
         "numberOfLights": 1200,
-        "name": "espnow-gw.local",
-        "udpPort": 6677
+        "name": "cabra-quinled.local",
+        "udpPort": 8888
       }
     }
   },

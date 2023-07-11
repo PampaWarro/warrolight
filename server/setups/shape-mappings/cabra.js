@@ -2,9 +2,9 @@ const _ = require("lodash");
 
 const stringCount = 4;
 const pixelsPerString = 300;
-const vCross1 = 87;
-const vCross2 = 147;
-const hCross1 = 33;
+const vCross1 = 85;
+const vCross2 = 146;
+const hCross1 = 29;
 const hCross2 = 86;
 
 module.exports = function getShapes() {

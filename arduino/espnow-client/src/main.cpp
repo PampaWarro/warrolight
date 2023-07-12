@@ -89,7 +89,8 @@ void setup() {
   Serial.println("Warrolight ESP-NOW Client");
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, kNumLeds);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 350);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 750);
+  FastLED.setDither(DISABLE_DITHER);
   std::fill(leds, leds + kNumLeds, CRGB::Black);
   FastLED.show();
 

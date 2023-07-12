@@ -1,3 +1,7 @@
+#define FASTLED_ESP32_I2S true
+#include <FastLED.h>
+//
+
 #include <Arduino.h>
 #include <AsyncUDP.h>
 #include <ESPmDNS.h>
@@ -162,7 +166,7 @@ void renderTask(void*) {
 
 void setup() {
   addLeds<LED_PINS>();
-  FastLED.setDither(0);
+  FastLED.setDither(DISABLE_DITHER);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 4000);
   std::fill(leds, leds + kNumLeds, CRGB::Black);
   FastLED.show();

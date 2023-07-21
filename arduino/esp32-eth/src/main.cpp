@@ -28,6 +28,11 @@ static constexpr std::array<uint8_t, 4> kPins{LED_PINS};
 #endif
 static constexpr size_t kNumLedsPerPin = LEDS_PER_PIN;
 static constexpr size_t kNumLeds = kPins.size() * kNumLedsPerPin;
+#ifndef ACTIVE_LEDS_PER_PIN
+#define ACTIVE_LEDS_PER_PIN LEDS_PER_PIN
+#endif
+static constexpr size_t kNumActiveLedsPerPin = ACTIVE_LEDS_PER_PIN;
+static constexpr size_t kNumActiveLeds = kPins.size() * kNumActiveLedsPerPin;
 CRGB leds[kNumLeds];
 
 #ifdef HOSTNAME
@@ -74,10 +79,11 @@ std::condition_variable cv;
 
 void onNewFrame(const CRGB* pixels, size_t length) {
   auto frame = std::make_unique<std::vector<CRGB>>(
-      pixels, pixels + std::min(length, kNumLeds));
-  if (length != kNumLeds) {
+      pixels, pixels + std::min(length, kNumActiveLeds));
+  if (length != kNumActiveLeds) {
     // Paint last pixel red (overflow) or yellow (underflow).
-    frame->at(frame->size() - 1) = length > kNumLeds ? CRGB::Red : CRGB::Green;
+    frame->at(frame->size() - 1) =
+        length > kNumActiveLeds ? CRGB::Red : CRGB::Green;
   }
   {
     std::lock_guard lock(mutex);
@@ -87,7 +93,7 @@ void onNewFrame(const CRGB* pixels, size_t length) {
   last_frame_millis = millis();
 }
 
-WarroChunkedUDP warroUDP(kNumLeds, onNewFrame);
+WarroChunkedUDP warroUDP(kNumActiveLeds, onNewFrame);
 
 void handleUdpPacket(AsyncUDPPacket& packet) {
   warroUDP.handlePacket(packet.data(), packet.length());
@@ -136,7 +142,17 @@ void renderTask(void*) {
     auto pixels = std::move(new_frame);
     lk.unlock();
     TRUE_OR_RESTART(pixels != nullptr);
-    std::copy(pixels->begin(), pixels->end(), leds);
+    if constexpr (kNumActiveLeds == kNumLeds) {
+      std::copy(pixels->begin(), pixels->end(), leds);
+    } else {
+      for (size_t pin = 0; pin < kPins.size(); ++pin) {
+        const CRGB* const start = &pixels->at(pin * kNumActiveLedsPerPin);
+        CRGB* const dest = &leds[pin * kNumLedsPerPin];
+        std::copy(start, start + kNumActiveLedsPerPin, dest);
+        std::fill(dest + kNumActiveLedsPerPin, dest + kNumLedsPerPin,
+                  CRGB::Black);
+      }
+    }
     has_new_frame = true;
   }
 }
@@ -144,7 +160,7 @@ void renderTask(void*) {
 void setup() {
   addLeds<LED_PINS>();
   FastLED.setDither(DISABLE_DITHER);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 4000);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 20000);
   std::fill(leds, leds + kNumLeds, CRGB::Black);
   FastLED.show();
 

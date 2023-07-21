@@ -193,7 +193,13 @@ void loop() {
     FastLED.show();
     ++frame_count;
   } else if (!last_frame_millis || millis() - *last_frame_millis > 1000) {
-    fadeToBlackBy(leds, kNumLeds, 5);
+    fadeToBlackBy(leds, kNumLeds, 1);
+    uint8_t dothue = 0;
+    for (int i = 0; i < 4; i++) {
+      leds[(5 * (10 + i) * (30000 + millis()) / 1000) % kNumLeds] |=
+          CHSV(dothue, 200, 255);
+      dothue += 64;
+    }
     for (size_t i = 0; i < kPins.size(); ++i) {
       for (size_t j = 0; j <= i; ++j) {
         leds[i * kNumLedsPerPin + j] = CRGB::Red;

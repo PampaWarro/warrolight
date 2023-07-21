@@ -74,8 +74,6 @@ static constexpr unsigned long kConnectionTimeoutMillis = 1000 + 500;
 
 AsyncUDP udp;
 
-static bool eth_connected = false;
-
 bool broadcastUdp(const uint8_t* data, size_t length) {
   udp.broadcastTo(const_cast<uint8_t*>(data), length, kUdpPort);
   return true;
@@ -104,7 +102,6 @@ void handleWiFiEvent(WiFiEvent_t event) {
   switch (event) {
     case ARDUINO_EVENT_ETH_START:
       Serial.println("ETH Started");
-      ETH.setHostname(kHostname.data());
       break;
     case ARDUINO_EVENT_ETH_CONNECTED:
       Serial.println("ETH Connected");
@@ -120,22 +117,14 @@ void handleWiFiEvent(WiFiEvent_t event) {
       Serial.print(", ");
       Serial.print(ETH.linkSpeed());
       Serial.println("Mbps");
-      TRUE_OR_RESTART(udp.listen(kUdpPort));
-      TRUE_OR_RESTART(MDNS.begin(kHostname.data()));
       Serial.print("Hostname: ");
       Serial.println(kHostname.data());
-      warroUDP.broadcastAlive(broadcastUdp);
-      eth_connected = true;
       break;
     case ARDUINO_EVENT_ETH_DISCONNECTED:
       Serial.println("ETH Disconnected");
-      eth_connected = false;
-      MDNS.end();
-      udp.close();
       break;
     case ARDUINO_EVENT_ETH_STOP:
       Serial.println("ETH Stopped");
-      eth_connected = false;
       break;
     default:
       break;
@@ -213,7 +202,10 @@ void setup() {
   Serial.println("Initializing ETH... ");
   WiFi.onEvent(handleWiFiEvent);
   udp.onPacket(handleUdpPacket);
-  ETH.begin();
+  TRUE_OR_RESTART(ETH.begin());
+  TRUE_OR_RESTART(ETH.setHostname(kHostname.data()));
+  TRUE_OR_RESTART(MDNS.begin(kHostname.data()));
+  TRUE_OR_RESTART(udp.listen(kUdpPort));
 
   Serial.println("Initializing ESP-NOW...");
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();

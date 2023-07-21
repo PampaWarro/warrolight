@@ -89,29 +89,6 @@ void onNewFrame(const CRGB* pixels, size_t length) {
 
 WarroChunkedUDP warroUDP(kNumLeds, onNewFrame);
 
-void handleWiFiEvent(WiFiEvent_t event) {
-  switch (event) {
-    case ARDUINO_EVENT_ETH_START:
-      ETH.setHostname(kHostname.data());
-      break;
-    case ARDUINO_EVENT_ETH_CONNECTED:
-      break;
-    case ARDUINO_EVENT_ETH_GOT_IP:
-      TRUE_OR_RESTART(udp.listen(kUdpPort));
-      TRUE_OR_RESTART(MDNS.begin(kHostname.data()));
-      warroUDP.broadcastAlive(broadcastUdp);
-      break;
-    case ARDUINO_EVENT_ETH_DISCONNECTED:
-      MDNS.end();
-      udp.close();
-      break;
-    case ARDUINO_EVENT_ETH_STOP:
-      break;
-    default:
-      break;
-  }
-}
-
 void handleUdpPacket(AsyncUDPPacket& packet) {
   warroUDP.handlePacket(packet.data(), packet.length());
 }
@@ -171,9 +148,11 @@ void setup() {
   std::fill(leds, leds + kNumLeds, CRGB::Black);
   FastLED.show();
 
-  WiFi.onEvent(handleWiFiEvent);
   udp.onPacket(handleUdpPacket);
   TRUE_OR_RESTART(ETH.begin());
+  TRUE_OR_RESTART(ETH.setHostname(kHostname.data()));
+  TRUE_OR_RESTART(MDNS.begin(kHostname.data()));
+  TRUE_OR_RESTART(udp.listen(kUdpPort));
 
   TimerHandle_t warroUDPStatusTimer =
       xTimerCreate("WarroUDPStatus", pdMS_TO_TICKS(1000),

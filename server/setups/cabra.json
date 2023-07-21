@@ -19,5 +19,6 @@
       "baseIndex": 0,
       "deviceName": "udp"
     }
-  ]
+  ],
+  "presetsFile": "cabra"
 }

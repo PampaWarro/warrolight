@@ -29,30 +29,31 @@ module.exports = function getShapes() {
     _.range(3 * pixelsPerString + hCross1, 3 * pixelsPerString + hCross2).reverse(),
     _.range(2 * pixelsPerString, 2 * pixelsPerString + hCross1).reverse(),
   ])
-  leftVHorn = _.range(0 * pixelsPerString + vCross2, 0 * pixelsPerString + pixelsPerString);
-  leftHHorn = _.range(2 * pixelsPerString + hCross2, 2 * pixelsPerString + pixelsPerString);
-  leftHorns = _.flatten([leftVHorn, leftHHorn.slice().reverse()]);
-  rightVHorn = _.range(1 * pixelsPerString + vCross2, 1 * pixelsPerString + pixelsPerString);
-  rightHHorn = _.range(3 * pixelsPerString + hCross2, 3 * pixelsPerString + pixelsPerString);
-  rightHorns = _.flatten([rightVHorn, rightHHorn.slice().reverse()]);
-  horns = _.flatten([leftHorns, rightHorns]);
-  v = _.flatten([strings[0], strings[1].slice().reverse()]);
-  h = _.flatten([strings[2], strings[3].slice().reverse()]);
-  hv = _.flatten([strings[2].slice(hCross1), strings[3].slice(hCross1).reverse()]);
-  u = _.flatten([
+  const leftVHorn = _.range(0 * pixelsPerString + vCross2, 0 * pixelsPerString + pixelsPerString);
+  const leftHHorn = _.range(2 * pixelsPerString + hCross2, 2 * pixelsPerString + pixelsPerString);
+  const leftHorns = _.flatten([leftVHorn, leftHHorn.slice().reverse()]);
+  const rightVHorn = _.range(1 * pixelsPerString + vCross2, 1 * pixelsPerString + pixelsPerString);
+  const rightHHorn = _.range(3 * pixelsPerString + hCross2, 3 * pixelsPerString + pixelsPerString);
+  const rightHorns = _.flatten([rightVHorn, rightHHorn.slice().reverse()]);
+  const horns = _.flatten([leftHorns, rightHorns]);
+  const v = _.flatten([strings[0], strings[1].slice().reverse()]);
+  const h = _.flatten([strings[2], strings[3].slice().reverse()]);
+  const hv = _.flatten([strings[2].slice(hCross1), strings[3].slice(hCross1).reverse()]);
+  const u = _.flatten([
     leftVHorn.reverse(),
     _.range(2 * pixelsPerString + hCross1, 2 * pixelsPerString + hCross2).reverse(),
     _.range(3 * pixelsPerString + hCross1, 3 * pixelsPerString + hCross2),
     rightVHorn,
   ]);
-  bottomVShort = _.flatten([
+  const bottomVShort = _.flatten([
     _.range(0 * pixelsPerString, 0 * pixelsPerString + vCross1),
     _.range(1 * pixelsPerString, 1 * pixelsPerString + vCross1),
   ]);
-  bottomVLong = _.flatten([
+  const bottomVLong = _.flatten([
     _.range(0 * pixelsPerString, 0 * pixelsPerString + vCross2),
     _.range(1 * pixelsPerString, 1 * pixelsPerString + vCross2),
   ]);
+  const notEyes = _.flatten([bottomVShort, horns]);
   return {
     all: allOfIt,
     allOfIt,
@@ -76,5 +77,6 @@ module.exports = function getShapes() {
     rightVHorn,
     rightHHorn,
     rightHorns,
+    notEyes,
   };
 };

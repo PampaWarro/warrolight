@@ -19,11 +19,13 @@ class NowPlaying extends EventEmitter {
   pollIntervalId: NodeJS.Timer = null;
   connected: boolean = false;
   headers: Headers;
+  url: URL;
 
   constructor() {
     super();
     this.port = 9099;
     this.password = "warro";
+    this.url = new URL(`http://127.0.0.1:${this.port}/requests/status.xml`);
     this.headers = new Headers();
     this.headers.set("Authorization", "Basic " + Buffer.from(":" + this.password).toString("base64"));
     this.reset();
@@ -58,7 +60,7 @@ class NowPlaying extends EventEmitter {
   private async poll() {
     let response;
     try {
-      response = await fetch(`http://localhost:${this.port}/requests/status.xml`, { headers: this.headers });
+      response = await fetch(this.url, { headers: this.headers });
       if (!this.connected) {
         logger.info("VLC connected.");
         this.connected = true;
@@ -74,7 +76,8 @@ class NowPlaying extends EventEmitter {
     try {
       const text = await response.text();
       const data = new DOMParser().parseFromString(text, "text/xml")
-      const title = (xpath.select("//information/category[@name='meta']/info[@name='filename']/text()", data, true) as Attr).textContent;
+      const state = (xpath.select("//state/text()", data, true) as Attr).textContent;
+      const title = state == "stopped" ? null : (xpath.select("//information/category[@name='meta']/info[@name='filename']/text()", data, true) as Attr).textContent;
       if (title != this.status.title) {
         this.emit("trackchange", title);
       }
@@ -86,8 +89,7 @@ class NowPlaying extends EventEmitter {
         this.status.lastTimeUpdate = Date.now();
       }
       this.status.time = time;
-      const playing = (xpath.select("//state/text()", data, true) as Attr).textContent == "playing";
-      this.status.playing = playing;
+      this.status.playing = state == "playing";
     } catch (e) {
       logger.error(e);
     }

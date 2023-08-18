@@ -26,6 +26,15 @@ function presetToByShapeSpec({ programClass, config }) {
   return [programClass, config];
 }
 
+// Returns [ProgramClass, config] for the given presets file, program name and preset name.
+function getPreset(fileName, programName, presetName) {
+  const config = getPresetsByProgram(fileName)[programName][presetName];
+  if (!config) {
+    throw `preset ${presetName} not found`;
+  }
+  return [getProgramClass(programName), config];
+}
+
 function randomSchedule({ presetsFile, mainShapes, filter, baseDuration, randomDuration }) {
   if (mainShapes.length != 2) {
     throw `main shapes length must be 2, got: ${mainShapes}`;
@@ -87,4 +96,5 @@ function randomSchedule({ presetsFile, mainShapes, filter, baseDuration, randomD
 
 module.exports = {
   randomSchedule,
+  getPreset,
 };

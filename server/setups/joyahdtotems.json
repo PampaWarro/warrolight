@@ -1,7 +1,7 @@
 {
   "geometry": "joyahdtotems",
   "shapeMapping": "joyahdtotems",
-  "lights": 4218,
+  "lights": 4203,
   "outputDevices": {
     "joya-r1": {
       "type": "udp-chunked",

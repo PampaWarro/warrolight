@@ -2088,6 +2088,87 @@
             ],
             "multiply": false,
             "globalBrightness": 0.32
+        },
+        "mid-moving-stars": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "starsColor": 1,
+                        "move": true,
+                        "decay": 0.965
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "soundMetric": "midPeakDecay",
+                        "multiplier": 2,
+                        "cutThreshold": 0,
+                        "globalBrightness": 1
+                    }
+                }
+            ],
+            "multiply": true,
+            "tags": [
+                "music-required",
+                "intensity-mid"
+            ]
+        },
+        "flow-lineal": {
+            "programs": [
+                {
+                    "programName": "polar",
+                    "config": {
+                        "width": 80,
+                        "angleYSpeed": -2.2,
+                        "tags": [
+                            "intensity-low",
+                            "music-optional"
+                        ],
+                        "fadeWidth": 45,
+                        "angleZSpeed": 4.4,
+                        "angleXSpeed": 2.2
+                    }
+                },
+                {
+                    "programName": "lineal",
+                    "config": {
+                        "velocidad": -2.2,
+                        "escala": 31.4,
+                        "centerX": 19.3,
+                        "centerY": -20,
+                        "colorMap": "xkcd-bath_r",
+                        "power": 1.8
+                    }
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0,
+                        "soundMetric": "midPeakDecay"
+                    }
+                }
+            ],
+            "multiply": true
+        },
+        "totem-mid-dots": {
+            "programs": [
+                {
+                    "programName": "radialSun",
+                    "config": {
+                        "centerY": -15.3,
+                        "soundMetric": "midPeakDecay",
+                        "animatePower": false,
+                        "radialDistance": false,
+                        "relative": false,
+                        "fromTop": true,
+                        "escala": 0.441,
+                        "colorMap": "_wb"
+                    },
+                    "shape": "totems"
+                }
+            ]
         }
     },
     "sound-waves": {

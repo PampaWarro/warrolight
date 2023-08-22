@@ -42,18 +42,15 @@ module.exports = class RadialSun extends LightProgram {
     for (let i = 0; i < this.numberOfLeds; i++) {
       let geometry = this.geometry;
 
-
       let distance = 0;
 
-      if(this.config.radialDistance) {
-        const dx = geometry.x[i] - geometry.width/2 + this.config.centerX;
-        const dy = geometry.y[i] - baselineY + this.config.centerY; // 18 is the offset
+      let dy = geometry.y[i] - baselineY + this.config.centerY; // 18 is the offset
+      let dx = geometry.x[i] - geometry.width/2 + this.config.centerX;
 
+      if(this.config.radialDistance) {
         distance = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / (height * this.config.escala * vol));
       } else {
-        const dx = 0 * (geometry.x[i] - geometry.width / 2 - this.config.centerX);
-        const dy = geometry.y[i] - baselineY + this.config.centerY; // 18 is the offset
-
+        dx = 0;
         distance = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / (height * this.config.escala * vol));
       }
 
@@ -75,6 +72,29 @@ module.exports = class RadialSun extends LightProgram {
     }
   }
 
+  getDebugHelpers() {
+    let {centerX, centerY, relative, radialDistance, fromTop, escala} = this.config;
+
+    let baseline = (fromTop ? 1 : -1) * this.geometry.height / 2;
+    let h = (relative ? this.relativeTop - this.relativeBottom : this.geometry.height)*escala;
+
+    let y = centerY + baseline;
+    let x = - centerX;
+    if(radialDistance) {
+      return [
+        {type: 'sphere', x, y, z: 0, r: h},
+        {type: 'sphere', x, y, z: 0, r: 1}
+      ];
+    } else {
+      return [
+        // {type: 'box', x: centerX, y: 0, z: -baseline, secondary: true, w: this.geometry.width, h: this.geometry.depth, d: this.geometry.height},
+        {type: 'rectangle', x, y: y + h, z: 0, w: this.geometry.width, h: this.geometry.depth, secondary: true},
+        {type: 'plane', x, y, z: 0, w: this.geometry.width, h: this.geometry.depth},
+        {type: 'rectangle', x, y: y - h, z: 0, w: this.geometry.width, h: this.geometry.depth, secondary: true},
+      ];
+    }
+  }
+
   static presets() {
     return {
       fromBottom: {centerY: -20, soundMetric: "bassPeakDecay", power: 2},
@@ -88,8 +108,8 @@ module.exports = class RadialSun extends LightProgram {
   static configSchema() {
     let res = super.configSchema();
     res.escala = { type: Number, min: 0.001, max: 10, step: 0.01, default: 1.5 };
-    res.centerY = { type: Number, min: -40, max: 80, step: 0.1, default: 0 };
-    res.centerX = { type: Number, min: -50, max: 50, step: 0.1, default: 0 };
+    res.centerY = { type: Number, min: -100, max: 100, step: 0.1, default: 0, id: 'center' };
+    res.centerX = { type: Number, min: -100, max: 100, step: 0.1, default: 0, id: 'center' };
     res.power = { type: Number, min: 0, max: 10, step: 0.1, default: 3 };
     res.saturation = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
     res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};

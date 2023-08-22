@@ -98,6 +98,20 @@ module.exports = class SoundWaves extends LightProgram {
     _.each(this.dots, dot => this.updateWave(dot));
   }
 
+  getDebugHelpers() {
+    let {waveCenterX, waveCenterY, waveCenterZ, initialDistance} = this.config;
+
+    // Helpers coordinates are already centered
+    let y =  waveCenterY + 9;
+    let x = waveCenterX;
+    let z = waveCenterZ;
+
+    return [
+      {type: 'sphere', x, y, z, r: initialDistance},
+      {type: 'sphere', x, y, z, r: 1}
+    ];
+  }
+
   static presets() {
     return {
       hexagono: {initialDistance: 69, haciaAfuera: false, waveSpeed: 1, waveWidth: 2},
@@ -118,10 +132,10 @@ module.exports = class SoundWaves extends LightProgram {
     let config = super.configSchema();
 
     config.brilloWave = {type: Number, min: 0, max: 3, step: 0.01, default: 0.5};
-    config.initialDistance = {type: Number, min: 0, max: 100, step: 0.1, default: 0};
-    config.waveCenterY = {type: Number, min: -40, max: 40, step: 1, default: 0};
-    config.waveCenterX = {type: Number, min: -60, max: 60, step: 1, default: 0};
-    config.waveCenterZ = { type: Number, min: -60, max: 60, step: 1, default: 0 };
+    config.initialDistance = {type: Number, min: 0, max: 200, step: 0.1, default: 0};
+    config.waveCenterY = {type: Number, min: -200, max: 200, step: 1, default: 0};
+    config.waveCenterX = {type: Number, min: -200, max: 200, step: 1, default: 0};
+    config.waveCenterZ = { type: Number, min: -200, max: 200, step: 1, default: 0 };
     config.waveWidth = {type: Number, min: 0, max: 10, step: 0.1, default: 2.5};
     config.waveSpeed = {type: Number, min: 0.1, max: 10, step: 0.1, default: 1};
     config.waveDecay = {type: Number, min: 0.01, max: 0.99, step: 0.01, default: 0.9};

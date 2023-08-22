@@ -42,14 +42,28 @@ module.exports = class Radial3D extends LightProgram {
     }
   }
 
+  getDebugHelpers() {
+    let {centerX, centerY, centerZ, escala} = this.config;
+
+    // Helpers coordinates are already centered
+    let y =  centerY + 18 - this.geometry.height/2;
+    let x = centerX;
+    let z = centerZ;
+
+    return [
+      {type: 'sphere', x, y, z, r: escala*Math.PI},
+      {type: 'sphere', x, y, z, r: 1}
+    ];
+  }
+
   // Override and extend config Schema
   static configSchema() {
     let res = super.configSchema();
     res.escala = { type: Number, min: 0.1, max: 100, step: 0.1, default: 5 };
     res.velocidad = { type: Number, min: -50, max: 50, step: 0.1, default: -5 };
-    res.centerY = { type: Number, min: -20, max: 40, step: 0.1, default: 0 };
-    res.centerX = { type: Number, min: -50, max: 50, step: 0.1, default: 0 };
-    res.centerZ = { type: Number, min: -50, max: 50, step: 0.1, default: 0 };
+    res.centerY = { type: Number, min: -50, max: 50, step: 0.1, default: 0 };
+    res.centerX = { type: Number, min: -100, max: 100, step: 0.1, default: 0 };
+    res.centerZ = { type: Number, min: -100, max: 100, step: 0.1, default: 0 };
     res.power = { type: Number, min: 0, max: 10, step: 0.1, default: 1 };
     res.colorMap = { type: "gradient", default: "" };
 

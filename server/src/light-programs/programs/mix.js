@@ -108,6 +108,10 @@ module.exports = class Mix extends LightProgram {
     super.updateConfig(newConfig)
   }
 
+  getDebugHelpers() {
+    return _.flatMap(this.subprograms, ([p]) => p.getDebugHelpers());
+  }
+
   static presets() {
     return {
       radialStars: {

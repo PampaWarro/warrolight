@@ -3,7 +3,7 @@ const util = require("util");
 const LightProgram = require("./LightProgram");
 
 module.exports = function programsByShape(mapping, name) {
-  return class ProgramsByShape extends LightProgram {
+  let newClass = class ProgramsByShape extends LightProgram {
     constructor(config, geometry, shapeMapping, lightController) {
       super(config, geometry)
       this.instances = {};
@@ -88,6 +88,10 @@ module.exports = function programsByShape(mapping, name) {
       }
     }
 
+    getDebugHelpers() {
+      return _.flatMap(this.instances, p => p.getDebugHelpers());
+    }
+
     toString() {
       return _.map(this.instances, (p,shape) => `${name ? name.yellow+' ' : ''}[${shape.cyan}] ${p.toString().green} ${JSON.stringify(p.specificConfig).gray}`).join('\n');
     }
@@ -103,4 +107,8 @@ module.exports = function programsByShape(mapping, name) {
       return schema;
     }
   };
+
+  Object.defineProperty(newClass, 'name', { value: name ? 'byShape:'+name : 'programsByShape', writable: false });
+
+  return newClass;
 };

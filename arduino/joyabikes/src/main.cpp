@@ -19,7 +19,7 @@ static constexpr int kChannel = 7;
 static constexpr std::string_view kGatewayHostname = "joya-totems-gw";
 
 #define PALETTE_CHANGE_INTERVAL 23
-#define ANIMATION_CHANGE_INTERVAL 60
+#define ANIMATION_CHANGE_INTERVAL 59
 
 CRGB leds[NUM_LEDS];
 std::vector<CRGBPalette16> palettes = {
@@ -74,24 +74,22 @@ void sawtooth();
 void one_sine_pal();
 void juggle_pal();
 void inoise8_fire();
-void dot_beat();
 void confetti_pal();
 void blur();
 void rippless();
 std::vector<std::function<void()>> animations = {
-    sinechase,  //
-                // rippless,       //
-                // plasma,         //
-                // noise16_1,      //
-                // sinelon,        //
-                // serendipitous,  //
-                // sawtooth,       //
-                // one_sine_pal,   //
-                // inoise8_fire,   //
-                // blur,           //
-                // dot_beat,       //
-                // juggle_pal,     //
-                // confetti_pal,   //
+    sinechase,      //
+    rippless,       //
+    plasma,         //
+    noise16_1,      //
+    sinelon,        //
+    serendipitous,  //
+    sawtooth,       //
+    one_sine_pal,   //
+    inoise8_fire,   //
+    blur,           //
+    juggle_pal,     //
+    confetti_pal,   //
 };
 
 static constexpr std::string_view kMillisHeader = "MILLIS";
@@ -341,9 +339,9 @@ void blur() {
          blurAmount);  // Apply some blurring to whatever's already on the
                        // strip, which will eventually go black.
 
-  uint8_t i = beatsin8(9, 0, NUM_LEDS);
-  uint8_t j = beatsin8(7, 0, NUM_LEDS);
-  uint8_t k = beatsin8(5, 0, NUM_LEDS);
+  uint16_t i = beatsin16(9, 0, NUM_LEDS);
+  uint16_t j = beatsin16(7, 0, NUM_LEDS);
+  uint16_t k = beatsin16(5, 0, NUM_LEDS);
 
   // The color of each point shifts over time, each at a different speed.
   uint16_t ms = get_millisecond_timer();
@@ -368,26 +366,6 @@ void confetti_pal() {
   thishue = thishue + thisinc;  // It increments here.
 }
 
-void dot_beat() {
-  static uint8_t fadeval =
-      224;  // Trail behind the LED's. Lower => faster fade.
-  static uint8_t bpm = 30;
-
-  uint8_t inner =
-      beatsin16(bpm, NUM_LEDS / 4, NUM_LEDS / 4 * 3);  // Move 1/4 to 3/4
-  uint8_t outer = beatsin16(bpm, 0, NUM_LEDS - 1);     // Move entire length
-  uint8_t middle =
-      beatsin16(bpm, NUM_LEDS / 3, NUM_LEDS / 3 * 2);  // Move 1/3 to 2/3
-
-  leds[middle] = CRGB::Purple;
-  leds[inner] = CRGB::Blue;
-  leds[outer] = CRGB::Aqua;
-
-  nscale8(leds, NUM_LEDS,
-          fadeval);  // Fade the entire array. Or for just a few LED's, use
-                     // nscale8(&leds[2], 5, fadeval);
-}
-
 void inoise8_fire() {
   static uint32_t xscale = 20;  // How far apart they are
   static uint32_t yscale = 1;   // How fast they move
@@ -399,7 +377,7 @@ void inoise8_fire() {
                                            // move along the Y at the rate of
                                            // get_millisecond_timer()
     leds[i] = ColorFromPalette(
-        currentPalette, min(i * (index) >> 6, 255), i * 255 / NUM_LEDS,
+        currentPalette, min(i * (index) >> 6, 255), 255,
         LINEARBLEND);  // With that value, look up the 8 bit colour palette
                        // value and assign it to the current LED.
   }  // The higher the value of i => the higher up the palette index (see
@@ -430,21 +408,21 @@ void juggle_pal() {  // Several colored dots, weaving in and out of sync with
     switch (secondHand) {
       case 0:
         numdots = 1;
-        thisbeat = 20;
+        thisbeat = 3;
         thisdiff = 16;
         thisfade = 2;
         thishue = 0;
         break;  // You can change values here, one at a time , or altogether.
       case 10:
         numdots = 4;
-        thisbeat = 10;
+        thisbeat = 2;
         thisdiff = 16;
         thisfade = 8;
         thishue = 128;
         break;
       case 20:
         numdots = 8;
-        thisbeat = 3;
+        thisbeat = 1;
         thisdiff = 0;
         thisfade = 8;
         thishue = random8();
@@ -459,7 +437,7 @@ void juggle_pal() {  // Several colored dots, weaving in and out of sync with
   fadeToBlackBy(leds, NUM_LEDS, thisfade);
 
   for (int i = 0; i < numdots; i++) {
-    leds[beatsin16(thisbeat + i + numdots, 0, NUM_LEDS)] +=
+    leds[beatsin16(thisbeat + i, 0, NUM_LEDS)] +=
         ColorFromPalette(currentPalette, curhue, thisbright,
                          LINEARBLEND);  // Munge the values and pick a
                                         // colour from the palette
@@ -511,8 +489,8 @@ void one_sine_pal() {  // This is the heart of this program. Sure is short.
 }
 
 void sawtooth() {
-  fadeToBlackBy(leds, NUM_LEDS, 5);
-  int bpm = 20;
+  fadeToBlackBy(leds, NUM_LEDS, 3);
+  int bpm = 10;
   int ms_per_beat =
       60000 / bpm;  // 500ms per beat, where 60,000 = 60 seconds * 1000 ms
   int ms_per_led = 60000 / bpm / NUM_LEDS;
@@ -530,8 +508,8 @@ void sawtooth() {
 void serendipitous() {
   static uint16_t Xorig = 0x012;
   static uint16_t Yorig = 0x015;
-  static uint16_t X;
-  static uint16_t Y;
+  static uint16_t X = Xorig;
+  static uint16_t Y = Yorig;
   static uint16_t Xn;
   static uint16_t Yn;
   static uint8_t index;
@@ -644,7 +622,8 @@ void sinechase() {
   fadeToBlackBy(leds, NUM_LEDS, 40);
   uint8_t dothue = 0;
   for (int i = 0; i < 8; i++) {
-    leds[beatsin16(5 + 2 * i, 0, NUM_LEDS)] |= CHSV(dothue, 200, 255);
+    leds[(i * NUM_LEDS / 8 + beatsin16(1 + i, 0, 2 * NUM_LEDS)) % NUM_LEDS] |=
+        CHSV(dothue, 200, 255);
     dothue += 32;
   }
 }

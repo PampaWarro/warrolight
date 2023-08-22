@@ -59,7 +59,7 @@ exports.Geometry = class Geometry {
         if (stripe.y[i] < minY) {
           minY = stripe.y[i];
         }
-        if (stripe.y[i] < minZ) {
+        if (stripe.z[i] < minZ) {
           minZ = stripe.z[i];
         }
         if (stripe.x[i] > maxX) {

@@ -38,7 +38,10 @@ module.exports = class MusicVolumeBars extends LightProgram {
           Math.min(1, audio[this.config.soundMetric] * audio[this.config.soundMetric])
         );
       }
-      this.lastVolume[i] = newColor;
+      if(this.config.invert)
+        this.lastVolume[this.numberOfLeds - i - 1] = newColor;
+      else
+        this.lastVolume[i] = newColor;
     }
 
     leds.forEach((v, i) => {
@@ -54,6 +57,7 @@ module.exports = class MusicVolumeBars extends LightProgram {
   static configSchema() {
     let res = super.configSchema();
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
+    res.invert = { type: Boolean, default: false };
     res.soundMetric = {type: 'soundMetric', default: "fastPeakDecay"};
     return res;
   }

@@ -1,5 +1,7 @@
 const _ = require("lodash");
 const LightProgram = require('./../base-programs/LightProgram');
+const ColorUtils = require("../utils/ColorUtils");
+const {loadGradient} = require("../utils/gradients");
 
 function euclideanDistance(a, b) {
   let sum = 0;
@@ -84,7 +86,15 @@ module.exports = class VertexGlow extends LightProgram {
       const brightness =
           Math.pow(_.clamp(Math.max(vertexBrightness, rippleBrightness), 0, 1),
                    this.config.pow);
-      leds[i].fill(255 * brightness);
+
+      if (this.config.colorMap) {
+        const gradient = loadGradient(this.config.colorMap);
+        const [r, g, b, a] = gradient.colorAt(1 - brightness);
+        leds[i] = [r, g, b];
+      } else {
+        leds[i].fill(255 * brightness);
+      }
+
     }
     return;
   }
@@ -101,6 +111,7 @@ module.exports = class VertexGlow extends LightProgram {
       ripplePow : {type : Number, min : .1, max : 10, step : .01, default : 1},
       soundMetric : {type : 'soundMetric', default : "rms"},
       enableSound : {type : Boolean, default : true},
+      colorMap: { type: "gradient", default: "" },
     });
   }
 };

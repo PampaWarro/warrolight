@@ -78,7 +78,15 @@ module.exports = function createNowPlayingPositionProgram(programs) {
     }
 
     toString() {
-      return `NowPlayingPositionProgram(${JSON.stringify(programs)})`;
+      return `NowPlayingPositionProgram:  \n  ...  ${programs.map(({start,end,fadeIn,fadeOut,program}) => {
+        let format = seconds => `${(Math.floor((seconds || 0)/60)).toFixed(0).padStart(2,0)}:${((seconds || 0) % 60).toFixed(0).padStart(2,0)}`
+        let from = (start ? format(start) :  '-----').green;
+        let to = (end ? format(end) :  '------').red;
+        let fi = ('/' + (fadeIn || '-').toString()).padEnd(4, ' ').gray;
+        let fo = (((fadeOut || '-').toString())+'\\').padStart(4, ' ').gray;
+        
+        return `${fi} ${from} to ${to} ${fo}  ${program.name}`;
+      }).join('\n  ...  ')}`;
     }
   };
 };

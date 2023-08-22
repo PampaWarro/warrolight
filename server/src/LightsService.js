@@ -52,6 +52,7 @@ module.exports = class LightsService {
       programs: controller.getProgramsSchema(),
       currentProgramName: controller.currentProgramName,
       currentConfig: controller.getCurrentConfig(),
+      currentDebugHelpers: this.controller.currentDebugHelpers,
       globalConfig: {
         gradientsLibrary: getGradientsByNameCss(),
         shapes: _.keys(controller.shapeMapping())
@@ -72,6 +73,7 @@ module.exports = class LightsService {
         programs: this.controller.getProgramsSchema(),
         currentProgramName: this.controller.currentProgramName,
         currentConfig: this.controller.getCurrentConfig(),
+        currentDebugHelpers: this.controller.currentDebugHelpers,
         globalConfig: {
           gradientsLibrary: getGradientsByNameCss(),
           shapes: _.keys(this.controller.shapeMapping())
@@ -82,6 +84,7 @@ module.exports = class LightsService {
       this.broadcast("stateChange", {
         currentProgramName: this.controller.currentProgramName,
         currentConfig: this.controller.getCurrentConfig(),
+        currentDebugHelpers: this.controller.currentDebugHelpers,
         micConfig: this.micConfig
       });
     }
@@ -134,7 +137,8 @@ module.exports = class LightsService {
     this.broadcast("stateChange", {
       currentProgramName: this.controller.currentProgramName,
       currentConfig: this.controller.getCurrentConfig(),
-      micConfig: this.micConfig
+      micConfig: this.micConfig,
+      currentDebugHelpers: this.controller.currentDebugHelpers
     });
   }
 

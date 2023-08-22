@@ -45,7 +45,6 @@ export class LightsSimulator extends React.Component<Props, State> {
     super(props);
 
     this.state = { layout: null };
-
     const Renderer = props.real3d? Real3DLightsRenderer : Fake3DLightsRenderer;
     this.lightsRenderer = new Renderer();
     this.lightsRenderer.enabled = this.props.receivingData;
@@ -111,6 +110,10 @@ export class LightsSimulator extends React.Component<Props, State> {
   updateLayout(layout: Layout) {
     this.setState({ layout });
     this.lightsRenderer.setLayout(layout);
+  }
+
+  updateDebugHelpers(helpers: any) {
+    this.lightsRenderer.updateDebugHelpers(helpers);
   }
 
   toggleRenderPreview() {
@@ -195,6 +198,8 @@ abstract class LightsRenderer {
   private _layout: Layout | null = null;
   _xAngle = 0;
   _yAngle = 0;
+  scale = 1;
+
 
   constructor() {
     this.enabled = false;
@@ -214,6 +219,10 @@ abstract class LightsRenderer {
 
   setLayout(layout: Layout | null) {
     this._layout = layout;
+  }
+
+  updateDebugHelpers(helpers: any) {
+    // To be redefined by subclasses
   }
 
   draw(lights: Light[]) {
@@ -410,6 +419,9 @@ class Real3DLightsRenderer extends LightsRenderer {
   private scene: THREE.Scene;
   private axes: THREE.AxesHelper;
   private bufferGeometry: THREE.BufferGeometry;
+  private sphere: any;
+  currentHelpers: any[];
+  private hideHelpersTimeout: any;
 
   constructor() {
     super();
@@ -422,6 +434,7 @@ class Real3DLightsRenderer extends LightsRenderer {
     this.camera.position.z = 7;
     this.scene = new THREE.Scene();
     this.scene.scale.y = -1;
+    this.currentHelpers = [];
     this.camera.lookAt(this.scene.position);
     this.bufferGeometry = new THREE.BufferGeometry();
     this.resetPositionBuffer(new Float32Array());
@@ -466,6 +479,89 @@ class Real3DLightsRenderer extends LightsRenderer {
     this.axes = new THREE.AxesHelper(.05);
     this.axes.scale.y = -1;
     this.scene.add(this.axes);
+  }
+
+  updateDebugHelpers(helpers: any) {
+    clearTimeout(this.hideHelpersTimeout);
+    this.scene.remove(...this.currentHelpers);
+
+    let newHelpers: any[] = [];
+
+    const primaryMaterial = new THREE.MeshBasicMaterial({ color: 0x777777, transparent: true, opacity: 0.4, wireframe: true });
+    const secondaryMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: true, opacity: 0.2, wireframe: true });
+    let scale = 1/this.scale;
+
+    for (const { type, secondary, ...params } of (helpers || [])) {
+      let material = secondary ? secondaryMaterial : primaryMaterial;
+      const yellowLine = new THREE.LineBasicMaterial({ color: 'yellow', transparent: true, opacity: 0.4 });
+
+      if (type === 'plane') {
+        const { x, y, z, w, h } = params;
+        const segments = secondary ? 1 : 3;
+        const box = new THREE.Mesh(new THREE.PlaneGeometry(w * scale, h * scale, segments, segments), material);
+        box.rotation.set(Math.PI/2, 0,0)
+        box.position.set(x * scale, -y * scale, z * scale);
+        newHelpers.push(box);
+      } else if (type === 'box') {
+        const { x, y, z, w, h, d } = params;
+        const box = new THREE.Mesh(new THREE.BoxGeometry(w * scale, h * scale, d*scale, 1, 1), material);
+        // box.rotation.set(Math.PI/2, 0,0)
+        box.position.set(x * scale, -y * scale, z * scale);
+        newHelpers.push(box);
+      } else if (type === 'rectangle') {
+        const { x, y, z, w, h } = params;
+
+        const rect = new THREE.Shape().moveTo( 0, 0 )
+          .lineTo( w*scale, 0 )
+          .lineTo( w*scale, h*scale )
+          .lineTo( 0, h*scale )
+          .lineTo( 0, 0 );
+
+        const geometryPoints = new THREE.BufferGeometry().setFromPoints(rect.getPoints(32));
+
+        let line = new THREE.Line(geometryPoints, yellowLine);
+        line.rotation.set(Math.PI / 2, 0, 0);
+        line.position.set((x - w/2) * scale, -y  * scale, (z- h/2)* scale); // Set the center position
+        // line.scale.set(scale, scale, scale);
+        newHelpers.push(line);
+      } else if (type === 'sphere') {
+        const { x, y, z, r } = params;
+
+        // const sphere = new THREE.Mesh(new THREE.SphereGeometry(r * scale, 10, 10), material);
+        // sphere.position.set(x * scale, -y * scale, z * scale); // Set the center position
+        // newHelpers.push(sphere);
+
+        const shape = new THREE.Shape().moveTo( (0+r)*scale, 0*scale ).absarc( 0*scale, 0*scale, r*scale, 0, Math.PI * 2, false );
+        shape.autoClose = true;
+
+        const geometryPoints = new THREE.BufferGeometry().setFromPoints(shape.getPoints(32));
+
+        let line = new THREE.Line(geometryPoints, yellowLine);
+        line.position.set(x * scale, -(y) * scale, z * scale);
+
+        // line.rotation.set( rx, ry, rz );
+        let line2 = new THREE.Line(geometryPoints, yellowLine);
+        line2.rotation.set(Math.PI / 2, 0, 0);
+        line2.position.set(x * scale, -(y) * scale, z * scale);
+
+        let line3 = new THREE.Line(geometryPoints, yellowLine);
+        line3.rotation.set(0, Math.PI / 2, 0);
+        line3.position.set(x * scale, -(y) * scale, z * scale);
+
+        newHelpers.push(line, line2, line3);
+      } else {
+        console.warn(`Helper type ${type} not supported.`, params);
+      }
+    }
+
+    if (newHelpers.length) {
+      this.scene.add(...newHelpers);
+    }
+
+    this.currentHelpers = newHelpers;
+
+    // Hide helpers after 5 seconds
+    this.hideHelpersTimeout = setTimeout(() => this.scene.remove(... this.currentHelpers), 5000);
   }
 
 
@@ -518,7 +614,11 @@ class Real3DLightsRenderer extends LightsRenderer {
     const centerX = layout? (layout.minX + layout.maxX) / 2 : 0;
     const centerY = layout? (layout.minY + layout.maxY) / 2 : 0;
     const centerZ = layout? (layout.minZ + layout.maxZ) / 2 : 0;
+
     const maxDim = 1.5 * Math.max(width, height, depth) ?? 1;
+
+    this.scale = maxDim/2;
+
     const position = this.bufferGeometry.attributes
       .position as THREE.BufferAttribute;
     for (let i = 0; i < points.length; i++) {
@@ -536,6 +636,7 @@ class Real3DLightsRenderer extends LightsRenderer {
     }
     this.axes.position.x = (layout?.maxX ?? 0) / maxDim;
     this.axes.position.y = (layout?.maxY ?? 0) / maxDim;
+
     position.needsUpdate = true;
     this.bufferGeometry.computeBoundingBox();
   }

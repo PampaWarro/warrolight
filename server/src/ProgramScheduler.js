@@ -95,4 +95,9 @@ module.exports = class ProgramScheduler {
     }
   }
 
+  getDebugHelpers() {
+    if (this.program) {
+      return this.program.getDebugHelpers();
+    }
+  }
 }

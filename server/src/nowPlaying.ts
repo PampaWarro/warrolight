@@ -5,7 +5,8 @@ import { DOMParser } from "@xmldom/xmldom";
 import xpath from "xpath";
 
 // Connects to the VLC HTTP XML API.
-// Usage: vlc -I http --http-password warro --http-port 9099 --random --loop <music folder>
+// Usage without GUI: vlc -I http --http-password warro --http-port 9099 --random --loop <music folder>
+// Usage with GUI: vlc --extraintf http --http-password warro --http-port 9099 --random --loop <music folder>
 class NowPlaying extends EventEmitter {
   status: {
     title: string,

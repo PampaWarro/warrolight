@@ -43,8 +43,6 @@ export class TagsParam extends React.Component<Props> {
   render() {
     const { name, value, options } = this.props;
 
-    console.log(name, value, options);
-
     let possibleOptions = _.uniq(options.concat(globalAllOptions)).map(makeOption);
 
     return (

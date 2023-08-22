@@ -22,6 +22,10 @@ module.exports = class LightProgram {
     return this.constructor.name;
   }
 
+  getDebugHelpers() {
+    return [];
+  }
+
   static configSchema() {
     // Child classes should call super.configSchema and extend this object
     return {

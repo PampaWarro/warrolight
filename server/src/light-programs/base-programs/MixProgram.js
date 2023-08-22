@@ -62,6 +62,10 @@ module.exports = function mixPrograms(...programs) {
       }
     }
 
+    getDebugHelpers() {
+      return _.flatMap(this.programs, p => p.programInstance.getDebugHelpers());
+    }
+
     static configSchema() {
       let schema = {};
       _.each(programs, program => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import _ from "lodash";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { DevicesStatus } from "./DevicesStatus";
@@ -26,6 +26,7 @@ interface State {
   currentConfig: CurrentProgramParameters;
   globalConfig: { [param: string]: any };
   micConfig: MicConfig;
+  currentDebugHelpers?: any[],
   remoteChange: boolean;
   receivingLights: boolean;
   devices: Device[];
@@ -84,6 +85,8 @@ export class App extends React.Component<Props, State> {
     });
 
     // console.log(state.currentProgramName, state);
+
+    this.lightsSim.current?.updateDebugHelpers(state.currentDebugHelpers);
   }
 
   componentDidMount() {

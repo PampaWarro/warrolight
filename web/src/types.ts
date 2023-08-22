@@ -42,6 +42,7 @@ export interface RemoteState {
   programs: Program[];
   currentProgramName: string;
   currentConfig: { [name: string]: ConfigValue };
+  currentDebugHelpers?: any[],
   globalConfig: { [name: string]: any };
   micConfig: MicConfig;
 }

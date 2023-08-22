@@ -135,6 +135,7 @@ module.exports = class LightController extends EventEmitter {
   start() {
     if (this.programScheduler) {
       this.currentConfig = this.buildParameters(this.programs[this.currentProgramName].configSchema);
+      this.currentDebugHelpers = this.programScheduler.getDebugHelpers();
       this.programScheduler.start();
       this.running = true;
     }
@@ -175,6 +176,7 @@ module.exports = class LightController extends EventEmitter {
     let { presetOverrides, currentPreset, overrides } = this.currentConfig;
     this.currentConfig = this.buildParameters(configSchema, presetOverrides, currentPreset, {... overrides, ... config})
     this.programScheduler.updateConfig(this.getConfig(this.currentConfig));
+    this.currentDebugHelpers = this.programScheduler.getDebugHelpers();
   }
 
   setPreset(presetName) {
@@ -190,6 +192,7 @@ module.exports = class LightController extends EventEmitter {
 
     this.currentConfig = this.buildParameters(configSchema, presetOverrides, presetName, {})
     this.programScheduler.updateConfig(this.getConfig(this.currentConfig));
+    this.currentDebugHelpers = this.programScheduler.getDebugHelpers();
   }
 
   savePreset(programName, presetName, config) {

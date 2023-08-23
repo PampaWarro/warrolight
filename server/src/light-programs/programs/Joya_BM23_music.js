@@ -11,29 +11,29 @@ class MetaSchedule {
   constructor() {
     this.schedules = {
       any: randomSchedule({
-        presetsFile: 'joyamatehd',
-        mainShapes: ['joya', 'mate'],
+        presetsFile: 'joyahdtotems',
+        mainShapes: ['joya', 'totems'],
         baseDuration,
         randomDuration,
       }),
       low: randomSchedule({
-        presetsFile: 'joyamatehd',
-        mainShapes: ['joya', 'mate'],
+        presetsFile: 'joyahdtotems',
+        mainShapes: ['joya', 'totems'],
         filter: (program, presetName, config) => config.tags && config.tags.includes("intensity-low"),
         baseDuration,
         randomDuration,
       }),
       mid: randomSchedule({
-        presetsFile: 'joyamatehd',
-        mainShapes: ['joya', 'mate'],
+        presetsFile: 'joyahdtotems',
+        mainShapes: ['joya', 'totems'],
         filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-mid"),
         baseDuration,
         randomDuration,
       }),
       high: randomSchedule({
-        presetsFile: 'joyamatehd',
-        mainShapes: ['joya', 'mate'],
+        presetsFile: 'joyahdtotems',
+        mainShapes: ['joya', 'totems'],
         filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-high"),
         baseDuration,
@@ -102,7 +102,7 @@ module.exports = class JoyaMusic extends (
         values: [
           "all",
           "joya",
-          "mate",
+          "totems",
           "vertices",
           "joya-odd-triangles",
           "joya-even-triangles",
@@ -117,7 +117,7 @@ module.exports = class JoyaMusic extends (
       default: {},
       joyaParts: { mask: "joya-odd-triangles", intensity: "mid" },
       joyaMid: { mask: "joya", intensity: "mid" },
-      mateMid: { mask: "mate", intensity: "mid" },
+      mateMid: { mask: "totems", intensity: "mid" },
       todo: { mask: "all", intensity: "high" },
     };
   }

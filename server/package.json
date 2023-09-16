@@ -11,7 +11,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "joyahdtotems"
+    "setup": "hash"
   },
   "keywords": [],
   "author": "Pampa Warro",

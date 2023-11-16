@@ -1,3 +1,7 @@
+/// @file    NoisePlusPalette.ino
+/// @brief   Demonstrates how to mix noise generation with color palettes on a 2D LED matrix
+/// @example NoisePlusPalette.ino
+
 #include <FastLED.h>
 
 #define LED_PIN     3
@@ -5,14 +9,17 @@
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 
+// Params for width and height
 const uint8_t kMatrixWidth  = 16;
 const uint8_t kMatrixHeight = 16;
+
+// Param for different pixel layouts
 const bool    kMatrixSerpentineLayout = true;
 
 
 // This example combines two features of FastLED to produce a remarkable range of
 // effects from a relatively small amount of code.  This example combines FastLED's 
-// color palette lookup functions with FastLED's Perlin/simplex noise generator, and
+// color palette lookup functions with FastLED's Perlin noise generator, and
 // the combination is extremely powerful.
 //
 // You might want to look at the "ColorPalette" and "Noise" examples separately
@@ -67,8 +74,8 @@ uint8_t       colorLoop = 1;
 
 void setup() {
   delay(3000);
-  LEDS.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds,NUM_LEDS);
-  LEDS.setBrightness(BRIGHTNESS);
+  FastLED.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds,NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
 
   // Initialize our coordinates to some random values
   x = random16();
@@ -163,7 +170,7 @@ void loop() {
   // using the current palette
   mapNoiseToLEDsUsingPalette();
 
-  LEDS.show();
+  FastLED.show();
   // delay(10);
 }
 

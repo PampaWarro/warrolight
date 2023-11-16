@@ -17,6 +17,7 @@ class FlexibleInlineBlockClocklessController : public CPixelLEDController<RGB_OR
     uint32_t m_nWriteMask;
     uint8_t m_nOutBlocks;
     uint32_t m_offsets[3];
+    uint32_t MS_COUNTER;
     CMinWait<WAIT_TIME> mWait;
 
 public:
@@ -40,6 +41,7 @@ public:
         m_nLowBit = 33;
         m_nHighBit = 0;
         m_nWriteMask = 0;
+	MS_COUNTER = 0;
 
         // setup the bits and data tracking for parallel output
         switch(FIRST_PIN) {
@@ -114,15 +116,15 @@ public:
   } _outlines;
 
 
-  template<int BITS,int PX> __attribute__ ((always_inline)) inline void writeBits(register uint32_t & next_mark, register _outlines & b, PixelController<RGB_ORDER, LANES, __FL_T4_MASK> &pixels) {
+  template<int BITS,int PX> __attribute__ ((always_inline)) inline void writeBits(FASTLED_REGISTER uint32_t & next_mark, FASTLED_REGISTER _outlines & b, PixelController<RGB_ORDER, LANES, __FL_T4_MASK> &pixels) {
         _outlines b2;
         transpose8x1(b.bg[3], b2.bg[3]);
         transpose8x1(b.bg[2], b2.bg[2]);
         transpose8x1(b.bg[1], b2.bg[1]);
         transpose8x1(b.bg[0], b2.bg[0]);
 
-        register uint8_t d = pixels.template getd<PX>(pixels);
-        register uint8_t scale = pixels.template getscale<PX>(pixels);
+        FASTLED_REGISTER uint8_t d = pixels.template getd<PX>(pixels);
+        FASTLED_REGISTER uint8_t scale = pixels.template getscale<PX>(pixels);
 
         int x = 0;
         for(uint32_t i = 8; i > 0;) {

@@ -448,7 +448,7 @@ uipclient_appcall(void)
           LogObject.uart_send_str(F("uipclient_appcall(void) DEBUG:UIPClient uip_newdata, uip_len:"));
           LogObject.uart_send_decln(uip_len);
 #endif
-          if (uip_len && !(u->state & (UIP_CLIENT_CLOSE | UIP_CLIENT_REMOTECLOSED)))
+          if (uip_len && u->state && !(u->state & UIP_CLIENT_CLOSE))
             {
               for (uint8_t i=0; i < UIP_SOCKET_NUMPACKETS; i++)
                 {
@@ -583,9 +583,9 @@ UIPClient::_allocateData()
       uip_userdata_t* data = &UIPClient::all_data[sock];
       if (!data->state)
         {
+          memset(data, 0, sizeof(uip_userdata_t));
           data->conn_index = uip_conn - uip_conns;
           data->state = UIP_CLIENT_CONNECTED;
-          memset(&data->packets_in[0],0,sizeof(uip_userdata_t)-sizeof(data->state));
           return data;
         }
     }

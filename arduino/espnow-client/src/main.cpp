@@ -183,12 +183,12 @@ void loop() {
     }
   }
   if (draw_fallback) {
-    EVERY_N_MILLIS(1000 / 40) {
+    EVERY_N_MILLIS(5) {
       fadeToBlackBy(leds, kNumLeds, 8);
       uint16_t value = beatsin8(10, 1, 80);
       leds[0].b = value * value / 255;
-      leds[1].b = leds[0].b / 6;
-      leds[2].b = leds[1].b / 6;
+      leds[1].b = leds[0].b / 2;
+      leds[2].b = leds[1].b / 2;
       FastLED.show();
     }
   }

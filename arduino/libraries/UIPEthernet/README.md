@@ -93,3 +93,15 @@ https://github.com/UIPEthernet/UIPEthernet/blob/master/hardware/NodeMCU_enc28j60
 - UIPServer.end() - stop() all clients
 - fixed library.json for platformio
 - New release:2.0.10
+
+- UIPUdp.cpp beginPacket fix IPAddress check for esp8266 core 3.x.x
+- platformio library.json fixes by Ivan Kravets
+- UIPClient._allocateData - fix data clear
+- UIPClient - fix NULL data field checks
+- New release:2.0.11
+
+- Revert "UIPClient - fix NULL data field checks"
+- UIPClient - process incoming data even when remote closed
+- restart UDP connection also when logging is off (by Karl Õmblus)
+- New release:2.0.12
+ 

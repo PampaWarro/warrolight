@@ -1,8 +1,8 @@
-#include "FastLED.h"
+/// @file    TwinkleFox.ino
+/// @brief   Twinkling "holiday" lights that fade in and out.
+/// @example TwinkleFox.ino
 
-#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001000)
-#warning "Requires FastLED 3.1 or later; check github for latest code."
-#endif
+#include "FastLED.h"
 
 
 #define NUM_LEDS      100

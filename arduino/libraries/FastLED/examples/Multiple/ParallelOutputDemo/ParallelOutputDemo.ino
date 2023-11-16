@@ -1,3 +1,7 @@
+/// @file    ParallelOutputDemo.ino
+/// @brief   Demonstrates how to write to multiple strips simultaneously
+/// @example ParallelOutputDemo.ino
+
 #include <FastLED.h>
 
 #define NUM_LEDS_PER_STRIP 16
@@ -24,13 +28,13 @@ void setup() {
   delay(5000);
   Serial.begin(57600);
   Serial.println("Starting...");
-  // LEDS.addLeds<WS2811_PORTA,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
-  // LEDS.addLeds<WS2811_PORTB,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
-  // LEDS.addLeds<WS2811_PORTD,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP).setCorrection(TypicalLEDStrip);
-  LEDS.addLeds<WS2811_PORTDC,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
+  // FastLED.addLeds<WS2811_PORTA,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
+  // FastLED.addLeds<WS2811_PORTB,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
+  // FastLED.addLeds<WS2811_PORTD,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP).setCorrection(TypicalLEDStrip);
+  FastLED.addLeds<WS2811_PORTDC,NUM_STRIPS>(leds, NUM_LEDS_PER_STRIP);
 
   // Teensy 4 parallel output example
-  // LEDS.addLeds<NUM_STRIPS, WS2811, 1>(leds,NUM_LEDS_PER_STRIP);
+  // FastLED.addLeds<NUM_STRIPS, WS2811, 1>(leds,NUM_LEDS_PER_STRIP);
 }
 
 void loop() {
@@ -51,6 +55,6 @@ void loop() {
 
   hue++;
 
-  LEDS.show();
-  // LEDS.delay(100);
+  FastLED.show();
+  // FastLED.delay(100);
 }

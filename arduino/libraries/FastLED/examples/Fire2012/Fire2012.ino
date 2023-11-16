@@ -1,3 +1,7 @@
+/// @file    Fire2012.ino
+/// @brief   Simple one-dimensional fire animation
+/// @example Fire2012.ino
+
 #include <FastLED.h>
 
 #define LED_PIN     5
@@ -72,7 +76,7 @@ void loop()
 void Fire2012()
 {
 // Array of temperature readings at each simulation cell
-  static byte heat[NUM_LEDS];
+  static uint8_t heat[NUM_LEDS];
 
   // Step 1.  Cool down every cell a little
     for( int i = 0; i < NUM_LEDS; i++) {

@@ -1,5 +1,3 @@
-
-
 /**
  * @file gpio.h
  * Class declaration for SPI helper files
@@ -9,13 +7,19 @@
  * Example of gpio.h class declaration for GPIO portability
  *
  * @defgroup Porting_GPIO Porting: GPIO
- *
  * @{
  */
+#ifndef RF24_UTILITY_TEMPLATE_GPIO_H_
+#define RF24_UTILITY_TEMPLATE_GPIO_H_
 
 #include <cstdio>
 
-// class GPIO {
+#ifndef DOXYGEN_FORCED
+// exclude this line from the docs to prevent displaying in the list of classes
+class GPIO
+#endif
+{
+
 public:
     /* Constants */
     static const int DIRECTION_OUT = 1;
@@ -52,7 +56,12 @@ public:
     */
     static void write(int port, int value);
 
-    virtual ~ GPIO();
+#ifndef DOXYGEN_FORCED
+    // exclude this line from the docs to prevent warnings docs generators
+    virtual ~GPIO();
+#endif
 };
 
 /**@}*/
+
+#endif // RF24_UTILITY_TEMPLATE_GPIO_H_

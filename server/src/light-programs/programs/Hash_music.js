@@ -12,20 +12,20 @@ class MetaSchedule {
     this.schedules = {
       any: randomSchedule({
         presetsFile: 'hash',
-        mainShapes: ['in', 'out'],
+        mainShapes: ['hash', 'totems'],
         baseDuration,
         randomDuration,
       }),
       low: randomSchedule({
         presetsFile: 'hash',
-        mainShapes: ['in', 'out'],
+        mainShapes: ['hash', 'totems'],
         filter: (program, presetName, config) => config.tags && config.tags.includes("intensity-low"),
         baseDuration,
         randomDuration,
       }),
       mid: randomSchedule({
         presetsFile: 'hash',
-        mainShapes: ['in', 'out'],
+        mainShapes: ['hash', 'totems'],
         filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-mid"),
         baseDuration,
@@ -33,7 +33,7 @@ class MetaSchedule {
       }),
       high: randomSchedule({
         presetsFile: 'hash',
-        mainShapes: ['in', 'out'],
+        mainShapes: ['hash', 'totems'],
         filter: (program, presetName, config) =>
           config.tags && config.tags.includes("intensity-high"),
         baseDuration,
@@ -93,7 +93,7 @@ module.exports = class JoyaMusic extends (
     return Object.assign(super.configSchema(), {
       intensity: {
         type: String,
-        default: "high",
+        default: "any",
         values: ["low", "mid", "high", "any"],
       },
       mask: {
@@ -101,8 +101,10 @@ module.exports = class JoyaMusic extends (
         default: "in",
         values: [
           "all",
+          "hash",
           "in",
           "out",
+          "totems",
         ],
       },
     });
@@ -111,9 +113,11 @@ module.exports = class JoyaMusic extends (
   static presets() {
     return {
       default: {},
+      all: { mask: "all", intensity: "any" },
+      hash: { mask: "hash", intensity: "any" },
       in: { mask: "in", intensity: "any" },
       out: { mask: "out", intensity: "any" },
-      todo: { mask: "all", intensity: "any" },
+      totems: { mask: "totems", intensity: "any" },
     };
   }
 };

@@ -1,23 +1,31 @@
 {
   "geometry": "hash",
   "shapeMapping": "hash",
-  "lights": 600,
+  "lights": 1800,
   "outputDevices": {
-    "udp": {
+    "hash": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "hash-quinled.local",
+        "udpPort": 6677
+      }
+    },
+    "totems": {
       "type": "udp-chunked",
       "params": {
         "numberOfLights": 600,
-        "name": "hash-quinled.local",
-        "udpPort": 6677
+        "name": "hash-totems-gw.local",
+        "udpPort": 6678
       }
     }
   },
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 600,
+      "to": 1200,
       "baseIndex": 0,
-      "deviceName": "udp"
+      "deviceName": "hash"
     }
   ],
   "presetsFile": "hash"

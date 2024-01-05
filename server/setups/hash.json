@@ -26,6 +26,12 @@
       "to": 1200,
       "baseIndex": 0,
       "deviceName": "hash"
+    },
+    {
+      "from": 1200,
+      "to": 1800,
+      "baseIndex": 0,
+      "deviceName": "totems"
     }
   ],
   "presetsFile": "hash"

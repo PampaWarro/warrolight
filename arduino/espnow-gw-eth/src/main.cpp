@@ -195,6 +195,8 @@ void setup() {
   Serial.begin(460800);
   Serial.println();
   Serial.println("Warrolight ESP-NOW Gateway");
+  Serial.print("Hostname: ");
+  Serial.println(kHostname.data());
 
   espNowSemaphore = xSemaphoreCreateCounting(kEspNowMaxPendingPackets,
                                              kEspNowMaxPendingPackets);

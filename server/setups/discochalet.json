@@ -1,0 +1,24 @@
+{
+  "geometry": "discochalet",
+  "shapeMapping": "discochalet",
+  "lights": 1200,
+  "outputDevices": {
+    "gateway": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "discochalet-gw.local",
+        "udpPort": 6678
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 1200,
+      "baseIndex": 0,
+      "deviceName": "gateway"
+    }
+  ],
+  "presetsFile": "discochalet"
+}

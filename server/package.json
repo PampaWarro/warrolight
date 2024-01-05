@@ -11,7 +11,11 @@
     "lint": "eslint ."
   },
   "warroLight": {
+<<<<<<< HEAD
     "setup": "fuego-pw-2024"
+=======
+    "setup": "discochalet"
+>>>>>>> 46149af (Disco Chalet setup.)
   },
   "keywords": [],
   "author": "Pampa Warro",

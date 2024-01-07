@@ -60,7 +60,9 @@ module.exports = class RadialSun extends LightProgram {
       const energy = Math.pow(v, power);
 
       if(gradient) {
-        const [r, g, b, a] = gradient.colorAt(1 - energy);
+        // TODO: fix bug where gradient can sometimes return undefined.
+        const color = gradient.colorAt(1 - energy);
+        const [r, g, b, a] = color ? color : [0, 0, 0, 1];
         leds[i] = [energy*r,energy*g,energy*b,1]
       } else {
         leds[i] = ColorUtils.HSVtoRGB(

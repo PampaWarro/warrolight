@@ -1,0 +1,80 @@
+{
+    "polar": {
+        "linterna1": {
+            "offsetZWiggleSpeed": -8.9,
+            "fadeWidth": 21,
+            "offsetZWiggleAmplitude": 20,
+            "angleXWiggleSpeed": -13.3,
+            "angleYWiggleSpeed": -22.2,
+            "offsetYWiggleSpeed": 4.4,
+            "angleZWiggleSpeed": -11.1,
+            "width": 10
+        },
+        "linterna2": {
+            "offsetZWiggleSpeed": 0,
+            "fadeWidth": 21,
+            "offsetZWiggleAmplitude": 20,
+            "angleXWiggleSpeed": 2.2,
+            "angleYWiggleSpeed": -11.1,
+            "offsetYWiggleSpeed": 2.2,
+            "angleZWiggleSpeed": 15.6,
+            "width": 10
+        }
+    },
+    "mix": {
+        "linternas": {
+            "programs": [
+                {
+                    "programName": "polar",
+                    "config": {
+                        "offsetZWiggleSpeed": -13.2,
+                        "fadeWidth": 21,
+                        "offsetZWiggleAmplitude": 20,
+                        "angleXWiggleSpeed": 2.2,
+                        "angleYWiggleSpeed": -11.1,
+                        "offsetYWiggleSpeed": 2.2,
+                        "angleZWiggleSpeed": 15.6,
+                        "width": 10,
+                        "angleYSpeed": -8.8,
+                        "offsetYWiggleAmplitude": 40,
+                        "angleXSpeed": -8.8
+                    }
+                },
+                {
+                    "programName": "polar",
+                    "config": {
+                        "offsetZWiggleSpeed": 0,
+                        "fadeWidth": 21,
+                        "offsetZWiggleAmplitude": 20,
+                        "angleXWiggleSpeed": 2.2,
+                        "angleYWiggleSpeed": -11.1,
+                        "offsetYWiggleSpeed": 2.2,
+                        "angleZWiggleSpeed": 15.6,
+                        "width": 10,
+                        "angleXSpeed": -6.6,
+                        "angleYSpeed": 2.2,
+                        "angleZSpeed": -4.4
+                    }
+                }
+            ]
+        },
+        "radialStars": {
+            "programs": [
+                {
+                    "programName": "stars",
+                    "config": {
+                        "move": true,
+                        "moveSpeed": 0.2,
+                        "starsColor": 0
+                    }
+                },
+                {
+                    "programName": "radial",
+                    "config": {
+                        "velocidad": 1.1
+                    }
+                }
+            ]
+        }
+    }
+}

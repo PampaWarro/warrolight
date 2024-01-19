@@ -1,0 +1,24 @@
+{
+  "geometry": "pinia",
+  "shapeMapping": "pinia",
+  "lights": 3900,
+  "outputDevices": {
+    "udp": {
+      "type": "udp",
+      "params": {
+        "numberOfLights": 3900,
+        "name": "mate.local",
+        "udpPort": 8886
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 3900,
+      "baseIndex": 0,
+      "deviceName": "udp"
+    }
+  ],
+  "presetsFile": "pinia"
+}

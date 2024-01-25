@@ -51,7 +51,7 @@ function audioFill(options) {
 }
 
 const BassFill = audioFill({
-  getAudioEnergy: c => Math.pow(c.bassPeakDecay, 4),
+  getAudioEnergy: c => Math.pow(c.bassPeakDecay, 10),
   cycleMs: 5000
 });
 const MidFill = audioFill({
@@ -62,11 +62,17 @@ const HighFill = audioFill({
   getAudioEnergy: c => Math.pow(c.highPeakDecay, 6),
   cycleMs: 9000
 });
+const RmsFill = audioFill({
+  getAudioEnergy: c => Math.pow(c.peakDecay, 6),
+  cycleMs: 9000
+});
 
 module.exports = programsByShape({
-  WarroOnly: [BassFill],
+  WarroOnly: [RmsFill],
   totemL1: [HighFill],
   totemR2: [HighFill],
   totemL2: [MidFill],
-  totemR1: [MidFill]
+  totemR1: [MidFill],
+  totemR3: [BassFill],
+  totemL3: [BassFill]
 });

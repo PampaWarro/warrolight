@@ -11,7 +11,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "hash"
+    "setup": "fuego-pw-2024"
   },
   "keywords": [],
   "author": "Pampa Warro",

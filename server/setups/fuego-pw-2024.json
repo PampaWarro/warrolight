@@ -30,8 +30,8 @@
     },
     {
       "from": 1200,
-      "to": 1350,
-      "baseIndex": -149,
+      "to": 3000,
+      "baseIndex": 0,
       "deviceName": "totems"
     }
   ]

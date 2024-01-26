@@ -9,6 +9,7 @@ const logger = require("pino")(require('pino-pretty')());
 const setupFile = process.argv[2] || "sample.json";
 const setupPath = `../setups/${setupFile}`;
 
+console.log('setupPath:', setupPath);
 console.log(`Loading setup from ${setupPath}`)
 const setup = require(setupPath);
 

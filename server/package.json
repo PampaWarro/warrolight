@@ -11,7 +11,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "joyahdtotems"
+    "setup": "fuego-2024.json"
   },
   "keywords": [],
   "author": "Pampa Warro",

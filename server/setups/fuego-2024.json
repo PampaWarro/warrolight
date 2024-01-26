@@ -1,0 +1,40 @@
+{
+  "geometry": "geometryFuego2022",
+  "shapeMapping": "fuego2022",
+  "lights": 1800,
+  "outputDevices": {
+    "esp32": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "",
+        "ip": "192.168.0.146",
+        "udpPort": 2222
+      }
+    },
+    "totems": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 600,
+        "name": "warro-totems-gw.local",
+        "ip": "192.168.1.107",
+        "udpPort": 6677,
+        "debugMode": true
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 1200,
+      "baseIndex": 0,
+      "deviceName": "esp32"
+    },
+    {
+      "from": 1200,
+      "to": 1800,
+      "baseIndex": 0,
+      "deviceName": "totems"
+    }
+  ]
+}

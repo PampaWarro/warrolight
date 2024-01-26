@@ -6,13 +6,13 @@ module.exports = class DebugSetup extends LightProgram {
   drawFrame(leds) {
     leds.forEach((v, i) => {
       let s = 1
-      let scale = i > 1200 ? 150 : 300;
+      let scale = 300;
 
-      if(i % 10 === 0)
+      if(i % (i+1) === 0)
         return [255,255,255,255];
       else
       leds[i] = ColorUtils.HSVtoRGB(
-        (Math.floor(i / scale) / 4)+(i%scale)/(scale*4),
+        (Math.floor(i / scale) / 4.5),
         0.9 * s,
         Math.min(1, this.config.brillo)
       );

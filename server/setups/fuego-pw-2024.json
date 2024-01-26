@@ -1,14 +1,14 @@
 {
   "geometry": "fuego2024",
   "shapeMapping": "fuego2024",
-  "lights": 1800,
+  "lights": 3000,
   "outputDevices": {
     "esp32": {
       "type": "udp-chunked",
       "params": {
         "numberOfLights": 1200,
         "name": "",
-        "ip": "192.168.0.146",
+        "ip": "192.168.1.112",
         "udpPort": 2222
       }
     },

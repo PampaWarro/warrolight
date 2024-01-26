@@ -1253,7 +1253,9 @@
         "Debug RF": {
             "brillo": 0,
             "globalBrightness": 0.04,
-            "speed": 5
+            "speed": 4,
+            "blink": true,
+            "sameColorLeds": 4
         }
     },
     "musicExplosions": {

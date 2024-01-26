@@ -12,24 +12,12 @@
         "udpPort": 2222
       }
     },
-    "rf1": {
-      "type": "serial",
+    "totems": {
+      "type": "udp-chunked",
       "params": {
-        "numberOfLights": 300,
-        "baudRate": 1000000,
-        "debugMode": true,
-        "devicePortWindows": "COM17",
-        "devicePortUnix": "/dev/ttyACM0"
-      }
-    },
-    "rf2": {
-      "type": "serial",
-      "params": {
-        "numberOfLights": 300,
-        "baudRate": 1000000,
-        "debugMode": true,
-        "devicePortWindows": "COM4",
-        "devicePortUnix": "/dev/ttyACM1"
+        "numberOfLights": 1800,
+        "name": "warro-totems-gw.local",
+        "udpPort": 6677
       }
     }
   },
@@ -44,25 +32,7 @@
       "from": 1200,
       "to": 1350,
       "baseIndex": -149,
-      "deviceName": "rf1"
-    },
-    {
-      "from": 1350,
-      "to": 1500,
-      "baseIndex": -299,
-      "deviceName": "rf1"
-    },
-    {
-      "from": 1500,
-      "to": 1650,
-      "baseIndex": -149,
-      "deviceName": "rf2"
-    },
-    {
-      "from": 1650,
-      "to": 1800,
-      "baseIndex": -299,
-      "deviceName": "rf2"
+      "deviceName": "totems"
     }
   ]
 }

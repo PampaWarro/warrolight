@@ -9,7 +9,7 @@ const { RGBChunkedEncoder} = require("./encodings");
 const RECONNECT_TIME = 3000;
 
 module.exports = class LightDeviceUDPChunked extends LightDevice {
-  constructor({ numberOfLights, ip, name, udpPort }) {
+  constructor({ numberOfLights, ip, name, udpPort, chunkSize }) {
     super(numberOfLights, "E " + (name || ip));
 
     this.expectedIp = ip;
@@ -19,7 +19,7 @@ module.exports = class LightDeviceUDPChunked extends LightDevice {
     }
     this.udpPort = udpPort;
 
-    this.encoder = new RGBChunkedEncoder(300);
+    this.encoder = new RGBChunkedEncoder(chunkSize || 300);
 
     this.freshData = false;
     this.connected = false;

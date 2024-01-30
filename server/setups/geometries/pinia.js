@@ -41,14 +41,14 @@ const ribs = [
   // 1:
   {
     radius: 13,
-    leds: 280,
-    excess: 20,
+    leds: 300,
+    excess: 0,
   },
   // 2:
   {
     radius: 14,
-    leds: 290,
-    excess: 10,
+    leds: 300,
+    excess: 0,
   },
   // 3:
   {
@@ -83,56 +83,56 @@ const ribs = [
   // 8:
   {
     radius: 14,
-    leds: 290,
-    excess: 10,
+    leds: 300,
+    excess: 0,
   },
   // 9:
   {
     radius: 13,
-    leds: 280,
-    excess: 20,
+    leds: 300,
+    excess: 0,
   },
   // 10:
   {
     radius: 12,
-    leds: 270,
-    excess: 30,
+    leds: 300,
+    excess: 0,
   },
   // 11:
   {
     radius: 11,
-    leds: 260,
-    excess: 40,
+    leds: 285,
+    excess: 15,
   },
   // 12:
   {
     radius: 10,
-    leds: 140,
-    excess: 10,
+    leds: 150,
+    excess: 15,
   },
   // 13:
   {
     radius: 9,
-    leds: 130,
-    excess: 20,
+    leds: 135,
+    excess: 0,
   },
   // 14:
   {
     radius: 8,
-    leds: 90,
-    excess: 10,
+    leds: 114,
+    excess: 15,
   },
   // 15:
   {
     radius: 7,
-    leds: 80,
+    leds: 78,
     excess: 20,
   },
   // 16:
   {
     radius: 6,
-    leds: 70,
-    excess: 30,
+    leds: 73,
+    excess: 0,
   },
 ]
 

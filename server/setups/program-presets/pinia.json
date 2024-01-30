@@ -19,6 +19,16 @@
             "offsetYWiggleSpeed": 2.2,
             "angleZWiggleSpeed": 15.6,
             "width": 10
+        },
+        "debug": {
+            "angleX": 6,
+            "angleYSpeed": 0,
+            "angleZSpeed": 0,
+            "angleZ": 232,
+            "width": 6,
+            "offsetX": 0,
+            "offsetY": 3,
+            "angleXSpeed": 0
         }
     },
     "mix": {
@@ -37,7 +47,10 @@
                         "width": 10,
                         "angleYSpeed": -8.8,
                         "offsetYWiggleAmplitude": 40,
-                        "angleXSpeed": -8.8
+                        "angleXSpeed": -8.8,
+                        "offsetXWiggleSpeed": 13.2,
+                        "offsetXWiggleAmplitude": 59,
+                        "angleZSpeed": -2.2
                     }
                 },
                 {
@@ -75,6 +88,177 @@
                     }
                 }
             ]
+        },
+        "linternas-stars": {
+            "programs": [
+                {
+                    "programName": "mix",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "polar",
+                                "config": {
+                                    "offsetZWiggleSpeed": -13.2,
+                                    "fadeWidth": 21,
+                                    "offsetZWiggleAmplitude": 20,
+                                    "angleXWiggleSpeed": 2.2,
+                                    "angleYWiggleSpeed": -11.1,
+                                    "offsetYWiggleSpeed": 2.2,
+                                    "angleZWiggleSpeed": 15.6,
+                                    "width": 10,
+                                    "angleYSpeed": -8.8,
+                                    "offsetYWiggleAmplitude": 40,
+                                    "angleXSpeed": -8.8,
+                                    "offsetXWiggleSpeed": 13.2,
+                                    "offsetXWiggleAmplitude": 59,
+                                    "angleZSpeed": -2.2
+                                }
+                            },
+                            {
+                                "programName": "polar",
+                                "config": {
+                                    "offsetZWiggleSpeed": 0,
+                                    "fadeWidth": 21,
+                                    "offsetZWiggleAmplitude": 20,
+                                    "angleXWiggleSpeed": 2.2,
+                                    "angleYWiggleSpeed": -11.1,
+                                    "offsetYWiggleSpeed": 2.2,
+                                    "angleZWiggleSpeed": 15.6,
+                                    "width": 10,
+                                    "angleXSpeed": -6.6,
+                                    "angleYSpeed": 2.2,
+                                    "angleZSpeed": -4.4
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "programName": "stars"
+                }
+            ]
+        },
+        "slowUp-stars": {
+            "programs": [
+                {
+                    "programName": "lineal",
+                    "config": {
+                        "velocidad": -1.1,
+                        "escala": 13,
+                        "power": 2.2
+                    }
+                },
+                {
+                    "programName": "stars"
+                }
+            ]
+        }
+    },
+    "lineal": {
+        "slowUp": {
+            "velocidad": -1.1,
+            "escala": 13,
+            "power": 2.2
+        }
+    },
+    "rays": {
+        "fueguitos": {
+            "numberOfParticles": 53,
+            "colorSaturationRange": 0.07,
+            "colorHueAmplitude": 0.06,
+            "colorHueOffset": 0.01,
+            "decay": 0.935,
+            "globalSpeed": 0.39
+        }
+    },
+    "radial3d": {
+        "fuegopabajo": {
+            "colorMap": "a_fire",
+            "velocidad": -1.7,
+            "centerY": 38.9,
+            "power": 0.7
+        },
+        "fuegoparriba": {
+            "colorMap": "a_fire",
+            "velocidad": -1.7,
+            "centerY": -26.7,
+            "power": 0.7
+        }
+    },
+    "noise": {
+        "fire-noise": {
+            "colorMap": "a_fire",
+            "speed": 1.64
+        }
+    },
+    "radial": {
+        "glow": {
+            "velocidad": -0.6
+        }
+    },
+    "stars": {
+        "flow": {
+            "decay": 0.97,
+            "probability": 0.0003,
+            "move": true
+        }
+    },
+    "vertexGlow": {
+        "vertex": {}
+    },
+    "shapes": {
+        "todo-rotor": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 50,
+            "bassLine": true,
+            "bassLineSensitivity": 15,
+            "fillCircle": true,
+            "highLayerAlpha": 0.25,
+            "rotorAlpha": 0.17,
+            "rainDotsAlpha": 0.3
+        },
+        "todo-sin-fill": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 50,
+            "bassLine": true,
+            "bassLineSensitivity": 15,
+            "fillCircle": false,
+            "highLayerAlpha": 0.25,
+            "rotorAlpha": 0.17,
+            "rainDotsAlpha": 0.3
+        },
+        "manso": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 50,
+            "bassLine": true,
+            "bassLineSensitivity": 15,
+            "fillCircle": false,
+            "highLayerAlpha": 1,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0.3
+        }
+    },
+    "musicFlow": {
+        "default": {
+            "multiplier": 1.3,
+            "cutThreshold": 0.6,
+            "speed": 3,
+            "doble": true
+        },
+        "doble": {
+            "speed": 7,
+            "doble": true,
+            "haciaAfuera": false
+        }
+    },
+    "circles": {
+        "circles": {}
+    },
+    "ca": {
+        "random": {
+            "colorMap": "",
+            "blend": 0.06,
+            "speed": 1
         }
     }
 }

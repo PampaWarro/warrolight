@@ -4,11 +4,12 @@
   "lights": 3900,
   "outputDevices": {
     "udp": {
-      "type": "udp",
+      "type": "udp-chunked",
       "params": {
         "numberOfLights": 3900,
         "name": "mate.local",
-        "udpPort": 8886
+        "udpPort": 8886,
+        "chunkSize": 450
       }
     }
   },

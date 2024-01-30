@@ -46,9 +46,11 @@ module.exports = class DeviceMultiplexer {
     let lightToDevice = new Array(this.numberOfLights);
 
     // For each segment, save that light 'i' of the strip corresponds to light 'j' of device 'deviceName'
-    _.each(setup.lightsToDevicesMapping, ({ from, to, baseIndex, deviceName }) => {
+    _.each(setup.lightsToDevicesMapping, ({ from, to, baseIndex, deviceName, reverse }) => {
       for (let i = from; i < to; i++) {
-        let j = Math.abs(i - from + baseIndex);
+        let rangeOffset = i - from;
+        let j = reverse ? Math.abs(to - from - rangeOffset - 1 + (baseIndex || 0)) : Math.abs(rangeOffset + (baseIndex || 0));
+
         if (!lightToDevice[i]) {
           lightToDevice[i] = [namesToIndex[deviceName], j];
         } else {

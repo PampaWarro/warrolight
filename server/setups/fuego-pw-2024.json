@@ -30,8 +30,44 @@
     },
     {
       "from": 1200,
-      "to": 3000,
+      "to": 1500,
       "baseIndex": 0,
+      "reverse": true,
+      "deviceName": "totems"
+    },
+    {
+      "from": 1500,
+      "to": 1800,
+      "baseIndex": 300,
+      "reverse": true,
+      "deviceName": "totems"
+    },
+    {
+      "from": 1800,
+      "to": 2100,
+      "baseIndex": 600,
+      "reverse": true,
+      "deviceName": "totems"
+    },
+    {
+      "from": 2100,
+      "to": 2400,
+      "baseIndex": 900,
+      "reverse": true,
+      "deviceName": "totems"
+    },
+    {
+      "from": 2400,
+      "to": 2700,
+      "baseIndex": 1200,
+      "reverse": true,
+      "deviceName": "totems"
+    },
+    {
+      "from": 2700,
+      "to": 3000,
+      "baseIndex": 1500,
+      "reverse": true,
       "deviceName": "totems"
     }
   ]

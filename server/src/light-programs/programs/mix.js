@@ -58,9 +58,9 @@ module.exports = class Mix extends LightProgram {
           b = b * ((b2+(255-b2)*(1-globalBrightness)) || 0) / 255;
           a = a + (a2 || 0)
         } else {
-          r += (r2 || 0) * globalBrightness;
-          g += (g2 || 0) * globalBrightness;
-          b += (b2 || 0) * globalBrightness;
+          r = Math.min(255, r + (r2 || 0) * globalBrightness);
+          g = Math.min(255, g + (g2 || 0) * globalBrightness);
+          b = Math.min(255, b + (b2 || 0) * globalBrightness);
           a += a2 || 0;
         }
         leds[i] = [r, g, b, a];

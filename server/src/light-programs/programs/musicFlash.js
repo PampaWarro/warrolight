@@ -1,5 +1,6 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const {loadGradient} = require("../utils/gradients");
 
 module.exports = class MusicFlash extends LightProgram {
 
@@ -23,7 +24,15 @@ module.exports = class MusicFlash extends LightProgram {
       vol = (vol - this.config.cutThreshold) / (1 - this.config.cutThreshold);
     }
 
-    let newVal = ColorUtils.HSVtoRGB(0, 0, Math.min(vol * vol, 1));
+    let intensity = Math.min(vol * vol, 1);
+
+    let newVal;
+    if (this.config.colorMap) {
+      const gradient = loadGradient(this.config.colorMap);
+      newVal = gradient.colorAt(1-intensity);
+    } else {
+      newVal = ColorUtils.HSVtoRGB(0, 0, intensity);
+    }
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       this.lastVolume[i] = newVal;
@@ -43,6 +52,7 @@ module.exports = class MusicFlash extends LightProgram {
     let res = super.configSchema();
     res.multiplier = { type: Number, min: 0, max: 2, step: 0.01, default: 1 };
     res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.45};
+    res.colorMap = { type: "gradient", default: "" };
     res.soundMetric = {type: 'soundMetric', default: "bassFastPeakDecay"};
     return res;
   }

@@ -34,6 +34,7 @@ const programNames = [
   "gradientSphere",
   "lineal",
   "musicFlow",
+  "music-flow-waves",
   "musicFlash",
   "musicFrequencyDot",
   "musicExplosions",

@@ -7,7 +7,6 @@ module.exports = class MusicFlow extends LightProgram {
     this.lastVolume = new Array(this.numberOfLeds + 1).fill([0, 0, 0]);
     this.time = 0;
     this.realTime = 0;
-    this.maxVolume = 0;
   }
 
   // Override parent method
@@ -91,13 +90,7 @@ module.exports = class MusicFlow extends LightProgram {
     let res = super.configSchema();
     res.multiplier = { type: Number, min: 0, max: 4, step: 0.01, default: 1 };
     res.speed = { type: Number, min: 1, max: 30, step: 1, default: 3 };
-    res.cutThreshold = {
-      type: Number,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0.4
-    };
+    res.cutThreshold = {type: Number, min: 0, max: 1, step: 0.01, default: 0.4};
     res.doble = { type: Boolean, default: true };
     res.haciaAfuera = { type: Boolean, default: false };
     res.soundMetric = {type: 'soundMetric', default: "rms"};

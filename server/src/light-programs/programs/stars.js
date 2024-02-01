@@ -29,9 +29,12 @@ module.exports = class Stars extends LightProgram {
 
       this.stars[i] = [r, g, b];
     }
-    if (this.config.move && (Math.floor((this.time*2)*this.config.moveSpeed) % 2 == 0)) {
-      let first = this.stars.shift();
-      this.stars.push(first);
+    let everyNFrame = Math.round(Math.max(1, 1/this.config.moveSpeed));
+    if (this.config.move && this.time % everyNFrame === 0) {
+      for(let i = 0; i < Math.ceil(this.config.moveSpeed);i++) {
+        let first = this.stars.shift();
+        this.stars.push(first);
+      }
     }
     this.stars.forEach(([r, g, b], i) => {
       leds[i] = ColorUtils.dim([r, g, b], this.config.brillo)
@@ -60,7 +63,7 @@ module.exports = class Stars extends LightProgram {
     config.brillo = { type: Number, min: 0, max: 1, step: 0.01, default: 1 };
     config.probability = {type: Number, min: 0, max: 1, step: 0.0001, default: 0.001};
     config.move = { type: Boolean, default: false };
-    config.moveSpeed = { type: Number, min: 0, step: 0.01, max: 1, default: 0.2 };
+    config.moveSpeed = { type: Number, min: 0, step: 0.1, max: 10, default: 1 };
     config.starsColor = {type: Number, min: 0, max: 1, step: 0.01, default: 0};
     return config;
   }

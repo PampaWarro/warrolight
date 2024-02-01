@@ -48,7 +48,7 @@ module.exports = class SoundWaves extends LightProgram {
         this.dots,
         d =>
           d.intensity > 0.001 &&
-          d.distance < 150 &&
+          d.distance < (150+this.config.initialDistance) &&
           d.distance > -this.config.waveWidth
       );
 

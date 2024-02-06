@@ -179,16 +179,6 @@ module.exports = class Rays extends LightProgram {
         numberOfParticles: 50,
         colorHueAmplitude: 0.12,
         colorHueOffset: 0.98
-      },
-      fireSlowSingle: {
-        brillo: 0.1,
-        decay: 0.95,
-        globalSpeed: 0.25,
-        colorSaturationRange: 0.07,
-        numberOfParticles: 50,
-        colorHueAmplitude: 0.12,
-        colorHueOffset: 0.98,
-        singleDirection: true
       }
     };
   }

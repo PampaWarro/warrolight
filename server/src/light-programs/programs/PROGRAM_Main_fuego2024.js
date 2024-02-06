@@ -171,10 +171,9 @@ let starsSunrise = mixPrograms(
 const schedule = [
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 
-  ...getFilePresets('javier.json', 60 * baseTime),
+  ...getFilePresets('default.json', 60 * baseTime),
 
-
-  ...getAllPresets(Rays, 60 * baseTime, "Warro"),
+  ...getAllPresets(Rays, 30 * baseTime, "Warro"),
 
   ...getAllPresets(Circles, 30 * baseTime, "allOfIt"),
 
@@ -350,7 +349,7 @@ const schedule = [
       Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]
     })
   },
-  ...getAllPresets(SoundWaves, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(SoundWaves, 30 * baseTime, "allOfIt"),
   {
     duration: 60 * baseTime,
     program: programsByShape({
@@ -454,7 +453,7 @@ const schedule = [
 
   ...getAllPresets(Lineal, 30 * baseTime, "Warro"),
 
-  ...getAllPresets(WaterFlood, 40 * baseTime, "allOfIt"),
+  ...getAllPresets(WaterFlood, 30 * baseTime, "allOfIt"),
 
   ...getAllPresets(AliveDots, 30 * baseTime, "Warro"),
   {
@@ -581,6 +580,10 @@ const schedule = [
   ...getAllPresets(Stars, 30 * baseTime, "Warro")
 ];
 
+
+// const schedule2 = [
+//   ...getFilePresets('default.json', 60 * baseTime),
+// ]
 // las formas que se pueden usar están definidas en Transformation
 
 module.exports = createMultiProgram(schedule, true, 15000, true);

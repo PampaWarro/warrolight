@@ -56,6 +56,8 @@ module.exports = function createMultiProgram(
         this.current = this.instantiate(scheduleItem);
         this.current.init();
         this.nextStartChange = Date.now() + scheduleItem.duration;
+
+        console.log(`Playing ${this.current.toString()}`, )
       }
 
       if (this.previous) {

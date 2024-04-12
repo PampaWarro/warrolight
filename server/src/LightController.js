@@ -22,6 +22,7 @@ const programNames = [
   "aliveDots",
   "aliveDotsSpeed",
   "all-white",
+  "hsv",
   "bandParticles",
   "bassWarpGrid",
   "bombs",

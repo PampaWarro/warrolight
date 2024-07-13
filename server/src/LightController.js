@@ -9,10 +9,10 @@ const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 // TODO: move this to some configuration file
 const programNames = [
-  "all-off",
-  "PROGRAM_Main_fuego2024",
+  // "all-off",
+  // "PROGRAM_Main_fuego2024",
+  "DC_music",
   "mix",
-  // "DC_music",
   // "congaShooting2",
   // "congaScore",
   // "congaShooting",
@@ -22,6 +22,7 @@ const programNames = [
   "aliveDots",
   "aliveDotsSpeed",
   "all-white",
+  "all-off",
   "hsv",
   "bandParticles",
   "bassWarpGrid",

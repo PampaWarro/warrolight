@@ -9,9 +9,8 @@ const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 // TODO: move this to some configuration file
 const programNames = [
-  // "all-off",
-  // "PROGRAM_Main_fuego2024",
-  "DC_music",
+  "Joya_BM23_art",
+  "Joya_BM23_music",
   "mix",
   // "congaShooting2",
   // "congaScore",
@@ -61,6 +60,7 @@ const programNames = [
   "warroBass",
   "water-flood",
   "waveform",
+  "waveform2",
 ];
 
 module.exports = class LightController extends EventEmitter {
@@ -82,7 +82,7 @@ module.exports = class LightController extends EventEmitter {
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
     this.setCurrentProgram(programNames[0]);
 
-    this.multiplexer.onDeviceStatus((... args) => this.emit('deviceStatus', ... args));
+    this.multiplexer.onDeviceStatus((...args) => this.emit('deviceStatus', ...args));
 
     this.lastLightsUpdate = Date.now();
     this.lastDroppedFrame = Date.now();
@@ -157,8 +157,8 @@ module.exports = class LightController extends EventEmitter {
     this.multiplexer.setLights(colorArray);
   }
 
-  getConfig({defaults, presetOverrides, overrides, currentPreset}) {
-    return {... defaults, ... presetOverrides, ... overrides};
+  getConfig({ defaults, presetOverrides, overrides, currentPreset }) {
+    return { ...defaults, ...presetOverrides, ...overrides };
   }
 
   buildParameters(configSchema, presetOverrides = {}, presetName = null, overrides = {}) {
@@ -169,13 +169,13 @@ module.exports = class LightController extends EventEmitter {
         defaults[paramName] = configSchema[paramName].default;
       }
     }
-    return {defaults, presetOverrides, currentPreset: presetName, overrides};
+    return { defaults, presetOverrides, currentPreset: presetName, overrides };
   }
 
   updateConfigOverride(config) {
     let configSchema = this.programs[this.currentProgramName].configSchema;
     let { presetOverrides, currentPreset, overrides } = this.currentConfig;
-    this.currentConfig = this.buildParameters(configSchema, presetOverrides, currentPreset, {... overrides, ... config})
+    this.currentConfig = this.buildParameters(configSchema, presetOverrides, currentPreset, { ...overrides, ...config })
     this.programScheduler.updateConfig(this.getConfig(this.currentConfig));
     this.currentDebugHelpers = this.programScheduler.getDebugHelpers();
   }
@@ -213,7 +213,7 @@ module.exports = class LightController extends EventEmitter {
 
   savePresetsToDisk() {
     fs.writeFile(this.savedPresetsFilePath, JSON.stringify(this.savedPresets, true, 4), (err) => {
-      if(err) {
+      if (err) {
         console.error(err);
       } else {
         console.log(`Updated presets file ${this.savedPresetsFilePath}`)
@@ -224,11 +224,11 @@ module.exports = class LightController extends EventEmitter {
   instanciateProgram(name, extraConfig) {
     let program = this.programs[name];
     let config = this.getConfig(this.buildParameters(program.configSchema, {}, null, extraConfig));
-    return  new program.generator(
-        config,
-        this.geometry,
-        this.shapeMapping,
-        this
+    return new program.generator(
+      config,
+      this.geometry,
+      this.shapeMapping,
+      this
     )
   }
 
@@ -281,9 +281,9 @@ module.exports = class LightController extends EventEmitter {
     let lastUpdateLatency = Date.now() - this.lastLightsUpdate;
     this.lastLightsUpdate = Date.now();
 
-    const frameDurationMS = 1000/this.programScheduler.config.fps;
+    const frameDurationMS = 1000 / this.programScheduler.config.fps;
 
-    if (lastUpdateLatency > frameDurationMS*2) {
+    if (lastUpdateLatency > frameDurationMS * 2) {
       console.warn(
         `[${moment().format(
           "HH:mm:ss"
@@ -292,7 +292,7 @@ module.exports = class LightController extends EventEmitter {
         ).toString()}s]`.red
       );
       this.lastDroppedFrame = Date.now();
-    } else if (lastUpdateLatency > frameDurationMS*1.5) {
+    } else if (lastUpdateLatency > frameDurationMS * 1.5) {
       console.warn(`[${moment().format('HH:mm:ss')}] Dropped frame: Last one took ${lastUpdateLatency}ms (instead of ${Math.round(frameDurationMS)}ms)`.yellow);
     }
   }

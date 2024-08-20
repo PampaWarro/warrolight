@@ -1,4 +1,5 @@
 const createMultiProgram = require("../base-programs/MultiPrograms");
+const makeOverrideColorProgram = require("../base-programs/OverrideColor");
 const { randomSchedule } = require("../joya-utils/preset");
 
 const timeScale = 1; // RESET to 1 before commet.
@@ -52,7 +53,7 @@ class MetaSchedule {
 const metaSchedule = new MetaSchedule();
 
 module.exports = class JoyaMusic extends (
-  createMultiProgram(() => metaSchedule.schedule(), false, 5 * seconds)
+  makeOverrideColorProgram(createMultiProgram(() => metaSchedule.schedule(), false, 5 * seconds))
 ) {
   init() {
     super.init();
@@ -81,11 +82,13 @@ module.exports = class JoyaMusic extends (
   }
 
   updateConfig(newConfig) {
-    if (this.masks && !(newConfig.mask in this.masks)) {
-      console.warn(`unknown mask: ${newConfig.mask}`);
+    if (newConfig.intensity !== this.config.intensity) {
+      if (this.masks && !(newConfig.mask in this.masks)) {
+        console.warn(`unknown mask: ${newConfig.mask}`);
+      }
+      metaSchedule.activeSchedule = newConfig.intensity;
+      this.startNextProgram();
     }
-    metaSchedule.activeSchedule = newConfig.intensity;
-    this.startNextProgram();
     super.updateConfig(newConfig);
   }
 
@@ -93,12 +96,12 @@ module.exports = class JoyaMusic extends (
     return Object.assign(super.configSchema(), {
       intensity: {
         type: String,
-        default: "high",
+        default: "any",
         values: ["low", "mid", "high", "any"],
       },
       mask: {
         type: String,
-        default: "vertices",
+        default: "all",
         values: [
           "all",
           "joya",

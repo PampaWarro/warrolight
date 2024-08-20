@@ -4,9 +4,7 @@ const createNowPlayingPositionProgram = require("../base-programs/NowPlayingPosi
 const overrideBrightness = require("../base-programs/OverrideBrightness");
 const programsByShape = require("../base-programs/ProgramsByShape");
 const { randomSchedule, getPreset } = require("../joya-utils/preset");
-
-const VertexGlow = require("./vertexGlow")
-const CA = require("./ca")
+const makeOverrideColorProgram = require("../base-programs/OverrideColor");
 
 const timeScale = 1; // RESET to 1 before commit.
 const seconds = (1 / timeScale) * 1000;
@@ -199,7 +197,7 @@ const arboles = placeholder;
 const lujo = placeholder;
 const nidos = placeholder;
 
-module.exports = createNowPlayingTrackProgram({
+module.exports = makeOverrideColorProgram(createNowPlayingTrackProgram({
   "Las Olas - Aurora": aurora,
   "Hello World": hello,
   "SidiRum - Key": key,
@@ -216,4 +214,4 @@ module.exports = createNowPlayingTrackProgram({
   "Lujo Asiatico": lujo,
   "SidiRum - Nidos": nidos,
   "": fallback,
-});
+}));

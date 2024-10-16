@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const DeviceSerial = require('./devices/serial');
 const DeviceUDP = require('./devices/udp');
+const DeviceAngio = require('./devices/angio');
 const DeviceUDPWLED = require('./devices/udp-wled');
 const LightDeviceUDPChunked = require("./devices/udp-chunked");
 
@@ -22,6 +23,9 @@ function initDevicesFromConfig(outputDevices) {
         break;
       case 'udp-chunked':
         device = new LightDeviceUDPChunked(params);
+        break;
+      case 'angio':
+        device = new DeviceAngio(params);
         break;
       default:
         throw new Error(`Invalid device type: ${type}`);

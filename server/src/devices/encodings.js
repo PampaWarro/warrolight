@@ -1,3 +1,6 @@
+const { Dmx, PROTOCOL_VERSION } = require('@rtf-dm/artnet-packets');
+const _ = require('lodash');
+
 class Encoder {
   constructor() {
     this.buf = null
@@ -147,6 +150,45 @@ class RGB565Encoder extends Encoder {
   }
 }
 
+class ArtNetEncoder extends Encoder {
+  constructor(mapping) {
+    super();
+    this.mapping = mapping;
+    this.sequence = 0;
+  }
+
+
+  encode(lights) {
+    let packets = [];
+    for (let { offset, length, universe } of this.mapping) {
+      let chunk = lights.slice(offset, offset + length);
+      if (chunk.length == 0) continue;
+      let dmxData = new Array(chunk.length * 3);
+      for (let i = 0; i < chunk.length; i++) {
+        dmxData[i * 3 + 0] = chunk[i][0];
+        dmxData[i * 3 + 1] = chunk[i][1];
+        dmxData[i * 3 + 2] = chunk[i][2];
+      }
+      let packet = new Dmx({
+        protoVersion: PROTOCOL_VERSION,
+        net: 0,
+        length: dmxData.length,
+        subNet: universe,
+        sequence: this.sequence,
+        physical: 0,
+        dmxData: dmxData,
+      })
+      this.sequence = (this.sequence + 1) % 256;
+      packets.push(packet.encode())
+    }
+    return packets;
+  }
+
+  writePixel(pos, r, g, b) {
+    this.write([r, g, b])
+  }
+}
+
 function rgbToVga(r, g, b) {
     return (r & 0xe0) + ((g & 0xe0) >> 3) + ((b & 0xc0) >> 6);
 }
@@ -169,4 +211,5 @@ module.exports = {
   WLEDRGBEncoder,
   RGBChunkedEncoder,
   WLEDDNRGBEncoder,
+  ArtNetEncoder,
 }

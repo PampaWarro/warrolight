@@ -11,12 +11,13 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "joyahdtotems"
+    "setup": "palo"
   },
   "keywords": [],
   "author": "Pampa Warro",
   "license": "MIT",
   "dependencies": {
+    "@rtf-dm/artnet-lib": "^1.6.11",
     "@xmldom/xmldom": "^0.8.6",
     "accurate-game-loop": "^2.0.0",
     "cellular-automata": "^2.0.1",
@@ -32,6 +33,7 @@
     "pino": "^8.1.0",
     "pino-pretty": "^9.1.1",
     "pngjs": "^6.0.0",
+    "reconnecting-websocket": "^4.4.0",
     "serialport": "^10.4.0",
     "simplex-noise": "^4.0.0",
     "ts-node": "^10.8.2",

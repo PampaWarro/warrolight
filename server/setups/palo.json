@@ -1,0 +1,44 @@
+{
+  "geometry": "palo",
+  "shapeMapping": "palo",
+  "lights": 2550,
+  "outputDevices": {
+    "wired": {
+      "type": "angio",
+      "params": {
+        "numberOfLights": 1950,
+        "lightsPerChannel": 300,
+        "name": "angio8-821b0f.local"
+      }
+    },
+    "wireless": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 600,
+        "name": "palo-gw.local",
+        "udpPort": 6678
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 300,
+      "baseIndex": 0,
+      "deviceName": "wireless"
+    },
+    {
+      "from": 300,
+      "to": 2250,
+      "baseIndex": 0,
+      "deviceName": "wired"
+    },
+    {
+      "from": 2250,
+      "to": 2550,
+      "baseIndex": 0,
+      "deviceName": "wireless"
+    }
+  ],
+  "presetsFile": "palo"
+}

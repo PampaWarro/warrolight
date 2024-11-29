@@ -1,5 +1,6 @@
 exports.Stripe = class Stripe {
   constructor(points, pixelRatio = 1) {
+    this.points = points;
     this.leds = points.length;
     this.density = pixelRatio;
     this.x = points.map(p => p[0] || 0);
@@ -17,6 +18,23 @@ exports.Stripe = class Stripe {
       ];
     }
     return new Stripe(points, pixelRatio);
+  }
+
+  static elbow(start, middle, end, firstLength, secondLength) {
+    const first = Stripe.line(start, middle, firstLength);
+    const second = Stripe.line(middle, end, secondLength);
+    return new Stripe([...first.points, ...second.points]); 
+  }
+
+  static interpolate(fragments, ledsPerFragment) {
+    const points = [];
+    for (let i = 0; i < fragments.length - 1; i++) {
+      const start = fragments[i];
+      const end = fragments[i + 1];
+      const stripe = Stripe.line(start, end, ledsPerFragment[i]);
+      points.push(...stripe.points);
+    }
+    return new Stripe(points);
   }
 
   // Convenience for old 2d constructor.

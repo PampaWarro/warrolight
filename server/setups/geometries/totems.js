@@ -6,10 +6,6 @@ const vertices = [];
 let offset = 0;
 const SCALE = 20;
 const TOTEM_VECTORS = [
-  [-1.2, 0, 0],
-  [-0.6, 1.04, 0],
-  [0.6, 1.04, 0],
-  [1.2, -0, 0],
   [0.6, -1.04, 0],
   [-0.6, -1.04, 0],
 ];
@@ -39,6 +35,29 @@ for (const v of TOTEM_VECTORS) {
       300
     )
   );
+  vertices.push(offset);
+  vertices.push(offset + 300 - 1);
+  offset += 300;
+}
+
+const WARRO_VECTORS = [
+  [[1,-4,0], [-1,-6.46,0], [0,-6.46,0], 240, 60],
+  [[-1,-4,0], [1,-6.46,0], [0,-6.46,0], 240, 60],
+  [[-1,-4,0], [-2.5,-6.46,0], [-2.5,-6.46,0], 240, 60],
+  [[1,-4,0], [2.5,-6.46,0], [2.5,-6.46,0], 240, 60],
+  // [[-2, -4, 0], [-4, -7, 0]],
+  // [[2, -4, 0], [4, -7, 0]],
+].map(arr => [
+  arr[0].map(x => x * SCALE),
+  arr[1].map(x => x * SCALE),
+  arr[2].map(x => x * SCALE),
+  arr[3],
+  arr[4]
+]);
+
+for (const v of WARRO_VECTORS) {
+  const stripe = Stripe.elbow(v[0], v[1], v[2], 240, 60);
+  stripes.push(stripe);
   vertices.push(offset);
   vertices.push(offset + 300 - 1);
   offset += 300;

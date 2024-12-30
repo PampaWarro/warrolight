@@ -57,7 +57,7 @@ function randomSchedule({ presetsFile, mainShapes, filter, baseDuration, randomD
   });
   return function () {
     const byShapeSpec = {};
-    if (Math.random() < .8) {  // 80% of the time it's all.
+    if (Math.random() < .95) {  // 95% of the time it's all.
       if (Math.random() < .6) { // Fill all with a single preset.
         byShapeSpec.all = presetToByShapeSpec(_.sample(presets));
       } else { // Or two presets using dynamic mask.

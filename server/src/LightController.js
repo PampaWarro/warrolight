@@ -9,8 +9,7 @@ const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 // TODO: move this to some configuration file
 const programNames = [
-  "Joya_BM23_art",
-  "Joya_BM23_music",
+  "PALO",
   "mix",
   // "congaShooting2",
   // "congaScore",

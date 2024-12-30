@@ -1,1 +1,605 @@
-{}
+{
+    "aliveDots": {
+        "constanteLento": {
+            "musicWeight": 0,
+            "speedWeight": 0.1,
+            "numberOfParticles": 15,
+            "toneColor": 0.5
+        },
+        "constanteRapidoPocas": {
+            "musicWeight": 0,
+            "speedWeight": 1,
+            "numberOfParticles": 10,
+            "toneColor": 0.3
+        },
+        "musicModerado": {
+            "musicWeight": 1,
+            "speedWeight": 0,
+            "numberOfParticles": 15,
+            "toneColor": 0.5
+        },
+        "musicQuilombo": {
+            "musicWeight": 1,
+            "speedWeight": 0.5,
+            "numberOfParticles": 15,
+            "toneColor": 0.7
+        }
+    },
+    "aliveDotsSpeed": {
+        "normal": {
+            "brillo": 1,
+            "speedWeight": 2.3,
+            "numberOfParticles": 50,
+            "toneColor": 0.7
+        }
+    },
+    "bandParticles": {
+        "default": {}
+    },
+    "bassWarpGrid": {
+        "default": {},
+        "red": {
+            "gradient": "tas06"
+        },
+        "amber": {
+            "gradient": "tas13_r"
+        }
+    },
+    "bombs": {
+        "default": {
+            "bassAlpha": 1,
+            "midAlpha": 1,
+            "highAlpha": 1,
+            "highNoiseAlpha": 0
+        },
+        "highNoise": {
+            "bassAlpha": 1,
+            "midAlpha": 1,
+            "highAlpha": 1,
+            "highNoiseAlpha": 0.5
+        }
+    },
+    "ca": {
+        "red-amber": {
+            "colorMap": "a_fire"
+        },
+        "white": {
+            "colorMap": "_bw"
+        },
+        "big": {
+            "colorMap": "_bw",
+            "scale": 20
+        }
+    },
+    "circles": {
+        "default": {
+            "velocidad": 0.6,
+            "escala": 1
+        },
+        "slow": {
+            "velocidad": 0.1,
+            "escala": 1
+        }
+    },
+    "dynamicMask": {
+        "default": {
+            "positive": {
+                "programName": "noise",
+                "config": {
+                    "colorMap": "a_fire"
+                }
+            }
+        }
+    },
+    "frequencyActivation": {
+        "default": {}
+    },
+    "gradientSphere": {
+        "default": {
+            "gradient": "a_fire"
+        }
+    },
+    "lineal": {
+        "fireballs": {
+            "colorMap": "pm3d13_r"
+        },
+        "large": {
+            "velocidad": 7,
+            "escala": 13,
+            "colorMap": "pm3d13_r"
+        },
+        "largeUp": {
+            "velocidad": -7,
+            "escala": 13,
+            "colorMap": "a_fire"
+        },
+        "smallSlow": {
+            "velocidad": -7,
+            "escala": 2,
+            "colorMap": "pm3d13_r"
+        },
+        "smallFast": {
+            "velocidad": 14,
+            "escala": 2,
+            "colorMap": "pm3d13_r"
+        },
+        "horizontal": {
+            "velocidad": -10,
+            "escala": 18,
+            "horizontal": true,
+            "centerX": 0
+        },
+        "horizontal2": {
+            "velocidad": -0.9,
+            "escala": 83.2,
+            "horizontal": true,
+            "centerX": 0,
+            "colorMap": "pm3d13_r",
+            "power": 3.4
+        }
+    },
+    "musicFlow": {
+        "slowDoble": {
+            "multiplier": 1,
+            "speed": 1,
+            "doble": true
+        },
+        "mediumDoble": {
+            "multiplier": 1.3,
+            "cutThreshold": 0.6,
+            "speed": 3,
+            "doble": true
+        },
+        "fastSimple": {
+            "speed": 7,
+            "doble": false
+        },
+        "default": {
+            "doble": false,
+            "haciaAfuera": false,
+            "speed": 3
+        },
+        "fastDobleDesdePuntas": {
+            "speed": 7,
+            "doble": true,
+            "haciaAfuera": false
+        },
+        "fastDobleDesdeCentro": {
+            "speed": 5,
+            "doble": true,
+            "haciaAfuera": true
+        }
+    },
+    "music-flow-waves": {
+        "red": {
+            "colorMap": "pm3d13_r"
+        }
+    },
+    "musicFrequencyDot": {
+        "symetry8Move": {
+            "move": true,
+            "numberOfOnLeds": 8,
+            "power": 2,
+            "multiplier": 1
+        },
+        "symetry8Slow": {
+            "move": false,
+            "numberOfOnLeds": 8,
+            "power": 2,
+            "multiplier": 1
+        },
+        "symetry8SlowRed": {
+            "move": false,
+            "numberOfOnLeds": 16,
+            "power": 3
+        },
+        "leds24": {
+            "move": false,
+            "numberOfOnLeds": 24
+        },
+        "leds20HighPower": {
+            "move": true,
+            "numberOfOnLeds": 20,
+            "power": 4
+        }
+    },
+    "musicExplosions": {
+        "fire": {
+            "colorMap": "a_fire",
+            "allowMultiple": true
+        }
+    },
+    "musicVolumeBars": {
+        "default": {}
+    },
+    "musicVolumeDot": {
+        "default": {
+            "cutThreshold": 0.18
+        }
+    },
+    "musicVolumeDotRandom": {
+        "default": {
+            "cutThreshold": 0.28
+        }
+    },
+    "noise": {
+        "fire": {
+            "colorScale": 2.84,
+            "brightnessScale": 0.87,
+            "colorMap": "a_fire"
+        },
+        "white": {
+            "colorScale": 2.84,
+            "brightnessScale": 0.87,
+            "colorMap": "_bw"
+        }
+    },
+    "polar": {
+        "dynamicmask-lr": {
+            "angleYSpeed": 22.9,
+            "offsetZ": 87,
+            "fadeWidth": 138
+        },
+        "dynamicmask-rl": {
+            "angleYSpeed": -23.4,
+            "offsetZ": 87,
+            "fadeWidth": 138
+        },
+        "dynamicmask-barrido": {
+            "angleYSpeed": -23.4,
+            "offsetZ": 87,
+            "fadeWidth": 138,
+            "angleXSpeed": -13.7,
+            "angleZSpeed": -18.9
+        },
+        "dynamicmask-linterna": {
+            "angleYSpeed": -23.4,
+            "offsetZ": 87,
+            "fadeWidth": 12,
+            "angleXSpeed": -13.7,
+            "angleZSpeed": -18.9,
+            "offsetXWiggleSpeed": 19.1,
+            "offsetXWiggleAmplitude": 22,
+            "offsetYWiggleSpeed": -4.6,
+            "offsetYWiggleAmplitude": 22,
+            "offsetZWiggleSpeed": 2.4,
+            "angleYWiggleSpeed": 9.4,
+            "angleZWiggleSpeed": -9.2
+        }
+    },
+    "randomShapes": {
+        "default": {}
+    },
+    "radial": {
+        "fire": {
+            "colorMap": "a_fire"
+        },
+        "fire-slow": {
+            "colorMap": "pm3d13_r",
+            "velocidad": 0.4
+        },
+        "reverse": {
+            "colorMap": "pm3d13_r",
+            "velocidad": 7.6
+        },
+        "dowwwwn": {
+            "colorMap": "pm3d13_r",
+            "velocidad": 7.6,
+            "centerX": 1.3,
+            "centerY": -45
+        }
+    },
+    "radial3d": {
+        "circle": {
+            "colorMap": "pm3d13_r",
+            "power": 0.5,
+            "centerX": -0.2,
+            "centerZ": 49.2
+        },
+        "flower": {
+            "colorMap": "pm3d13_r",
+            "power": 0.5,
+            "centerX": -0.2,
+            "centerZ": 49.2,
+            "centerY": -50
+        }
+    },
+    "radialSun": {
+        "fromBottom": {
+            "centerY": -20,
+            "soundMetric": "bassPeakDecay",
+            "power": 2,
+            "colorMap": "pm3d13_r"
+        },
+        "fromTop": {
+            "centerY": 62,
+            "soundMetric": "bassPeakDecay",
+            "power": 2,
+            "colorMap": "pm3d13_r"
+        },
+        "bassCenter": {
+            "centerY": 35.4,
+            "power": 10,
+            "soundMetric": "bassFastPeakDecay",
+            "colorMap": "pm3d13_r"
+        },
+        "fromBottomAnimatedPower": {
+            "centerY": -20,
+            "soundMetric": "bassPeakDecay",
+            "power": 2,
+            "animatePower": true,
+            "colorMap": "pm3d13"
+        }
+    },
+    "radialWarp": {
+        "default": {}
+    },
+    "rays": {
+        "normal": {
+            "colorHueAmplitude": 0.18,
+            "colorHueOffset": 0
+        },
+        "normalSound": {
+            "globalSpeed": 3,
+            "useSoundSpeed": true,
+            "singleDirection": true,
+            "colorHueAmplitude": 0.08,
+            "colorHueOffset": 0
+        },
+        "rainbowSmoke": {
+            "decay": 0.9,
+            "globalSpeed": 2,
+            "colorSaturationRange": 0,
+            "numberOfParticles": 15,
+            "colorHueAmplitude": 0.21
+        },
+        "colorSmoke": {
+            "brillo": 0.5,
+            "decay": 0.9,
+            "globalSpeed": 5,
+            "colorSaturationRange": 0.3,
+            "numberOfParticles": 30,
+            "colorHueAmplitude": 0.13
+        },
+        "crazyDots": {
+            "decay": 0.2,
+            "brillo": 1,
+            "globalSpeed": 4,
+            "colorSaturationRange": 0,
+            "numberOfParticles": 40,
+            "colorHueAmplitude": 0.07,
+            "colorHueOffset": 0
+        },
+        "longTraces": {
+            "decay": 0.99,
+            "brillo": 0.4,
+            "globalSpeed": 8,
+            "colorSaturationRange": 0.4,
+            "numberOfParticles": 10,
+            "colorHueAmplitude": 0.13
+        },
+        "slowBlue": {
+            "decay": 0.92,
+            "brillo": 0.4,
+            "globalSpeed": 1,
+            "colorSaturationRange": 0.4,
+            "numberOfParticles": 15,
+            "colorHueAmplitude": 0.1,
+            "colorHueOffset": 0.01
+        },
+        "fireFast": {
+            "brillo": 0.5,
+            "decay": 0.8,
+            "globalSpeed": 3,
+            "colorSaturationRange": 0.07,
+            "numberOfParticles": 90,
+            "colorHueAmplitude": 0.12,
+            "colorHueOffset": 0.98,
+            "singleDirection": true
+        },
+        "fireFastSound": {
+            "brillo": 0.6,
+            "decay": 0.8,
+            "globalSpeed": 3,
+            "colorSaturationRange": 0.07,
+            "numberOfParticles": 90,
+            "colorHueAmplitude": 0.12,
+            "colorHueOffset": 0.98,
+            "singleDirection": true,
+            "useSoundSpeed": true
+        },
+        "fireSlow": {
+            "brillo": 0.1,
+            "decay": 0.95,
+            "globalSpeed": 0.25,
+            "colorSaturationRange": 0.07,
+            "numberOfParticles": 50,
+            "colorHueAmplitude": 0.12,
+            "colorHueOffset": 0.98
+        }
+    },
+    "shapes": {
+        "default": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 50,
+            "bassLine": false,
+            "bassLineSensitivity": 0,
+            "fillCircle": false,
+            "highLayerAlpha": 0.2,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0
+        },
+        "bassLine": {
+            "bassCircle": false,
+            "bassCircleSensitivity": 50,
+            "bassLine": true,
+            "bassLineSensitivity": 50,
+            "fillCircle": false,
+            "highLayerAlpha": 0.2,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0
+        },
+        "bassCircle": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 85,
+            "bassLine": false,
+            "bassLineSensitivity": 50,
+            "fillCircle": false,
+            "highLayerAlpha": 0,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0
+        },
+        "rotor": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 42,
+            "bassLine": false,
+            "bassLineSensitivity": 0,
+            "fillCircle": false,
+            "highLayerAlpha": 0.1,
+            "rotorAlpha": 0.5,
+            "rainDotsAlpha": 0
+        },
+        "rain": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 42,
+            "bassLine": false,
+            "bassLineSensitivity": 0,
+            "fillCircle": false,
+            "highLayerAlpha": 0.1,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0.3
+        },
+        "todo": {
+            "bassCircle": true,
+            "bassCircleSensitivity": 50,
+            "bassLine": true,
+            "bassLineSensitivity": 15,
+            "fillCircle": true,
+            "highLayerAlpha": 0.25,
+            "rotorAlpha": 0.17,
+            "rainDotsAlpha": 0.3
+        },
+        "randomPlusFill": {
+            "bassCircle": false,
+            "bassCircleSensitivity": 50,
+            "bassLine": false,
+            "bassLineSensitivity": 15,
+            "fillCircle": true,
+            "highLayerAlpha": 0.5,
+            "rotorAlpha": 0,
+            "rainDotsAlpha": 0
+        }
+    },
+    "sound-waves": {
+        "hexagono": {
+            "initialDistance": 69,
+            "haciaAfuera": false,
+            "waveSpeed": 1,
+            "waveWidth": 2
+        },
+        "default": {
+            "waveCenterY": 0
+        },
+        "deLasPuntas": {
+            "waveSpeed": 1,
+            "waveWidth": 2,
+            "initialDistance": 40,
+            "haciaAfuera": false,
+            "brilloWave": 0.5
+        },
+        "centroLento": {
+            "waveSpeed": 0.1
+        },
+        "centroLentoDark": {
+            "waveSpeed": 0.1,
+            "brilloWave": 0.25
+        },
+        "centroFast": {
+            "waveSpeed": 3
+        },
+        "centroDots": {
+            "waveSpeed": 2,
+            "waveWidth": 0.5
+        },
+        "centroBrightFast": {
+            "waveSpeed": 0.7,
+            "brilloWave": 2,
+            "waveWidth": 1,
+            "waveCenterY": -17.3
+        },
+        "abajoFast": {
+            "waveCenterY": -17.3,
+            "waveSpeed": 3,
+            "waveWidth": 3
+        },
+        "xInvertida": {
+            "initialDistance": 15,
+            "haciaAfuera": false
+        },
+        "deArribaAbajo": {
+            "initialDistance": 67,
+            "waveCenterY": -40,
+            "haciaAfuera": false,
+            "waveSpeed": 2
+        }
+    },
+    "stars": {
+        "default": {},
+        "pocasSlow": {
+            "decay": 0.97,
+            "probability": 0.0003
+        },
+        "slowBlue": {
+            "decay": 0.97,
+            "probability": 0.003,
+            "starsColor": 0.58,
+            "brillo": 0.05
+        },
+        "pocasMoving": {
+            "decay": 0.97,
+            "probability": 0.002,
+            "move": true,
+            "brillo": 1
+        }
+    },
+    "stripe-patterns": {
+        "default": {
+            "speed": 0.25,
+            "brillo": 0.4
+        },
+        "slowMarks": {
+            "speed": 3,
+            "sameColorLeds": 5
+        }
+    },
+    "vertexGlow": {
+        "default": {}
+    },
+    "water-flood": {
+        "default": {
+            "velocidad": 0.4,
+            "whiteBorder": true,
+            "color": 0.42
+        },
+        "gold": {
+            "velocidad": 0.1,
+            "whiteBorder": false,
+            "escala": 0.5,
+            "color": 0.42
+        }
+    },
+    "waveform": {
+        "default": {
+            "colorMap": "a_fire"
+        },
+        "slow": {
+            "colorMap": "a_fire_r"
+        }
+    },
+    "waveform2": {
+        "default": {
+            "scale": 8.74,
+            "width": 0.036
+        }
+    }
+}

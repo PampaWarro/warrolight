@@ -35,7 +35,7 @@
     {
       "from": 4200,
       "to": 4800,
-      "baseIndex": 0,
+      "baseIndex": 600,
       "deviceName": "wireless"
     }
   ],

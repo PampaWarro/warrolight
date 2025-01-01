@@ -75,7 +75,7 @@ module.exports = class DeviceFalcon extends LightDevice {
         encoderMapping.push({
           offset: offset + portOffset,
           length: Math.min(MAX_RGB_PER_UNIVERSE, lights - portOffset),
-          universe: universe - 1,
+          universe,
         });
         ++universe;
       }

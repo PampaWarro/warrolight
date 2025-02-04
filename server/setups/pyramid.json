@@ -1,0 +1,24 @@
+{
+  "geometry": "pyramid",
+  "shapeMapping": "pyramid",
+  "lights": 894,
+  "outputDevices": {
+    "udp": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 894,
+        "name": "",
+        "ip": "192.168.0.17",
+        "udpPort": 2222
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 894,
+      "baseIndex": 0,
+      "deviceName": "udp"
+    }
+  ]
+}

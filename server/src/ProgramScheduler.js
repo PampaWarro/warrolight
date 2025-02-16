@@ -100,4 +100,7 @@ module.exports = class ProgramScheduler {
       return this.program.getDebugHelpers();
     }
   }
+  touch(data) {
+    this.program.touch(data);
+  }
 }

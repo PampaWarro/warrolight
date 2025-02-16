@@ -14,6 +14,13 @@ module.exports = class LightProgram {
     throw new Error("Child classes should override drawFrame");
   }
 
+  touch(data) {
+    this.touchData = {
+      'angle': data.angle,
+      'intensity': data.intensity
+    }
+  }
+
   updateConfig(config) {
     this.config = config;
   }

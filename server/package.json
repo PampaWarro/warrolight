@@ -4,7 +4,7 @@
   "description": "Warro lights",
   "main": "./src/index.js",
   "scripts": {
-    "start": "node -r ts-node/register --inspect --trace-uncaught --expose-gc --trace-gc --trace-gc-ignore-scavenger src/index.js $npm_package_warroLight_setup",
+    "start": "node -r ts-node/register --inspect --trace-uncaught --expose-gc --trace-gc --trace-gc-ignore-scavenger src/index.js pyramid",
     "server": "node src/server.js conga",
     "prettier": "prettier --write src/*.js src/**/*.js",
     "merge-presets": "node src/mergepresets.js",

@@ -22,6 +22,7 @@ const programNames = [
   "aliveDots",
   "aliveDotsSpeed",
   "all-white",
+  "white-rect",
   "bandParticles",
   "bassWarpGrid",
   "bombs",
@@ -168,6 +169,10 @@ module.exports = class LightController extends EventEmitter {
       }
     }
     return {defaults, presetOverrides, currentPreset: presetName, overrides};
+  }
+
+  touch(data) {
+    this.programScheduler.touch(data);
   }
 
   updateConfigOverride(config) {

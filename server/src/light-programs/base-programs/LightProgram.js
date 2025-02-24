@@ -15,9 +15,20 @@ module.exports = class LightProgram {
   }
 
   touch(data) {
-    this.touchData = {
-      'angle': data.angle,
-      'intensity': data.intensity
+    if (typeof data.angleLeft !== 'undefined' && typeof data.angleRight !== 'undefined') {
+      // Double mode: use left and right angles and intensities.
+      this.touchData = {
+        angleLeft: data.angleLeft,
+        angleRight: data.angleRight,
+        intensityLeft: (typeof data.intensityLeft !== 'undefined') ? data.intensityLeft : 1,
+        intensityRight: (typeof data.intensityRight !== 'undefined') ? data.intensityRight : 1
+      };
+    } else {
+      // Single mode: use a single angle and intensity.
+      this.touchData = {
+        angle: data.angle,
+        intensity: data.intensity
+      };
     }
   }
 

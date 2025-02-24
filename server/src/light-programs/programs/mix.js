@@ -26,6 +26,14 @@ module.exports = class Mix extends LightProgram {
     p.init();
     return p;
   }
+  touch(data){
+    this.subprograms.forEach((p, i) => {
+      if (typeof p[0].touch === "function"){
+        console.log('touchable mix touch')
+        p[0].touch(data);
+      }
+    })
+  }
 
   drawFrame(leds, context) {
     leds.fill(this.config.multiply ? [255, 255, 255, 0] : [0, 0, 0, 0]);
@@ -34,6 +42,7 @@ module.exports = class Mix extends LightProgram {
 
     for (const [prog, progLeds] of this.subprograms) {
       // Done by ProgramScheduler, has to be replicated here
+
       prog.timeInMs = this.timeInMs;
       let globalBrightness = prog.config.globalBrightness || 0;
       progLeds.fill([0, 0, 0]);

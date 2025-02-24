@@ -10,7 +10,10 @@ const {makeFXProgram} = require("./light-programs/base-programs/FX");
 // TODO: move this to some configuration file
 const programNames = [
   "all-off",
+  "PROGRAM_Main_Pyramid_FA25",
+  "PROGRAM_Main_Touchable_Pyramid_FA25",
   "PROGRAM_Main_fuego2024",
+  "RectProgram",
   "mix",
   // "DC_music",
   // "congaShooting2",

@@ -59,7 +59,11 @@ module.exports = function programsByShape(mapping, name) {
         this.instances[shapeName].init();
       }
     }
-
+    touch(data) {
+      for (let shapeName in this.instances) {
+        this.instances[shapeName].touch(data);
+      }
+    }
     drawFrame(leds, context) {
       _.each(this.instances, (program, mapName) => {
         const map = this.knownMappings[mapName];

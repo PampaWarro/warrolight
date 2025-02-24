@@ -11,7 +11,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "fuego-pw-2024"
+    "setup": "pyramid"
   },
   "keywords": [],
   "author": "Pampa Warro",

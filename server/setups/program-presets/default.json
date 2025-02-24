@@ -2488,6 +2488,216 @@
                 }
             ],
             "multiply": true
+        },
+        "reachForTheStars": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "probability": 0.0937
+                                }
+                            }
+                        ],
+                        "rectWidth": 0.26,
+                        "rectAngle": 0
+                    }
+                },
+                {
+                    "programName": "stars",
+                    "config": {
+                        "probability": 0.0112
+                    }
+                }
+            ]
+        },
+        "reachForTheStarsBest": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "probability": 0.0937
+                                }
+                            }
+                        ],
+                        "rectWidth": 19,
+                        "rectAngle": 0,
+                        "angleUpdateInterval": 1,
+                        "angleSpeed": 30,
+                        "rectLength": 1,
+                        "blurExtent": 3.6,
+                        "blurRandomness": 0.78,
+                        "flipHorizontally": true
+                    }
+                },
+                {
+                    "programName": "stars",
+                    "config": {
+                        "probability": 0.0165,
+                        "globalBrightness": 1
+                    }
+                }
+            ]
+        },
+        "radialWithWhite": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "all-white"
+                            }
+                        ],
+                        "rectWidth": 10,
+                        "rectAngle": 0,
+                        "angleUpdateInterval": 1,
+                        "angleSpeed": 15,
+                        "rectLength": 1,
+                        "blurExtent": 3.6,
+                        "blurRandomness": 0.78,
+                        "flipHorizontally": true
+                    }
+                },
+                {
+                    "programName": "radial"
+                }
+            ]
+        },
+        "reachForTheStarsBestDouble": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "stars",
+                                "config": {
+                                    "probability": 0.0937
+                                }
+                            }
+                        ],
+                        "rectWidth": 5,
+                        "rectAngle": 0,
+                        "angleUpdateInterval": 1,
+                        "angleSpeed": 30,
+                        "rectLength": 1,
+                        "blurExtent": 3.6,
+                        "blurRandomness": 0.78,
+                        "flipHorizontally": true
+                    }
+                },
+                {
+                    "programName": "stars",
+                    "config": {
+                        "probability": 0.0165,
+                        "globalBrightness": 1
+                    }
+                }
+            ]
+        },
+        "RelampejoConRects": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "rainbow",
+                                "config": {
+                                    "brillo": 0.85
+                                }
+                            }
+                        ],
+                        "rectWidth": 5,
+                        "angleSpeed": 50,
+                        "multiply": false,
+                        "angleUpdateInterval": 1
+                    }
+                },
+                {
+                    "programName": "relampejo"
+                }
+            ],
+            "multiply": false
+        },
+        "ThunderRainbowRects": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "presetName": "whiteUp",
+                    "config": {
+                        "colorMap": "pm3d05_r",
+                        "waveWidth": 1.9,
+                        "waveSpeed": 3.3,
+                        "waveCenterY": -40,
+                        "waveDecay": 0.83,
+                        "soundMetric": "bassRms",
+                        "wavePower": 1,
+                        "brilloWave": 1.37,
+                        "initialDistance": 15.4
+                    },
+                    "shape": "Warro"
+                },
+                {
+                    "programName": "musicFlash",
+                    "config": {
+                        "cutThreshold": 0.18,
+                        "soundMetric": "bassFastPeakDecay",
+                        "multiplier": 1.33
+                    }
+                },
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "rainbow",
+                                "config": {
+                                    "brillo": 0.7
+                                }
+                            }
+                        ],
+                        "rectWidth": 10,
+                        "angleSpeed": 50,
+                        "angleUpdateInterval": 1
+                    }
+                }
+            ],
+            "multiply": false
+        },
+        "radialWithWhiteRects": {
+            "programs": [
+                {
+                    "programName": "RectProgram",
+                    "config": {
+                        "programs": [
+                            {
+                                "programName": "all-white"
+                            }
+                        ],
+                        "rectWidth": 2,
+                        "rectAngle": 0,
+                        "angleUpdateInterval": 1,
+                        "angleSpeed": 50,
+                        "rectLength": 1,
+                        "blurExtent": 4.1,
+                        "blurRandomness": 0.78,
+                        "flipHorizontally": true
+                    }
+                },
+                {
+                    "programName": "radial"
+                }
+            ],
+            "multiply": false
         }
     },
     "sound-waves": {
@@ -2728,5 +2938,16 @@
             "refillChance": 0.459
         }
     },
-    "rays": {}
+    "rays": {},
+    "RectProgram": {
+        "Best": {
+            "programs": [
+                {
+                    "programName": "rainbow"
+                }
+            ],
+            "rectWidth": 5,
+            "angleSpeed": 50
+        }
+    }
 }

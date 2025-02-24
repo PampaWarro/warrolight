@@ -48,7 +48,9 @@ module.exports = function createMultiProgram(
       this.previousColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
       this.currentColors = new Array(this.numberOfLeds).fill([0, 0, 0]);
     }
-
+    touch(data) {
+      if (this.current && this.current.touch) this.current.touch(data);
+    }
     drawFrame(leds, context) {
       // init
       if (this.current === null) {

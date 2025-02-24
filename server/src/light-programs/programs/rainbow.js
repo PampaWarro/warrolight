@@ -23,6 +23,10 @@ module.exports = class Rainbow extends LightProgram {
   }
 
   drawFrame(leds) {
+    if (isNaN(this.time)) {
+      this.time = 0;
+    }
+
     this.time += this.config.speed;
     this.frame ++;
 

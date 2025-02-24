@@ -1,14 +1,14 @@
 {
   "geometry": "pyramid",
   "shapeMapping": "pyramid",
-  "lights": 894,
+  "lights": 907,
   "outputDevices": {
-    "udp": {
+    "esp": {
       "type": "udp-chunked",
       "params": {
-        "numberOfLights": 894,
+        "numberOfLights": 1200,
         "name": "",
-        "ip": "192.168.0.17",
+        "ip": "192.168.1.113",
         "udpPort": 2222
       }
     }
@@ -16,9 +16,28 @@
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 894,
+      "to": 282,
       "baseIndex": 0,
-      "deviceName": "udp"
+      "deviceName": "esp"
+    },
+    {
+      "from": 282,
+      "to": 423,
+      "baseIndex": 300,
+      "reverse": true,
+      "deviceName": "esp"
+    },
+    {
+      "from": 423,
+      "to": 724,
+      "baseIndex": 600,
+      "deviceName": "esp"
+    },
+    {
+      "from": 724,
+      "to": 904,
+      "baseIndex": 900,
+      "deviceName": "esp"
     }
   ]
 }

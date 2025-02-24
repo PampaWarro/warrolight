@@ -30,7 +30,7 @@ module.exports = function getShapes() {
   // Choose how many LEDs on each side of each triangle
   const T1_LEDS = 60; // innermost triangle
   const T2_LEDS = 100; // middle triangle
-  const T3_LEDS = 184; // outermost triangle
+  const T3_LEDS = 141; // outermost triangle
 
   // Compute total
   const T1Total = 3 * T1_LEDS; // 3 sides
@@ -60,9 +60,11 @@ module.exports = function getShapes() {
   const middleTriangle  = _.flatten([T2_side1, T2_side2, T2_side3]);
   const outerTriangle   = _.flatten([T3_side1, T3_side2, T3_side3]);
   const allOfIt         = _.range(0, totalLEDs);
+  const all = allOfIt;
 
   return {
     // All possible LEDs
+    all,
     allOfIt,
 
     // Inner triangle, broken down by side or whole

@@ -48,6 +48,11 @@ static constexpr int kChannel = WIFI_CHANNEL;
 #endif
 static constexpr size_t kNumLeds = NUM_LEDS;
 
+#ifndef MAX_MILLIAMPS
+#define MAX_MILLIAMPS 200
+#endif
+static constexpr size_t kMaxMilliamps = MAX_MILLIAMPS;
+
 #ifdef GATEWAY_HOSTNAME
 #define XSTR(s) STR(s)
 #define STR(s) #s
@@ -89,7 +94,7 @@ void setup() {
   Serial.println("Warrolight ESP-NOW Client");
 
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, kNumLeds);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 200);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, kMaxMilliamps);
   FastLED.setDither(DISABLE_DITHER);
   std::fill(leds, leds + kNumLeds, CRGB::Black);
   FastLED.show();

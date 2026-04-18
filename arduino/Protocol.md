@@ -54,3 +54,56 @@ The RF protocol is used to communicate light frames between two Arduinos. One of
 The server reads light frames using the serial protocol and retransmits them split into individual packages of 32 bytes each one. The first byte contains the index of the first light that is specified in the package. The second byte describes the frame number. The rest of the package contains the RGB values for the next 10 lights. Note that 3 bytes x 10 lights is 30 bytes, which covers the remaining space in the packet.
 
 The server transmits half of the lights in one radio channel, and half in the other, thus controlling 2 strips of 150 lights each.
+
+## ESP-NOW protocol
+
+The ESP-NOW protocol is the successor to the RF protocol. It uses Espressif's ESP-NOW peer-to-peer WiFi protocol (no router required) for higher bandwidth and more reliable wireless communication.
+
+### Architecture
+
+The ESP-NOW setup uses a gateway-client model:
+
+- **Gateway** (`espnow-gw-eth` or `espnow-gw-serial`): An ESP32 with both Ethernet and WiFi. It receives full RGB frames from the server via UDP (using the chunked variant of the Ethernet protocol) and rebroadcasts them over ESP-NOW to all clients.
+- **Client** (`espnow-client`): An ESP32 or ESP8266 with WiFi only. Each client is assigned an index (`CLIENT=0`, `CLIENT=1`, etc.) and only processes packets addressed to its index.
+
+```
+Server ──UDP/Ethernet──→ Gateway (ESP32 + Ethernet)
+                              │
+                         ESP-NOW broadcast
+                              │
+                    ┌─────────┼─────────┐
+                    ↓         ↓         ↓
+                Client 0  Client 1  Client 2  ...
+```
+
+### Discovery
+
+The gateway broadcasts a beacon packet every 250ms with the format:
+
+```
+BEACON<hostname>
+```
+
+For example, `BEACONespnow-gw`. Each client is configured with a `GATEWAY_HOSTNAME` at compile time. When a client receives a beacon matching its expected hostname, it locks onto the gateway's MAC address and begins accepting data packets from it. This prevents interference when multiple gateway/client groups operate nearby.
+
+### Packet format
+
+ESP-NOW has a maximum message size of 250 bytes. Data packets use a 4-byte header followed by RGB pixel data:
+
+```
+Byte 0:    'W'          Magic header byte
+Byte 1:    seq          Sequence number (0-255, wraps around), identifies the frame
+Byte 2:    client       Target client index
+Byte 3:    offset       Packet index within this client's frame
+Bytes 4+:  RGB data     3 bytes per LED, up to 82 LEDs per packet ((250 - 4) / 3)
+```
+
+A 300-LED client requires `ceil(300 / 82)` = 4 packets per frame. All clients receive all broadcast packets, but each client ignores packets where the `client` byte does not match its own index.
+
+### Frame assembly
+
+The client accumulates incoming packets into a pixel buffer. When the sequence number changes (indicating a new frame has started), the client pushes the completed buffer to FastLED for display and begins assembling the next frame. Non-consecutive sequence numbers are tracked as packet loss.
+
+### Connection timeout and fallback
+
+If a client has not received any frame for 1 second, or has received only all-black frames for 10 seconds, it falls back to a built-in blue breathing animation so that the hardware does not appear dead when disconnected.

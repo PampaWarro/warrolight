@@ -9,6 +9,7 @@ const {makeFXProgram} = require("./light-programs/base-programs/FX");
 
 // TODO: move this to some configuration file
 const programNames = [
+  "PROGRAM_Main_warcos",
   "PALO",
   "mix",
   // "congaShooting2",

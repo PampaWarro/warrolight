@@ -59,7 +59,7 @@ module.exports = function getShapes() {
   ]);
 
   // La W warra
-  const Warro = _.flatten([inv(pataLeft), tira2, pataRight]);
+  const WarroOnly = _.flatten([inv(pataLeft), tira2, pataRight]);
 
   // Las V V
   const V1L = pataLeft;
@@ -109,6 +109,31 @@ module.exports = function getShapes() {
 
   const allOfIt = _.range(0, wSize + 2 * TOTEM_LEDS);
 
+  // Nombres como en fuego2024, para poder usar sus programas. Cada mitad de
+  // arco hace de totem: L/R es el lado y 1 el arco de atrás, 2 el de adelante.
+  const X = inv(V1R).concat(V2L);
+  const totemL1 = arcos.arco1Left;
+  const totemR1 = arcos.arco1Right;
+  const totemL2 = arcos.arco2Left;
+  const totemR2 = arcos.arco2Right;
+  // No hay un tercer par de totems: usamos las patas de la W, que son lo de más
+  // afuera.
+  const totemL3 = pataLeft;
+  const totemR3 = pataRight;
+  const totems = arcos.arcos;
+  const totemsInt = arcos.arco1;
+  const totemsExt = arcos.arco2;
+  const totemsExtExt = totemL3.concat(totemR3);
+  // Nombres de conga, usados en presets de default.json.
+  const man = WarroOnly;
+  const fullArc = totems;
+  // La W con los arcos.
+  const Warro = WarroOnly.concat(totems);
+  const wingsLeft = _.flatten([totemL2, totemL1, V1L, V2L]);
+  const wingsRight = _.flatten([V1R, V2R, totemR1, totemR2]);
+  const wings = _.flatten([totemL2, totemL1, V1L, V2R, totemR1, totemR2]);
+  const wingsX = _.flatten([totemL2, totemL1, X, totemR1, totemR2]);
+
   return {
     pataLeft,
     pataRight,
@@ -121,6 +146,24 @@ module.exports = function getShapes() {
     trianguloBottomBottom,
     trianguloTopTop,
     Warro,
+    WarroOnly,
+    X,
+    totemL1,
+    totemR1,
+    totemL2,
+    totemR2,
+    totemL3,
+    totemR3,
+    totems,
+    totemsInt,
+    totemsExt,
+    totemsExtExt,
+    man,
+    fullArc,
+    wings,
+    wingsLeft,
+    wingsRight,
+    wingsX,
     reloj,
     V1,
     V2,

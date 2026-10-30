@@ -1,0 +1,23 @@
+{
+  "geometry": "warcos",
+  "shapeMapping": "warcos",
+  "lights": 1200,
+  "outputDevices": {
+    "esp32": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 1200,
+        "name": "warcos-gw.local",
+        "udpPort": 6677
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 1200,
+      "baseIndex": 0,
+      "deviceName": "esp32"
+    }
+  ]
+}

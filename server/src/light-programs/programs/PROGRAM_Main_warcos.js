@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const {getAllPresets, getFilePresets} = require("../../presets.js");
+const LightProgram = require("../base-programs/LightProgram");
 const createMultiProgram = require("../base-programs/MultiPrograms");
 const animateParamProgram = require("../base-programs/AnimatePrograms");
 const programsByShape = require("../base-programs/ProgramsByShape");
@@ -182,19 +183,19 @@ let starsSunrise = mixPrograms(
   ]
 );
 
-const schedule = [
-  ...getAllPresets(DepthWaves, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(DepthBands, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(PerspectiveRise, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(Vortex, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(KillBill, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(WhiteRipples, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(StarFire, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(GhostParade, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(BatFlight, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(EyesInTheDark, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(WitchBrew, 60 * baseTime, "allOfIt"),
-  ...getAllPresets(HauntedStorm, 60 * baseTime, "allOfIt"),
+const allSchedule = shape => [
+  ...getAllPresets(DepthWaves, 60 * baseTime, shape),
+  ...getAllPresets(DepthBands, 60 * baseTime, shape),
+  ...getAllPresets(PerspectiveRise, 60 * baseTime, shape),
+  ...getAllPresets(Vortex, 60 * baseTime, shape),
+  ...getAllPresets(KillBill, 60 * baseTime, shape),
+  ...getAllPresets(WhiteRipples, 60 * baseTime, shape),
+  ...getAllPresets(StarFire, 60 * baseTime, shape),
+  ...getAllPresets(GhostParade, 60 * baseTime, shape),
+  ...getAllPresets(BatFlight, 60 * baseTime, shape),
+  ...getAllPresets(EyesInTheDark, 60 * baseTime, shape),
+  ...getAllPresets(WitchBrew, 60 * baseTime, shape),
+  ...getAllPresets(HauntedStorm, 60 * baseTime, shape),
 
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 
@@ -202,11 +203,11 @@ const schedule = [
 
   ...getAllPresets(Rays, 30 * baseTime, "Warro"),
 
-  ...getAllPresets(Circles, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(Circles, 30 * baseTime, shape),
 
-  ...getAllPresets(StripePatterns, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(StripePatterns, 30 * baseTime, shape),
 
-  ...getAllPresets(MusicFrequencyDot, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(MusicFrequencyDot, 30 * baseTime, shape),
 
 
   { duration: 60 * baseTime, program: BandParticles },
@@ -217,17 +218,17 @@ const schedule = [
 
   { duration: 30 * baseTime, program: radialSunArribaAbajo },
 
-  ...getAllPresets(Shapes, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(Shapes, 60 * baseTime, shape),
 
   { duration: 30 * baseTime, program: WarroBass },
   { duration: 30 * baseTime, program: WarroBass }, // Es muy buenoo!!! más
   { duration: 60 * baseTime, program: WarroBass }, // Es muy buenoo!!! más
 
-  ...getAllPresets(Bombs, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(Bombs, 60 * baseTime, shape),
 
-  ...getAllPresets(BassWarpGrid, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(BassWarpGrid, 60 * baseTime, shape),
 
-  ...getAllPresets(RadialSun, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(RadialSun, 30 * baseTime, shape),
   { duration: 60 * baseTime, program: radialSunByBand },
 
   { duration: 60 * baseTime, program: volumeDotsRandomByBand(3) },
@@ -376,11 +377,11 @@ const schedule = [
       Warro: [MusicFlow, MusicFlow.presets().fastDobleDesdePuntas]
     })
   },
-  ...getAllPresets(SoundWaves, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(SoundWaves, 30 * baseTime, shape),
   {
     duration: 60 * baseTime,
     program: programsByShape({
-      allOfIt: [
+      [shape]: [
         animateParamProgram(SoundWaves, "centerX", 120, x => -x),
         {
           waveCenterX: -20,
@@ -480,7 +481,7 @@ const schedule = [
 
   ...getAllPresets(Lineal, 30 * baseTime, "Warro"),
 
-  ...getAllPresets(WaterFlood, 30 * baseTime, "allOfIt"),
+  ...getAllPresets(WaterFlood, 30 * baseTime, shape),
 
   ...getAllPresets(AliveDots, 30 * baseTime, "Warro"),
   {
@@ -613,4 +614,112 @@ const schedule = [
 // ]
 // las formas que se pueden usar están definidas en Transformation
 
-module.exports = createMultiProgram(schedule, true, 15000, true);
+// Combinaciones de Halloween que reparten los programas entre la W y los arcos.
+// Sólo tienen sentido con la geometría entera.
+const halloweenCombos = [
+  {
+    duration: 60 * baseTime,
+    program: programsByShape({WarroOnly: BatFlight, arcos: GhostParade}, "murcielagosYFantasmas"),
+  },
+  {
+    duration: 60 * baseTime,
+    program: programsByShape({WarroOnly: EyesInTheDark, arcos: HauntedStorm}, "ojosEnLaTormenta"),
+  },
+  {
+    duration: 60 * baseTime,
+    program: programsByShape({WarroOnly: WitchBrew, arcos: [EyesInTheDark, EyesInTheDark.presets().muchosOjos]}, "elCaldero"),
+  },
+  {
+    duration: 60 * baseTime,
+    program: programsByShape({WarroOnly: [StarFire, StarFire.presets().hoguera], arcos: [EyesInTheDark, EyesInTheDark.presets().teSiguen]}, "fogataConOjos"),
+  },
+  {
+    duration: 60 * baseTime,
+    program: programsByShape({WarroOnly: HauntedStorm, arcos: [GhostParade, GhostParade.presets().procesion]}, "tormentaDeFantasmas"),
+  },
+];
+
+const halloweenSchedule = shape => [
+  ...getAllPresets(GhostParade, 60 * baseTime, shape),
+  ...getAllPresets(BatFlight, 60 * baseTime, shape),
+  ...getAllPresets(EyesInTheDark, 60 * baseTime, shape),
+  ...getAllPresets(WitchBrew, 60 * baseTime, shape),
+  ...getAllPresets(HauntedStorm, 60 * baseTime, shape),
+
+  // Variantes que no están entre los presets de cada programa.
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [GhostParade, {ghostsPerSecond: 3, maxGhosts: 18, speed: 30, size: 2.5, fog: 0.3}]}, "estampida")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [BatFlight, {batsPerSecond: 6, maxBats: 40, size: 2, speed: 40}]}, "enjambre")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [EyesInTheDark, {eyesPerSecond: 3, maxEyes: 25, size: 0.8, stalkers: 0.5}]}, "manada")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [WitchBrew, {level: 0.25, bubblesPerSecond: 30, vapor: 1, sloshSpeed: 2}]}, "humareda")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [HauntedStorm, {strikesPerSecond: 1, thunderDelay: 0.3, witchlight: 1, fog: 0.5}]}, "aquelarre")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [StarFire, StarFire.presets().hoguera]}, "hoguera")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [StarFire, StarFire.presets().soloBrasas]}, "brasas")},
+
+  ...(shape === "allOfIt" ? halloweenCombos : []),
+];
+
+const schedules = {
+  all: allSchedule,
+  halloween: halloweenSchedule,
+};
+
+// Dónde se pueden poner los programas: todo, sólo la W o sólo los arcos.
+const shapes = ["allOfIt", "WarroOnly", "arcos", "arco1", "arco2"];
+
+// El main elige al azar entre los programas del modo seleccionado. Con una shape
+// que no sea "allOfIt", los programas generales se dibujan sólo en esa shape, y
+// los que usan formas propias (V1, totems, etc.) se recortan para no prender
+// nada fuera de ella.
+module.exports = class MainWarcos extends LightProgram {
+  init() {
+    this.build();
+  }
+
+  build() {
+    const {mode, shape} = this.config;
+    const schedule = (schedules[mode] || allSchedule)(shape);
+    const MultiProgram = createMultiProgram(schedule, true, 15000, true);
+    this.program = new MultiProgram(this.config, this.geometry, this.shapeMapping, this.lightController);
+    this.program.init();
+    this.built = {mode, shape};
+
+    const map = shape !== "allOfIt" && this.shapeMapping()[shape];
+    this.outside = null;
+    if (map) {
+      this.outside = new Array(this.numberOfLeds).fill(true);
+      for (const i of map) this.outside[i] = false;
+    }
+  }
+
+  drawFrame(leds, context) {
+    this.program.timeInMs = this.timeInMs;
+    this.program.drawFrame(leds, context);
+    if (this.outside) {
+      for (let i = 0; i < this.numberOfLeds; i++) {
+        if (this.outside[i]) leds[i] = [0, 0, 0];
+      }
+    }
+  }
+
+  updateConfig(config) {
+    this.config = config;
+    if (this.program && (config.mode !== this.built.mode || config.shape !== this.built.shape)) {
+      this.build();
+    }
+  }
+
+  getDebugHelpers() {
+    return this.program ? this.program.getDebugHelpers() : [];
+  }
+
+  toString() {
+    return this.program ? this.program.toString() : super.toString();
+  }
+
+  static configSchema() {
+    let res = super.configSchema();
+    res.mode = {type: String, values: Object.keys(schedules), default: "all"};
+    res.shape = {type: String, values: shapes, default: "allOfIt"};
+    return res;
+  }
+};

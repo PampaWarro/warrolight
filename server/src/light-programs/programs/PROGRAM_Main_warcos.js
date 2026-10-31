@@ -665,6 +665,14 @@ const halloweenSchedule = shape => [
   {duration: 60 * baseTime, program: programsByShape({[shape]: [StarFire, StarFire.presets().hoguera]}, "hoguera")},
   {duration: 60 * baseTime, program: programsByShape({[shape]: [StarFire, StarFire.presets().soloBrasas]}, "brasas")},
 
+  // Los programas de profundidad, con colores de Halloween.
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [WarpTunnel, WarpTunnel.presets().halloween]}, "warpHalloween")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [CometTunnel, CometTunnel.presets().calabazas]}, "calabazas")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [SlicePlanes, SlicePlanes.presets().escanerToxico]}, "escanerToxico")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [SlicePlanes, SlicePlanes.presets().calabazaYBruja]}, "calabazaYBruja")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [RackFocus, RackFocus.presets().embrujado]}, "focoEmbrujado")},
+  {duration: 60 * baseTime, program: programsByShape({[shape]: [DepthEcho, DepthEcho.presets().pocion]}, "ecoPocion")},
+
   ...(shape === "allOfIt" ? halloweenCombos : []),
 ];
 

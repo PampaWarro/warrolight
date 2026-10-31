@@ -48,6 +48,11 @@ const BatFlight = require("./batFlight");
 const EyesInTheDark = require("./eyesInTheDark");
 const WitchBrew = require("./witchBrew");
 const HauntedStorm = require("./hauntedStorm");
+const SlicePlanes = require("./slicePlanes");
+const WarpTunnel = require("./warpTunnel");
+const DepthEcho = require("./depthEcho");
+const RackFocus = require("./rackFocus");
+const CometTunnel = require("./cometTunnel");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000;
@@ -196,6 +201,11 @@ const allSchedule = shape => [
   ...getAllPresets(EyesInTheDark, 60 * baseTime, shape),
   ...getAllPresets(WitchBrew, 60 * baseTime, shape),
   ...getAllPresets(HauntedStorm, 60 * baseTime, shape),
+  ...getAllPresets(SlicePlanes, 60 * baseTime, shape),
+  ...getAllPresets(WarpTunnel, 60 * baseTime, shape),
+  ...getAllPresets(DepthEcho, 60 * baseTime, shape),
+  ...getAllPresets(RackFocus, 60 * baseTime, shape),
+  ...getAllPresets(CometTunnel, 60 * baseTime, shape),
 
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 

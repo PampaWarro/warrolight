@@ -42,6 +42,11 @@ const Vortex = require("./vortex");
 const KillBill = require("./killBill");
 const WhiteRipples = require("./whiteRipples");
 const StarFire = require("./starFire");
+const GhostParade = require("./ghostParade");
+const BatFlight = require("./batFlight");
+const EyesInTheDark = require("./eyesInTheDark");
+const WitchBrew = require("./witchBrew");
+const HauntedStorm = require("./hauntedStorm");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000;
@@ -185,6 +190,11 @@ const schedule = [
   ...getAllPresets(KillBill, 60 * baseTime, "allOfIt"),
   ...getAllPresets(WhiteRipples, 60 * baseTime, "allOfIt"),
   ...getAllPresets(StarFire, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(GhostParade, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(BatFlight, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(EyesInTheDark, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(WitchBrew, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(HauntedStorm, 60 * baseTime, "allOfIt"),
 
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 

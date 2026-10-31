@@ -22,6 +22,10 @@ const programNames = [
   "aliveDotsSpeed",
   "all-white",
   "all-off",
+  "batFlight",
+  "eyesInTheDark",
+  "ghostParade",
+  "hauntedStorm",
   "hsv",
   "killBill",
   "bandParticles",
@@ -68,6 +72,7 @@ const programNames = [
   "waveform",
   "waveform2",
   "whiteRipples",
+  "witchBrew",
 ];
 
 module.exports = class LightController extends EventEmitter {

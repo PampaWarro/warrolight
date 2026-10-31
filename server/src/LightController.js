@@ -23,6 +23,7 @@ const programNames = [
   "all-white",
   "all-off",
   "hsv",
+  "killBill",
   "bandParticles",
   "bassWarpGrid",
   "bombs",

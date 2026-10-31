@@ -54,6 +54,7 @@ const programNames = [
   "noise",
   "perspectiveRise",
   "polar",
+  "povImage",
   "rackFocus",
   "randomShapes",
   "radial",

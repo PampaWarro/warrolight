@@ -38,10 +38,27 @@ module.exports = function depthLayers(geometry, tolerance = 1) {
     rise[i] = (bottom[l] - geometry.y[i]) / Math.max(bottom[l] - top[l], 1);
   }
 
+  // Each layer is symmetric around its own vertical axis. `side` is the
+  // distance to it, the same for a led and its mirror on the other half.
+  const left = new Array(layerZs.length).fill(Infinity);
+  const right = new Array(layerZs.length).fill(-Infinity);
+  for (let i = 0; i < leds; i++) {
+    const l = layerOf[i];
+    left[l] = Math.min(left[l], geometry.x[i]);
+    right[l] = Math.max(right[l], geometry.x[i]);
+  }
+  const center = left.map((x, l) => (x + right[l]) / 2);
+  const side = new Array(leds);
+  for (let i = 0; i < leds; i++) {
+    side[i] = Math.abs(geometry.x[i] - center[layerOf[i]]);
+  }
+
   return {
     count: layerZs.length,
     z: layerZs,
     layerOf,
     rise,
+    center,
+    side,
   };
 };

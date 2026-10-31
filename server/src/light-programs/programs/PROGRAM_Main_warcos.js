@@ -34,6 +34,12 @@ const StripePatterns = require("./stripe-patterns");
 const FrequencyActivation = require("./frequencyActivation");
 const Circles = require("./circles");
 
+// Programas pensados para la profundidad de la W con los dos arcos.
+const DepthWaves = require("./depthWaves");
+const DepthBands = require("./depthBands");
+const PerspectiveRise = require("./perspectiveRise");
+const Vortex = require("./vortex");
+
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000;
 
@@ -169,6 +175,11 @@ let starsSunrise = mixPrograms(
 );
 
 const schedule = [
+  ...getAllPresets(DepthWaves, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(DepthBands, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(PerspectiveRise, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(Vortex, 60 * baseTime, "allOfIt"),
+
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 
   ...getFilePresets('default.json', 60 * baseTime),

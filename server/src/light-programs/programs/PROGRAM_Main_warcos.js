@@ -41,6 +41,7 @@ const PerspectiveRise = require("./perspectiveRise");
 const Vortex = require("./vortex");
 const KillBill = require("./killBill");
 const WhiteRipples = require("./whiteRipples");
+const StarFire = require("./starFire");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000;
@@ -183,6 +184,7 @@ const schedule = [
   ...getAllPresets(Vortex, 60 * baseTime, "allOfIt"),
   ...getAllPresets(KillBill, 60 * baseTime, "allOfIt"),
   ...getAllPresets(WhiteRipples, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(StarFire, 60 * baseTime, "allOfIt"),
 
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 

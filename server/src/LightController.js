@@ -58,6 +58,7 @@ const programNames = [
   "relampejo",
   "shapes",
   "sound-waves",
+  "starFire",
   "stars",
   "stripe-patterns",
   "vertexGlow",

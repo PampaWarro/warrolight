@@ -40,6 +40,7 @@ const DepthBands = require("./depthBands");
 const PerspectiveRise = require("./perspectiveRise");
 const Vortex = require("./vortex");
 const KillBill = require("./killBill");
+const WhiteRipples = require("./whiteRipples");
 
 // TODO: AJUSTAR ANTES  DE COMITEAR!!!
 const baseTime = 1 * 1000;
@@ -181,6 +182,7 @@ const schedule = [
   ...getAllPresets(PerspectiveRise, 60 * baseTime, "allOfIt"),
   ...getAllPresets(Vortex, 60 * baseTime, "allOfIt"),
   ...getAllPresets(KillBill, 60 * baseTime, "allOfIt"),
+  ...getAllPresets(WhiteRipples, 60 * baseTime, "allOfIt"),
 
   ...getAllPresets(Mix, 60 * baseTime, "Warro"),
 

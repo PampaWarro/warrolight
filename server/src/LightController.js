@@ -66,6 +66,7 @@ const programNames = [
   "water-flood",
   "waveform",
   "waveform2",
+  "whiteRipples",
 ];
 
 module.exports = class LightController extends EventEmitter {

@@ -1,6 +1,7 @@
 const {createNoise3D} = require("simplex-noise");
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const {loadGradient} = require("../utils/gradients");
 const depthLayers = require("../utils/depthLayers");
 
 const clamp01 = x => Math.min(1, Math.max(0, x));
@@ -56,6 +57,7 @@ module.exports = class RackFocus extends LightProgram {
     this.hue = (this.hue + this.config.hueSpeed / 1000) % 1;
 
     const scale = this.config.scale;
+    const gradient = loadGradient(this.config.colorMap);
     const flow = time * this.config.speed;
 
     for (let i = 0; i < this.numberOfLeds; i++) {
@@ -69,8 +71,17 @@ module.exports = class RackFocus extends LightProgram {
       const pattern = smoothstep(0.55 - edge, 0.55 + edge, n);
 
       const v = pattern * (1 - this.config.blurDim * blur) + 0.05 * (1 - blur) * (1 + bass);
-      const hue = (this.hue + n * this.config.hueSpread + this.layers.layerOf[i] * 0.07) % 1;
-      leds[i] = ColorUtils.HSVtoRGB(hue, this.config.saturation * (1 - 0.6 * blur), clamp01(v));
+      if (gradient) {
+        // Fuera de foco el color se lava hacia el gris.
+        const [r, gg, b] = gradient.colorAt(clamp01((n - 0.2) / 0.6)) || [0, 0, 0];
+        const wash = 0.6 * blur * (1 - this.config.saturation * 0.5);
+        const grey = (r + gg + b) / 3;
+        const level = clamp01(v);
+        leds[i] = [r, gg, b].map(c => (c + (grey - c) * wash) * level);
+      } else {
+        const hue = (this.hue + n * this.config.hueSpread + this.layers.layerOf[i] * 0.07) % 1;
+        leds[i] = ColorUtils.HSVtoRGB(hue, this.config.saturation * (1 - 0.6 * blur), clamp01(v));
+      }
     }
   }
 
@@ -80,6 +91,7 @@ module.exports = class RackFocus extends LightProgram {
       lento: {focusSeconds: 10, glideSeconds: 4, speed: 0.2},
       nervioso: {focusSeconds: 2, glideSeconds: 0.5, beatJumps: 0.5, speed: 1.2},
       detalle: {scale: 0.35, depthOfField: 0.25, blurDim: 0.85},
+      embrujado: {colorMap: "#ff5a00,#8a00ff,#ff9a00", glideSeconds: 2.5},
       pastel: {saturation: 0.45, hueSpread: 0.5},
     };
   }
@@ -99,6 +111,7 @@ module.exports = class RackFocus extends LightProgram {
     res.hueSpread = {type: Number, min: 0, max: 1, step: 0.01, default: 0.25};
     res.hueSpeed = {type: Number, min: 0, max: 10, step: 0.01, default: 0.5};
     res.saturation = {type: Number, min: 0, max: 1, step: 0.01, default: 1};
+    res.colorMap = {type: "gradient", default: ""};
     return res;
   }
 };

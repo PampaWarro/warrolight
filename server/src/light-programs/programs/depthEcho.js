@@ -1,5 +1,6 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const {loadGradient} = require("../utils/gradients");
 const depthLayers = require("../utils/depthLayers");
 
 const clamp01 = x => Math.min(1, Math.max(0, x));
@@ -54,6 +55,7 @@ module.exports = class DepthEcho extends LightProgram {
     while (this.history.length > 2 && this.history[1].t < this.timeInMs - maxLag * 1000) this.history.shift();
     this.hue = (this.hue + this.config.hueSpeed / 1000) % 1;
 
+    const gradient = loadGradient(this.config.colorMap);
     const samples = [];
     for (let l = 0; l < this.layers.count; l++) {
       const order = this.config.fromW ? l : lastLayer - l;
@@ -74,8 +76,15 @@ module.exports = class DepthEcho extends LightProgram {
       const v = clamp01(bar * 0.7 + peak) * fade;
 
       // Graves rojos, medios verdes, agudos violetas, con un corrimiento por capa.
-      const hue = (this.hue + f * this.config.hueSpread + order * this.config.layerHueShift) % 1;
-      leds[i] = ColorUtils.HSVtoRGB(hue, 1 - peak * 0.7, v);
+      if (gradient) {
+        // Del centro (graves) hacia afuera (agudos) a lo largo del gradiente.
+        const [r, gg, b] = gradient.colorAt(clamp01(f)) || [0, 0, 0];
+        const white = clamp01(peak) * 0.6;
+        leds[i] = [r, gg, b].map(c => (c + (255 - c) * white) * v);
+      } else {
+        const hue = (this.hue + f * this.config.hueSpread + order * this.config.layerHueShift) % 1;
+        leds[i] = ColorUtils.HSVtoRGB(hue, 1 - peak * 0.7, v);
+      }
     }
   }
 
@@ -85,6 +94,7 @@ module.exports = class DepthEcho extends LightProgram {
       ecoLargo: {echoDelay: 0.6, echoFade: 0.85},
       delPublicoALaW: {fromW: false},
       ecoCorto: {echoDelay: 0.08, echoFade: 0.95, metric: "FastPeakDecay"},
+      pocion: {colorMap: "#39ff14,#8a00ff,#ff00c8"},
       monocromo: {hueSpread: 0.1, layerHueShift: 0, hueSpeed: 0.2},
     };
   }
@@ -100,6 +110,7 @@ module.exports = class DepthEcho extends LightProgram {
     res.hueSpread = {type: Number, min: 0, max: 1, step: 0.01, default: 0.75};
     res.layerHueShift = {type: Number, min: 0, max: 0.5, step: 0.01, default: 0.05};
     res.hueSpeed = {type: Number, min: 0, max: 10, step: 0.01, default: 0.1};
+    res.colorMap = {type: "gradient", default: ""};
     return res;
   }
 };

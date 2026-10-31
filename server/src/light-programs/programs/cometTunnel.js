@@ -1,5 +1,6 @@
 const LightProgram = require("./../base-programs/LightProgram");
 const ColorUtils = require("./../utils/ColorUtils");
+const {loadGradient} = require("../utils/gradients");
 const depthLayers = require("../utils/depthLayers");
 
 const clamp01 = x => Math.min(1, Math.max(0, x));
@@ -76,6 +77,9 @@ module.exports = class CometTunnel extends LightProgram {
 
     const reach = this.config.reach;
     const sat = this.config.saturation;
+    const gradient = loadGradient(this.config.colorMap);
+    // Con un gradiente, cada cometa toma su color de ahí en vez del arcoíris.
+    const colorOf = (hue, s) => gradient ? (gradient.colorAt(hue) || [0, 0, 0]) : ColorUtils.HSVtoRGB(hue, s, 1);
 
     for (let i = 0; i < this.numberOfLeds; i++) {
       const side = this.layers.side[i], y = g.y[i], z = g.z[i];
@@ -92,7 +96,7 @@ module.exports = class CometTunnel extends LightProgram {
         }
         light = Math.pow(light, 1.3);
         if (light < 0.01) continue;
-        const [cr, cg, cb] = ColorUtils.HSVtoRGB(c.hue, sat * (1 - 0.5 * light), 1);
+        const [cr, cg, cb] = colorOf(c.hue, sat * (1 - 0.5 * light));
         r += cr * light; gg += cg * light; b += cb * light;
       }
 
@@ -102,7 +106,7 @@ module.exports = class CometTunnel extends LightProgram {
           const dist = Math.hypot(side, y - im.y);
           const radius = im.age * this.config.impactSpeed;
           const ring = Math.exp(-Math.pow((dist - radius) / 3, 2)) * (1 - im.age / 1.5);
-          const [cr, cg, cb] = ColorUtils.HSVtoRGB(im.hue, sat, 1);
+          const [cr, cg, cb] = colorOf(im.hue, sat);
           r += cr * ring; gg += cg * ring; b += cb * ring;
         }
       }
@@ -118,6 +122,7 @@ module.exports = class CometTunnel extends LightProgram {
       bolaDeFuego: {cometsPerSecond: 0.25, speed: 30, reach: 24, trailFrames: 40, saturation: 0.8},
       pingPong: {bounce: 1, cometsPerSecond: 0.6, speed: 60, reach: 18},
       blanco: {saturation: 0, hueStep: 0},
+      calabazas: {colorMap: "#ff4d00,#ff9a00,#8a00ff,#39ff14", hueStep: 0.29, reach: 18},
     };
   }
 
@@ -136,6 +141,7 @@ module.exports = class CometTunnel extends LightProgram {
     res.impactSpeed = {type: Number, min: 5, max: 120, step: 1, default: 40};
     res.hueStep = {type: Number, min: 0, max: 0.5, step: 0.01, default: 0.17};
     res.saturation = {type: Number, min: 0, max: 1, step: 0.01, default: 1};
+    res.colorMap = {type: "gradient", default: ""};
     return res;
   }
 };

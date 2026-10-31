@@ -61,6 +61,8 @@ module.exports = class SlicePlanes extends LightProgram {
       capaPorCapa: {angle: 0, swing: 0, spacing: 1.2, thickness: 0.12, speed: 0.5},
       horizontes: {angle: 90, swing: 10, spacing: 0.5, speed: 0.3},
       diagonalLoca: {angle: 45, swing: 80, swingSpeed: 0.4, spacing: 0.35, thickness: 0.08},
+      escanerToxico: {spacing: 2, thickness: 0.05, speed: 0.25, musicSpeed: 0.5, colorMap: "#1a5c00,#39ff14,#c8ff70"},
+      calabazaYBruja: {colorMap: "#ff5a00,#8a00ff,#ff5a00", spacing: 0.45},
       escaner: {spacing: 2, thickness: 0.05, speed: 0.25, musicSpeed: 0.5, saturation: 0.3, hueStep: 0},
     };
   }

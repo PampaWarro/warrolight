@@ -91,6 +91,7 @@ module.exports = class WarpTunnel extends LightProgram {
       crucero: {speed: 25, musicSpeed: 0.5, stars: 20, trail: 15, saturation: 0.2},
       arcoiris: {hueSpread: 1, saturation: 1, stars: 40},
       fuego: {hue: 0.0, hueSpread: 0.12, saturation: 1},
+      halloween: {hue: 0.75, hueSpread: 0.33, saturation: 1, stars: 40},
     };
   }
 

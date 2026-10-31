@@ -44,6 +44,10 @@ function heatColor(h) {
 //    estrellas, pero suben y se van enfriando. Lo que tocan queda encendido y
 //    decae como una estrella, así que dejan estela.
 //  - Cielo (stars): arriba de las llamas titilan estrellas cálidas.
+//
+// Con `mixed` en 1 el fuego deja de estar abajo: aparece en focos que se mueven
+// por todo el espacio 3D, y las estrellas titilan en lo oscuro entre ellos.
+// Los valores intermedios mezclan las dos cosas.
 module.exports = class StarFire extends LightProgram {
   init() {
     const g = this.geometry;
@@ -116,6 +120,9 @@ module.exports = class StarFire extends LightProgram {
     const decay = Math.pow(this.config.flickerDecay, dt * 60);
     const reignite = this.config.flicker * dt * 60;
     const starDecay = Math.pow(this.config.starDecay, dt * 60);
+    const mixed = this.config.mixed;
+    const patchScale = 2.5 / Math.max(g.width, g.height, 1);
+    const patchDepth = 1.2 / Math.max(g.depth, 1);
 
     const heat = new Float32Array(n);
     for (let i = 0; i < n; i++) {
@@ -127,8 +134,25 @@ module.exports = class StarFire extends LightProgram {
       // Lenguas de fuego que suben, más altas en algunos lugares que en otros.
       const tongue = noise(g.x[i] * 0.08, rise * 3 - time * this.config.flameSpeed, g.z[i] * 0.05 + time * 0.2);
       const reach = flame * (0.75 + 0.35 * tongue);
-      const body = 1 - smoothstep(reach * 0.35, reach, rise);
-      heat[i] = body * (0.3 + 0.55 * f) * (1 - rise * 0.6);
+      let body = 1 - smoothstep(reach * 0.35, reach, rise);
+      let sky = smoothstep(flame, Math.min(1, flame + 0.25), rise);
+      let falloff = 1 - rise * 0.6;
+
+      // Mezclado: focos de fuego que aparecen en cualquier lugar del espacio y
+      // suben despacio, con estrellas en lo oscuro entre ellos. Con el bajo los
+      // focos crecen.
+      if (mixed > 0) {
+        const patch = noise(
+          g.x[i] * patchScale + time * 0.03,
+          g.y[i] * patchScale + time * 0.12 * this.config.flameSpeed,
+          g.z[i] * patchDepth - time * 0.02
+        ) + tongue * 0.2;
+        const threshold = 0.7 - flame;
+        body += (smoothstep(threshold, threshold + 0.35, patch) - body) * mixed;
+        sky += (1 - smoothstep(threshold - 0.25, threshold + 0.05, patch) - sky) * mixed;
+        falloff += (1 - falloff) * mixed;
+      }
+      heat[i] = body * (0.3 + 0.55 * f) * falloff;
 
       // Stars: todo lo encendido decae.
       const s = this.stars[i];
@@ -136,8 +160,7 @@ module.exports = class StarFire extends LightProgram {
       s[1] *= starDecay;
       s[2] *= starDecay;
 
-      // El cielo: estrellas que titilan arriba de las llamas.
-      const sky = smoothstep(flame, Math.min(1, flame + 0.25), rise);
+      // El cielo: estrellas que titilan donde no hay fuego.
       if (sky > 0 && Math.random() < this.config.skyStars * sky * dt * 60) {
         const warm = Math.random() * 0.25;
         const v = (0.35 + Math.random() * 0.65) * this.config.skyBrightness * 255;
@@ -206,6 +229,9 @@ module.exports = class StarFire extends LightProgram {
       hoguera: {flameHeight: 0.55, musicFlame: 0.8, sparks: 80, burst: 40, flameSpeed: 1.6},
       cieloEstrellado: {flameHeight: 0.18, sparks: 10, skyStars: 0.008, starDecay: 0.985},
       soloBrasas: {flameHeight: 0.12, musicFlame: 2, sparks: 50, flicker: 0.02},
+      mezclado: {mixed: 1},
+      incendioEstelar: {mixed: 1, flameHeight: 0.5, sparks: 60, skyStars: 0.006},
+      mitadYMitad: {mixed: 0.5},
     };
   }
 
@@ -228,6 +254,9 @@ module.exports = class StarFire extends LightProgram {
     res.skyStars = {type: Number, min: 0, max: 0.02, step: 0.0001, default: 0.004};
     res.skyBrightness = {type: Number, min: 0, max: 1, step: 0.01, default: 0.6};
     res.starDecay = {type: Number, min: 0.8, max: 0.999, step: 0.001, default: 0.975};
+    // 0: fuego abajo y estrellas arriba. 1: focos de fuego y estrellas
+    // mezclados en todo el espacio.
+    res.mixed = {type: Number, min: 0, max: 1, step: 0.01, default: 0};
     res.brightness = {type: Number, min: 0, max: 1, step: 0.01, default: 1};
     return res;
   }

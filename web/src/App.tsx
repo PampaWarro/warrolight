@@ -41,6 +41,7 @@ export class App extends React.Component<Props, State> {
   lightsSim: React.RefObject<LightsSimulator>;
   micViewer: React.RefObject<MicrophoneViewer>;
   private pendingAnimationFrame?: number;
+  private latestLights?: [number, number, number][];
 
   constructor(props: Props) {
     super(props);
@@ -111,13 +112,17 @@ export class App extends React.Component<Props, State> {
     );
 
     api.on("lightsSample", (encodedLights: string) => {
+      // Todos los cuadros van al barrido POV; se dibuja sólo el último por
+      // refresco de pantalla.
+      const lights = decodeLedsColorsFromString(encodedLights);
+      this.lightsSim.current!.pushFrame(lights);
+      this.latestLights = lights;
       if (this.pendingAnimationFrame) {
         return;
       }
       this.pendingAnimationFrame = window.requestAnimationFrame(() => {
         delete this.pendingAnimationFrame;
-        const lights = decodeLedsColorsFromString(encodedLights);
-        this.lightsSim.current!.drawCanvas(lights);
+        this.lightsSim.current!.drawCanvas(this.latestLights!);
       });
     });
 

@@ -27,7 +27,8 @@ module.exports = function hackLightControllerRestart(controller) {
         ),
         config,
         this.leds,
-        this.updateLeds.bind(this)
+        this.updateLeds.bind(this),
+        () => this.globalBrightness
       );
 
       this.programScheduler.start();

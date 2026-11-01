@@ -76,6 +76,7 @@ export class TopProgramConfig extends React.PureComponent<Props> {
                     onSelectPreset={this.props.onSelectPreset}
                     onSaveNewPreset={this.props.onSaveNewPreset}
                     onDeletePreset={this.props.onDeletePreset}
+                    hiddenParams={['globalBrightness']}
                     onChangeProgramConfig={this.handleParamChange}/>
 
                 <div className={'text-right'}>

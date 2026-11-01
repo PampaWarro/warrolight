@@ -19,6 +19,9 @@ interface Props {
   onSaveNewPreset?(programName: string, presetName: string, presetConfig: { [param: string]: ConfigValue }): void;
   onDeletePreset?(programName: string, presetName: string): void;
   onChangeProgramConfig(config: { [name: string]: ConfigValue }): void;
+  // Params that are not shown (e.g. globalBrightness, which is global to all
+  // programs, except for the layers of mix).
+  hiddenParams?: string[];
 }
 
 const lightProgramConfigKeys = ['tags', 'globalBrightness', 'fps']
@@ -61,7 +64,8 @@ export class ProgramConfig extends React.PureComponent<Props> {
 
     let configOptions = [];
 
-    let configKeys = Object.keys(currentProgram.config);
+    const hiddenParams = this.props.hiddenParams || [];
+    let configKeys = Object.keys(currentProgram.config).filter(k => !hiddenParams.includes(k));
     configKeys = _.sortBy(configKeys, k => lightProgramConfigKeys.includes(k));
 
     for (let paramName of configKeys) {

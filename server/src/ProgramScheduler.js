@@ -9,11 +9,15 @@ const Loop = require('accurate-game-loop');
 
 module.exports = class ProgramScheduler {
 
-  constructor(program, config, leds, ledsUpdatedCallback) {
+  constructor(program, config, leds, ledsUpdatedCallback, getGlobalBrightness = () => 1) {
     this.config = config;
     this.program = program;
     this.leds = leds;
     this.ledsUpdatedCallback = ledsUpdatedCallback;
+    // The brightness is global to all programs, so that it survives program
+    // changes. The globalBrightness param of each program is only used by mix
+    // as the weight of each layer.
+    this.getGlobalBrightness = getGlobalBrightness;
     this.timeInMs = 0;
     this.startTime = null;
   }
@@ -52,9 +56,10 @@ module.exports = class ProgramScheduler {
       }
 
       lastFlushTime = now;
-      if (this.config.globalBrightness != 1) {
+      const globalBrightness = this.getGlobalBrightness();
+      if (globalBrightness != 1) {
         this.leds.forEach((col, i) => {
-          this.leds[i] = ColorUtils.dim(col, this.config.globalBrightness);
+          this.leds[i] = ColorUtils.dim(col, globalBrightness);
         });
       }
       this.ledsUpdatedCallback(this.leds);

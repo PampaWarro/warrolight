@@ -52,6 +52,7 @@ module.exports = class LightsService {
       programs: controller.getProgramsSchema(),
       currentProgramName: controller.currentProgramName,
       currentConfig: controller.getCurrentConfig(),
+      globalBrightness: controller.globalBrightness,
       currentDebugHelpers: this.controller.currentDebugHelpers,
       globalConfig: {
         gradientsLibrary: getGradientsByNameCss(),
@@ -73,6 +74,7 @@ module.exports = class LightsService {
         programs: this.controller.getProgramsSchema(),
         currentProgramName: this.controller.currentProgramName,
         currentConfig: this.controller.getCurrentConfig(),
+        globalBrightness: this.controller.globalBrightness,
         currentDebugHelpers: this.controller.currentDebugHelpers,
         globalConfig: {
           gradientsLibrary: getGradientsByNameCss(),
@@ -84,6 +86,7 @@ module.exports = class LightsService {
       this.broadcast("stateChange", {
         currentProgramName: this.controller.currentProgramName,
         currentConfig: this.controller.getCurrentConfig(),
+        globalBrightness: this.controller.globalBrightness,
         currentDebugHelpers: this.controller.currentDebugHelpers,
         micConfig: this.micConfig
       });
@@ -104,6 +107,7 @@ module.exports = class LightsService {
     this.send("stateChange", {
       currentProgramName: this.controller.currentProgramName,
       currentConfig: this.controller.getCurrentConfig(),
+      globalBrightness: this.controller.globalBrightness,
       micConfig: this.micConfig
     });
   }
@@ -126,6 +130,11 @@ module.exports = class LightsService {
     console.log("Deleted preset", programName, presetName)
   }
 
+  setGlobalBrightness(value) {
+    this.controller.setGlobalBrightness(value);
+    this.broadcastStateChange();
+  }
+
   setCurrentProgram(programKey) {
     this.controller.setCurrentProgram(programKey);
     this.broadcastStateChange();
@@ -137,6 +146,7 @@ module.exports = class LightsService {
     this.broadcast("stateChange", {
       currentProgramName: this.controller.currentProgramName,
       currentConfig: this.controller.getCurrentConfig(),
+      globalBrightness: this.controller.globalBrightness,
       micConfig: this.micConfig,
       currentDebugHelpers: this.controller.currentDebugHelpers
     });

@@ -52,6 +52,10 @@ export class API extends EventEmitter {
     this.send("updateConfigParam", config);
   }
 
+  setGlobalBrightness(value: number) {
+    this.send("setGlobalBrightness", value);
+  }
+
   setMicConfig(config: Partial<MicConfig>) {
     this.send("setMicConfig", config);
   }

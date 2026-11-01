@@ -44,6 +44,7 @@ export interface RemoteState {
   currentConfig: { [name: string]: ConfigValue };
   currentDebugHelpers?: any[],
   globalConfig: { [name: string]: any };
+  globalBrightness?: number;
   micConfig: MicConfig;
 }
 

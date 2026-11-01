@@ -77,6 +77,7 @@ module.exports = class LightController extends EventEmitter {
     this.shapeMapping = shapeMapping;
 
     this.leds = new Array(geometry.leds).fill([0, 0, 0]);
+    this.globalBrightness = 1;
 
     this.programs = _.keyBy(_.map(programNames, this.loadProgram), "name");
     this.setCurrentProgram(programNames[0]);
@@ -256,11 +257,16 @@ module.exports = class LightController extends EventEmitter {
       ),
       config,
       this.leds,
-      this.updateLeds.bind(this)
+      this.updateLeds.bind(this),
+      () => this.globalBrightness
     );
     if (this.running) {
       this.start();
     }
+  }
+
+  setGlobalBrightness(value) {
+    this.globalBrightness = _.clamp(Number(value) || 0, 0, 1);
   }
 
   loadProgram(name) {

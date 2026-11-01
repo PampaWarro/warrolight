@@ -17,6 +17,7 @@ import {
 } from "./types";
 import { API } from "./api";
 import { TopProgramConfig } from "./TopProgramConfig";
+import { NumberParam } from "./NumberParam";
 
 interface Props {}
 
@@ -25,6 +26,7 @@ interface State {
   programs: { [name: string]: Program };
   currentConfig: CurrentProgramParameters;
   globalConfig: { [param: string]: any };
+  globalBrightness: number;
   micConfig: MicConfig;
   currentDebugHelpers?: any[],
   remoteChange: boolean;
@@ -50,6 +52,7 @@ export class App extends React.Component<Props, State> {
       programs: {},
       currentConfig: {},
       globalConfig: {},
+      globalBrightness: 1,
       micConfig: {
         sendingMicData: false,
         metric: "",
@@ -71,6 +74,7 @@ export class App extends React.Component<Props, State> {
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
       globalConfig: state.globalConfig || {},
+      globalBrightness: state.globalBrightness ?? 1,
       micConfig: state.micConfig
     });
     console.log(state);
@@ -81,6 +85,7 @@ export class App extends React.Component<Props, State> {
       selected: state.currentProgramName,
       currentConfig: state.currentConfig,
       micConfig: state.micConfig,
+      globalBrightness: state.globalBrightness ?? this.state.globalBrightness,
       remoteChange: true
     });
 
@@ -196,6 +201,11 @@ export class App extends React.Component<Props, State> {
     this.api.updateConfigParam(config);
   };
 
+  handleGlobalBrightness = (name: string, value: number) => {
+    this.setState({globalBrightness: value});
+    this.api.setGlobalBrightness(value);
+  };
+
   handleStartLights = () => {
     this.setState({receivingLights: true});
     this.api.startSamplingLights();
@@ -251,6 +261,14 @@ export class App extends React.Component<Props, State> {
               />
             </div>
             <div className="preview p-2">
+              <NumberParam
+                name="globalBrightness"
+                value={this.state.globalBrightness}
+                min={0}
+                max={1}
+                step={0.01}
+                onChange={this.handleGlobalBrightness}
+              />
               <LightsSimulator
                 ref={this.lightsSim}
                 height={900}

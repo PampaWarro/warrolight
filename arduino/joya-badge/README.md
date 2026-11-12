@@ -10,9 +10,10 @@ What is different from `joyabikes`:
   (`src/effects.cpp`), next to the original strip version. The remote switches
   between the two.
 - **Remote.** Each badge is a WiFi access point called `Joya Badge XXXX` (the last
-  two bytes of its MAC). Join it and open http://192.168.4.1/ (phones usually pop
-  it up on their own): effect, palette, brightness, speed, auto cycle, power,
-  mapping. Any change is broadcast over ESP-NOW, so every badge in range follows.
+  two bytes of its MAC). Join it and open http://joya.local/ (phones usually pop
+  it up on their own; http://192.168.4.1/ also works): effect, palette,
+  brightness, speed, auto cycle, power, mapping. Any change is broadcast over
+  ESP-NOW, so every badge in range follows.
 - **MODE button** (SW3, GPIO5): press = next effect (auto cycle off), hold for
   0.8 s = auto cycle on.
 - Clock sync with the `joya-totems-gw` gateway and the streamed pixel frames work

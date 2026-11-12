@@ -39,7 +39,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:0}
 .hint{font-size:12px;color:var(--muted)}
 .off .grid,.off .pals,.off .row2,.off .seg{opacity:.4;pointer-events:none}
 </style></head><body><div class="wrap" id="app">
-<div class="head"><div><h1>Joya Badge</h1><div class="sub" id="who">connecting…</div></div>
+<div class="head"><div><h1>Joya Badge</h1><div class="sub" id="who">joya.local</div></div>
 <button class="sw" id="power" role="switch" aria-checked="true" aria-label="Power"></button></div>
 <div><div class="lab"><span>Effect</span><b id="lEff">—</b></div><div class="grid" id="effects"></div></div>
 <div><div class="lab"><span>Palette</span><b id="lPal">—</b></div><div class="pals" id="pals"></div></div>

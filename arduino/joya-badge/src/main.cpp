@@ -5,6 +5,7 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 #include <ESPNOWPixels.h>
 #include <WifiEspNow.h>
 
@@ -268,11 +269,13 @@ static void sendMillisMsg() {
 }
 
 // ---------------------------------------------------------------------------
-// Web remote on the badge's own WiFi: http://192.168.4.1/
+// Web remote on the badge's own WiFi: http://joya.local/ (mDNS for iPhone and
+// Mac; the wildcard DNS below answers it for Android) or http://192.168.4.1/
 // ---------------------------------------------------------------------------
 static ESP8266WebServer server(80);
 static DNSServer dns;
 static const IPAddress kApIp(192, 168, 4, 1);
+static constexpr const char* kHostname = "joya";
 static String ssid;
 
 static void sendStateJson() {
@@ -377,6 +380,7 @@ static void setupRemote() {
   server.on("/api/palettes", HTTP_GET, handlePalettes);
   server.onNotFound(handleNotFound);
   server.begin();
+  if (MDNS.begin(kHostname, kApIp)) MDNS.addService("http", "tcp", 80);
 }
 
 // ---------------------------------------------------------------------------
@@ -441,7 +445,7 @@ void setup() {
   Serial.println(WiFi.channel());
   Serial.print("Remote: join \"");
   Serial.print(ssid);
-  Serial.println("\" and open http://192.168.4.1/");
+  Serial.println("\" and open http://joya.local/ (or http://192.168.4.1/)");
 
   WifiEspNow.onReceive(handleMessage, nullptr);
   WifiEspNow.begin();
@@ -457,6 +461,7 @@ static void updatePalette() {
 void loop() {
   dns.processNextRequest();
   server.handleClient();
+  MDNS.update();
   pollModeButton();
 
   // Frames streamed by the gateway win while they keep coming.

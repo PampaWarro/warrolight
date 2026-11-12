@@ -31,6 +31,7 @@ interface Props {
 
 interface State {
   layout: Layout | null;
+  povSweep: number;
 }
 
 export class LightsSimulator extends React.Component<Props, State> {
@@ -44,7 +45,7 @@ export class LightsSimulator extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = { layout: null };
+    this.state = { layout: null, povSweep: 0 };
     const Renderer = props.real3d? Real3DLightsRenderer : Fake3DLightsRenderer;
     this.lightsRenderer = new Renderer();
     this.lightsRenderer.enabled = this.props.receivingData;
@@ -105,6 +106,17 @@ export class LightsSimulator extends React.Component<Props, State> {
     this.stats?.begin();
     this.lightsRenderer.draw(lights);
     this.stats?.end();
+  }
+
+  // Se llama con cada cuadro que llega, aunque no se dibuje, para que el barrido
+  // POV no pierda columnas.
+  pushFrame(lights: Light[]) {
+    this.lightsRenderer.pushFrame(lights);
+  }
+
+  setPovSweep(povSweep: number) {
+    this.setState({ povSweep });
+    this.lightsRenderer.povSweep = povSweep;
   }
 
   updateLayout(layout: Layout) {
@@ -181,6 +193,27 @@ export class LightsSimulator extends React.Component<Props, State> {
             width={this.props.width}
             height={this.props.height}
           />
+          <div className="pov-sweep" style={{position: "absolute", bottom: 4, right: 8, color: "#aaa", fontSize: 12}}>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.state.povSweep > 0}
+                onChange={e => this.setPovSweep(e.target.checked ? 0.85 : 0)}
+              />{" "}
+              Barrido POV
+            </label>
+            {this.state.povSweep > 0 ? (
+              <input
+                type="range"
+                min={0.1}
+                max={3}
+                step={0.05}
+                value={this.state.povSweep}
+                onChange={e => this.setPovSweep(parseFloat(e.target.value))}
+                style={{marginLeft: 8, verticalAlign: "middle"}}
+              />
+            ) : null}
+          </div>
           {this.lightsRenderer.enabled ? null : (
             <div className="preview-btn">
               Click to START / PAUSE preview of lights
@@ -192,6 +225,26 @@ export class LightsSimulator extends React.Component<Props, State> {
   }
 }
 
+// Color and size of a led in the 3D preview.
+function ledAppearance([r, g, b]: Light): [number, number, number, number] {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  // The goal is to create a preview as close as how then the human eye sees a LED strip.
+  // Tuned experimentally, inspired on https://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/
+  const gamma = 2.2;
+  const invGamma = 1/ gamma;
+  const gammaPower = (r**gamma+g**gamma+b**gamma)**invGamma;
+
+  // on real life, the color brightness is almost always "maxed out", what changes is the perceived size
+  // of the lit led. That's why size is the main variable reflecting brightness changes
+  const power = (r+g+b)/3;
+  const [or, og, ob] = [r/power, g/power, b/power];
+
+  return [or || 0, og || 0, ob || 0, (0.02+0.98*gammaPower**invGamma) || 0];
+}
+
 abstract class LightsRenderer {
   enabled: boolean;
   _canvas: HTMLCanvasElement | null = null;
@@ -199,6 +252,22 @@ abstract class LightsRenderer {
   _xAngle = 0;
   _yAngle = 0;
   scale = 1;
+  // Barrido POV: cuánto se corre cada cuadro anterior hacia la izquierda, en
+  // unidades de la geometría. 0 lo apaga.
+  povSweep = 0;
+  povHistory: Light[][] = [];
+  static POV_FRAMES = 120;
+
+  pushFrame(lights: Light[]) {
+    if (this.povSweep <= 0) {
+      this.povHistory = [];
+      return;
+    }
+    this.povHistory.push(lights);
+    if (this.povHistory.length > LightsRenderer.POV_FRAMES) {
+      this.povHistory.shift();
+    }
+  }
 
 
   constructor() {
@@ -419,6 +488,8 @@ class Real3DLightsRenderer extends LightsRenderer {
   private scene: THREE.Scene;
   private axes: THREE.AxesHelper;
   private bufferGeometry: THREE.BufferGeometry;
+  private trailGeometry: THREE.BufferGeometry;
+  private basePositions: Float32Array = new Float32Array();
   private sphere: any;
   currentHelpers: any[];
   private hideHelpersTimeout: any;
@@ -476,6 +547,9 @@ class Real3DLightsRenderer extends LightsRenderer {
     });
     const leds = new THREE.Points(this.bufferGeometry, material);
     this.scene.add(leds);
+    // Los cuadros anteriores del barrido POV, corridos hacia un costado.
+    this.trailGeometry = new THREE.BufferGeometry();
+    this.scene.add(new THREE.Points(this.trailGeometry, material));
     this.axes = new THREE.AxesHelper(.05);
     this.axes.scale.y = -1;
     this.scene.add(this.axes);
@@ -639,6 +713,7 @@ class Real3DLightsRenderer extends LightsRenderer {
 
     position.needsUpdate = true;
     this.bufferGeometry.computeBoundingBox();
+    this.basePositions = Float32Array.from(position.array as any);
   }
 
   setColors(colors: Light[]) {
@@ -652,30 +727,39 @@ class Real3DLightsRenderer extends LightsRenderer {
     const size = this.bufferGeometry.attributes.size as THREE.BufferAttribute;
     // const pixelRatio = window.devicePixelRatio ?? 1;
     for (let i = 0; i < colors.length; i++) {
-      let [r, g, b] = colors[i];
-      r /= 255;
-      g /= 255;
-      b /= 255;
-
-      // The goal is to create a preview as close as how then the human eye sees a LED strip.
-      // Tuned experimentally, inspired on https://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/
-      const gamma = 2.2;
-      const invGamma = 1/ gamma;
-      const gammaPower = (r**gamma+g**gamma+b**gamma)**invGamma;
-
-      // on real life, the color brightness is almost always "maxed out", what changes is the perceived size
-      // of the lit led. That's why size is the main variable reflecting brightness changes
-      const power = (r+g+b)/3;
-      let [or, og, ob] = [r/power, g/power, b/power];
-
-      (color.array as any)[3 * i] = or || 0;
-      (color.array as any)[3 * i + 1] = og || 0;
-      (color.array as any)[3 * i + 2] = ob || 0;
-
-      (size.array as any)[i] = (0.02+0.98*gammaPower**invGamma) || 0;
+      const [or, og, ob, s] = ledAppearance(colors[i]);
+      (color.array as any)[3 * i] = or;
+      (color.array as any)[3 * i + 1] = og;
+      (color.array as any)[3 * i + 2] = ob;
+      (size.array as any)[i] = s;
     }
     color.needsUpdate = true;
     size.needsUpdate = true;
+  }
+
+  // Dibuja los cuadros anteriores corridos hacia la izquierda, como una cámara
+  // paneando: así se arma la imagen de un programa POV.
+  setTrail() {
+    const history = this.povSweep > 0 ? this.povHistory : [];
+    const base = this.basePositions;
+    const step = this.povSweep / this.scale;
+    const positions: number[] = [];
+    const colors: number[] = [];
+    const sizes: number[] = [];
+    for (let k = 1; k < history.length; k++) {
+      const frame = history[history.length - 1 - k];
+      for (let i = 0; i < frame.length && 3 * i < base.length; i++) {
+        const [r, g, b] = frame[i];
+        if (r + g + b < 3) continue;
+        const [or, og, ob, s] = ledAppearance(frame[i]);
+        positions.push(base[3 * i] - k * step, base[3 * i + 1], base[3 * i + 2]);
+        colors.push(or, og, ob);
+        sizes.push(s);
+      }
+    }
+    this.trailGeometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    this.trailGeometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    this.trailGeometry.setAttribute("size", new THREE.Float32BufferAttribute(sizes, 1));
   }
 
   setXAngle(rad: number) {
@@ -690,6 +774,7 @@ class Real3DLightsRenderer extends LightsRenderer {
 
   _draw(canvas: HTMLCanvasElement, lights: Light[]) {
     this.setColors(lights);
+    this.setTrail();
     if (this.renderer) {
       this.renderer.render(this.scene, this.camera);
     }

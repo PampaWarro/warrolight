@@ -2488,6 +2488,35 @@
                 }
             ],
             "multiply": true
+        },
+        "FireExplosionsDelicate": {
+            "programs": [
+                {
+                    "programName": "sound-waves",
+                    "config": {
+                        "initialDistance": 69,
+                        "haciaAfuera": false,
+                        "waveSpeed": 1,
+                        "waveWidth": 2,
+                        "colorMap": "pm3d13_r"
+                    }
+                },
+                {
+                    "programName": "musicExplosions",
+                    "presetName": "FirePunches",
+                    "config": {
+                        "blastSpeed": 0.75,
+                        "cutThreshold": 0.4,
+                        "soundMetric": "bassRms",
+                        "energy": 0.5,
+                        "colorMap": "a_fire",
+                        "multiplier": 0.98,
+                        "power": 0.6,
+                        "depowering": 0.04,
+                        "allowMultiple": true
+                    }
+                }
+            ]
         }
     },
     "sound-waves": {
@@ -2728,5 +2757,26 @@
             "refillChance": 0.459
         }
     },
-    "rays": {}
+    "rays": {},
+    "vortex": {
+        "hipnotico male": {
+            "arms": 1,
+            "twist": 2,
+            "speed": 0.15,
+            "musicSpeed": 0.5,
+            "sharpness": 2,
+            "minBrightness": 1,
+            "colorMap": "pm3d21"
+        }
+    },
+    "perspectiveRise": {
+        "lentosinmusicamale": {
+            "speed": 0.25,
+            "musicSpeed": 0,
+            "minBrightness": 1,
+            "tail": 2,
+            "saturation": 0.7,
+            "colorMap": "a_pink"
+        }
+    }
 }

@@ -1,0 +1,43 @@
+{
+  "geometry": "warcos",
+  "shapeMapping": "warcos",
+  "lights": 1200,
+  "outputDevices": {
+    "esp32": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 600,
+        "name": "esp32-gw.local",
+        "udpPort": 2222
+      }
+    },
+    "totems": {
+      "type": "udp-chunked",
+      "params": {
+        "numberOfLights": 600,
+        "name": "warro-totems-gw.local",
+        "udpPort": 6677
+      }
+    }
+  },
+  "lightsToDevicesMapping": [
+    {
+      "from": 0,
+      "to": 600,
+      "baseIndex": 0,
+      "deviceName": "esp32"
+    },
+    {
+      "from": 600,
+      "to": 900,
+      "baseIndex": 0,
+      "deviceName": "totems"
+    },
+    {
+      "from": 900,
+      "to": 1200,
+      "baseIndex": 300,
+      "deviceName": "totems"
+    }
+  ]
+}

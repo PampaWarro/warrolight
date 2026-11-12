@@ -10,10 +10,15 @@ What is different from `joyabikes`:
   (`src/effects.cpp`), next to the original strip version. The remote switches
   between the two.
 - **Remote.** Each badge is a WiFi access point called `Joya Badge XXXX` (the last
-  two bytes of its MAC). Join it and open http://joya.local/ (phones usually pop
-  it up on their own; http://192.168.4.1/ also works): effect, palette,
-  brightness, speed, auto cycle, power, mapping. Any change is broadcast over
-  ESP-NOW, so every badge in range follows.
+  two bytes of its MAC) until you give it a name from the remote, which is then
+  its WiFi name (saved in EEPROM, survives reflashing). Join it and open
+  http://joya.local/ (phones usually pop it up on their own; http://192.168.4.1/
+  also works): a live preview of the current effect, every effect as an animated
+  tile, palette, brightness, speed, auto cycle, power, mapping. Any change is
+  broadcast over ESP-NOW, so every badge in range follows.
+- The remote page is `remote/page.html` + `remote/sim.js` (the same simulation as
+  the prototype). After editing them run `python3 remote/build_page.py`, which
+  gzips the page into `src/remote_page.h`.
 - **MODE button** (SW3, GPIO5): press = next effect (auto cycle off), hold for
   0.8 s = auto cycle on.
 - Clock sync with the `joya-totems-gw` gateway and the streamed pixel frames work

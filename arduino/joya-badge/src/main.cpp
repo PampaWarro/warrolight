@@ -3,6 +3,7 @@
 #include "effects.h"  // defines USE_GET_MILLISECOND_TIMER before FastLED.h
 //
 #include <DNSServer.h>
+#include <EEPROM.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -71,21 +72,6 @@ std::vector<CRGBPalette16> palettes = {
     es_pinksplash_07_gp,          //
     BlacK_Blue_Magenta_White_gp,  //
     gr64_hult_gp,                 //
-};
-static const char* const kPaletteNames[] = {
-    "gr65 hult",       "es rivendell 15",      "es ocean breeze 068",
-    "Colorfull",       "Blue Cyan Yellow",     "Coral reef",
-    "Party",           "Ocean",                "retro2 16",
-    "Black Red Magenta Yellow", "es emerald dragon 08", "Rainbow Stripe",
-    "es vintage 57",   "departure",            "Analogous 1",
-    "es vintage 01",   "lava",                 "Rainbow",
-    "fire",            "es ocean breeze 036",  "ib jul01",
-    "GMT drywet",      "Black Magenta Red",    "Magenta Evening",
-    "rgi 15",          "rainbowsherbet",       "Lava",
-    "Sunset Real",     "ib15",                 "es landscape 33",
-    "Forest",          "Heat",                 "es autumn 19",
-    "es pinksplash 08", "Pink Purple",         "Fuschia 7",
-    "es pinksplash 07", "Black Blue Magenta White", "gr64 hult",
 };
 CRGBPalette16 currentPalette = palettes[0];
 
@@ -276,7 +262,41 @@ static ESP8266WebServer server(80);
 static DNSServer dns;
 static const IPAddress kApIp(192, 168, 4, 1);
 static constexpr const char* kHostname = "joya";
-static String ssid;
+static String ssid;  // the badge's name, also its WiFi name
+
+// The name lives in the EEPROM sector so it survives reboots and reflashes.
+struct Settings {
+  uint32_t magic;
+  char name[24];
+};
+static constexpr uint32_t kSettingsMagic = 0x4A4F5941;  // "JOYA"
+static constexpr size_t kNameMax = 20;
+static uint32_t apRenameAt = 0;  // millis() at which to apply a new name
+
+static bool validName(const String& s) {
+  if (s.length() < 1 || s.length() > kNameMax) return false;
+  for (char c : s) {
+    if (c < 0x20 || c > 0x7e || c == '"' || c == '\\') return false;
+  }
+  return true;
+}
+
+static String loadName() {
+  Settings s;
+  EEPROM.begin(sizeof(Settings));
+  EEPROM.get(0, s);
+  if (s.magic != kSettingsMagic) return "";
+  s.name[sizeof(s.name) - 1] = 0;
+  const String name(s.name);
+  return validName(name) ? name : "";
+}
+
+static void saveName(const String& name) {
+  Settings s = {kSettingsMagic, {}};
+  strncpy(s.name, name.c_str(), sizeof(s.name) - 1);
+  EEPROM.put(0, s);
+  EEPROM.commit();
+}
 
 static void sendStateJson() {
   char buf[200];
@@ -331,31 +351,18 @@ static void handleSet() {
     state.badgeMap = server.arg("map").toInt() != 0;
     changed = true;
   }
+  if (server.hasArg("name")) {
+    String name = server.arg("name");
+    name.trim();
+    if (validName(name) && name != ssid) {
+      saveName(name);
+      ssid = name;
+      apRenameAt = millis() + 500;  // after this reply has gone out
+      Serial.printf("Name saved: \"%s\" (WiFi restarts with it)\n", ssid.c_str());
+    }
+  }
   if (changed) commitState(before, "remote");
   sendStateJson();
-}
-
-// 39 palettes as 16 hex colours each, streamed so it never needs a big buffer.
-static void handlePalettes() {
-  server.setContentLength(CONTENT_LENGTH_UNKNOWN);
-  server.send(200, "application/json", "");
-  String chunk;
-  chunk.reserve(200);
-  for (size_t i = 0; i < palettes.size(); i++) {
-    chunk = i ? ",{\"n\":\"" : "[{\"n\":\"";
-    chunk += kPaletteNames[i];
-    chunk += "\",\"c\":[";
-    for (int k = 0; k < 16; k++) {
-      const CRGB c = palettes[i].entries[k];
-      char hex[10];
-      snprintf(hex, sizeof hex, "%s\"%02x%02x%02x\"", k ? "," : "", c.r, c.g, c.b);
-      chunk += hex;
-    }
-    chunk += "]}";
-    server.sendContent(chunk);
-  }
-  server.sendContent("]");
-  server.sendContent("");
 }
 
 static void handleNotFound() {
@@ -374,10 +381,13 @@ static void setupRemote() {
   WiFi.softAP(ssid.c_str(), nullptr, kChannel, false, 4);
   dns.setErrorReplyCode(DNSReplyCode::NoError);
   dns.start(53, "*", kApIp);
-  server.on("/", HTTP_GET, [] { server.send_P(200, PSTR("text/html"), kRemotePage); });
+  server.on("/", HTTP_GET, [] {
+    server.sendHeader("Content-Encoding", "gzip");
+    server.send_P(200, PSTR("text/html"), reinterpret_cast<PGM_P>(kRemotePageGz),
+                  kRemotePageGzLen);
+  });
   server.on("/api/state", HTTP_GET, sendStateJson);
   server.on("/api/set", handleSet);
-  server.on("/api/palettes", HTTP_GET, handlePalettes);
   server.onNotFound(handleNotFound);
   server.begin();
   if (MDNS.begin(kHostname, kApIp)) MDNS.addService("http", "tcp", 80);
@@ -434,9 +444,12 @@ void setup() {
   WiFi.setAutoReconnect(false);
   WiFi.macAddress(my_mac);
   WiFi.macAddress(millis_mac);
-  char tail[6];
-  snprintf(tail, sizeof tail, "%02X%02X", my_mac[4], my_mac[5]);
-  ssid = String("Joya Badge ") + tail;
+  ssid = loadName();
+  if (!ssid.length()) {
+    char tail[6];
+    snprintf(tail, sizeof tail, "%02X%02X", my_mac[4], my_mac[5]);
+    ssid = String("Joya Badge ") + tail;
+  }
   setupRemote();  // the soft AP pins the radio to kChannel
 
   Serial.print("MAC address of this node is ");
@@ -463,6 +476,12 @@ void loop() {
   server.handleClient();
   MDNS.update();
   pollModeButton();
+  if (apRenameAt && static_cast<int32_t>(millis() - apRenameAt) >= 0) {
+    apRenameAt = 0;
+    WiFi.softAP(ssid.c_str(), nullptr, kChannel, false, 4);
+    Serial.print("WiFi name is now ");
+    Serial.println(ssid);
+  }
 
   // Frames streamed by the gateway win while they keep coming.
   auto frame = std::move(latest_frame);

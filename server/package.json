@@ -11,7 +11,7 @@
     "lint": "eslint ."
   },
   "warroLight": {
-    "setup": "joya-uruguay-300"
+    "setup": "joyahd"
   },
   "keywords": [],
   "author": "Pampa Warro",

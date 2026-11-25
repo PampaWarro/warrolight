@@ -3,79 +3,41 @@
   "shapeMapping": "joyahdtotems",
   "lights": 4203,
   "outputDevices": {
-    "joya-r1": {
-      "type": "udp-chunked",
+    "joya-r": {
+      "type": "udp",
       "params": {
-        "numberOfLights": 1200,
-        "name": "joya-r1.local",
+        "numberOfLights": 2064,
+        "name": "joya-r.local",
         "udpPort": 8888
       }
     },
-    "joya-r2": {
-      "type": "udp-chunked",
-      "params": {
-        "numberOfLights": 1200,
-        "name": "joya-r2.local",
-        "udpPort": 8887
-      }
-    },
     "joya-h": {
-      "type": "udp-chunked",
+      "type": "udp",
       "params": {
         "numberOfLights": 855,
         "name": "joya-h.local",
-        "udpPort": 8886
+        "udpPort": 8887
       }
     }
   },
   "lightsToDevicesMapping": [
     {
       "from": 0,
-      "to": 258,
+      "to": 1548,
       "baseIndex": 0,
-      "deviceName": "joya-r1"
-    },
-    {
-      "from": 258,
-      "to": 516,
-      "baseIndex": 300,
-      "deviceName": "joya-r1"
-    },
-    {
-      "from": 516,
-      "to": 774,
-      "baseIndex": 600,
-      "deviceName": "joya-r1"
+      "deviceName": "joya-r"
     },
     {
       "from": 2403,
-      "to": 2703,
-      "baseIndex": 900,
-      "deviceName": "joya-r1"
-    },
-    {
-      "from": 774,
-      "to": 1032,
-      "baseIndex": 0,
-      "deviceName": "joya-r2"
-    },
-    {
-      "from": 1032,
-      "to": 1290,
-      "baseIndex": 300,
-      "deviceName": "joya-r2"
-    },
-    {
-      "from": 1290,
-      "to": 1548,
-      "baseIndex": 600,
-      "deviceName": "joya-r2"
+      "to": 2661,
+      "baseIndex": 1548,
+      "deviceName": "joya-r"
     },
     {
       "from": 2703,
-      "to": 3003,
-      "baseIndex": 900,
-      "deviceName": "joya-r2"
+      "to": 2961,
+      "baseIndex": 1806,
+      "deviceName": "joya-r"
     },
     {
       "from": 1548,

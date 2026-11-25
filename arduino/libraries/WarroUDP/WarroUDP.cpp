@@ -1,5 +1,7 @@
 #include "WarroUDP.h"
 
+#include <string_view>
+
 namespace {
 
 static constexpr uint8_t kEncodingRgb = 4;

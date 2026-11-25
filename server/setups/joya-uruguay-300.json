@@ -4,7 +4,7 @@
   "lights": 4203,
   "outputDevices": {
     "joya-r": {
-      "type": "udp",
+      "type": "udp-chunked",
       "params": {
         "numberOfLights": 2400,
         "name": "joya-r.local",

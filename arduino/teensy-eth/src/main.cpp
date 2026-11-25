@@ -45,7 +45,13 @@ void handleFrame(CRGB* pixels, size_t length) {
 }
 
 EthernetUDP udp;
+// Frames bigger than ~4 IP fragments never reach the Teensy whole, so
+// joya-r (2400 LEDs) takes them in 300-LED chunks.
+#ifdef WARRO_CHUNKED
+WarroChunkedUDP warroUDP(kNumLeds, handleFrame);
+#else
 WarroUDP warroUDP(kNumLeds, handleFrame);
+#endif
 
 bool broadcastUdp(const uint8_t* data, size_t length) {
   udp.beginPacket(kBroadcastIP, kUdpPort);

@@ -111,11 +111,33 @@ void maybePrintStats() {
   ++loop_count;
 }
 
+// The server only starts sending after it hears from us, and stops after 3 s
+// of silence, so say something every second, as WarroUDP did before 24593fd:
+// PERF while frames arrive, YEAH (alive) while they don't.
+void maybeReportToServer(bool got_packet) {
+  static unsigned long last_report_millis = 0;
+  static size_t packet_count = 0;
+  if (got_packet) {
+    ++packet_count;
+  }
+  if (millis() - last_report_millis < 1000) {
+    return;
+  }
+  if (packet_count > 0) {
+    warroUDP.broadcastFps(packet_count, broadcastUdp);
+  } else {
+    warroUDP.broadcastAlive(broadcastUdp);
+  }
+  packet_count = 0;
+  last_report_millis = millis();
+}
+
 std::vector<uint8_t> udp_buffer;
 unsigned long last_packet_millis = millis();
 
 void loop() {
   const int packet_size = udp.parsePacket();
+  maybeReportToServer(packet_size > 0);
   if (packet_size > 0) {
     last_packet_millis = millis();
     if (static_cast<size_t>(packet_size) > udp_buffer.size()) {
@@ -124,14 +146,6 @@ void loop() {
     udp.readBytes(udp_buffer.data(), packet_size);
     warroUDP.handlePacket(udp_buffer.data(), packet_size);
   } else if (millis() - last_packet_millis > 1000) {
-    // No frames: keep announcing ourselves, so a server that started or
-    // joined the network after our boot still finds us (it only starts
-    // sending once it hears this).
-    static unsigned long last_alive_millis = 0;
-    if (millis() - last_alive_millis > 1000) {
-      warroUDP.broadcastAlive(broadcastUdp);
-      last_alive_millis = millis();
-    }
     fadeToBlackBy(leds, kNumLeds, 5);
     uint8_t dothue = 0;
     for (int i = 0; i < 16; i++) {

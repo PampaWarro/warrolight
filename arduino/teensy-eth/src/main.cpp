@@ -124,6 +124,14 @@ void loop() {
     udp.readBytes(udp_buffer.data(), packet_size);
     warroUDP.handlePacket(udp_buffer.data(), packet_size);
   } else if (millis() - last_packet_millis > 1000) {
+    // No frames: keep announcing ourselves, so a server that started or
+    // joined the network after our boot still finds us (it only starts
+    // sending once it hears this).
+    static unsigned long last_alive_millis = 0;
+    if (millis() - last_alive_millis > 1000) {
+      warroUDP.broadcastAlive(broadcastUdp);
+      last_alive_millis = millis();
+    }
     fadeToBlackBy(leds, kNumLeds, 5);
     uint8_t dothue = 0;
     for (int i = 0; i < 16; i++) {
